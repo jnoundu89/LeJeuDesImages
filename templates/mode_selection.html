@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choisir le mode de jeu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="mode-selection">
+        <h1>Choisissez votre mode de jeu</h1>
+        <button onclick="window.location.href='{{ url_for('normal') }}'">Normal</button>
+        <button onclick="window.location.href='{{ url_for('reverse') }}'">Reverse</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Over</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #003366; /* Dark Blue */
+            color: #ffffff; /* White */
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #ffffff; /* White */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+        }
+        button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 20px 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+        button:hover {
+            background-color: #45a049; /* Slightly darker green */
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Style amélioré pour les scores */
+        .score {
+            display: inline-block;
+            font-size: 22px;
+            font-weight: bold;
+            color: #FFD700; /* Couleur dorée pour les scores */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* Message avec animation */
+        .message {
+            margin: 30px auto;
+            font-size: 22px;
+            max-width: 800px;
+            background-color: rgba(0, 51, 102, 0.8);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Style pour la section des statistiques */
+        .stats {
+            background-color: rgba(0, 51, 102, 0.7);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .stats h2 {
+            color: #FFD700;
+            margin-top: 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-size: 28px;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Mise en valeur des statistiques */
+        .stats p {
+            margin: 15px 0;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            text-align: left;
+            padding-left: 20px;
+        }
+
+        .stats p:hover {
+            transform: translateX(10px);
+            color: #FFD700;
+        }
+
+        /* Score final */
+        h1 .score-highlight {
+            font-size: 120%;
+            color: #FFD700;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(255, 215, 0, 1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Résultat final, votre score est de : <span class="score-highlight">{{ currentScore }} / {{ maxScore }}</span></h1>
+
+    <div class="message">
+        {% if currentScore == maxScore %}
+            <p>Tu es un imbattable concernant tes collègues d'Infolegale !</p>
+        {% elif currentScore >= (maxScore * 0.75) %}
+            <p>Bravo, tu es un vrai crack tu connais quasiment tout le monde !</p>
+        {% elif currentScore > (maxScore * 0.5) %}
+            <p>Bravo, essaie de faire mieux la prochaine fois</p>
+        {% else %}
+            <p>Game Over, à croire que tu ne sais pas avec qui tu travailles ...</p>
+        {% endif %}
+    </div>
+
+    <div class="stats">
+        <h2>Statistiques de jeu</h2>
+        <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+        <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+        <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+        <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+    </div>
+
+    <button onclick="window.location.href='/restart'">Recommencer</button>
+</body>
+</html>
