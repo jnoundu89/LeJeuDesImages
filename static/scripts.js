@@ -6,8 +6,39 @@ let timerValue = 60;
 let timerInterval;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    currentScore = parseInt(document.getElementById('current-score').textContent.split(' ')[2]);
-    maxScore = parseInt(document.getElementById('current-score').textContent.split(' ')[4]);
+    // Initialize current score and max score if they exist
+    const currentScoreElement = document.getElementById('current-score');
+    if (currentScoreElement) {
+        const scoreText = currentScoreElement.textContent;
+        if (scoreText) {
+            const scoreParts = scoreText.split(' ');
+            if (scoreParts.length >= 5) {
+                currentScore = parseInt(scoreParts[2]);
+                maxScore = parseInt(scoreParts[4]);
+            }
+        }
+    }
+
+    // Initialize page elements
+    const progressBarElement = document.querySelector('.progress-bar-fill');
+    const totalQuestionsElement = document.getElementById('total_questions');
+    const maxScoreElement = document.getElementById('maxScore');
+
+    if (progressBarElement && totalQuestionsElement && maxScoreElement) {
+        const totalQuestions = parseInt(totalQuestionsElement.value);
+        const maxScoreValue = parseInt(maxScoreElement.value);
+        updateProgressBar(totalQuestions, maxScoreValue / 4);
+    }
+
+    // Reset answers count if on game page
+    if (document.getElementById('next')) {
+        resetAnswersCount();
+    }
+
+    // Toggle stats if stats banner exists
+    if (document.getElementById('stats-banner')) {
+        toggleStats();
+    }
 });
 
 function checkAnswer(correct, selected, element, currentScoreId, titleId) {
@@ -41,9 +72,17 @@ function checkAnswer(correct, selected, element, currentScoreId, titleId) {
 }
 
 function checkImage(correct, selected, element) {
-    const buttons = document.querySelectorAll('.choice-btn');
+    // Check if we're in reverse mode (with image grid) or normal mode
+    const isReverseMode = document.getElementById('image-choices') !== null;
+    const buttonSelector = isReverseMode ? '#image-choices .choice-btn' : '.choice-btn';
+    const buttons = document.querySelectorAll(buttonSelector);
+
     buttons.forEach(btn => {
         btn.disabled = true;
+        // Add opacity for reverse mode
+        if (isReverseMode) {
+            btn.style.opacity = "0.6";
+        }
     });
 
     if (correct === selected) {
@@ -54,16 +93,23 @@ function checkImage(correct, selected, element) {
     } else {
         element.classList.add('incorrect');
         buttons.forEach(btn => {
-            if (btn.querySelector('img').alt === correct) {
+            if (btn.querySelector('img')?.alt === correct) {
                 btn.classList.add('correct');
             }
         });
     }
 
-    answersCount += 1;
-    document.getElementById('current-score').textContent = `Score actuel : ${currentScore} / ${maxScore}`;
+    // In reverse mode, set answersCount to 1 directly
+    if (isReverseMode) {
+        answersCount = 1;
+        // Use innerHTML for reverse mode to maintain the span
+        document.getElementById('current-score').innerHTML = `Score actuel : <span class="score">${currentScore} / ${maxScore}</span>`;
+    } else {
+        answersCount += 1;
+        document.getElementById('current-score').textContent = `Score actuel : ${currentScore} / ${maxScore}`;
+    }
 
-    if (answersCount === 1) {
+    if (answersCount === 1 || (isReverseMode && answersCount === 1)) {
         enableNextButton();
         clearInterval(timerInterval);
     }
@@ -225,5 +271,52 @@ window.addEventListener('resize', function() {
     if (canvas) {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+    }
+});
+
+// Function from reverse.html
+function toggleStats() {
+    const statsBanner = document.getElementById('stats-banner');
+    if (statsBanner && (statsBanner.style.display === 'none' || statsBanner.style.display === '')) {
+        statsBanner.style.display = 'block';
+    } else if (statsBanner) {
+        statsBanner.style.display = 'none';
+    }
+}
+
+// Navigation functions
+function goToNormalMode() {
+    window.location.href = '/normal';
+}
+
+function goToReverseMode() {
+    window.location.href = '/reverse';
+}
+
+function restartGame() {
+    window.location.href = '/restart';
+}
+
+// Initialize page when loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize progress bar if elements exist
+    const progressBarFill = document.querySelector('.progress-bar-fill');
+    const totalQuestionsElement = document.getElementById('total-questions');
+    const maxScoreElement = document.getElementById('max-score');
+
+    if (progressBarFill && totalQuestionsElement && maxScoreElement) {
+        const totalQuestions = parseInt(totalQuestionsElement.value);
+        const maxScore = parseInt(maxScoreElement.value);
+        updateProgressBar(totalQuestions, maxScore / 4);
+    }
+
+    // Reset answers count if on game page
+    if (document.getElementById('next')) {
+        resetAnswersCount();
+    }
+
+    // Toggle stats if on reverse page
+    if (document.getElementById('stats-banner')) {
+        toggleStats();
     }
 });
