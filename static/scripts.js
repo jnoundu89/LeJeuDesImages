@@ -150,11 +150,24 @@ function startTimer() {
 
 function updateTimer() {
     const timerElement = document.getElementById('timer');
+
+    // Remove any existing classes
+    timerElement.classList.remove('warning', 'danger');
+
     if (timerValue > 0) {
         timerElement.textContent = `Temps restant: ${timerValue}s`;
+
+        // Add warning class when time is below 20 seconds
+        if (timerValue <= 20 && timerValue > 10) {
+            timerElement.classList.add('warning');
+        }
+        // Add danger class when time is below 10 seconds
+        else if (timerValue <= 10) {
+            timerElement.classList.add('danger');
+        }
     } else {
-        timerElement.textContent = "Temps écoulé ! :(";
-        timerElement.style.color = "#ff6b6b";
+        timerElement.textContent = "Temps écoulé !";
+        timerElement.classList.add('danger');
     }
 }
 
@@ -178,72 +191,213 @@ function showFireworks() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // S'assurer que le canvas reste positionné correctement même avec défilement
+    // Ensure canvas is positioned correctly even with scrolling
     canvas.style.position = 'fixed';
     canvas.style.top = '0';
     canvas.style.left = '0';
+    canvas.style.zIndex = '1000';
+    canvas.style.pointerEvents = 'none';
+
+    // Variables to track animation state
+    let animationActive = true;
+    let rocketTimeouts = [];
+    let animationFrameId;
 
     const particles = [];
-    const colors = ['#FF1461', '#18FF92', '#5A87FF', '#FBF38C'];
+    const rockets = [];
+    const colors = [
+        '#6a11cb', '#2575fc', '#FF1461', '#18FF92', 
+        '#5A87FF', '#FBF38C', '#FF4E50', '#FC466B'
+    ];
 
-    function createParticle(x, y) {
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        const particle = {
-            x: x,
-            y: y,
-            radius: Math.random() * 16 + 4, // Augmenter la taille des particules
-            color: color,
-            speed: Math.random() * 5 + 2,
-            angle: Math.random() * 2 * Math.PI,
-            alpha: 1,
-            decay: Math.random() * 0.03 + 0.01
-        };
-        particles.push(particle);
+    // Particle class for explosion effects
+    class Particle {
+        constructor(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+            this.radius = Math.random() * 3 + 2;
+            this.speed = Math.random() * 5 + 2;
+            this.angle = Math.random() * Math.PI * 2;
+            this.friction = 0.95;
+            this.gravity = 0.98;
+            this.hue = 0;
+            this.alpha = 1;
+            this.decay = Math.random() * 0.015 + 0.005;
+            this.brightness = Math.random() * 50 + 50;
+            this.vx = Math.cos(this.angle) * this.speed;
+            this.vy = Math.sin(this.angle) * this.speed;
+        }
+
+        update() {
+            this.vx *= this.friction;
+            this.vy *= this.friction;
+            this.vy += this.gravity * 0.1;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.alpha -= this.decay;
+            return this.alpha <= 0;
+        }
+
+        draw() {
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+
+            // Add glow effect
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = this.color;
+        }
     }
 
-    function updateParticles() {
-        for (let i = particles.length - 1; i >= 0; i--) {
-            const p = particles[i];
-            p.x += p.speed * Math.cos(p.angle);
-            p.y += p.speed * Math.sin(p.angle);
-            p.alpha -= p.decay;
-            if (p.alpha <= 0) {
-                particles.splice(i, 1);
+    // Rocket class that launches and explodes
+    class Rocket {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = canvas.height;
+            this.targetX = Math.random() * canvas.width;
+            this.targetY = Math.random() * canvas.height / 2;
+            this.speed = 2;
+            this.angle = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+            this.vx = Math.cos(this.angle) * this.speed;
+            this.vy = Math.sin(this.angle) * this.speed;
+            this.trail = [];
+            this.trailLength = 10;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.size = 3;
+            this.exploded = false;
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            // Add trail effect
+            this.trail.push({ x: this.x, y: this.y, alpha: 1 });
+            if (this.trail.length > this.trailLength) {
+                this.trail.shift();
+            }
+
+            // Check if rocket reached target
+            const distanceToTarget = Math.hypot(this.targetX - this.x, this.targetY - this.y);
+            if (distanceToTarget < 15 || this.y < this.targetY) {
+                this.explode();
+                return true;
+            }
+            return false;
+        }
+
+        draw() {
+            // Draw trail
+            for (let i = 0; i < this.trail.length; i++) {
+                const point = this.trail[i];
+                const alpha = i / this.trail.length;
+                ctx.globalAlpha = alpha;
+                ctx.beginPath();
+                ctx.arc(point.x, point.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+
+            // Draw rocket
+            ctx.globalAlpha = 1;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+
+            // Add glow effect
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = this.color;
+        }
+
+        explode() {
+            if (this.exploded) return;
+            this.exploded = true;
+
+            // Create explosion particles
+            const particleCount = Math.floor(Math.random() * 50) + 50;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(this.x, this.y, this.color));
             }
         }
     }
 
-    function drawParticles() {
+    function createRocket() {
+        if (!animationActive) return;
+
+        rockets.push(new Rocket());
+        // Schedule next rocket and store timeout reference
+        const timeout = setTimeout(createRocket, Math.random() * 1000 + 500);
+        rocketTimeouts.push(timeout);
+    }
+
+    function update() {
+        if (!animationActive) return;
+
+        // Clear canvas with semi-transparent black for trail effect
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Reset shadow
+        ctx.shadowBlur = 0;
+
+        // Update and draw rockets
+        for (let i = rockets.length - 1; i >= 0; i--) {
+            if (rockets[i].update()) {
+                rockets.splice(i, 1);
+            } else {
+                rockets[i].draw();
+            }
+        }
+
+        // Update and draw particles
+        for (let i = particles.length - 1; i >= 0; i--) {
+            if (particles[i].update()) {
+                particles.splice(i, 1);
+            } else {
+                particles[i].draw();
+            }
+        }
+
+        animationFrameId = requestAnimationFrame(update);
+    }
+
+    // Function to stop the animation
+    function stopAnimation() {
+        animationActive = false;
+
+        // Clear all rocket timeouts
+        rocketTimeouts.forEach(timeout => clearTimeout(timeout));
+        rocketTimeouts = [];
+
+        // Cancel the animation frame
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        // Clear the canvas completely
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        particles.forEach(p => {
-            ctx.globalAlpha = p.alpha;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, 2 * Math.PI);
-            ctx.fillStyle = p.color;
-            ctx.fill();
-        });
-    }
 
-    function loop() {
-        updateParticles();
-        drawParticles();
-        requestAnimationFrame(loop);
-    }
-
-    function launchFireworks(x, y) {
-        for (let i = 0; i < 100; i++) {
-            createParticle(x, y);
+        // Remove the canvas from DOM
+        if (canvas && canvas.parentNode) {
+            canvas.parentNode.removeChild(canvas);
         }
     }
 
-    // Lancer des feux d'artifice à différents endroits de l'écran
-    launchFireworks(canvas.width / 2, canvas.height / 2); // Centre
-    setTimeout(() => launchFireworks(canvas.width / 4, canvas.height / 3), 800); // Gauche-haut
-    setTimeout(() => launchFireworks((canvas.width / 4) * 3, canvas.height / 3), 1600); // Droite-haut
-    setTimeout(() => launchFireworks(canvas.width / 4, (canvas.height / 3) * 2), 2400); // Gauche-bas
-    setTimeout(() => launchFireworks((canvas.width / 4) * 3, (canvas.height / 3) * 2), 3200); // Droite-bas
+    // Start animation
+    createRocket();
+    update();
 
-    loop();
+    // Create initial fireworks
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => rockets.push(new Rocket()), i * 300);
+    }
+
+    // Stop the animation after 3 seconds
+    setTimeout(stopAnimation, 3000);
 }
 
 function enableNextButton() {
@@ -252,8 +406,11 @@ function enableNextButton() {
     nextButton.classList.remove('disabled-btn');
     document.getElementById('score-increment').value = correctAnswers;
 
-    // Faire défiler jusqu'au bouton suivant pour s'assurer qu'il est visible
-    if (answersCount === 4) {
+    // Check if we're in reverse mode
+    const isReverseMode = document.getElementById('image-choices') !== null;
+
+    // Show fireworks if all answers are correct in normal mode or if the answer is correct in reverse mode
+    if (answersCount === 4 || (isReverseMode && document.getElementById('correct-answer').value === "1")) {
         nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
         showFireworks();
     } else {
