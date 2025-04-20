@@ -396,6 +396,44 @@ button:hover:before {
     animation: incorrectShake 0.5s;
 }
 
+.normal-choice-btn {
+    background: linear-gradient(90deg, #6a11cb, #2575fc); /* Couleurs similaires */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.normal-choice-btn:hover {
+    background: linear-gradient(90deg, #2575fc, #6a11cb); /* Inversion des couleurs au survol */
+    transform: scale(1.05);
+}
+
+.normal-choice-btn.correct {
+    background-color: #4CAF50;
+    animation: pulse 1.5s infinite;
+}
+
+.normal-choice-btn.incorrect {
+    background-color: #f44336;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 @keyframes correctPulse {
     0% { box-shadow: 0 0 20px rgba(37, 117, 252, 0.4); }
     50% { box-shadow: 0 0 30px rgba(37, 117, 252, 0.7); }

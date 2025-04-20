@@ -207,33 +207,33 @@
         <div class="game-section" style="margin-top: -10px;"> <!-- Ajout de la marge négative -->
             <div>
                 <p id="company-title" class="text-align-center"><strong>ENTREPRISE :</strong> <span class="score" id="company-score">0/1</span></p>
-                <div class="choices" id="company-choices">
+                <div class="normal-choices" id="company-choices">
                     {% for comp in companies %}
-                    <button type="button" class="choice-btn" onclick="checkAnswer('{{ company }}', '{{ comp }}', this, 'company-choices', 'company-title')">{{ comp }}</button>
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ company }}', '{{ comp }}', this, 'company-choices', 'company-title')">{{ comp }}</button>
                     {% endfor %}
                 </div>
             </div>
             <div>
                 <p id="team-title" class="text-align-center"><strong>ÉQUIPE :</strong> <span class="score" id="team-score">0/1</span></p>
-                <div class="choices" id="team-choices">
+                <div class="normal-choices" id="team-choices">
                     {% for tm in teams %}
-                    <button type="button" class="choice-btn" onclick="checkAnswer('{{ team }}', '{{ tm }}', this, 'team-choices', 'team-title')">{{ tm }}</button>
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ team }}', '{{ tm }}', this, 'team-choices', 'team-title')">{{ tm }}</button>
                     {% endfor %}
                 </div>
             </div>
             <div>
                 <p id="name-title" class="text-align-center"><strong>NOM :</strong> <span class="score" id="name-score">0/1</span></p>
-                <div class="choices" id="name-choices">
+                <div class="normal-choices" id="name-choices">
                     {% for nm in names %}
-                    <button type="button" class="choice-btn" onclick="checkAnswer('{{ name }}', '{{ nm }}', this, 'name-choices', 'name-title')">{{ nm }}</button>
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ name }}', '{{ nm }}', this, 'name-choices', 'name-title')">{{ nm }}</button>
                     {% endfor %}
                 </div>
             </div>
             <div>
                 <p id="position-title" class="text-align-center"><strong>POSTE :</strong> <span class="score" id="position-score">0/1</span></p>
-                <div class="choices" id="position-choices">
+                <div class="normal-choices" id="position-choices">
                     {% for pos in positions %}
-                    <button type="button" class="choice-btn" onclick="checkAnswer('{{ position }}', '{{ pos }}', this, 'position-choices', 'position-title')">{{ pos }}</button>
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ position }}', '{{ pos }}', this, 'position-choices', 'position-title')">{{ pos }}</button>
                     {% endfor %}
                 </div>
             </div>

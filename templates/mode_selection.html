@@ -6,12 +6,30 @@
     <title>Choisir le mode de jeu</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <style>
+        .mode-selection {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .mode-selection h1 {
+            color: #FFD700;
+            font-size: 36px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
         .mode-card {
             background-color: rgba(0, 51, 102, 0.7);
             border-radius: 10px;
             padding: 20px;
-            margin: 20px auto;
-            max-width: 400px;
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s;
@@ -57,14 +75,16 @@
 </head>
 <body>
     <div class="mode-selection">
-        <h1>Choisissez votre mode de jeu</h1>
-        {% for mode in modes %}
-        <div class="mode-card">
-            <h2>{{ mode.name|capitalize }}</h2>
-            <p>{{ mode.description }}</p>
-            <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button">Jouer</a>
+        <h1>Le jeu des images</h1>
+        <div class="mode-grid">
+            {% for mode in modes %}
+            <div class="mode-card">
+                <h2>{{ mode.name|capitalize }}</h2>
+                <p>{{ mode.description }}</p>
+                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button">Jouer</a>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 </body>
 </html>
