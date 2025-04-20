@@ -41,7 +41,7 @@ Pour installer et exécuter le jeu, suivez ces étapes simples :
 3. **Choisissez un mode de jeu** 🎲
    - **Mode Normal** : Identifiez l'entreprise, l'équipe, le nom et le poste à partir d'une photo
    - **Mode Reverse** : Identifiez la personne à partir d'un nom
-   - **Mode Example** : Un mode simplifié pour vous familiariser avec le jeu
+   - **Mode Pixelisation** : Une image pixelisée qui devient progressivement plus nette, identifiez la personne parmi 4 propositions
 
 4. **Répondez aux questions** ❓
    - Vous avez 60 secondes pour répondre à chaque question
@@ -149,6 +149,7 @@ LeJeuDesImages/
 └── templates/              # Templates HTML
     ├── index.html          # Mode normal
     ├── mode_selection.html # Sélection du mode
+    ├── pixelation.html     # Mode pixelisation
     ├── result.html         # Résultats
     └── reverse.html        # Mode inversé
 ```

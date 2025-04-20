@@ -4,7 +4,7 @@ from models.employee import EmployeeData
 from models.score import ScoreManager
 from models.game import GameManager
 from models.game_mode import GameModeFactory
-from models.example_mode import ExampleMode
+from models.pixelation_mode import PixelationMode
 from routes.game_routes import game_bp, init_routes
 
 # Configuration du logging
@@ -26,8 +26,8 @@ def create_app():
     game_manager = GameManager(employee_data, score_manager)
     game_mode_factory = GameModeFactory(game_manager)
 
-    # Register the example game mode
-    game_mode_factory.register_mode(ExampleMode(game_manager))
+    # Register the pixelation game mode
+    game_mode_factory.register_mode(PixelationMode(game_manager))
 
     # Initialize routes
     init_routes(game_mode_factory)

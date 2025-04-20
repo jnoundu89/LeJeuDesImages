@@ -3,55 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Exemple</title>
+    <title>Mode Pixelisation</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
     <style>
-        .example-container {
+        .pixelation-container {
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
         }
 
-        .example-image {
+        .pixelation-image-container {
+            position: relative;
             max-width: 400px;
             margin: 20px auto;
-            display: block;
             border-radius: 10px;
+            overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .example-choices {
+        .pixelation-image {
+            width: 100%;
+            display: block;
+            image-rendering: pixelated;
+            transition: filter 0.5s ease;
+        }
+
+        .pixelation-choices {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin: 20px auto;
         }
 
-        .example-choice-btn {
+        .pixelation-choice-btn {
+            display: inline-block;
             background-color: #4CAF50;
             color: white;
             border: none;
-            padding: 15px;
+            padding: 10px 20px;
             text-align: center;
+            text-decoration: none;
             font-size: 16px;
+            margin: 10px auto;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .example-choice-btn:hover {
+        .pixelation-choice-btn:hover {
             background-color: #45a049;
             transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .example-choice-btn.correct {
+        .pixelation-choice-btn.correct {
             background-color: #4CAF50;
             animation: pulse 1.5s infinite;
         }
 
-        .example-choice-btn.incorrect {
+        .pixelation-choice-btn.incorrect {
             background-color: #f44336;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
@@ -75,11 +94,13 @@
 
         <!-- Colonne centrale - Photo et titre -->
         <div class="center-content">
-            <h1 class="title">Mode Exemple - Identifiez le nom</h1>
+            <h1 class="title">Mode Pixelisation - Identifiez la personne</h1>
             <div class="progress-bar">
                 <div class="progress-bar-fill"></div>
             </div>
-            <img src="{{ image_url }}" alt="Photo d'employé" class="example-image">
+            <div class="pixelation-image-container">
+                <img id="pixelated-image" src="{{ image_url }}" alt="Photo d'employé" class="pixelation-image" style="filter: blur(10px);">
+            </div>
             <div id="timer" class="timer">Temps restant: 60s</div>
         </div>
 
@@ -95,13 +116,14 @@
     <form action="/check" method="post">
         <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
         <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+        <input type="hidden" name="score_increment" id="score-increment" value="0">
         <input type="hidden" id="total-questions" value="{{ total_questions }}">
         <input type="hidden" id="max-score" value="{{ maxScore }}">
 
-        <div class="example-container">
-            <div class="example-choices" id="name-choices">
+        <div class="pixelation-container">
+            <div class="pixelation-choices" id="name-choices">
                 {% for name in name_choices %}
-                <button type="button" class="example-choice-btn" onclick="checkExampleAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}</button>
+                <button type="button" class="pixelation-choice-btn choice-btn" onclick="checkPixelationAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}</button>
                 {% endfor %}
             </div>
         </div>
@@ -110,8 +132,28 @@
     <!-- Fireworks container removed -->
 
     <script>
-        // Function to check the answer in example mode
-        function checkExampleAnswer(correct, selected, element) {
+        // Variables for pixelation effect
+        let pixelationLevel = 20; // Start with high pixelation
+        let pixelationInterval;
+
+        // Function to update pixelation level based on time remaining
+        function updatePixelation() {
+            // Get the current timer value from the timer element
+            const timerText = document.getElementById('timer').textContent;
+            const timeRemaining = parseInt(timerText.match(/\d+/)[0]);
+            const totalTime = 60; // Total time in seconds
+
+            // Calculate pixelation level based on time remaining (more time = more pixelated)
+            // As time decreases, pixelation decreases (image becomes clearer)
+            pixelationLevel = Math.max(1, Math.floor((timeRemaining / totalTime) * 20));
+
+            // Apply pixelation effect using CSS blur filter
+            const blurAmount = pixelationLevel * 0.5; // Convert pixelation level to blur amount
+            document.getElementById('pixelated-image').style.filter = `blur(${blurAmount}px)`;
+        }
+
+        // Function to check the answer in pixelation mode
+        function checkPixelationAnswer(correct, selected, element) {
             const buttons = document.querySelectorAll('#name-choices button');
             buttons.forEach(btn => {
                 btn.disabled = true;
@@ -120,6 +162,7 @@
             if (correct === selected) {
                 element.classList.add('correct');
                 document.getElementById('correct-answer').value = 1;
+                document.getElementById('score-increment').value = 1;
             } else {
                 element.classList.add('incorrect');
                 buttons.forEach(btn => {
@@ -133,8 +176,15 @@
                 }, 500);
             }
 
+            // Clear the pixelation effect to show the full image
+            document.getElementById('pixelated-image').style.filter = 'blur(0)';
+
+            // Set answersCount to 1 to enable the next button
+            answersCount = 1;
+
             enableNextButton();
             clearInterval(timerInterval);
+            clearInterval(pixelationInterval);
         }
 
         // Initialize the page
@@ -145,6 +195,38 @@
             updateProgressBar(totalQuestions, maxScore);
             resetAnswersCount();
             toggleStats();
+
+            // Start the pixelation effect
+            updatePixelation();
+
+            // Update pixelation more frequently for smoother effect
+            pixelationInterval = setInterval(updatePixelation, 200);
+
+            // Override the timer function to update pixelation
+            const originalUpdateTimer = window.updateTimer;
+            window.updateTimer = function() {
+                originalUpdateTimer.apply(this, arguments);
+                updatePixelation();
+
+                // If timer reaches 0, show the correct answer
+                if (timerValue <= 0) {
+                    clearInterval(pixelationInterval);
+
+                    // Time's up - show the correct answer
+                    const buttons = document.querySelectorAll('#name-choices button');
+                    const correctName = '{{ correct_name }}';
+
+                    buttons.forEach(btn => {
+                        btn.disabled = true;
+                        if (btn.textContent === correctName) {
+                            btn.classList.add('correct');
+                        }
+                    });
+
+                    // Show full image
+                    document.getElementById('pixelated-image').style.filter = 'blur(0)';
+                }
+            };
         });
     </script>
 </body>
