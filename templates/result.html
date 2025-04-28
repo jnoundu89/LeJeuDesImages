@@ -180,6 +180,17 @@
             50% { transform: translateY(-15px); }
         }
 
+        /* ARR mode specific styles */
+        .positive-impact {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .negative-impact {
+            color: #f44336;
+            font-weight: bold;
+        }
+
         /* Fireworks CSS removed */
     </style>
 </head>
@@ -206,23 +217,58 @@
         </div>
 
         <div class="message">
-            {% if currentScore == maxScore %}
-                <p>Tu es un imbattable concernant tes collègues d'Infolegale ! Félicitations pour ton score parfait !</p>
-            {% elif currentScore >= (maxScore * 0.75) %}
-                <p>Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde et tu as fait un excellent travail !</p>
-            {% elif currentScore > (maxScore * 0.5) %}
-                <p>Bravo pour ton effort ! Continue à apprendre à connaître tes collègues et essaie de faire encore mieux la prochaine fois.</p>
+            {% if mode_name == 'arr' %}
+                {% if success %}
+                    <p>Félicitations ! Vous avez atteint l'objectif de +15% d'ARR ! Les employés recevront leur prime de participation.</p>
+                    <div style="margin-top: 20px; background: rgba(76, 175, 80, 0.2); padding: 15px; border-radius: 10px;">
+                        <p>ARR Initial : {{ initial_arr_formatted }} €</p>
+                        <p>ARR Final : {{ current_arr_formatted }} €</p>
+                        <p>Augmentation : {{ percentage_increase_formatted }}%</p>
+                    </div>
+                {% else %}
+                    <p>Malheureusement, vous n'avez pas atteint l'objectif de +15% d'ARR. Les employés ne recevront pas de prime cette année.</p>
+                    <div style="margin-top: 20px; background: rgba(244, 67, 54, 0.2); padding: 15px; border-radius: 10px;">
+                        <p>ARR Initial : {{ initial_arr_formatted }} €</p>
+                        <p>ARR Final : {{ current_arr_formatted }} €</p>
+                        <p>Augmentation : {{ percentage_increase_formatted }}%</p>
+                    </div>
+                {% endif %}
             {% else %}
-                <p>Il semble que tu aies encore beaucoup à apprendre sur tes collègues. Ne t'inquiète pas, c'est l'occasion parfaite pour faire de nouvelles rencontres !</p>
+                {% if currentScore == maxScore %}
+                    <p>Tu es un imbattable concernant tes collègues d'Infolegale ! Félicitations pour ton score parfait !</p>
+                {% elif currentScore >= (maxScore * 0.75) %}
+                    <p>Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde et tu as fait un excellent travail !</p>
+                {% elif currentScore > (maxScore * 0.5) %}
+                    <p>Bravo pour ton effort ! Continue à apprendre à connaître tes collègues et essaie de faire encore mieux la prochaine fois.</p>
+                {% else %}
+                    <p>Il semble que tu aies encore beaucoup à apprendre sur tes collègues. Ne t'inquiète pas, c'est l'occasion parfaite pour faire de nouvelles rencontres !</p>
+                {% endif %}
             {% endif %}
         </div>
 
         <div class="stats">
             <h2>Statistiques de jeu</h2>
-            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+            {% if mode_name == 'arr' %}
+                {% if actions_taken %}
+                <h3>Actions prises :</h3>
+                <div style="max-height: 300px; overflow-y: auto; margin: 20px 0; padding: 10px; background: rgba(255, 255, 255, 0.1); border-radius: 10px;">
+                    {% for action in actions_taken %}
+                    <div style="margin: 10px 0; padding: 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+                        <p><strong>Mois {{ action.month }}</strong>: {{ action.action }}</p>
+                        <p>{{ action.description }}</p>
+                        <p class="{% if action.arr_change > 0 %}positive-impact{% else %}negative-impact{% endif %}">
+                            Impact: {{ action.arr_change_formatted }} €
+                        </p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            {% else %}
+                <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+                <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+                <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+                <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+            {% endif %}
         </div>
 
         <button class="restart-btn" onclick="window.location.href='/restart'">Recommencer</button>

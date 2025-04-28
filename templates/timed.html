@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Chronométré</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .timed-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .timed-image-container {
+            position: relative;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .timed-image {
+            width: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .timed-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .timed-choice-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .timed-choice-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: scale(1.05);
+        }
+
+        .timed-choice-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .timed-choice-btn.correct {
+            background-color: #4CAF50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .timed-choice-btn.incorrect {
+            background-color: #f44336;
+        }
+
+        .global-timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            margin: 20px 0;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .global-timer.warning {
+            color: #FFA500;
+            animation: pulse 1s infinite;
+        }
+
+        .global-timer.danger {
+            color: #FF0000;
+            animation: pulse 0.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Photo et titre -->
+    <div class="center-content">
+        <h1 class="title">Mode Chronométré - Identifiez le maximum de personnes en 2 minutes</h1>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+        <div id="global-timer" class="global-timer">Temps restant: 120s</div>
+        <div class="timed-image-container">
+            <img id="timed-image" src="{{ image_url }}" alt="Photo d'employé" class="timed-image">
+        </div>
+        <div id="timer" class="timer">Temps pour cette question: 10s</div>
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post">
+    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="score_increment" id="score-increment" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="total-time" value="{{ total_time }}">
+
+    <div class="timed-container">
+        <div class="timed-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="timed-choice-btn choice-btn"
+                    onclick="checkTimedAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+</form>
+
+<script>
+    let globalTimerValue = parseInt(document.getElementById('total-time').value);
+    let globalTimerInterval;
+    let gameEnded = false;
+
+    // Function to check the answer in timed mode
+    function checkTimedAnswer(correct, selected, element) {
+        if (gameEnded) return;
+        
+        const buttons = document.querySelectorAll('#name-choices button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+
+        if (correct === selected) {
+            element.classList.add('correct');
+            document.getElementById('correct-answer').value = 1;
+            document.getElementById('score-increment').value = 1;
+        } else {
+            element.classList.add('incorrect');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === correct) {
+                    btn.classList.add('correct');
+                }
+            });
+            document.body.classList.add('shake');
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+            }, 500);
+        }
+
+        // Set answersCount to 1 to enable the next button
+        answersCount = 1;
+        enableNextButton();
+        clearInterval(timerInterval);
+    }
+
+    // Function to update the global timer
+    function updateGlobalTimer() {
+        if (gameEnded) return;
+        
+        globalTimerValue--;
+        const globalTimerElement = document.getElementById('global-timer');
+        globalTimerElement.textContent = `Temps restant: ${globalTimerValue}s`;
+
+        // Add warning classes as time decreases
+        if (globalTimerValue <= 30) {
+            globalTimerElement.classList.add('warning');
+        }
+        if (globalTimerValue <= 10) {
+            globalTimerElement.classList.remove('warning');
+            globalTimerElement.classList.add('danger');
+        }
+
+        // If time is up, end the game
+        if (globalTimerValue <= 0) {
+            endGame();
+        }
+    }
+
+    // Function to end the game
+    function endGame() {
+        if (gameEnded) return;
+        
+        gameEnded = true;
+        clearInterval(globalTimerInterval);
+        clearInterval(timerInterval);
+        
+        // Disable all buttons
+        const buttons = document.querySelectorAll('#name-choices button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        // Show the correct answer
+        const correctName = '{{ correct_name }}';
+        buttons.forEach(btn => {
+            if (btn.textContent.trim() === correctName) {
+                btn.classList.add('correct');
+            }
+        });
+        
+        // Redirect to results page
+        setTimeout(() => {
+            window.location.href = '/result';
+        }, 2000);
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        const maxScore = parseInt(document.getElementById('max-score').value);
+
+        updateProgressBar(totalQuestions, maxScore);
+        resetAnswersCount();
+        toggleStats();
+
+        // Start the global timer
+        globalTimerInterval = setInterval(updateGlobalTimer, 1000);
+
+        // Override the timer function to check if global time is up
+        const originalUpdateTimer = window.updateTimer;
+        window.updateTimer = function () {
+            if (gameEnded) return;
+            
+            originalUpdateTimer.apply(this, arguments);
+
+            // If timer reaches 0, show the correct answer and move to next question
+            if (timerValue <= 0) {
+                // Time's up - show the correct answer
+                const buttons = document.querySelectorAll('#name-choices button');
+                const correctName = '{{ correct_name }}';
+
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent.trim() === correctName) {
+                        btn.classList.add('correct');
+                    }
+                });
+
+                // Enable next button to move to next question
+                answersCount = 1;
+                enableNextButton();
+            }
+        };
+    });
+</script>
+</body>
+</html>

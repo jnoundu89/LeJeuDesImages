@@ -230,6 +230,72 @@ function restartGame() {
     window.location.href = '/restart';
 }
 
+// Easter egg - Konami code (up, up, down, down, left, right, left, right, b, a)
+let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+let konamiIndex = 0;
+
+// Function to create a visual flash effect when a correct key is pressed
+function flashScreen() {
+    // Create a flash overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(255, 215, 0, 0.3)'; // Gold color with transparency
+    overlay.style.zIndex = '9999';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.transition = 'opacity 0.3s ease';
+    document.body.appendChild(overlay);
+
+    // Remove the overlay after a short delay
+    setTimeout(() => {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            document.body.removeChild(overlay);
+        }, 300);
+    }, 100);
+}
+
+document.addEventListener('keydown', function(e) {
+    // Check if the key pressed matches the next key in the Konami code
+    if (e.code === konamiCode[konamiIndex]) {
+        // Flash the screen for visual feedback
+        flashScreen();
+
+        // Increment the index
+        konamiIndex++;
+
+        // If the entire code has been entered correctly
+        if (konamiIndex === konamiCode.length) {
+            // Reset the index
+            konamiIndex = 0;
+
+            // Create a more dramatic effect for the final key
+            const finalOverlay = document.createElement('div');
+            finalOverlay.style.position = 'fixed';
+            finalOverlay.style.top = '0';
+            finalOverlay.style.left = '0';
+            finalOverlay.style.width = '100%';
+            finalOverlay.style.height = '100%';
+            finalOverlay.style.backgroundColor = 'rgba(255, 215, 0, 0.7)'; // Brighter gold
+            finalOverlay.style.zIndex = '9999';
+            finalOverlay.style.pointerEvents = 'none';
+            finalOverlay.style.transition = 'opacity 0.5s ease';
+            document.body.appendChild(finalOverlay);
+
+            // Redirect after a short delay for the effect to be visible
+            setTimeout(() => {
+                window.location.href = '/arr';
+            }, 500);
+        }
+    } else {
+        // Reset the index if an incorrect key is pressed
+        konamiIndex = 0;
+    }
+});
+
 // Initialize page when loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize progress bar if elements exist

@@ -231,3 +231,10 @@ def init_routes(game_mode_factory: GameModeFactory):
         """
         session.clear()
         return redirect(url_for('game.index'))
+
+    @game_bp.route('/arr')
+    def arr_easter_egg():
+        """
+        Easter egg route for the ARR game mode.
+        """
+        return render_template('arr.html')

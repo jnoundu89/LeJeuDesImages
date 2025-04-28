@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Mémoire</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .memory-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .memory-card {
+            position: relative;
+            height: 150px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .memory-card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card.matched .card-inner {
+            transform: rotateY(180deg);
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.8);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #1e5799, #2989d8);
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card-back {
+            background-color: white;
+            color: black;
+            transform: rotateY(180deg);
+        }
+
+        .card-back.image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-back.name {
+            background-color: #f8f9fa;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .memory-info {
+            background-color: rgba(0, 51, 102, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px auto;
+            max-width: 600px;
+            color: white;
+        }
+
+        .memory-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+
+        .memory-stat {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .memory-stat span {
+            color: #FFD700;
+        }
+
+        .memory-complete {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            font-size: 24px;
+            font-weight: bold;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Jeu de mémoire et titre -->
+    <div class="center-content">
+        <h1 class="title">Mode Mémoire - Associez les photos avec les noms</h1>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+        <div class="memory-info">
+            <div class="memory-stats">
+                <div class="memory-stat">Paires trouvées: <span id="pairs-found">0</span>/<span id="total-pairs">{{ total_pairs }}</span></div>
+                <div class="memory-stat">Essais: <span id="attempts">0</span></div>
+            </div>
+        </div>
+        <div class="memory-complete" id="memory-complete">
+            Félicitations! Vous avez trouvé toutes les paires!
+        </div>
+        <div id="timer" class="timer">Temps restant: 120s</div>
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post" id="memory-form">
+    <button type="submit" id="next" class="disabled-btn" disabled>Niveau suivant</button>
+    <input type="hidden" name="matched_pairs" id="matched-pairs" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="total-pairs-value" value="{{ total_pairs }}">
+    
+    {% for card in cards %}
+    <input type="hidden" class="card-data" 
+           data-type="{{ card.type }}" 
+           data-value="{{ card.value }}" 
+           data-match-id="{{ card.match_id }}" 
+           data-display="{{ card.display }}">
+    {% endfor %}
+
+    <div class="memory-container">
+        <div class="memory-grid" id="memory-grid">
+            <!-- Cards will be dynamically generated by JavaScript -->
+        </div>
+    </div>
+</form>
+
+<script>
+    // Game state variables
+    let cards = [];
+    let flippedCards = [];
+    let matchedPairs = 0;
+    let totalPairs = parseInt(document.getElementById('total-pairs-value').value);
+    let attempts = 0;
+    let canFlip = true;
+    let gameCompleted = false;
+    
+    // Function to load card data from hidden inputs
+    function loadCardData() {
+        const cardElements = document.querySelectorAll('.card-data');
+        cardElements.forEach(element => {
+            cards.push({
+                type: element.getAttribute('data-type'),
+                value: element.getAttribute('data-value'),
+                matchId: element.getAttribute('data-match-id'),
+                display: element.getAttribute('data-display')
+            });
+        });
+    }
+    
+    // Function to create the memory grid
+    function createMemoryGrid() {
+        const grid = document.getElementById('memory-grid');
+        grid.innerHTML = '';
+        
+        cards.forEach((card, index) => {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'memory-card';
+            cardElement.dataset.index = index;
+            
+            cardElement.innerHTML = `
+                <div class="card-inner">
+                    <div class="card-front">
+                        <span>?</span>
+                    </div>
+                    <div class="card-back ${card.type}">
+                        ${card.type === 'image' ? `<img src="${card.display}" alt="Employee">` : card.display}
+                    </div>
+                </div>
+            `;
+            
+            cardElement.addEventListener('click', () => flipCard(cardElement, index));
+            grid.appendChild(cardElement);
+        });
+    }
+    
+    // Function to flip a card
+    function flipCard(cardElement, index) {
+        // Don't allow flipping if the game is completed or the card is already flipped/matched
+        if (!canFlip || gameCompleted || 
+            cardElement.classList.contains('flipped') || 
+            cardElement.classList.contains('matched')) {
+            return;
+        }
+        
+        // Don't allow more than 2 cards to be flipped at once
+        if (flippedCards.length >= 2) {
+            return;
+        }
+        
+        // Flip the card
+        cardElement.classList.add('flipped');
+        flippedCards.push({ element: cardElement, index: index });
+        
+        // Check for a match if 2 cards are flipped
+        if (flippedCards.length === 2) {
+            attempts++;
+            document.getElementById('attempts').textContent = attempts;
+            
+            const card1 = cards[flippedCards[0].index];
+            const card2 = cards[flippedCards[1].index];
+            
+            // Check if the cards match
+            if (card1.matchId === card2.matchId && card1.type !== card2.type) {
+                // Match found
+                matchedPairs++;
+                document.getElementById('pairs-found').textContent = matchedPairs;
+                document.getElementById('matched-pairs').value = matchedPairs;
+                
+                // Mark cards as matched
+                flippedCards.forEach(card => {
+                    card.element.classList.add('matched');
+                });
+                
+                flippedCards = [];
+                
+                // Check if all pairs are found
+                if (matchedPairs === totalPairs) {
+                    gameCompleted = true;
+                    document.getElementById('memory-complete').style.display = 'block';
+                    document.getElementById('next').disabled = false;
+                    document.getElementById('next').classList.remove('disabled-btn');
+                    clearInterval(timerInterval);
+                }
+            } else {
+                // No match, flip cards back after a delay
+                canFlip = false;
+                setTimeout(() => {
+                    flippedCards.forEach(card => {
+                        card.element.classList.remove('flipped');
+                    });
+                    flippedCards = [];
+                    canFlip = true;
+                }, 1000);
+            }
+        }
+    }
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        const maxScore = parseInt(document.getElementById('max-score').value);
+
+        updateProgressBar(totalQuestions, maxScore);
+        toggleStats();
+        
+        // Load card data and create the memory grid
+        loadCardData();
+        createMemoryGrid();
+        
+        // Override the timer function
+        const originalUpdateTimer = window.updateTimer;
+        window.updateTimer = function () {
+            originalUpdateTimer.apply(this, arguments);
+
+            // If timer reaches 0, end the game
+            if (timerValue <= 0 && !gameCompleted) {
+                gameCompleted = true;
+                
+                // Reveal all cards
+                document.querySelectorAll('.memory-card').forEach((card, index) => {
+                    card.classList.add('flipped');
+                });
+                
+                // Enable the next button
+                document.getElementById('next').disabled = false;
+                document.getElementById('next').classList.remove('disabled-btn');
+            }
+        };
+    });
+</script>
+</body>
+</html>

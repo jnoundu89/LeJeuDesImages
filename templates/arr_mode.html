@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode ARR - Prime de Participation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .arr-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .arr-header {
+            background-color: rgba(0, 51, 102, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .arr-title {
+            color: #FFD700;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .arr-info {
+            color: white;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .arr-action-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin: 10px;
+            display: inline-block;
+            width: 300px;
+        }
+
+        .positive-impact {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .negative-impact {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .arr-action-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <div class="center-content">
+        <h1 class="title">Mode ARR - Prime de Participation</h1>
+        <div class="arr-info">
+            <p>ARR Initial : {{ initial_arr_formatted }} €</p>
+            <p>ARR Actuel : {{ current_arr_formatted }} €</p>
+            <p>ARR Cible (+15%) : {{ target_arr_formatted }} €</p>
+
+            <!-- Progress bar for ARR increase -->
+            <div style="background-color: rgba(0, 0, 0, 0.3); border-radius: 5px; height: 20px; margin: 10px 0; overflow: hidden;">
+                <div id="arr-progress" style="background: linear-gradient(90deg, #4CAF50, #8BC34A); height: 100%; width: 0%; transition: width 0.5s ease;">
+                    <span style="display: inline-block; padding: 0 10px; color: white; line-height: 20px; font-weight: bold;">{{ percentage_formatted }}%</span>
+                </div>
+            </div>
+
+            <p>Progression : {{ percentage_formatted }}% (objectif : 15%)</p>
+
+            <!-- Month progress bar -->
+            <div style="background-color: rgba(0, 0, 0, 0.3); border-radius: 5px; height: 20px; margin: 10px 0; overflow: hidden;">
+                <div id="month-progress" style="background: linear-gradient(90deg, #2196F3, #03A9F4); height: 100%; width: 0%; transition: width 0.5s ease;">
+                    <span style="display: inline-block; padding: 0 10px; color: white; line-height: 20px; font-weight: bold;">Mois {{ current_month }} / {{ max_months }}</span>
+                </div>
+            </div>
+
+            <p>Mois : {{ current_month }} / {{ max_months }}</p>
+        </div>
+    </div>
+
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post" id="arr-form">
+    <input type="hidden" name="data_id" value="{{ data_id }}">
+    <input type="hidden" name="action_index" id="action-index" value="-1">
+
+    <div class="arr-container">
+        <h2>Choisissez une action :</h2>
+
+        <div id="event-container"></div>
+
+        <div id="actions-container"></div>
+    </div>
+</form>
+
+<script>
+    // Parse the available actions from the template variables
+    const availableActions = JSON.parse('{{ available_actions|tojson }}');
+    const event = JSON.parse('{{ event|tojson if event else "null" }}');
+
+    function selectAction(index) {
+        document.getElementById('action-index').value = index;
+
+        var buttons = document.querySelectorAll('.arr-action-btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            buttons[i].style.opacity = "0.6";
+        }
+
+        buttons[index].style.opacity = "1";
+        buttons[index].style.background = "linear-gradient(90deg, #4CAF50, #8BC34A)";
+
+        setTimeout(function() {
+            document.getElementById('arr-form').submit();
+        }, 1000);
+    }
+
+    function populateActions() {
+        const actionsContainer = document.getElementById('actions-container');
+        actionsContainer.innerHTML = '';
+
+        // Display event if there is one
+        const eventContainer = document.getElementById('event-container');
+        if (event) {
+            eventContainer.innerHTML = `
+                <div class="arr-header">
+                    <h3>${event.name}</h3>
+                    <p>${event.description}</p>
+                    <p class="${parseFloat(event.arr_change) >= 0 ? 'positive-impact' : 'negative-impact'}">
+                        Impact: ${event.arr_change_formatted} €
+                    </p>
+                </div>
+            `;
+        } else {
+            eventContainer.innerHTML = '';
+        }
+
+        // Create buttons for each available action
+        availableActions.forEach((action, index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'arr-action-btn';
+            button.onclick = function() { selectAction(index); };
+
+            const impact = parseFloat(action.arr_change);
+            const impactClass = impact >= 0 ? 'positive-impact' : 'negative-impact';
+
+            button.innerHTML = `
+                <strong>${action.name}</strong><br>
+                ${action.description}<br>
+                <span class="${impactClass}">Impact: ${action.arr_change_formatted} €</span>
+            `;
+
+            actionsContainer.appendChild(button);
+        });
+    }
+
+    function updateProgressBar() {
+        // Get the percentage value from the template
+        const percentage = parseFloat('{{ percentage_formatted }}'.replace(',', '.'));
+
+        // Calculate the width (capped at 100%)
+        const width = Math.min(percentage / 15 * 100, 100);
+
+        // Update the ARR progress bar width
+        const progressBar = document.getElementById('arr-progress');
+        if (progressBar) {
+            progressBar.style.width = width + '%';
+
+            // Change color based on progress
+            if (percentage >= 15) {
+                progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)'; // Green
+            } else if (percentage >= 10) {
+                progressBar.style.background = 'linear-gradient(90deg, #FFC107, #FFEB3B)'; // Yellow
+            } else if (percentage >= 5) {
+                progressBar.style.background = 'linear-gradient(90deg, #FF9800, #FFC107)'; // Orange
+            } else {
+                progressBar.style.background = 'linear-gradient(90deg, #F44336, #FF5722)'; // Red
+            }
+        }
+
+        // Update the month progress bar
+        const currentMonth = parseInt('{{ current_month }}');
+        const maxMonths = parseInt('{{ max_months }}');
+        const monthWidth = (currentMonth / maxMonths) * 100;
+
+        const monthProgressBar = document.getElementById('month-progress');
+        if (monthProgressBar) {
+            monthProgressBar.style.width = monthWidth + '%';
+
+            // Change color based on month progress
+            if (currentMonth >= maxMonths) {
+                monthProgressBar.style.background = 'linear-gradient(90deg, #F44336, #FF5722)'; // Red (time's up!)
+            } else if (currentMonth >= Math.floor(maxMonths * 0.75)) {
+                monthProgressBar.style.background = 'linear-gradient(90deg, #FF9800, #FFC107)'; // Orange (getting close)
+            } else if (currentMonth >= Math.floor(maxMonths * 0.5)) {
+                monthProgressBar.style.background = 'linear-gradient(90deg, #FFC107, #FFEB3B)'; // Yellow (halfway)
+            } else {
+                monthProgressBar.style.background = 'linear-gradient(90deg, #2196F3, #03A9F4)'; // Blue (plenty of time)
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        toggleStats();
+        populateActions();
+        updateProgressBar();
+    });
+</script>
+</body>
+</html>
