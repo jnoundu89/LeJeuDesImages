@@ -35,10 +35,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
         resetAnswersCount();
     }
 
-    // Toggle stats if stats banner exists
-    if (document.getElementById('stats-banner')) {
-        toggleStats();
-    }
+    // Don't toggle stats on load to keep them hidden by default
+    // if (document.getElementById('stats-banner')) {
+    //     toggleStats();
+    // }
 
     // Dynamically load animations.js
     const animationsScript = document.createElement('script');
@@ -400,12 +400,25 @@ function enableNextButton() {
 
 // Fireworks resize handler removed
 
+// Track if the page has just loaded
+let pageJustLoaded = true;
+
 // Function from reverse.html
 function toggleStats() {
     const statsBanner = document.getElementById('stats-banner');
     const toggleButton = document.querySelector('.toggle-stats-btn');
 
     if (statsBanner) {
+        // If page just loaded, keep stats hidden and update flag
+        if (pageJustLoaded) {
+            pageJustLoaded = false;
+            statsBanner.style.display = 'none';
+            if (toggleButton) {
+                toggleButton.textContent = 'Afficher les statistiques';
+            }
+            return;
+        }
+
         // Toggle the display
         if (statsBanner.style.display === 'block') {
             statsBanner.style.display = 'none';
@@ -531,8 +544,8 @@ document.addEventListener('DOMContentLoaded', function() {
         resetAnswersCount();
     }
 
-    // Toggle stats if on reverse page
-    if (document.getElementById('stats-banner')) {
-        toggleStats();
-    }
+    // Don't toggle stats on load to keep them hidden by default
+    // if (document.getElementById('stats-banner')) {
+    //     toggleStats();
+    // }
 });

@@ -1,7 +1,7 @@
 // bouncing-images.js - Implements the bouncing image animation
 
 // Global variable to track if animation is enabled
-let isAnimationEnabled = true;
+let isAnimationEnabled = false;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the bouncing image animation
