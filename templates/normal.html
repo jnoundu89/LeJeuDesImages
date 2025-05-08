@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qui qui c'est le monsieur / la madame ?</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='normal-mode.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='normal-mode.js') }}" defer></script>
+    <style>
+        .choice-btn {
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            background-color: gray; /* Couleur de base grise */
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .choice-btn.correct {
+            background-color: #4CAF50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .choice-btn.incorrect {
+            background-color: #f44336;
+        }
+
+        .choice-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .score-section {
+            border: 2px solid #FFD700; /* Bordure jaune */
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .score-section .score {
+            color: #FFD700; /* Couleur jaune */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-size: 22px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .stats h2, .score-section h2 {
+            color: #FFD700; /* Couleur jaune */
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD700; /* Couleur dorée */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            margin-bottom: 20px;
+            background-color: rgba(0, 51, 102, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .text-align-center {
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.025); } /* Réduction de l'effet de 50% */
+            100% { transform: scale(1); }
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 25% 50% 25%;
+            grid-gap: 10px; /* Réduction de l'espace entre les colonnes */
+            margin-bottom: 10px; /* Réduction de la marge en bas */
+            margin-top: 0px; /* Réduire l'espace en haut */
+        }
+
+        .fireworks {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .stats-banner {
+            display: none;
+            background-color: rgba(0, 51, 102, 0.8);
+            color: #FFD700;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .stats-banner h2 {
+            color: #FFD700;
+            text-align: center;
+            border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stats-banner p {
+            margin: 5px 0;
+        }
+
+        .toggle-stats-btn {
+            background-color: #FFD700;
+            color: #003366;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .toggle-stats-btn:hover {
+            background-color: #FFC107;
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-container">
+        <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+    </div>
+
+    <div class="main-layout">
+        <!-- Colonne gauche - Statistiques -->
+        <div class="stats">
+            <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+            <div id="stats-banner" class="stats-banner">
+                <h2>Statistiques de jeu</h2>
+                <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+                <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+                <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+                <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+            </div>
+        </div>
+
+        <!-- Colonne centrale - Photo et titre -->
+        <div class="center-content">
+            <h1 class="title">Qui qui c'est le monsieur / la madame sur la photo ?</h1>
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <img src="{{ image_url }}" alt="Photo d'employé">
+            <div id="timer" class="timer">Temps restant: 60s</div>
+        </div>
+
+        <!-- Colonne droite - Scores et timer -->
+        <div class="right-content">
+            <div class="stats score-section">
+                <h2>Scores</h2>
+                <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+                <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <form action="/check" method="post">
+        <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+        <input type="hidden" name="correct_company" value="{{ company }}">
+        <input type="hidden" name="correct_team" value="{{ team }}">
+        <input type="hidden" name="correct_name" value="{{ name }}">
+        <input type="hidden" name="correct_position" value="{{ position }}">
+        <input type="hidden" id="score-increment" name="score_increment" value="0">
+        <input type="hidden" id="company-correct" name="company_correct" value="0">
+        <input type="hidden" id="team-correct" name="team_correct" value="0">
+        <input type="hidden" id="name-correct" name="name_correct" value="0">
+        <input type="hidden" id="position-correct" name="position_correct" value="0">
+        <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="max-score" value="{{ maxScore }}">
+
+        <div class="game-section" style="margin-top: -10px;"> <!-- Ajout de la marge négative -->
+            <div>
+                <p id="company-title" class="text-align-center"><strong>ENTREPRISE :</strong> <span class="score" id="company-score">0/1</span></p>
+                <div class="normal-choices" id="company-choices">
+                    {% for comp in companies %}
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ company }}', '{{ comp }}', this, 'company-choices', 'company-title')">{{ comp }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <p id="team-title" class="text-align-center"><strong>ÉQUIPE :</strong> <span class="score" id="team-score">0/1</span></p>
+                <div class="normal-choices" id="team-choices">
+                    {% for tm in teams %}
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ team }}', '{{ tm }}', this, 'team-choices', 'team-title')">{{ tm }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <p id="name-title" class="text-align-center"><strong>NOM :</strong> <span class="score" id="name-score">0/1</span></p>
+                <div class="normal-choices" id="name-choices">
+                    {% for nm in names %}
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ name }}', '{{ nm }}', this, 'name-choices', 'name-title')">{{ nm }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div>
+                <p id="position-title" class="text-align-center"><strong>POSTE :</strong> <span class="score" id="position-score">0/1</span></p>
+                <div class="normal-choices" id="position-choices">
+                    {% for pos in positions %}
+                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ position }}', '{{ pos }}', this, 'position-choices', 'position-title')">{{ pos }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="fireworks-container" class="fireworks"></div>
+    
+    <script>
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Update progress bar
+            const totalQuestions = document.getElementById('total-questions').value;
+            const maxScore = document.getElementById('max-score').value;
+            updateProgressBar(totalQuestions, maxScore / 4);
+            
+            // Reset answers count
+            resetAnswersCount();
+        });
+    </script>
+</body>
+</html>

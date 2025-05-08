@@ -1,0 +1,57 @@
+/* CSS for the normal game mode redesign */
+
+/* Hide statistics by default */
+.stats-banner {
+    display: none !important;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* Reduce photo size */
+.center-content img {
+    max-width: 300px !important;
+}
+
+/* Eliminate scrolling in the game section */
+.game-section {
+    max-height: none !important;
+    overflow-y: visible !important;
+}
+
+/* Sequential display of game parts */
+.game-section > div {
+    display: none;
+}
+
+.game-section > div.active {
+    display: block;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Horizontal alignment for buttons */
+.normal-choices {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.normal-choice-btn {
+    width: auto !important;
+    margin: 5px !important;
+    min-width: 120px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out forwards;
+}

@@ -120,7 +120,8 @@ def init_routes(game_mode_factory: GameModeFactory):
             'currentScore': user_score['score'],
             'total_questions': len(session['used_indices']),
             'current_question': session.get('current_question', 0),
-            'total_employees': len(mode.game_manager.get_game_data(session['data_id']))
+            'total_employees': len(mode.game_manager.get_game_data(session['data_id'])),
+            'use_normal_mode_styles': mode_name == "normal"  # Flag to include normal mode styles
         }
 
         # Add question-specific data
@@ -151,7 +152,11 @@ def init_routes(game_mode_factory: GameModeFactory):
             # Just pass all question data to the template
             template_data.update(question_data)
 
-        return render_template(mode.template, **template_data)
+        # Use a specific template for normal mode
+        if mode_name == "normal":
+            return render_template('normal.html', **template_data)
+        else:
+            return render_template(mode.template, **template_data)
 
     @game_bp.route('/check', methods=['POST'])
     def check():
