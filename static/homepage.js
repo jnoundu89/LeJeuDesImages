@@ -212,6 +212,92 @@ function createScreenShake() {
 
 // Activate Easter egg
 function activateEasterEgg() {
-    // Redirect to Easter egg page immediately
-    window.location.href = '/arr';
+    // Create fireworks effect
+    createFireworks();
+
+    // Redirect to Easter egg page after fireworks display
+    setTimeout(() => {
+        window.location.href = '/arr';
+    }, 3000); // 3 seconds delay to enjoy the fireworks
+}
+
+// Create fireworks effect
+function createFireworks() {
+    // Create container for fireworks
+    const fireworksContainer = document.createElement('div');
+    fireworksContainer.classList.add('fireworks-container');
+    document.body.appendChild(fireworksContainer);
+
+    // Create multiple fireworks with different colors, positions and timings
+    const fireworksCount = 20;
+    const colors = [
+        'rgba(255, 0, 0, 0.8)',    // Red
+        'rgba(0, 255, 0, 0.8)',    // Green
+        'rgba(0, 0, 255, 0.8)',    // Blue
+        'rgba(255, 255, 0, 0.8)',  // Yellow
+        'rgba(255, 0, 255, 0.8)',  // Magenta
+        'rgba(0, 255, 255, 0.8)',  // Cyan
+        'rgba(255, 215, 0, 0.8)',  // Gold
+        'rgba(255, 255, 255, 0.8)' // White
+    ];
+
+    for (let i = 0; i < fireworksCount; i++) {
+        setTimeout(() => {
+            launchFirework(fireworksContainer, colors);
+        }, i * 150); // Stagger the fireworks
+    }
+}
+
+// Launch a single firework
+function launchFirework(container, colors) {
+    // Create the firework element
+    const firework = document.createElement('div');
+    firework.classList.add('firework');
+
+    // Random position, color, and animation properties
+    const x = Math.random() * 100; // Random x position (0-100%)
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const duration = Math.random() * 0.5 + 0.5; // Random duration (0.5-1s)
+
+    // Set custom properties for the animation
+    firework.style.setProperty('--x', `${x}vw`);
+    firework.style.setProperty('--color', color);
+    firework.style.setProperty('--duration', `${duration}s`);
+
+    // Create multiple particles from this firework
+    const particleCount = 12;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('firework');
+
+        // Calculate angle for this particle (full circle divided by particleCount)
+        const angle = (i / particleCount) * (2 * Math.PI);
+        const distance = 20 + Math.random() * 30; // Random distance from center
+
+        // Calculate end position based on angle and distance
+        const xEnd = Math.cos(angle) * distance;
+        const yEnd = Math.sin(angle) * distance;
+
+        // Set custom properties for this particle
+        particle.style.setProperty('--x', `${x}vw`);
+        particle.style.setProperty('--xEnd', `${xEnd}vmin`);
+        particle.style.setProperty('--yEnd', `${-yEnd}vmin`); // Negative to go upwards
+        particle.style.setProperty('--color', color);
+        particle.style.setProperty('--duration', `${duration}s`);
+
+        // Add particle to container
+        container.appendChild(particle);
+
+        // Remove particle after animation completes
+        setTimeout(() => {
+            particle.remove();
+        }, duration * 1000);
+    }
+
+    // Remove firework container after all animations complete
+    setTimeout(() => {
+        if (container.parentNode) {
+            container.remove();
+        }
+    }, 3000);
 }
