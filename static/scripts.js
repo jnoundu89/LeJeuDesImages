@@ -325,9 +325,9 @@ function enableNextButton() {
         showConfetti = correctAnswers === 4;
     }
 
-    // For other game modes, always show confetti on completion
+    // For other game modes, only show confetti if there was at least one correct answer
     if (!isReverseMode && !document.querySelector('.normal-choices')) {
-        showConfetti = true;
+        showConfetti = correctAnswers > 0;
     }
 
     // Create confetti effect for successful completions
