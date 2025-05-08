@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize mode cards interaction
     initModeCards();
 
-    // Initialize particle background
+    // Initialize a particle background
     initParticleBackground();
 
     // Initialize typing effect
@@ -47,6 +47,26 @@ function initAnimations() {
 // Initialize mode cards interaction
 function initModeCards() {
     const modeCards = document.querySelectorAll('.mode-card');
+    const modeButtons = document.querySelectorAll('.mode-button');
+
+    // Add fireworks effect to all play buttons
+    modeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            // Prevent default to stop immediate navigation
+            e.preventDefault();
+
+            // Store the href to navigate to later
+            const href = this.getAttribute('href');
+
+            // Create fireworks effect
+            createFireworks();
+
+            // Navigate after a delay to enjoy the fireworks
+            setTimeout(() => {
+                window.location.href = href;
+            }, 500); // 1 second delay to enjoy the fireworks
+        });
+    });
 
     modeCards.forEach(card => {
         // Add hover effect class
@@ -57,20 +77,19 @@ function initModeCards() {
 
         // Add click effect
         card.addEventListener('click', function(e) {
-            // Don't trigger if clicking on the button
+            // Don't trigger if clicking on the button (it has its own handler now)
             if (e.target.classList.contains('mode-button')) return;
 
-            // Find the button in this card and click it
+            // Find the button in this card
             const button = this.querySelector('.mode-button');
             if (button) {
-                // Add jello animation before clicking
+                // Add jello animation
                 this.classList.add('jello');
 
                 // Remove the animation after it completes
                 setTimeout(() => {
                     this.classList.remove('jello');
-                    button.click();
-                }, 500);
+                }, 1000); // 1 second delay for animation
             }
         });
     });
