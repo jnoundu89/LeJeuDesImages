@@ -1,15 +1,81 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap');
+
+/* Modern CSS Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+:root {
+    /* Primary Colors */
+    --primary-dark: #1a1c6c;
+    --primary: #3f51b5;
+    --primary-light: #7986cb;
+
+    /* Secondary Colors */
+    --secondary-dark: #00796b;
+    --secondary: #009688;
+    --secondary-light: #4db6ac;
+
+    /* Accent Colors */
+    --accent-dark: #ffc107;
+    --accent: #ffeb3b;
+    --accent-light: #fff59d;
+
+    /* Neutral Colors */
+    --dark: #121212;
+    --dark-surface: #1e1e1e;
+    --medium-dark: #2d2d2d;
+    --medium: #424242;
+    --light: #f5f5f5;
+
+    /* Feedback Colors */
+    --success: #4caf50;
+    --warning: #ff9800;
+    --error: #f44336;
+
+    /* Typography */
+    --font-primary: 'Poppins', 'Segoe UI', sans-serif;
+    --font-secondary: 'Montserrat', sans-serif;
+
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+    --space-xxl: 3rem;
+
+    /* Borders */
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 24px;
+
+    /* Shadows */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.14);
+    --shadow-xl: 0 12px 24px rgba(0, 0, 0, 0.16);
+
+    /* Animations */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-bounce: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
 body {
-    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #1a2a6c, #2a4858);
-    color: #ffffff;
-    padding: 0px;
+    font-family: var(--font-primary);
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+    color: var(--light);
+    padding: 0;
     position: relative;
     min-height: 100vh;
     margin: 0;
     background-attachment: fixed;
     background-size: cover;
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
 /* Styles from result.html */
@@ -24,12 +90,19 @@ body.result-page {
     margin-bottom: 10px; /* Réduction de la marge en bas */
 }
 
-h1 {
-    color: #ffffff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    margin-bottom: 15px;
-    font-size: 28px;
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-secondary);
+    margin-top: 0;
+    line-height: 1.2;
     font-weight: 700;
+}
+
+h1 {
+    color: var(--light);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: var(--space-lg);
+    font-size: 2.5rem;
     letter-spacing: 0.5px;
     position: relative;
     display: inline-block;
@@ -40,115 +113,393 @@ h1:after {
     position: absolute;
     width: 60%;
     height: 3px;
-    background: linear-gradient(90deg, rgba(106, 17, 203, 0.8), rgba(37, 117, 252, 0));
+    background: linear-gradient(90deg, var(--primary), var(--primary-light), transparent);
     bottom: -8px;
     left: 20%;
-    border-radius: 2px;
+    border-radius: var(--border-radius-sm);
+    transition: width var(--transition-medium);
 }
 
-/* Grille principale en 3 colonnes */
+h1:hover:after {
+    width: 80%;
+    left: 10%;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: var(--space-md);
+    color: var(--accent-dark);
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-sm);
+    color: var(--accent-light);
+}
+
+p {
+    margin-bottom: var(--space-md);
+}
+
+/* Layout Components */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-md);
+}
+
+/* Main 3-column grid layout */
 .main-layout {
     display: grid;
-    grid-template-columns: 25% 50% 25%;
-    grid-gap: 10px; /* Réduction de l'espace entre les colonnes */
-    margin-top: 0px; /* Réduire l'espace en haut */
-    margin-bottom: 10px; /* Réduction de la marge en bas */
+    grid-template-columns: minmax(200px, 1fr) minmax(300px, 2fr) minmax(200px, 1fr);
+    grid-gap: var(--space-md);
+    margin: var(--space-md) auto;
+    max-width: 1200px;
+    padding: 0 var(--space-sm);
+    align-items: start;
 }
 
-/* Colonne centrale avec la photo */
+/* Center column with photo */
 .center-content {
     text-align: center;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: var(--border-radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
 }
 
+.center-content {
+    position: relative;
+}
+
+.center-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.center-content:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
+}
+
+/* This pseudo-element extends below the element to maintain hover when element moves up */
+.center-content::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 20px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    pointer-events: auto;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+/* Right column with scores */
 .right-content {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--space-lg);
 }
 
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .main-layout {
+        grid-template-columns: 1fr 2fr;
+        grid-gap: var(--space-sm);
+    }
+
+    .right-content {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    img {
+        max-width: 250px;
+        max-height: 250px;
+    }
+
+    .title {
+        font-size: 24px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        margin: var(--space-sm) auto;
+    }
+
+    .center-content {
+        order: 1;
+        padding: var(--space-sm);
+    }
+
+    .right-content {
+        order: 3;
+        flex-direction: column;
+    }
+
+    img {
+        max-width: 200px;
+        max-height: 200px;
+    }
+
+    .game-section {
+        max-height: none;
+        overflow-y: visible;
+    }
+
+    .title {
+        font-size: 20px;
+        padding: 8px;
+        margin-bottom: 15px;
+    }
+
+    .normal-choice-btn {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.9rem;
+    }
+}
+
+/* Image styling */
 img {
-    max-width: 360px; /* Augmenté de 20% */
-    border-radius: 10px;
-    background-color: #ffffff;
-    padding: 10px;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-lg);
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: var(--space-sm);
     margin: 0 auto;
+    box-shadow: var(--shadow-md);
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    object-fit: cover;
 }
 
-/* Style amélioré pour les scores */
+/* Image container with next button */
+.image-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: var(--space-md) 0;
+    width: 100%;
+}
+
+.image-container img {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.next-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--space-md);
+}
+
+/* Photo and next button container */
+.photo-next-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin: var(--space-md) 0;
+    flex-wrap: wrap;
+}
+
+.photo-next-container img {
+    max-width: 280px;
+    max-height: 280px;
+}
+
+.photo-next-container button {
+    margin-left: auto;
+}
+
+.profile-image {
+    max-width: 280px;
+    max-height: 280px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    filter: brightness(1.05);
+    object-fit: contain;
+}
+
+img:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Score styling */
 .score {
     display: inline-block;
-    font-size: 22px;
-    font-weight: bold;
-    color: #FFD700; /* Couleur dorée pour les scores */
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    margin-left: 10px;
-    transition: all 0.3s ease;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent-dark);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    margin-left: var(--space-sm);
+    transition: all var(--transition-medium);
+    position: relative;
+    padding: 0 var(--space-xs);
 }
 
-/* Score principal */
+.score:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--accent-dark);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--transition-medium);
+}
+
+/* This pseudo-element extends below the element to maintain hover when element moves up */
+.score::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    pointer-events: auto;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+.score:hover {
+    color: var(--accent);
+    transform: translateY(-2px);
+}
+
+.score:hover:after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Current score */
 #current-score {
-    border: 2px solid #2575fc !important; /* Bordure bleue */
-    padding: 5px;
-    border-radius: 5px;
-    margin-top: 10px;
-    color: #2575fc !important; /* Couleur bleue */
-    font-size: 22px;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+    border: 2px solid var(--primary) !important;
+    padding: var(--space-sm);
+    border-radius: var(--border-radius-md);
+    margin-top: var(--space-sm);
+    color: var(--primary-light) !important;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-medium);
+    background: rgba(63, 81, 181, 0.1);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+}
+
+/* This pseudo-element extends below the element to maintain hover when element moves up */
+#current-score::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 12px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    pointer-events: auto;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+#current-score:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
 }
 
 #best-score {
-    font-size: 20px;
-    color: #FFD700;
-    margin: 15px 0;
+    font-size: 1.2rem;
+    color: var(--accent-dark);
+    margin: var(--space-md) 0;
 }
 
-/* Style pour le score élevé */
+/* High score */
 #high-score {
-    border: 2px solid #FF4500; /* Bordure orange */
-    padding: 5px;
-    border-radius: 5px;
-    margin-top: 10px;
-    color: #FFD700; /* Couleur jaune pour le score */
-    font-size: 22px;
-    font-weight: bold;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
+    border: 2px solid var(--accent-dark);
+    padding: var(--space-sm);
+    border-radius: var(--border-radius-md);
+    margin-top: var(--space-sm);
+    color: var(--accent-dark);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-medium);
+    background: rgba(255, 193, 7, 0.1);
+    box-shadow: var(--shadow-sm);
+    position: relative;
 }
 
-/* Barre de progression améliorée */
+/* This pseudo-element extends below the element to maintain hover when element moves up */
+#high-score::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 12px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    pointer-events: auto;
+    z-index: 10; /* Ensure it's above other elements */
+}
+
+#high-score:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+/* Progress Bar */
 .progress-bar {
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    margin: 15px 0;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: var(--border-radius-xl);
+    margin: var(--space-md) 0;
     overflow: hidden;
-    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.1);
     padding: 3px;
+    position: relative;
 }
 
 .progress-bar-fill {
     height: 20px;
     width: 0;
-    background: linear-gradient(to right, #6a11cb, #2575fc);
-    border-radius: 20px;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    border-radius: var(--border-radius-xl);
     text-align: center;
     line-height: 20px;
     color: white;
     font-weight: 600;
+    font-size: 0.85rem;
     letter-spacing: 1px;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 0 15px rgba(106, 17, 203, 0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    transition: width 1s var(--transition-bounce);
+    box-shadow: 0 0 15px rgba(var(--primary-dark), 0.5);
     position: relative;
     overflow: hidden;
+    z-index: 1;
 }
 
-.progress-bar-fill:after {
+.progress-bar-fill:before {
     content: '';
     position: absolute;
     top: 0;
@@ -159,31 +510,54 @@ img {
                 rgba(255, 255, 255, 0) 0%, 
                 rgba(255, 255, 255, 0.4) 50%, 
                 rgba(255, 255, 255, 0) 100%);
-    animation: progressShine 2s infinite;
+    animation: progressShine 2.5s infinite;
+    z-index: -1;
+}
+
+.progress-bar-fill:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
 }
 
 @keyframes progressShine {
-    0% { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+    0% { transform: translateX(-200%); }
+    100% { transform: translateX(200%); }
 }
 
-/* Timer amélioré */
+/* Progress bar hover effect */
+.progress-bar:hover .progress-bar-fill {
+    background: linear-gradient(to right, var(--secondary), var(--primary));
+    box-shadow: 0 0 20px rgba(var(--primary-dark), 0.7);
+}
+
+/* Timer styling */
 .timer {
-    font-size: 28px;
+    font-size: 1.5rem;
     font-weight: 700;
-    padding: 15px;
-    margin-top: 15px;
-    background: rgba(255, 255, 255, 0.1);
+    font-family: var(--font-secondary);
+    padding: var(--space-md);
+    margin: var(--space-md) auto;
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    transition: all 0.3s ease;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-medium);
     position: relative;
     overflow: hidden;
+    max-width: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .timer:before {
@@ -193,9 +567,28 @@ img {
     left: 0;
     width: 100%;
     height: 3px;
-    background: linear-gradient(to right, #6a11cb, #2575fc);
+    background: linear-gradient(to right, var(--primary), var(--secondary));
     animation: timerProgress 60s linear forwards;
     transform-origin: left;
+    z-index: 1;
+}
+
+.timer:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, 
+                rgba(255, 255, 255, 0.05) 0%, 
+                rgba(255, 255, 255, 0) 100%);
+    z-index: 0;
+}
+
+.timer span {
+    position: relative;
+    z-index: 2;
 }
 
 @keyframes timerProgress {
@@ -204,152 +597,362 @@ img {
 }
 
 .timer.warning {
-    color: #FFC107;
-    animation: timerPulse 1s infinite alternate;
+    color: var(--warning);
+    animation: timerPulse 1.2s infinite alternate;
 }
 
 .timer.danger {
-    color: #FF5252;
+    color: var(--error);
     animation: timerShake 0.5s infinite;
+    background: rgba(244, 67, 54, 0.1);
 }
 
 @keyframes timerPulse {
-    from { box-shadow: 0 8px 32px rgba(255, 193, 7, 0.2); }
-    to { box-shadow: 0 8px 32px rgba(255, 193, 7, 0.6); }
+    from { 
+        box-shadow: 0 8px 32px rgba(255, 152, 0, 0.2);
+        transform: scale(1);
+    }
+    to { 
+        box-shadow: 0 8px 32px rgba(255, 152, 0, 0.4);
+        transform: scale(1.03);
+    }
 }
 
 @keyframes timerShake {
     0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
-    20%, 40%, 60%, 80% { transform: translateX(2px); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
 }
 
-/* Style pour la section des statistiques */
+/* Stats section styling */
 .stats {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    padding: var(--space-sm);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
     text-align: left;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    max-width: 250px;
+    margin: 0 auto;
+    font-size: 0.85rem;
+}
+
+.stats:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, 
+                rgba(var(--primary-dark), 0.05) 0%, 
+                rgba(var(--secondary-dark), 0.05) 100%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+}
+
+/* This pseudo-element extends below the element to maintain hover when element moves up */
+.stats::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 20px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    pointer-events: auto;
+    z-index: 10; /* Ensure it's above other elements */
 }
 
 .stats:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-xl);
 }
 
-.stats h3 {
-    color: #FFD700;
+.stats:hover:before {
+    opacity: 1;
+}
+
+.stats h2, .stats h3 {
+    color: var(--accent-dark);
     margin-top: 0;
-    border-bottom: 2px solid rgba(255, 215, 0, 0.5);
-    padding-bottom: 10px;
-    margin-bottom: 10px; /* Réduction de la marge en bas */
+    border-bottom: 2px solid rgba(255, 193, 7, 0.3);
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-md);
+    position: relative;
+}
+
+.stats h2:after, .stats h3:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 30%;
+    height: 2px;
+    background: var(--accent-dark);
+    transition: width var(--transition-medium);
+}
+
+.stats:hover h2:after, .stats:hover h3:after {
+    width: 100%;
 }
 
 .stats p {
-    margin: 5px 0; /* Réduction de la marge en bas */
-    font-size: 16px;
-    transition: all 0.3s ease;
-    padding-left: 10px;
+    margin: var(--space-xs) 0;
+    font-size: 1rem;
+    transition: all var(--transition-medium);
+    padding-left: var(--space-sm);
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stats p:before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: var(--primary-light);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all var(--transition-medium);
 }
 
 .stats p:hover {
-    transform: translateX(5px);
-    color: #FFD700;
+    transform: translateX(var(--space-sm));
+    color: var(--accent-dark);
+    padding-left: var(--space-md);
 }
 
-/* Boutons et autres styles existants... */
-button {
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-    color: white;
+.stats p:hover:before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Button styling */
+button, .btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--light);
     border: none;
-    padding: 12px 24px;
+    padding: var(--space-sm) var(--space-lg);
     text-align: center;
     text-decoration: none;
-    display: block;
-    font-size: 16px;
+    display: inline-block;
+    font-size: 1rem;
     font-weight: 600;
-    margin: 12px auto;
+    font-family: var(--font-secondary);
+    margin: var(--space-sm) auto;
     cursor: pointer;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-medium);
+    box-shadow: var(--shadow-md);
     position: relative;
     overflow: hidden;
     z-index: 1;
+    letter-spacing: 0.5px;
+    outline: none;
 }
 
-button:before {
+button:before, .btn:before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 0%;
     height: 100%;
-    background: linear-gradient(135deg, #2575fc, #6a11cb);
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
     transition: all 0.4s ease;
     z-index: -1;
 }
 
-button:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 7px 20px rgba(0, 0, 0, 0.3);
+/* This pseudo-element extends below the element to maintain hover when element moves up */
+button::after, .btn::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 20px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    pointer-events: auto;
+    z-index: 10; /* Ensure it's above other elements */
 }
 
-button:hover:before {
+button:hover, .btn:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+button:hover:before, .btn:hover:before {
+    width: 100%;
+}
+
+button:active, .btn:active {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+button:focus, .btn:focus {
+    box-shadow: 0 0 0 3px rgba(var(--primary-light), 0.5);
+}
+
+/* Button variations */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+}
+
+.btn-primary:before {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+}
+
+.btn-secondary:before {
+    background: linear-gradient(135deg, var(--secondary-light), var(--secondary));
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, var(--accent-dark), var(--accent));
+    color: var(--dark);
+}
+
+.btn-accent:before {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:before {
+    background: var(--primary);
+    opacity: 0.1;
+}
+
+.btn-outline:hover {
+    color: var(--light);
+}
+
+.btn-outline:hover:before {
+    opacity: 1;
+}
+
+.btn-large {
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1.2rem;
+}
+
+.btn-small {
+    padding: var(--space-xs) var(--space-md);
+    font-size: 0.9rem;
+}
+
+.btn-block {
+    display: block;
     width: 100%;
 }
 
 .top-right {
     position: absolute;
-    top: 10px; /* Réduction de la marge en bas */
-    right: 10px; /* Réduction de la marge en bas */
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 10;
 }
 
-.disabled-btn {
-    background: linear-gradient(135deg, rgba(37, 117, 252, 0.3), rgba(106, 17, 203, 0.3));
+.disabled-btn, button:disabled, .btn:disabled {
+    background: linear-gradient(135deg, rgba(var(--primary), 0.3), rgba(var(--secondary), 0.3));
     cursor: not-allowed;
     opacity: 0.7;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
+.disabled-btn:before, button:disabled:before, .btn:disabled:before {
+    display: none;
+}
+
+/* Game section styling */
 .game-section {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px; /* Réduction de l'espace entre les colonnes */
-    margin-top: 5px !important; /* Réduction de la marge en haut et override de l'inline style */
-    margin-bottom: 5px; /* Réduction de la marge en bas */
-    max-height: calc(100vh - 350px); /* Limiter la hauteur pour éviter le défilement */
-    overflow-y: auto; /* Ajouter un défilement vertical si nécessaire */
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: var(--space-md) auto;
+    max-width: 800px;
+    padding: 0 var(--space-md);
+    max-height: calc(100vh - 350px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-light) var(--dark-surface);
 }
 
-.choices {
+/* Game section item */
+.game-section > div {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: var(--border-radius-md);
+    padding: var(--space-sm);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-medium);
+}
+
+.game-section > div:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.game-section::-webkit-scrollbar {
+    width: 8px;
+}
+
+.game-section::-webkit-scrollbar-track {
+    background: var(--dark-surface);
+    border-radius: var(--border-radius-md);
+}
+
+.game-section::-webkit-scrollbar-thumb {
+    background-color: var(--primary-light);
+    border-radius: var(--border-radius-md);
+}
+
+.choices, .normal-choices {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
 }
 
+/* Choice buttons */
 .choice-btn {
     width: 100%;
-    margin: 6px 0;
-    padding: 10px;
-    background: rgba(37, 117, 252, 0.1);
-    color: white;
-    border: 1px solid rgba(37, 117, 252, 0.3);
+    margin: var(--space-xs) 0;
+    padding: var(--space-md);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    border: 1px solid rgba(var(--primary-light), 0.3);
     cursor: pointer;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    border-radius: var(--border-radius-md);
+    transition: all var(--transition-medium);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     font-weight: 500;
+    font-family: var(--font-secondary);
     letter-spacing: 0.5px;
     position: relative;
     overflow: hidden;
     z-index: 1;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
 }
 
 .choice-btn:before {
@@ -359,67 +962,135 @@ button:hover:before {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+    background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0), 
+                rgba(255, 255, 255, 0.1), 
+                rgba(255, 255, 255, 0));
     transition: left 0.7s ease;
     z-index: -1;
 }
 
+.choice-btn:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-medium);
+}
+
+/* Add a hover-fix class that can be used for any element with hover issues */
+.hover-fix {
+    position: relative;
+}
+
+.hover-fix::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 20px; /* Increased height to ensure hover state is maintained when clicking from bottom */
+    z-index: 10;
+    pointer-events: auto; /* Ensure clicks on this element maintain the hover state */
+}
+
+.choice-btn {
+    /* Add the hover-fix class via JavaScript */
+    position: relative;
+}
+
 .choice-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(37, 117, 252, 0.2);
-    background: rgba(37, 117, 252, 0.2);
-    border-color: rgba(37, 117, 252, 0.5);
+    box-shadow: var(--shadow-md);
+    background: rgba(var(--primary), 0.1);
+    border-color: rgba(var(--primary-light), 0.5);
 }
 
 .choice-btn:hover:before {
     left: 100%;
 }
 
-.choice-btn:focus {
-    outline: 2px solid #2575fc;
-    outline-offset: 2px;
-    box-shadow: 0 0 0 4px rgba(37, 117, 252, 0.3);
+.choice-btn:hover:after {
+    transform: scaleX(1);
 }
 
+.choice-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(var(--primary-light), 0.3);
+}
+
+/* Correct and incorrect states */
 .choice-btn.correct {
-    background: linear-gradient(135deg, rgba(37, 117, 252, 0.8), rgba(106, 17, 203, 0.8));
-    border-color: rgba(37, 117, 252, 0.5);
-    box-shadow: 0 0 20px rgba(37, 117, 252, 0.4);
+    background: linear-gradient(135deg, rgba(var(--success), 0.8), rgba(var(--success), 0.6));
+    border-color: var(--success);
+    box-shadow: 0 0 20px rgba(var(--success), 0.4);
     animation: correctPulse 1.5s infinite;
     transform: translateY(-3px);
+    color: white;
 }
 
 .choice-btn.incorrect {
-    background: linear-gradient(135deg, rgba(244, 67, 54, 0.8), rgba(255, 128, 128, 0.8));
-    border-color: rgba(244, 67, 54, 0.5);
-    box-shadow: 0 0 20px rgba(244, 67, 54, 0.4);
+    background: linear-gradient(135deg, rgba(var(--error), 0.8), rgba(var(--error), 0.6));
+    border-color: var(--error);
+    box-shadow: 0 0 20px rgba(var(--error), 0.4);
     animation: incorrectShake 0.5s;
+    color: white;
 }
 
+/* Normal choice buttons (alternative style) */
 .normal-choice-btn {
-    background: linear-gradient(90deg, #6a11cb, #2575fc); /* Couleurs similaires */
-    color: #fff;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    color: var(--light);
     border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: 16px;
+    border-radius: var(--border-radius-md);
+    padding: var(--space-sm) var(--space-md);
+    margin: var(--space-xs) 0;
+    font-size: 0.95rem;
+    font-family: var(--font-secondary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-medium);
     text-align: center;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+}
+
+.normal-choice-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-light), var(--primary));
+    transition: width var(--transition-medium);
+    z-index: -1;
 }
 
 .normal-choice-btn:hover {
-    background: linear-gradient(90deg, #2575fc, #6a11cb); /* Inversion des couleurs au survol */
-    transform: scale(1.05);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: var(--shadow-md);
+}
+
+.normal-choice-btn:hover:before {
+    width: 100%;
 }
 
 .normal-choice-btn.correct {
-    background-color: #4CAF50;
+    background: var(--success);
     animation: pulse 1.5s infinite;
 }
 
 .normal-choice-btn.incorrect {
-    background-color: #f44336;
+    background: var(--error);
 }
 
 @keyframes pulse {
@@ -506,6 +1177,7 @@ h1 .score-highlight {
     animation: glow 1.5s infinite alternate;
 }
 
+/* Enhanced animations */
 @keyframes glow {
     from {
         text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
@@ -514,6 +1186,106 @@ h1 .score-highlight {
         text-shadow: 0 0 20px rgba(255, 215, 0, 1);
     }
 }
+
+/* Processing animation for waiting state */
+@keyframes processing {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.processing {
+    animation: processing 0.6s infinite;
+    background: linear-gradient(135deg, var(--primary-light), var(--secondary-light)) !important;
+    border-color: var(--primary) !important;
+    color: var(--light) !important;
+}
+
+/* Score update animation */
+@keyframes scoreUpdated {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.1); }
+    40% { transform: scale(0.95); }
+    60% { transform: scale(1.05); }
+    80% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+}
+
+.score-updated {
+    animation: scoreUpdated 1s ease;
+    color: var(--accent-dark) !important;
+}
+
+/* Success and error icons */
+.success-icon {
+    color: var(--success);
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 5px;
+    animation: successPop 0.5s ease;
+}
+
+.error-icon {
+    color: var(--error);
+    font-weight: bold;
+    display: inline-block;
+    margin-right: 5px;
+    animation: errorPop 0.5s ease;
+}
+
+@keyframes successPop {
+    0% { transform: scale(0); opacity: 0; }
+    60% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes errorPop {
+    0% { transform: scale(0) rotate(0deg); opacity: 0; }
+    60% { transform: scale(1.2) rotate(20deg); opacity: 1; }
+    80% { transform: scale(1.1) rotate(-15deg); opacity: 1; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Button hover animation */
+@keyframes buttonHover {
+    0% { box-shadow: 0 0 0 0 rgba(var(--primary), 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(var(--primary), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--primary), 0); }
+}
+
+/* Floating animation for cards */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Staggered fade in for multiple elements */
+.stagger-fade-in > * {
+    opacity: 0;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.stagger-fade-in > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger-fade-in > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger-fade-in > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger-fade-in > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger-fade-in > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger-fade-in > *:nth-child(6) { animation-delay: 0.6s; }
 
 /* Styles from index.html */
 .shake {
@@ -535,13 +1307,17 @@ h1 .score-highlight {
 }
 
 .stats-banner {
-    display: none;
+    display: none; /* Hidden by default */
     background-color: rgba(0, 51, 102, 0.8);
     color: #FFD700;
-    padding: 10px;
+    padding: 8px;
     border-radius: 5px;
-    margin-top: 10px;
+    margin-top: 8px;
     text-align: left;
+    font-size: 0.85rem;
+    max-width: 250px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .stats-banner h2 {

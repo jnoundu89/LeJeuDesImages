@@ -39,35 +39,143 @@ document.addEventListener('DOMContentLoaded', (event) => {
     if (document.getElementById('stats-banner')) {
         toggleStats();
     }
+
+    // Dynamically load animations.js
+    const animationsScript = document.createElement('script');
+    animationsScript.src = '/static/animations.js';
+    animationsScript.defer = true;
+    document.head.appendChild(animationsScript);
+
+    // Load test script in development mode
+    // This can be removed in production
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        const testScript = document.createElement('script');
+        testScript.src = '/static/test.js';
+        testScript.defer = true;
+        document.head.appendChild(testScript);
+        console.log('Test mode enabled. Check console for test results.');
+    }
 });
 
 function checkAnswer(correct, selected, element, currentScoreId, titleId) {
-    const buttons = document.querySelectorAll(`#${currentScoreId} button.choice-btn`);
-    buttons.forEach(btn => {
-        btn.disabled = true;
-    });
+    // Add a subtle animation to the selected element before showing result
+    element.classList.add('processing');
 
-    if (correct === selected) {
-        element.classList.add('correct');
-        document.getElementById(titleId).textContent = `${titleId.split('-')[0]}: 1/1`;
-        correctAnswers += 1;
-        currentScore += 1;
-    } else {
-        element.classList.add('incorrect');
+    // Delay the result to create anticipation
+    setTimeout(() => {
+        // Remove processing class
+        element.classList.remove('processing');
+
+        // Disable all buttons in this category
+        const buttons = document.querySelectorAll(`#${currentScoreId} button.choice-btn`);
         buttons.forEach(btn => {
-            if (btn.textContent === correct) {
-                btn.classList.add('correct');
-            }
+            btn.disabled = true;
+            btn.classList.add('disabled-btn');
         });
-        document.getElementById(titleId).textContent = `${titleId.split('-')[0]}: 0/1`;
+
+        // Check if answer is correct
+        if (correct === selected) {
+            // Correct answer animation and updates
+            element.classList.add('correct');
+            element.classList.remove('disabled-btn');
+
+            // Update title with success icon
+            document.getElementById(titleId).innerHTML = `${titleId.split('-')[0]}: <span class="success-icon">✓</span> 1/1`;
+
+            // Update scores
+            correctAnswers += 1;
+            currentScore += 1;
+
+            // Add confetti effect for correct answer
+            createConfetti(element);
+        } else {
+            // Incorrect answer animation and updates
+            element.classList.add('incorrect');
+
+            // Highlight the correct answer
+            buttons.forEach(btn => {
+                if (btn.textContent === correct) {
+                    btn.classList.add('correct');
+                    btn.classList.remove('disabled-btn');
+                }
+            });
+
+            // Update title with error icon
+            document.getElementById(titleId).innerHTML = `${titleId.split('-')[0]}: <span class="error-icon">✗</span> 0/1`;
+        }
+
+        // Update the score display with animation
+        const scoreElement = document.getElementById('current-score');
+        scoreElement.classList.add('score-updated');
+        scoreElement.textContent = `Score actuel : ${currentScore} / ${maxScore}`;
+
+        // Remove animation class after animation completes
+        setTimeout(() => {
+            scoreElement.classList.remove('score-updated');
+        }, 1000);
+
+        // Check if all questions are answered
+        answersCount += 1;
+        if (answersCount === 4) {
+            enableNextButton();
+            clearInterval(timerInterval);
+        }
+    }, 300); // 300ms delay for anticipation
+}
+
+// Function to create confetti effect
+function createConfetti(element) {
+    // Get element position
+    const rect = element.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Create confetti container if it doesn't exist
+    let confettiContainer = document.getElementById('confetti-container');
+    if (!confettiContainer) {
+        confettiContainer = document.createElement('div');
+        confettiContainer.id = 'confetti-container';
+        confettiContainer.style.position = 'fixed';
+        confettiContainer.style.top = '0';
+        confettiContainer.style.left = '0';
+        confettiContainer.style.width = '100%';
+        confettiContainer.style.height = '100%';
+        confettiContainer.style.pointerEvents = 'none';
+        confettiContainer.style.zIndex = '9999';
+        document.body.appendChild(confettiContainer);
     }
 
-    answersCount += 1;
-    document.getElementById('current-score').textContent = `Score actuel : ${currentScore} / ${maxScore}`;
+    // Create confetti particles
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
 
-    if (answersCount === 4) {
-        enableNextButton();
-        clearInterval(timerInterval);
+    for (let i = 0; i < 30; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'absolute';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.borderRadius = '50%';
+        confetti.style.left = `${centerX}px`;
+        confetti.style.top = `${centerY}px`;
+        confetti.style.transform = 'translate(-50%, -50%)';
+        confetti.style.opacity = '1';
+        confetti.style.transition = 'all 1s ease-out';
+
+        confettiContainer.appendChild(confetti);
+
+        // Animate confetti
+        setTimeout(() => {
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 50 + Math.random() * 100;
+            confetti.style.left = `${centerX + Math.cos(angle) * distance}px`;
+            confetti.style.top = `${centerY + Math.sin(angle) * distance}px`;
+            confetti.style.opacity = '0';
+        }, 10);
+
+        // Remove confetti after animation
+        setTimeout(() => {
+            confettiContainer.removeChild(confetti);
+        }, 1000);
     }
 }
 
@@ -117,9 +225,21 @@ function checkImage(correct, selected, element) {
 
 function updateProgressBar(current, total) {
     const progressBarFill = document.querySelector('.progress-bar-fill');
-    const percentage = (current / total) * 100;
-    progressBarFill.style.width = percentage + '%';
-    progressBarFill.textContent = `${current}/${total}`;
+
+    // Ensure current is at least 1 to make the progress bar visible at the beginning
+    const displayCurrent = Math.max(1, current);
+
+    // Ensure minimum width for visibility (10% at the beginning)
+    const percentage = (displayCurrent / total) * 100;
+    progressBarFill.style.width = Math.max(10, percentage) + '%';
+
+    // Make sure the text is visible by using a contrasting color and larger font
+    progressBarFill.style.color = 'white';
+    progressBarFill.style.fontWeight = 'bold';
+    progressBarFill.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.7)';
+
+    // Display the current progress
+    progressBarFill.textContent = `${displayCurrent}/${Math.round(total)}`;
 }
 
 function resetAnswersCount() {
@@ -194,15 +314,88 @@ function enableNextButton() {
     // Check if we're in reverse mode
     const isReverseMode = document.getElementById('image-choices') !== null;
 
-    if (answersCount === 4 || (isReverseMode && document.getElementById('correct-answer').value === "1")) {
-        nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    // Determine if we should show confetti based on game mode and success
+    let showConfetti = false;
+
+    if (isReverseMode) {
+        // In reverse mode, show confetti if the answer was correct
+        showConfetti = document.getElementById('correct-answer').value === "1";
     } else {
+        // In normal mode, show confetti if all answers are correct
+        showConfetti = correctAnswers === 4;
+    }
+
+    // For other game modes, always show confetti on completion
+    if (!isReverseMode && !document.querySelector('.normal-choices')) {
+        showConfetti = true;
+    }
+
+    // Create confetti effect for successful completions
+    if (showConfetti) {
+        // Create confetti at the center of the screen
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        // Create confetti container if it doesn't exist
+        let confettiContainer = document.getElementById('confetti-container');
+        if (!confettiContainer) {
+            confettiContainer = document.createElement('div');
+            confettiContainer.id = 'confetti-container';
+            confettiContainer.style.position = 'fixed';
+            confettiContainer.style.top = '0';
+            confettiContainer.style.left = '0';
+            confettiContainer.style.width = '100%';
+            confettiContainer.style.height = '100%';
+            confettiContainer.style.pointerEvents = 'none';
+            confettiContainer.style.zIndex = '9999';
+            document.body.appendChild(confettiContainer);
+        }
+
+        // Create more confetti for a bigger celebration
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
+        for (let i = 0; i < 100; i++) {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'absolute';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+            confetti.style.left = `${centerX}px`;
+            confetti.style.top = `${centerY}px`;
+            confetti.style.transform = 'translate(-50%, -50%)';
+            confetti.style.opacity = '1';
+            confetti.style.transition = 'all 1.5s ease-out';
+
+            confettiContainer.appendChild(confetti);
+
+            // Animate confetti
+            setTimeout(() => {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = 100 + Math.random() * 200;
+                confetti.style.left = `${centerX + Math.cos(angle) * distance}px`;
+                confetti.style.top = `${centerY + Math.sin(angle) * distance}px`;
+                confetti.style.opacity = '0';
+                confetti.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 360}deg)`;
+            }, 10);
+
+            // Remove confetti after animation
+            setTimeout(() => {
+                if (confettiContainer.contains(confetti)) {
+                    confettiContainer.removeChild(confetti);
+                }
+            }, 1500);
+        }
+    } else {
+        // Only add shake effect if confetti is not shown
         document.body.classList.add('shake');
         setTimeout(() => {
             document.body.classList.remove('shake');
-            nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 500);
     }
+
+    // Always scroll to the next button
+    nextButton.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // Fireworks resize handler removed
@@ -210,12 +403,36 @@ function enableNextButton() {
 // Function from reverse.html
 function toggleStats() {
     const statsBanner = document.getElementById('stats-banner');
-    if (statsBanner && (statsBanner.style.display === 'none' || statsBanner.style.display === '')) {
-        statsBanner.style.display = 'block';
-    } else if (statsBanner) {
-        statsBanner.style.display = 'none';
+    const toggleButton = document.querySelector('.toggle-stats-btn');
+
+    if (statsBanner) {
+        // Toggle the display
+        if (statsBanner.style.display === 'block') {
+            statsBanner.style.display = 'none';
+            if (toggleButton) {
+                toggleButton.textContent = 'Afficher les statistiques';
+            }
+        } else {
+            statsBanner.style.display = 'block';
+            if (toggleButton) {
+                toggleButton.textContent = 'Masquer les statistiques';
+            }
+        }
     }
 }
+
+// Initialize stats panel to be hidden by default
+document.addEventListener('DOMContentLoaded', function() {
+    const statsBanner = document.getElementById('stats-banner');
+    const toggleButton = document.querySelector('.toggle-stats-btn');
+
+    if (statsBanner) {
+        statsBanner.style.display = 'none';
+        if (toggleButton) {
+            toggleButton.textContent = 'Afficher les statistiques';
+        }
+    }
+});
 
 // Navigation functions
 function goToNormalMode() {

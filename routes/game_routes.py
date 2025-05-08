@@ -117,7 +117,9 @@ def init_routes(game_mode_factory: GameModeFactory):
             'maxScore': session.get('max_score', 0),
             'stats': stats,
             'currentScore': user_score['score'],
-            'total_questions': len(session['used_indices'])
+            'total_questions': len(session['used_indices']),
+            'current_question': session.get('current_question', 0),
+            'total_employees': len(mode.game_manager.get_game_data(session['data_id']))
         }
 
         # Add question-specific data
