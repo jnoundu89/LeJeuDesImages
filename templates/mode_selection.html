@@ -1,95 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Choisir le mode de jeu</title>
+    <title>Le Jeu Des Images - Découvrez tous les modes de jeu</title>
+    <meta name="description" content="Testez votre connaissance des membres de l'équipe Infolegale et Eloficash avec différents modes de jeu amusants et interactifs.">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        .mode-selection {
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .mode-selection h1 {
-            color: #FFD700;
-            font-size: 36px;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
-        .mode-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .mode-card {
-            background-color: rgba(0, 51, 102, 0.7);
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
-        }
-
-        .mode-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-        }
-
-        .mode-card h2 {
-            color: #FFD700;
-            margin-top: 0;
-        }
-
-        .mode-card p {
-            color: #ffffff;
-            margin-bottom: 20px;
-        }
-
-        .mode-button {
-            display: inline-block;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            font-size: 16px;
-            margin: 10px auto;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-        }
-
-        .mode-button:hover {
-            background-color: #45a049;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="mode-selection">
-        <h1>Le jeu des images</h1>
+    <!-- Dark overlay for better readability -->
+    <div class="dark-overlay"></div>
+
+    <!-- Particle background -->
+    <div class="particles-container">
+        <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <!-- Game header -->
+    <header class="game-header">
+        <img src="https://www.infolegale.fr/hs-fs/hubfs/Logo-Infolegale-fond-noir.png?width=569&height=569&name=Logo-Infolegale-fond-noir.png" alt="Logo du Jeu Des Images" class="game-logo">
+        <h1 class="game-title gradient-bg">Le Jeu Des Images</h1>
+        <p class="game-tagline">Testez votre connaissance des membres de l'équipe Infolegale et Eloficash avec différents modes de jeu amusants et interactifs.</p>
+    </header>
+
+    <!-- Game modes container -->
+    <main class="mode-container">
         <div class="mode-grid">
             {% for mode in modes %}
             <div class="mode-card">
+                {% if mode.name == "pixelation" %}
+                    <i class="fas fa-puzzle-piece mode-icon"></i>
+                    <span class="mode-badge popular">Populaire</span>
+                {% elif mode.name == "normal" %}
+                    <i class="fas fa-user-tie mode-icon"></i>
+                {% elif mode.name == "reverse" %}
+                    <i class="fas fa-sync-alt mode-icon"></i>
+                {% elif mode.name == "timed" %}
+                    <i class="fas fa-stopwatch mode-icon"></i>
+                    <span class="mode-badge">Chronométré</span>
+                {% elif mode.name == "team" %}
+                    <i class="fas fa-users mode-icon"></i>
+                {% elif mode.name == "clue" %}
+                    <i class="fas fa-lightbulb mode-icon"></i>
+                {% elif mode.name == "memory" %}
+                    <i class="fas fa-brain mode-icon"></i>
+                    <span class="mode-badge new">Nouveau</span>
+                {% elif mode.name == "quiz" %}
+                    <i class="fas fa-question-circle mode-icon"></i>
+                {% elif mode.name == "arr" %}
+                    <i class="fas fa-star mode-icon"></i>
+                    <span class="mode-badge">Spécial</span>
+                {% else %}
+                    <i class="fas fa-gamepad mode-icon"></i>
+                {% endif %}
+
                 <h2>{{ mode.name|capitalize }}</h2>
+
+                <!-- Difficulty indicator -->
+                <div class="difficulty-indicator">
+                    {% if mode.name in ["normal", "team"] %}
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                        <div class="difficulty-dot"></div>
+                    {% elif mode.name in ["reverse", "clue", "quiz"] %}
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot"></div>
+                    {% else %}
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                        <div class="difficulty-dot active"></div>
+                    {% endif %}
+                </div>
+
                 <p>{{ mode.description }}</p>
-                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button">Jouer</a>
+
+                <!-- Mode features -->
+                {% if mode.name == "normal" %}
+                <ul class="mode-features">
+                    <li>Identifiez l'entreprise, l'équipe, le nom et le poste</li>
+                    <li>Gagnez des points pour chaque bonne réponse</li>
+                </ul>
+                {% elif mode.name == "reverse" %}
+                <ul class="mode-features">
+                    <li>Identifiez la personne à partir d'un nom</li>
+                    <li>Testez votre mémoire visuelle</li>
+                </ul>
+                {% elif mode.name == "pixelation" %}
+                <ul class="mode-features">
+                    <li>Image progressivement plus nette</li>
+                    <li>Identifiez la personne le plus vite possible</li>
+                </ul>
+                {% elif mode.name == "timed" %}
+                <ul class="mode-features">
+                    <li>Course contre la montre</li>
+                    <li>Répondez avant la fin du temps</li>
+                </ul>
+                {% elif mode.name == "memory" %}
+                <ul class="mode-features">
+                    <li>Testez votre mémoire</li>
+                    <li>Retrouvez les paires correspondantes</li>
+                </ul>
+                {% else %}
+                <ul class="mode-features">
+                    <li>Mode de jeu unique</li>
+                    <li>Défi personnalisé</li>
+                </ul>
+                {% endif %}
+
+                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
             </div>
             {% endfor %}
         </div>
-    </div>
+    </main>
+
+    <!-- Game footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <p class="footer-text">Le Jeu Des Images - Un jeu interactif pour identifier les membres de l'équipe Infolegale et Eloficash.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">À propos</a>
+                <a href="#" class="footer-link">Comment jouer</a>
+                <a href="#" class="footer-link">Scores</a>
+            </div>
+        </div>
+    </footer>
 
     <!-- Subtle hint for the Konami code easter egg -->
     <div style="position: fixed; bottom: 10px; right: 10px; font-size: 12px; color: rgba(255, 215, 0, 0.5); cursor: default;">
         ↑↑↓↓←→←→BA
     </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='homepage.js') }}"></script>
 </body>
 </html>
