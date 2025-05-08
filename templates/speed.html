@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Vitesse</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .speed-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .speed-image-container {
+            position: relative;
+            max-width: 400px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .speed-image {
+            width: 100%;
+            display: block;
+            transition: transform 0.3s ease;
+        }
+
+        .speed-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .speed-choice-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .speed-choice-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .speed-choice-btn.correct {
+            background-color: #4CAF50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .speed-choice-btn.incorrect {
+            background-color: #f44336;
+        }
+
+        .time-bonus {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 10px 0;
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .timer {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff5722;
+            margin: 10px 0;
+        }
+
+        .timer.warning {
+            color: #f44336;
+            animation: pulse 1s infinite;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Photo et titre -->
+    <div class="center-content">
+        <h1 class="title">Mode Vitesse - Identifiez rapidement la personne</h1>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+        <div class="speed-image-container">
+            <img id="speed-image" src="{{ image_url }}" alt="Photo d'employé" class="speed-image">
+        </div>
+        <div id="timer" class="timer">Temps restant: 60s</div>
+        <div id="time-bonus" class="time-bonus" style="display: none;"></div>
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post">
+    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="response_time" id="response-time" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+
+    <div class="speed-container">
+        <div class="speed-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="speed-choice-btn choice-btn"
+                    onclick="checkSpeedAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+</form>
+
+<script>
+    let startTime;
+    let timerInterval;
+    let timeLimit = 60; // Default time limit
+    let timerValue = timeLimit;
+
+    // Function to check the answer in speed mode
+    function checkSpeedAnswer(correct, selected, element) {
+        const buttons = document.querySelectorAll('#name-choices button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+
+        // Calculate response time in milliseconds
+        const responseTime = new Date().getTime() - startTime;
+        document.getElementById('response-time').value = responseTime;
+
+        if (correct === selected) {
+            element.classList.add('correct');
+            document.getElementById('correct-answer').value = 1;
+            
+            // Display time bonus based on response time
+            let bonusPoints = 0;
+            if (responseTime < 1000) {
+                bonusPoints = 3;
+            } else if (responseTime < 3000) {
+                bonusPoints = 2;
+            } else {
+                bonusPoints = 1;
+            }
+            
+            const timeBonus = document.getElementById('time-bonus');
+            timeBonus.textContent = `+${bonusPoints} points!`;
+            timeBonus.style.display = 'block';
+        } else {
+            element.classList.add('incorrect');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === correct) {
+                    btn.classList.add('correct');
+                }
+            });
+            document.body.classList.add('shake');
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+            }, 500);
+        }
+
+        // Set answersCount to 1 to enable the next button
+        answersCount = 1;
+        enableNextButton();
+        clearInterval(timerInterval);
+    }
+
+    // Update the timer
+    function updateTimer() {
+        timerValue--;
+        const timerElement = document.getElementById('timer');
+        timerElement.textContent = `Temps restant: ${timerValue}s`;
+        
+        // Update progress bar
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = (timerValue / timeLimit) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+        
+        // Add warning class when time is running out
+        if (timerValue <= 10) {
+            timerElement.classList.add('warning');
+        }
+        
+        // Time's up
+        if (timerValue <= 0) {
+            clearInterval(timerInterval);
+            
+            // Show the correct answer
+            const buttons = document.querySelectorAll('#name-choices button');
+            const correctName = '{{ correct_name }}';
+            
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                if (btn.textContent.trim() === correctName) {
+                    btn.classList.add('correct');
+                }
+            });
+            
+            // Enable the next button
+            answersCount = 1;
+            enableNextButton();
+        }
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        const maxScore = parseInt(document.getElementById('max-score').value);
+        const currentQuestion = parseInt(document.getElementById('current-question').value);
+        
+        // Update progress counter
+        document.getElementById('question-counter').textContent = 
+            `${currentQuestion} / ${totalQuestions}`;
+        
+        // Initialize timer
+        startTime = new Date().getTime();
+        timerInterval = setInterval(updateTimer, 1000);
+        
+        // Reset for new question
+        resetAnswersCount();
+        toggleStats();
+    });
+</script>
+</body>
+</html>

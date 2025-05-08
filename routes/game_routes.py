@@ -198,6 +198,20 @@ def init_routes(game_mode_factory: GameModeFactory):
                 name_correct=name_correct,
                 position_correct=position_correct
             )
+        elif mode_name == "arr":
+            # Special handling for ARR mode
+            data_id = int(request.form.get('data_id', 0))
+            action = request.form.get('action', '')
+
+            # Log the action for debugging
+            logging.info(f"ARR mode action: {action}, data_id: {data_id}")
+
+            # Update the game state based on the action
+            mode.update_score(
+                user_id,
+                data_id=data_id,
+                action=action
+            )
         else:  # reverse mode or other modes (like pixelation)
             correct_answer = int(request.form.get('correct_answer', 0))
             mode.update_score(user_id, correct_answer=correct_answer)

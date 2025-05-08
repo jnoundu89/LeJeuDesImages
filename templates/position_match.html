@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Association de Postes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .position-match-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .employees-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px auto;
+        }
+
+        .employee-card {
+            width: 180px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            background-color: #fff;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .employee-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .employee-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .employee-info {
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+
+        .employee-info h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .position-selector {
+            margin-top: 10px;
+        }
+
+        .position-selector select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            background-color: white;
+            font-size: 14px;
+        }
+
+        .position-selector select:focus {
+            outline: none;
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+        }
+
+        .submit-matches-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .submit-matches-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .submit-matches-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .round-banner {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-block;
+            margin: 10px auto;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            transition: width 0.3s ease;
+        }
+
+        .correct-match {
+            background-color: rgba(76, 175, 80, 0.2);
+            border: 2px solid #4CAF50;
+            animation: pulse 1.5s;
+        }
+
+        .incorrect-match {
+            background-color: rgba(244, 67, 54, 0.2);
+            border: 2px solid #f44336;
+        }
+
+        .result-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .result-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .result-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .result-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .result-score {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .continue-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .continue-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Photo et titre -->
+    <div class="center-content">
+        <h1 class="title">Mode Association de Postes</h1>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+        
+        <div class="round-banner">
+            Manche {{ current_round }} / {{ total_rounds }}
+        </div>
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post" id="position-match-form">
+    <input type="hidden" name="correct_matches" id="correct-matches" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="current-round" value="{{ current_round }}">
+    <input type="hidden" id="total-rounds" value="{{ total_rounds }}">
+    <input type="hidden" id="total-employees" value="{{ employees|length }}">
+
+    <div class="position-match-container">
+        <h2>Associez chaque employé avec son poste correct</h2>
+        <div class="employees-container">
+            {% for employee_data in employees %}
+            <div class="employee-card" id="employee-{{ loop.index }}">
+                <img src="{{ employee_data.employee.image_url }}" alt="{{ employee_data.employee.name }}">
+                <div class="employee-info">
+                    <h4>{{ employee_data.employee.name }}</h4>
+                    <div class="position-selector">
+                        <select name="position-{{ loop.index }}" id="position-{{ loop.index }}" data-correct="{{ employee_data.correct_position }}">
+                            <option value="">-- Sélectionnez un poste --</option>
+                            {% for position in employee_data.position_options %}
+                            <option value="{{ position }}">{{ position }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <button type="button" id="submit-matches" class="submit-matches-btn" disabled>Vérifier les associations</button>
+    </div>
+</form>
+
+<!-- Result overlay -->
+<div id="result-overlay" class="result-overlay">
+    <div class="result-content">
+        <h2>Résultats</h2>
+        <p>Vous avez correctement associé <span id="correct-count">0</span> employés avec leurs postes.</p>
+        <div class="result-score">Score: <span id="round-score">0</span> points</div>
+        <button id="continue-btn" class="continue-btn">Continuer</button>
+    </div>
+</div>
+
+<script>
+    // Initialize variables
+    let correctMatches = 0;
+    let totalEmployees = parseInt(document.getElementById('total-employees').value);
+    
+    // Function to check if all positions are selected
+    function checkAllSelected() {
+        const selects = document.querySelectorAll('.position-selector select');
+        let allSelected = true;
+        
+        selects.forEach(select => {
+            if (select.value === '') {
+                allSelected = false;
+            }
+        });
+        
+        document.getElementById('submit-matches').disabled = !allSelected;
+    }
+    
+    // Add event listeners to all select elements
+    document.querySelectorAll('.position-selector select').forEach(select => {
+        select.addEventListener('change', checkAllSelected);
+    });
+    
+    // Function to check matches
+    document.getElementById('submit-matches').addEventListener('click', function() {
+        correctMatches = 0;
+        const selects = document.querySelectorAll('.position-selector select');
+        
+        selects.forEach(select => {
+            const employeeCard = select.closest('.employee-card');
+            const correctPosition = select.getAttribute('data-correct');
+            const selectedPosition = select.value;
+            
+            if (correctPosition === selectedPosition) {
+                employeeCard.classList.add('correct-match');
+                correctMatches++;
+            } else {
+                employeeCard.classList.add('incorrect-match');
+                // Show the correct position
+                select.innerHTML = `<option value="${correctPosition}" selected>${correctPosition} (correct)</option>`;
+            }
+            
+            // Disable the select
+            select.disabled = true;
+        });
+        
+        // Update the hidden field with the number of correct matches
+        document.getElementById('correct-matches').value = correctMatches;
+        
+        // Show the result overlay
+        document.getElementById('correct-count').textContent = correctMatches;
+        document.getElementById('round-score').textContent = correctMatches;
+        document.getElementById('result-overlay').classList.add('show');
+        
+        // Disable the submit button
+        this.disabled = true;
+    });
+    
+    // Continue button event listener
+    document.getElementById('continue-btn').addEventListener('click', function() {
+        // Hide the overlay
+        document.getElementById('result-overlay').classList.remove('show');
+        
+        // Submit the form to go to the next round
+        document.getElementById('position-match-form').submit();
+    });
+    
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentRound = parseInt(document.getElementById('current-round').value);
+        const totalRounds = parseInt(document.getElementById('total-rounds').value);
+        
+        // Update progress bar
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = ((currentRound - 1) / totalRounds) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+        
+        // Reset for new question
+        toggleStats();
+    });
+</script>
+</body>
+</html>

@@ -11,6 +11,15 @@ from models.clue_mode import ClueMode
 from models.memory_mode import MemoryMode
 from models.quiz_mode import QuizMode
 from models.arr_mode import ARRMode
+from models.speed_mode import SpeedMode
+from models.team_guess_mode import TeamGuessMode
+from models.missing_person_mode import MissingPersonMode
+from models.position_match_mode import PositionMatchMode
+from models.progressive_hint_mode import ProgressiveHintMode
+from models.scrambled_face_mode import ScrambledFaceMode
+from models.emoji_challenge_mode import EmojiChallengeMode
+from models.silhouette_mode import SilhouetteMode
+from models.mirror_mode import MirrorMode
 from routes.game_routes import game_bp, init_routes
 
 # Configuration du logging
@@ -40,6 +49,19 @@ def create_app():
     game_mode_factory.register_mode(MemoryMode(game_manager))
     game_mode_factory.register_mode(QuizMode(game_manager))
     game_mode_factory.register_mode(ARRMode(game_manager))
+
+    # Register new game modes
+    game_mode_factory.register_mode(SpeedMode(game_manager))
+    game_mode_factory.register_mode(TeamGuessMode(game_manager))
+    game_mode_factory.register_mode(MissingPersonMode(game_manager))
+    game_mode_factory.register_mode(PositionMatchMode(game_manager))
+    game_mode_factory.register_mode(ProgressiveHintMode(game_manager))
+
+    # Register fun and crazy game modes
+    game_mode_factory.register_mode(ScrambledFaceMode(game_manager))
+    game_mode_factory.register_mode(EmojiChallengeMode(game_manager))
+    game_mode_factory.register_mode(SilhouetteMode(game_manager))
+    game_mode_factory.register_mode(MirrorMode(game_manager))
 
     # Initialize routes
     init_routes(game_mode_factory)

@@ -2,11 +2,12 @@
 from typing import Dict, Any, List, Optional
 from .game_mode import GameMode
 import random
+import math
 
 class ARRMode(GameMode):
     """
-    ARR (Annual Recurring Revenue) game mode where players must reach +15% ARR objectives
-    to earn employee bonuses. This is a hidden easter egg mode.
+    ARR (Arcade Retro Racing) game mode where players control a car in a retro-style racing game.
+    This is a hidden easter egg mode.
     """
     @property
     def name(self) -> str:
@@ -14,7 +15,7 @@ class ARRMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode ARR : atteignez +15% d'ARR pour obtenir une prime de participation"
+        return "Mode ARR : Arcade Retro Racing - Évitez les obstacles et atteignez la ligne d'arrivée !"
 
     @property
     def template(self) -> str:
@@ -33,22 +34,28 @@ class ARRMode(GameMode):
         # Initialize user
         user_id = self.game_manager.score_manager.initialize_user(user_id)
 
-        # Generate initial ARR value (between 1,000,000 and 5,000,000)
-        initial_arr = random.randint(1000000, 5000000)
-
-        # Calculate target ARR (15% increase)
-        target_arr = initial_arr * 1.15
-
         # Generate game data
         game_data = {
-            'initial_arr': initial_arr,
-            'current_arr': initial_arr,
-            'target_arr': target_arr,
-            'current_month': 1,
-            'max_months': 12,  # 12 months to reach the target
-            'actions_taken': [],
-            'events': self._generate_events(),
-            'available_actions': self._generate_actions()
+            'player': {
+                'position': 2,  # Middle lane (0-4)
+                'speed': 1,     # Initial speed
+                'distance': 0,  # Distance traveled
+                'boost': 0,     # Boost meter (0-100)
+                'lives': 3      # Number of lives
+            },
+            'track': {
+                'length': 1000,  # Track length
+                'obstacles': self._generate_obstacles(1000),  # Generate obstacles
+                'power_ups': self._generate_power_ups(1000),  # Generate power-ups
+                'current_segment': 0  # Current track segment
+            },
+            'game_state': {
+                'started': False,
+                'game_over': False,
+                'win': False,
+                'score': 0,
+                'time': 0
+            }
         }
 
         # Store data and return initialization info
@@ -58,7 +65,7 @@ class ARRMode(GameMode):
             'user_id': user_id,
             'data_id': data_id,
             'reverse_mode': False,
-            'max_score': 1  # Binary win/lose
+            'max_score': 1000  # Maximum possible score
         }
 
     def get_question_data(self, data_id: int, used_indices: List[int], 
@@ -79,87 +86,49 @@ class ARRMode(GameMode):
         if game_data is None:
             return {'game_over': True}
 
-        # Check if game is over (reached max months or target ARR)
-        if game_data['current_month'] > game_data['max_months']:
-            # Game over - check if target was reached
-            success = game_data['current_arr'] >= game_data['target_arr']
-            percentage_increase = ((game_data['current_arr'] - game_data['initial_arr']) / game_data['initial_arr']) * 100
+        # Check if game_data is a dictionary and has the expected structure
+        if not isinstance(game_data, dict) or 'game_state' not in game_data:
+            # If game_data is not properly structured, return game over
+            return {'game_over': True}
 
-            # Format values for display
-            formatted_actions = []
-            for action in game_data['actions_taken']:
-                formatted_action = action.copy()
-                formatted_action['arr_change_formatted'] = f"{action['arr_change']:+,.0f}"
-                formatted_actions.append(formatted_action)
-
+        # Check if game is over
+        if game_data['game_state']['game_over']:
             return {
                 'game_over': True,
-                'success': success,
-                'initial_arr': game_data['initial_arr'],
-                'current_arr': game_data['current_arr'],
-                'target_arr': game_data['target_arr'],
-                'percentage_increase': percentage_increase,
-                'actions_taken': formatted_actions,
-                # Formatted values for display
-                'initial_arr_formatted': f"{game_data['initial_arr']:,.0f}",
-                'current_arr_formatted': f"{game_data['current_arr']:,.0f}",
-                'target_arr_formatted': f"{game_data['target_arr']:,.0f}",
-                'percentage_increase_formatted': f"{percentage_increase:.2f}"
+                'win': game_data['game_state']['win'],
+                'score': game_data['game_state']['score'],
+                'distance': game_data['player']['distance'],
+                'time': game_data['game_state']['time']
             }
 
-        # Get random event for this month if not already processed
-        event = None
-        if current_question == game_data['current_month'] - 1:
-            # No event for the first turn
-            pass
-        elif len(used_indices) < len(game_data['events']):
-            # Get a random event
-            available_indices = [i for i in range(len(game_data['events'])) if i not in used_indices]
-            if available_indices:
-                event_index = random.choice(available_indices)
-                used_indices.append(event_index)
-                event = game_data['events'][event_index]
+        # Get visible obstacles and power-ups for the current segment
+        visible_range = 20  # How far ahead the player can see
+        current_segment = game_data['track']['current_segment']
+        visible_obstacles = [
+            obs for obs in game_data['track']['obstacles'] 
+            if current_segment <= obs['position'] < current_segment + visible_range
+        ]
+        visible_power_ups = [
+            pu for pu in game_data['track']['power_ups'] 
+            if current_segment <= pu['position'] < current_segment + visible_range
+        ]
 
-                # Apply event effect
-                game_data['current_arr'] = max(0, game_data['current_arr'] + event['arr_change'])
-
-        # Calculate percentage increase
-        percentage = ((game_data['current_arr'] - game_data['initial_arr']) / game_data['initial_arr']) * 100
-
-        # Format values for display
-        formatted_actions = []
-        for action in game_data['actions_taken']:
-            formatted_action = action.copy()
-            formatted_action['arr_change_formatted'] = f"{action['arr_change']:+,.0f}"
-            formatted_actions.append(formatted_action)
-
-        formatted_available_actions = []
-        for action in game_data['available_actions']:
-            formatted_action = action.copy()
-            formatted_action['arr_change_formatted'] = f"{action['arr_change']:+,.0f}"
-            formatted_available_actions.append(formatted_action)
-
-        # Calculate progress bar width (clamped between 0-100%)
-        progress_width = min(max(percentage / 15 * 100, 0), 100)
+        # Calculate progress percentage
+        progress = (game_data['player']['distance'] / game_data['track']['length']) * 100
+        progress = min(max(progress, 0), 100)  # Clamp between 0-100%
 
         return {
             'game_over': False,
             'data_id': data_id,
-            'current_month': game_data['current_month'],
-            'max_months': game_data['max_months'],
-            'initial_arr': game_data['initial_arr'],
-            'current_arr': game_data['current_arr'],
-            'target_arr': game_data['target_arr'],
-            'percentage': percentage,
-            'event': event,
-            'available_actions': formatted_available_actions,
-            'actions_taken': formatted_actions,
-            # Formatted values for display
-            'initial_arr_formatted': f"{game_data['initial_arr']:,.0f}",
-            'current_arr_formatted': f"{game_data['current_arr']:,.0f}",
-            'target_arr_formatted': f"{game_data['target_arr']:,.0f}",
-            'percentage_formatted': f"{percentage:.2f}",
-            'progress_width': progress_width
+            'player': game_data['player'],
+            'track_length': game_data['track']['length'],
+            'visible_obstacles': visible_obstacles,
+            'visible_power_ups': visible_power_ups,
+            'current_segment': current_segment,
+            'progress': progress,
+            'score': game_data['game_state']['score'],
+            'time': game_data['game_state']['time'],
+            'game_started': game_data['game_state']['started']
         }
 
     def update_score(self, user_id: int, **kwargs) -> None:
@@ -172,150 +141,227 @@ class ARRMode(GameMode):
         """
         # Get the game data
         data_id = kwargs.get('data_id', 0)
-        action_index = kwargs.get('action_index', -1)
+        action = kwargs.get('action', '')
 
         game_data = self.game_manager.get_game_data(data_id)
         if game_data is None:
             return
 
-        # Apply the selected action
-        if 0 <= action_index < len(game_data['available_actions']):
-            action = game_data['available_actions'][action_index]
+        # Check if game_data is a dictionary and has the expected structure
+        if not isinstance(game_data, dict) or 'game_state' not in game_data:
+            # Initialize a new game if game_data is not properly structured
+            game_data = self.initialize(user_id)
+            data_id = game_data['data_id']
+            game_data = self.game_manager.get_game_data(data_id)
+            if not isinstance(game_data, dict) or 'game_state' not in game_data:
+                # If still not properly structured, return to avoid errors
+                return
 
-            # Apply action effect
-            game_data['current_arr'] = max(0, game_data['current_arr'] + action['arr_change'])
-
-            # Record the action
-            game_data['actions_taken'].append({
-                'month': game_data['current_month'],
-                'action': action['name'],
-                'description': action['description'],
-                'arr_change': action['arr_change']
-            })
-
-            # Move to next month
-            game_data['current_month'] += 1
-
-            # Update the game data
+        # Start the game if not started
+        if not game_data['game_state']['started'] and action == 'start':
+            game_data['game_state']['started'] = True
             self.game_manager.update_game_data(data_id, game_data)
+            return
 
-            # Check if game is over and successful
-            if game_data['current_month'] > game_data['max_months'] and game_data['current_arr'] >= game_data['target_arr']:
-                # Update the score (1 point for success)
+        # Process player action
+        if game_data['game_state']['started'] and not game_data['game_state']['game_over']:
+            # Handle player movement
+            if action == 'left' and game_data['player']['position'] > 0:
+                game_data['player']['position'] -= 1
+            elif action == 'right' and game_data['player']['position'] < 4:
+                game_data['player']['position'] += 1
+            elif action == 'boost' and game_data['player']['boost'] >= 25:
+                game_data['player']['speed'] += 1
+                game_data['player']['boost'] -= 25
+
+            # Update player position
+            self._update_game_state(game_data)
+
+            # Check for collisions
+            self._check_collisions(game_data)
+
+            # Check if player reached the finish line
+            if game_data['player']['distance'] >= game_data['track']['length']:
+                game_data['game_state']['game_over'] = True
+                game_data['game_state']['win'] = True
+
+                # Calculate final score based on time, lives, and distance
+                time_bonus = max(0, 300 - game_data['game_state']['time']) * 2
+                lives_bonus = game_data['player']['lives'] * 100
+                final_score = time_bonus + lives_bonus + 500  # Base score for finishing
+
+                game_data['game_state']['score'] = final_score
+
+                # Update the score in the score manager
                 self.game_manager.score_manager.update_score(
                     user_id, 
-                    score_increment=1,
+                    score_increment=min(final_score, 1000),  # Cap at max score
                     company_correct=1,  # Count as company knowledge
                     team_correct=0,
                     name_correct=0,
                     position_correct=0
                 )
 
-    def _generate_events(self) -> List[Dict[str, Any]]:
+            # Check if player lost all lives
+            if game_data['player']['lives'] <= 0:
+                game_data['game_state']['game_over'] = True
+                game_data['game_state']['win'] = False
+
+                # Calculate partial score based on distance traveled
+                distance_percentage = game_data['player']['distance'] / game_data['track']['length']
+                partial_score = int(distance_percentage * 500)  # Up to 500 points for distance
+
+                game_data['game_state']['score'] = partial_score
+
+                # Update the score in the score manager (partial credit)
+                self.game_manager.score_manager.update_score(
+                    user_id, 
+                    score_increment=partial_score,
+                    company_correct=0,
+                    team_correct=0,
+                    name_correct=0,
+                    position_correct=0
+                )
+
+            # Update the game data
+            self.game_manager.update_game_data(data_id, game_data)
+
+    def _update_game_state(self, game_data: Dict[str, Any]) -> None:
         """
-        Generate random events that can occur during the game.
+        Update the game state based on player speed and other factors.
+
+        Args:
+            game_data: The current game data
+        """
+        # Update distance based on speed
+        game_data['player']['distance'] += game_data['player']['speed']
+
+        # Update current segment
+        game_data['track']['current_segment'] = min(
+            int(game_data['player']['distance'] / 10),  # Each segment is 10 units
+            int(game_data['track']['length'] / 10)
+        )
+
+        # Gradually increase speed if not at max
+        if game_data['player']['speed'] < 5 and random.random() < 0.05:
+            game_data['player']['speed'] += 0.1
+
+        # Gradually increase boost meter
+        if game_data['player']['boost'] < 100:
+            game_data['player']['boost'] += 0.5
+
+        # Update time (each update is roughly 0.1 seconds in game time)
+        game_data['game_state']['time'] += 0.1
+
+    def _check_collisions(self, game_data: Dict[str, Any]) -> None:
+        """
+        Check for collisions with obstacles and power-ups.
+
+        Args:
+            game_data: The current game data
+        """
+        player_position = game_data['player']['position']
+        player_distance = game_data['player']['distance']
+
+        # Check for obstacle collisions
+        for obstacle in game_data['track']['obstacles']:
+            if not obstacle.get('hit', False):  # Only check obstacles that haven't been hit
+                # Check if player is at the obstacle's position
+                if abs(obstacle['position'] * 10 - player_distance) < 5:  # Within collision range
+                    if obstacle['lane'] == player_position:
+                        # Collision with obstacle
+                        obstacle['hit'] = True
+                        game_data['player']['lives'] -= 1
+                        game_data['player']['speed'] = max(1, game_data['player']['speed'] - 1)  # Reduce speed
+                        break
+
+        # Check for power-up collisions
+        for power_up in game_data['track']['power_ups']:
+            if not power_up.get('collected', False):  # Only check power-ups that haven't been collected
+                # Check if player is at the power-up's position
+                if abs(power_up['position'] * 10 - player_distance) < 5:  # Within collection range
+                    if power_up['lane'] == player_position:
+                        # Collect power-up
+                        power_up['collected'] = True
+
+                        # Apply power-up effect
+                        if power_up['type'] == 'boost':
+                            game_data['player']['boost'] = min(100, game_data['player']['boost'] + 50)
+                        elif power_up['type'] == 'life':
+                            game_data['player']['lives'] += 1
+                        elif power_up['type'] == 'speed':
+                            game_data['player']['speed'] = min(5, game_data['player']['speed'] + 0.5)
+                        break
+
+    def _generate_obstacles(self, track_length: int) -> List[Dict[str, Any]]:
+        """
+        Generate obstacles for the track.
+
+        Args:
+            track_length: Length of the track
 
         Returns:
-            List of event dictionaries
+            List of obstacle dictionaries
         """
-        events = [
-            {
-                'name': 'Crise économique',
-                'description': 'Une crise économique affecte le marché. Votre ARR diminue de 5%.',
-                'arr_change': lambda arr: -0.05 * arr
-            },
-            {
-                'name': 'Nouveau concurrent',
-                'description': 'Un nouveau concurrent entre sur le marché. Votre ARR diminue de 3%.',
-                'arr_change': lambda arr: -0.03 * arr
-            },
-            {
-                'name': 'Opportunité de marché',
-                'description': 'Une nouvelle opportunité de marché s\'ouvre. Votre ARR augmente de 4%.',
-                'arr_change': lambda arr: 0.04 * arr
-            },
-            {
-                'name': 'Partenariat stratégique',
-                'description': 'Vous concluez un partenariat stratégique. Votre ARR augmente de 6%.',
-                'arr_change': lambda arr: 0.06 * arr
-            },
-            {
-                'name': 'Problème technique',
-                'description': 'Un problème technique affecte votre service. Votre ARR diminue de 4%.',
-                'arr_change': lambda arr: -0.04 * arr
-            },
-            {
-                'name': 'Reconnaissance du marché',
-                'description': 'Votre entreprise est reconnue comme leader du marché. Votre ARR augmente de 5%.',
-                'arr_change': lambda arr: 0.05 * arr
-            }
-        ]
+        obstacles = []
 
-        # Process the lambda functions to get actual values
-        processed_events = []
-        for event in events:
-            processed_events.append({
-                'name': event['name'],
-                'description': event['description'],
-                'arr_change': 0  # Will be calculated when the event occurs
+        # Number of obstacles scales with track length
+        num_obstacles = int(track_length / 20)  # One obstacle every ~20 units on average
+
+        # Generate obstacles with increasing frequency
+        for i in range(num_obstacles):
+            # Position obstacles along the track, with more towards the end
+            position_factor = i / num_obstacles  # 0 to 1
+            min_position = int(position_factor * track_length * 0.1)  # Start after 10% of track
+            max_position = int(min(position_factor * track_length * 1.5, track_length - 50))  # End before finish
+
+            position = random.randint(min_position, max_position)
+            lane = random.randint(0, 4)  # 5 lanes (0-4)
+
+            # Different types of obstacles
+            obstacle_types = ['rock', 'oil', 'cone', 'barrier']
+            obstacle_type = random.choice(obstacle_types)
+
+            obstacles.append({
+                'position': position // 10,  # Convert to segment position
+                'lane': lane,
+                'type': obstacle_type,
+                'hit': False
             })
 
-        return processed_events
+        return obstacles
 
-    def _generate_actions(self) -> List[Dict[str, Any]]:
+    def _generate_power_ups(self, track_length: int) -> List[Dict[str, Any]]:
         """
-        Generate actions that the player can take during the game.
+        Generate power-ups for the track.
+
+        Args:
+            track_length: Length of the track
 
         Returns:
-            List of action dictionaries
+            List of power-up dictionaries
         """
-        return [
-            {
-                'name': 'Lancer une campagne marketing',
-                'description': 'Investir dans une campagne marketing pour attirer de nouveaux clients.',
-                'arr_change': 100000,  # Fixed amount
-                'success_rate': 0.8
-            },
-            {
-                'name': 'Améliorer le produit',
-                'description': 'Investir dans l\'amélioration du produit pour fidéliser les clients existants.',
-                'arr_change': 80000,
-                'success_rate': 0.9
-            },
-            {
-                'name': 'Réduire les prix',
-                'description': 'Réduire les prix pour attirer plus de clients, mais avec une marge plus faible.',
-                'arr_change': 50000,
-                'success_rate': 0.7
-            },
-            {
-                'name': 'Augmenter les prix',
-                'description': 'Augmenter les prix pour améliorer la marge, mais risquer de perdre des clients.',
-                'arr_change': -30000,  # Initial negative impact
-                'success_rate': 0.4
-            },
-            {
-                'name': 'Embaucher une équipe commerciale',
-                'description': 'Investir dans une équipe commerciale pour augmenter les ventes.',
-                'arr_change': 150000,
-                'success_rate': 0.75
-            },
-            {
-                'name': 'Développer un nouveau produit',
-                'description': 'Investir dans le développement d\'un nouveau produit pour diversifier l\'offre.',
-                'arr_change': 200000,
-                'success_rate': 0.6
-            },
-            {
-                'name': 'Expansion internationale',
-                'description': 'Étendre l\'activité à de nouveaux marchés internationaux.',
-                'arr_change': 250000,
-                'success_rate': 0.5
-            },
-            {
-                'name': 'Optimiser les coûts',
-                'description': 'Réduire les coûts opérationnels pour améliorer la rentabilité.',
-                'arr_change': 70000,
-                'success_rate': 0.85
-            }
-        ]
+        power_ups = []
+
+        # Number of power-ups scales with track length
+        num_power_ups = int(track_length / 40)  # One power-up every ~40 units on average
+
+        # Generate power-ups
+        for i in range(num_power_ups):
+            # Distribute power-ups evenly along the track
+            position = random.randint(int(track_length * 0.1), int(track_length * 0.9))
+            lane = random.randint(0, 4)  # 5 lanes (0-4)
+
+            # Different types of power-ups
+            power_up_types = ['boost', 'life', 'speed']
+            weights = [0.6, 0.2, 0.2]  # More boost power-ups
+            power_up_type = random.choices(power_up_types, weights=weights, k=1)[0]
+
+            power_ups.append({
+                'position': position // 10,  # Convert to segment position
+                'lane': lane,
+                'type': power_up_type,
+                'collected': False
+            })
+
+        return power_ups

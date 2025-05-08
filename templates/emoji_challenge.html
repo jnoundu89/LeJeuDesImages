@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Défi Emoji</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .emoji-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .emoji-clues-container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .emoji-clue {
+            margin: 15px 0;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .emoji-clue-label {
+            font-size: 16px;
+            margin-right: 15px;
+            min-width: 100px;
+            text-align: right;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .emoji-clue-value {
+            font-size: 36px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .emoji-personality {
+            font-size: 48px;
+            margin: 30px 0;
+            text-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .emoji-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .emoji-choice-btn {
+            background: linear-gradient(90deg, #FF9966, #FF5E62);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 15px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .emoji-choice-btn:hover {
+            background: linear-gradient(90deg, #FF5E62, #FF9966);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .emoji-choice-btn.correct {
+            background: linear-gradient(90deg, #00b09b, #96c93d);
+            animation: pulse 1.5s infinite;
+        }
+
+        .emoji-choice-btn.incorrect {
+            background: linear-gradient(90deg, #ED213A, #93291E);
+        }
+
+        .reveal-image-btn {
+            background: linear-gradient(90deg, #4776E6, #8E54E9);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .reveal-image-btn:hover {
+            background: linear-gradient(90deg, #8E54E9, #4776E6);
+            transform: scale(1.05);
+        }
+
+        .employee-image-container {
+            max-width: 300px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+
+        .employee-image {
+            width: 100%;
+            display: block;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Emojis et titre -->
+    <div class="center-content">
+        <h1 class="title">Mode Défi Emoji - Qui suis-je?</h1>
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+        
+        <div class="emoji-clues-container">
+            <div class="emoji-clue">
+                <span class="emoji-clue-label">Entreprise:</span>
+                <span class="emoji-clue-value">{{ emoji_clues.company }}</span>
+            </div>
+            <div class="emoji-clue">
+                <span class="emoji-clue-label">Équipe:</span>
+                <span class="emoji-clue-value">{{ emoji_clues.team }}</span>
+            </div>
+            <div class="emoji-clue">
+                <span class="emoji-clue-label">Poste:</span>
+                <span class="emoji-clue-value">{{ emoji_clues.position }}</span>
+            </div>
+            <div class="emoji-personality">
+                {{ emoji_clues.personality }}
+            </div>
+        </div>
+        
+        <div class="employee-image-container" id="employee-image-container">
+            <img id="employee-image" src="{{ image_url }}" alt="Photo d'employé" class="employee-image">
+        </div>
+        
+        <button id="reveal-image-btn" class="reveal-image-btn" onclick="revealImage()">Révéler la photo</button>
+        <div id="timer" class="timer">Temps restant: 60s</div>
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post">
+    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="score_increment" id="score-increment" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+
+    <div class="emoji-container">
+        <div class="emoji-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="emoji-choice-btn choice-btn"
+                    onclick="checkEmojiAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+</form>
+
+<script>
+    // Function to check the answer in emoji challenge mode
+    function checkEmojiAnswer(correct, selected, element) {
+        const buttons = document.querySelectorAll('#name-choices button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+
+        if (correct === selected) {
+            element.classList.add('correct');
+            document.getElementById('correct-answer').value = 1;
+            document.getElementById('score-increment').value = 1;
+        } else {
+            element.classList.add('incorrect');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === correct) {
+                    btn.classList.add('correct');
+                }
+            });
+            document.body.classList.add('shake');
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+            }, 500);
+        }
+
+        // Reveal the image
+        revealImage();
+
+        // Set answersCount to 1 to enable the next button
+        answersCount = 1;
+
+        enableNextButton();
+        clearInterval(timerInterval);
+    }
+
+    // Function to reveal the employee image
+    function revealImage() {
+        // Show the employee image
+        document.getElementById('employee-image-container').style.display = 'block';
+        
+        // Disable the reveal button
+        document.getElementById('reveal-image-btn').disabled = true;
+        document.getElementById('reveal-image-btn').style.opacity = '0.5';
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        const maxScore = parseInt(document.getElementById('max-score').value);
+
+        updateProgressBar(totalQuestions, maxScore);
+        resetAnswersCount();
+        toggleStats();
+
+        // Override the timer function
+        const originalUpdateTimer = window.updateTimer;
+        window.updateTimer = function () {
+            originalUpdateTimer.apply(this, arguments);
+
+            // If timer reaches 0, show the correct answer
+            if (timerValue <= 0) {
+                // Time's up - show the correct answer
+                const buttons = document.querySelectorAll('#name-choices button');
+                const correctName = '{{ correct_name }}';
+
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent.trim() === correctName) {
+                        btn.classList.add('correct');
+                    }
+                });
+
+                // Reveal the image
+                revealImage();
+            }
+        };
+    });
+</script>
+</body>
+</html>

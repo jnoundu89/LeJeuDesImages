@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Indices Progressifs</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .progressive-hint-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hint-container {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .hint {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            opacity: 0.5;
+            transform: scale(0.95);
+        }
+
+        .hint.active {
+            opacity: 1;
+            transform: scale(1);
+            border-left: 4px solid #6a11cb;
+        }
+
+        .hint-level {
+            font-weight: bold;
+            color: #6a11cb;
+            margin-bottom: 5px;
+        }
+
+        .hint-text {
+            font-size: 18px;
+        }
+
+        .hint-points {
+            font-size: 14px;
+            color: #4CAF50;
+            margin-top: 5px;
+        }
+
+        .next-hint-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .next-hint-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .next-hint-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progressive-hint-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .progressive-hint-choice-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .progressive-hint-choice-btn img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            border: 2px solid white;
+        }
+
+        .progressive-hint-choice-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .progressive-hint-choice-btn.correct {
+            background-color: #4CAF50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .progressive-hint-choice-btn.incorrect {
+            background-color: #f44336;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            transition: width 0.3s ease;
+        }
+
+        .bonus-points {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin: 10px 0;
+            animation: fadeIn 1s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Photo et titre -->
+    <div class="center-content">
+        <h1 class="title">Mode Indices Progressifs</h1>
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+        
+        <div class="hint-container">
+            {% for hint in hints %}
+            <div class="hint {% if loop.index == 1 %}active{% endif %}" id="hint-{{ hint.level }}">
+                <div class="hint-level">Indice {{ hint.level }}</div>
+                <div class="hint-text">{{ hint.text }}</div>
+                <div class="hint-points">Valeur: {{ hint.points }} points</div>
+            </div>
+            {% endfor %}
+            
+            <button id="next-hint-btn" class="next-hint-btn">Indice suivant</button>
+            <div id="bonus-points" class="bonus-points" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post">
+    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="hint_level" id="hint-level" value="1">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-hint-level" value="{{ hints|length }}">
+
+    <div class="progressive-hint-container">
+        <h2>Qui est cette personne ?</h2>
+        <div class="progressive-hint-choices" id="person-choices">
+            {% for person in choices %}
+            <button type="button" class="progressive-hint-choice-btn choice-btn"
+                    onclick="checkProgressiveHintAnswer('{{ employee.name }}', '{{ person.name }}', this)">
+                <img src="{{ person.image_url }}" alt="{{ person.name }}">
+                {{ person.name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+</form>
+
+<script>
+    // Initialize variables
+    let currentHintLevel = 1;
+    let maxHintLevel = parseInt(document.getElementById('max-hint-level').value);
+    
+    // Function to show the next hint
+    document.getElementById('next-hint-btn').addEventListener('click', function() {
+        if (currentHintLevel < maxHintLevel) {
+            currentHintLevel++;
+            
+            // Update the hint level in the form
+            document.getElementById('hint-level').value = currentHintLevel;
+            
+            // Update the active hint
+            document.querySelectorAll('.hint').forEach(hint => {
+                hint.classList.remove('active');
+            });
+            document.getElementById(`hint-${currentHintLevel}`).classList.add('active');
+            
+            // Disable the button if we've reached the maximum hint level
+            if (currentHintLevel >= maxHintLevel) {
+                this.disabled = true;
+            }
+        }
+    });
+    
+    // Function to check the answer in progressive hint mode
+    function checkProgressiveHintAnswer(correct, selected, element) {
+        const buttons = document.querySelectorAll('#person-choices button');
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        // Disable the next hint button
+        document.getElementById('next-hint-btn').disabled = true;
+
+        if (correct === selected) {
+            element.classList.add('correct');
+            document.getElementById('correct-answer').value = 1;
+            
+            // Display bonus points based on hint level
+            let bonusPoints = 0;
+            if (currentHintLevel === 1) {
+                bonusPoints = 3;
+            } else if (currentHintLevel === 2) {
+                bonusPoints = 2;
+            } else {
+                bonusPoints = 1;
+            }
+            
+            const bonusPointsElement = document.getElementById('bonus-points');
+            bonusPointsElement.textContent = `+${bonusPoints} points!`;
+            bonusPointsElement.style.display = 'block';
+            
+            // Update progress bar
+            const progressBar = document.getElementById('progress-bar');
+            const currentQuestion = parseInt(document.getElementById('current-question').value);
+            const totalQuestions = parseInt(document.getElementById('total-questions').value);
+            const progressPercentage = (currentQuestion / totalQuestions) * 100;
+            progressBar.style.width = `${progressPercentage}%`;
+        } else {
+            element.classList.add('incorrect');
+            buttons.forEach(btn => {
+                if (btn.textContent.trim() === correct) {
+                    btn.classList.add('correct');
+                }
+            });
+            document.body.classList.add('shake');
+            setTimeout(() => {
+                document.body.classList.remove('shake');
+            }, 500);
+        }
+
+        // Set answersCount to 1 to enable the next button
+        answersCount = 1;
+        enableNextButton();
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function () {
+        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        const maxScore = parseInt(document.getElementById('max-score').value);
+        const currentQuestion = parseInt(document.getElementById('current-question').value);
+        
+        // Update progress counter
+        document.getElementById('question-counter').textContent = 
+            `${currentQuestion} / ${totalQuestions}`;
+        
+        // Update progress bar
+        const progressBar = document.getElementById('progress-bar');
+        const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
+        progressBar.style.width = `${progressPercentage}%`;
+        
+        // Reset for new question
+        resetAnswersCount();
+        toggleStats();
+    });
+</script>
+</body>
+</html>
