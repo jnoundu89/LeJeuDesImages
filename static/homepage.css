@@ -70,23 +70,37 @@
 /* Game header styles */
 .game-header {
     text-align: center;
-    padding: var(--space-lg) var(--space-md);
+    padding: var(--space-xl) var(--space-md) var(--space-lg);
     margin-bottom: var(--space-xl);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .game-logo {
-    max-width: 150px;
-    margin-bottom: var(--space-md);
+    max-width: 200px;
+    margin: 0 auto var(--space-md) auto;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.game-logo:hover {
+    transform: scale(1.05);
 }
 
 .game-title {
-    font-size: 3.5rem;
+    font-size: 3.8rem;
     margin-bottom: var(--space-md);
     color: var(--accent-dark);
-    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 15px rgba(255, 215, 0, 0.5);
     font-weight: 800;
-    letter-spacing: 1px;
+    letter-spacing: 2px;
+    position: relative;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: var(--border-radius-md);
 }
 
 .game-tagline {
@@ -347,6 +361,39 @@
     color: var(--dark);
 }
 
+/* Toggle animation button */
+.toggle-animation-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toggle-animation-btn {
+    background: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(10px);
+    color: var(--accent-dark);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.toggle-animation-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+.toggle-animation-btn i {
+    font-size: 1.2rem;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .game-title {
@@ -363,6 +410,16 @@
 
     .mode-card p {
         min-height: auto;
+    }
+
+    .toggle-animation-container {
+        top: 10px;
+        right: 10px;
+    }
+
+    .toggle-animation-btn {
+        width: 35px;
+        height: 35px;
     }
 }
 

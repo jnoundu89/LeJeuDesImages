@@ -1,5 +1,38 @@
 /* animations.css - Enhanced animations for LeJeuDesImages */
 
+/* Bouncing Image Animation */
+.bouncing-image-container {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    z-index: 100;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.bouncing-image-container:hover {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 1);
+    cursor: pointer;
+}
+
+.bouncing-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 1s ease;
+}
+
+.bouncing-image.fade-out {
+    opacity: 0;
+}
+
+.bouncing-image.fade-in {
+    opacity: 1;
+}
+
 /* Fade In Animation */
 @keyframes fadeIn {
     from { opacity: 0; }
@@ -154,10 +187,17 @@
     100% { background-position: 0% 50%; }
 }
 
+@keyframes borderGlow {
+    0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 193, 7, 0.6); }
+    100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+}
+
 .gradient-bg {
-    background: linear-gradient(-45deg, var(--primary-dark), var(--secondary-dark), var(--primary), var(--secondary));
-    background-size: 400% 400%;
-    animation: gradientBG 15s ease infinite;
+    background: linear-gradient(-45deg, var(--primary-dark), var(--secondary-dark), var(--accent-dark), var(--primary));
+    background-size: 300% 300%;
+    animation: gradientBG 10s ease infinite, borderGlow 3s ease-in-out infinite;
+    border: 2px solid rgba(255, 215, 0, 0.3);
 }
 
 /* Card Hover Effects */
@@ -244,4 +284,69 @@
     transform: skewX(-25deg);
     background-position: -100px;
     animation: shine 3s infinite;
+}
+
+/* Golden Flash Animation for Konami Code Easter Egg */
+@keyframes goldenFlash {
+    0% { background-color: rgba(255, 215, 0, 0); }
+    50% { background-color: rgba(255, 215, 0, 0.3); }
+    100% { background-color: rgba(255, 215, 0, 0); }
+}
+
+.golden-flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    animation: goldenFlash 0.3s ease-out forwards;
+}
+
+/* Fireworks Animation for Konami Code Easter Egg */
+@keyframes firework {
+    0% { 
+        transform: translate(var(--x), var(--initialY)); 
+        width: 0.5vmin; 
+        height: 0.5vmin; 
+        opacity: 1; 
+    }
+    50% { 
+        width: 0.5vmin; 
+        height: 0.5vmin; 
+        opacity: 1; 
+    }
+    100% { 
+        width: 0vmin; 
+        height: 0vmin; 
+        opacity: 0; 
+        transform: translate(
+            calc(var(--x) + var(--xEnd)), 
+            calc(var(--initialY) + var(--yEnd))
+        );
+    }
+}
+
+.firework, .firework::before, .firework::after {
+    --initialY: 60vh;
+    content: "";
+    position: absolute;
+    width: 0.5vmin;
+    height: 0.5vmin;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0.5vmin var(--color);
+    animation: firework var(--duration) ease-in-out forwards;
+    opacity: 0;
+}
+
+.fireworks-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9998;
+    pointer-events: none;
+    overflow: hidden;
 }

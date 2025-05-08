@@ -21,7 +21,8 @@ def init_routes(game_mode_factory: GameModeFactory):
         """
         # Get all available game modes for display
         modes = game_mode_factory.get_all_modes()
-        mode_info = [{'name': mode.name, 'description': mode.description} for mode in modes.values()]
+        # Exclude ARR mode from the regular modes list (only accessible via Konami code)
+        mode_info = [{'name': mode.name, 'description': mode.description} for mode in modes.values() if mode.name != "arr"]
 
         return render_template('mode_selection.html', modes=mode_info)
 
@@ -240,3 +241,19 @@ def init_routes(game_mode_factory: GameModeFactory):
         Easter egg route for the ARR game mode.
         """
         return render_template('arr.html')
+
+    @game_bp.route('/api/employee_images')
+    def get_employee_images():
+        """
+        Return all employee image URLs as JSON.
+        """
+        from flask import jsonify
+
+        # Get all employees from the game manager
+        employee_data = game_mode_factory.get_mode("normal").game_manager.employee_data
+        employees = employee_data.get_all_employees()
+
+        # Extract image URLs
+        image_urls = [employee['image_url'] for employee in employees]
+
+        return jsonify(image_urls)

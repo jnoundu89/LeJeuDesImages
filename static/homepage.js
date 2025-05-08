@@ -165,6 +165,9 @@ function initKonamiCode() {
     document.addEventListener('keydown', function(e) {
         // Check if the key matches the next key in the Konami code
         if (e.key === konamiCode[konamiIndex]) {
+            // Create golden flash effect for correct input
+            createGoldenFlash();
+
             konamiIndex++;
 
             // If the full code is entered
@@ -173,41 +176,42 @@ function initKonamiCode() {
                 konamiIndex = 0;
             }
         } else {
+            // Only shake if we've started the sequence but made a mistake
+            if (konamiIndex > 0) {
+                // Create shake effect for incorrect input
+                createScreenShake();
+            }
+
+            // Reset the sequence
             konamiIndex = 0;
         }
     });
 }
 
-// Activate Easter egg
-function activateEasterEgg() {
-    // Create confetti effect
-    createConfetti();
+// Create golden flash effect
+function createGoldenFlash() {
+    const flash = document.createElement('div');
+    flash.classList.add('golden-flash');
+    document.body.appendChild(flash);
 
-    // Redirect to Easter egg page after a short delay
+    // Remove the flash element after animation completes
     setTimeout(() => {
-        window.location.href = '/arr';
-    }, 2000);
+        flash.remove();
+    }, 300);
 }
 
-// Create confetti effect
-function createConfetti() {
-    const confettiCount = 200;
-    const confettiColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+// Create screen shake effect
+function createScreenShake() {
+    document.body.classList.add('shake');
 
-    for (let i = 0; i < confettiCount; i++) {
-        const confetti = document.createElement('div');
-        confetti.classList.add('confetti');
+    // Remove the shake class after animation completes
+    setTimeout(() => {
+        document.body.classList.remove('shake');
+    }, 500);
+}
 
-        // Random position, color, and animation delay
-        confetti.style.left = Math.random() * 100 + 'vw';
-        confetti.style.backgroundColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-        confetti.style.animationDelay = Math.random() * 5 + 's';
-
-        document.body.appendChild(confetti);
-
-        // Remove confetti after animation
-        setTimeout(() => {
-            confetti.remove();
-        }, 5000);
-    }
+// Activate Easter egg
+function activateEasterEgg() {
+    // Redirect to Easter egg page immediately
+    window.location.href = '/arr';
 }
