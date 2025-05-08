@@ -2,7 +2,7 @@
 
 /* Hide statistics by default */
 .stats-banner {
-    display: none !important;
+    display: none;
     max-height: 300px;
     overflow-y: auto;
 }

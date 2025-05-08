@@ -6,6 +6,12 @@ let timerValue = 60;
 let timerInterval;
 
 document.addEventListener('DOMContentLoaded', (event) => {
+    // Load the score section loader script
+    const loaderScript = document.createElement('script');
+    loaderScript.src = '/static/score-section-loader.js';
+    loaderScript.defer = true;
+    document.head.appendChild(loaderScript);
+
     // Initialize current score and max score if they exist
     const currentScoreElement = document.getElementById('current-score');
     if (currentScoreElement) {
@@ -13,20 +19,26 @@ document.addEventListener('DOMContentLoaded', (event) => {
         if (scoreText) {
             const scoreParts = scoreText.split(' ');
             if (scoreParts.length >= 5) {
-                currentScore = parseInt(scoreParts[2]);
-                maxScore = parseInt(scoreParts[4]);
+                currentScore = parseInt(scoreParts[2]) || 0;
+                maxScore = parseInt(scoreParts[4]) || 0;
             }
         }
     }
 
     // Initialize page elements
     const progressBarElement = document.querySelector('.progress-bar-fill');
-    const totalQuestionsElement = document.getElementById('total_questions');
-    const maxScoreElement = document.getElementById('maxScore');
+    const totalQuestionsElement = document.getElementById('total_questions') || document.getElementById('total-questions');
+
+    // Try different possible IDs for max score element
+    let maxScoreElement = document.getElementById('maxScore') || document.getElementById('max-score') || document.getElementById('max_score');
 
     if (progressBarElement && totalQuestionsElement && maxScoreElement) {
-        const totalQuestions = parseInt(totalQuestionsElement.value);
-        const maxScoreValue = parseInt(maxScoreElement.value);
+        const totalQuestions = parseInt(totalQuestionsElement.value) || 0;
+        const maxScoreValue = parseInt(maxScoreElement.value) || 0;
+        // Update global maxScore if it's still 0
+        if (maxScore === 0 && maxScoreValue > 0) {
+            maxScore = maxScoreValue;
+        }
         updateProgressBar(totalQuestions, maxScoreValue / 4);
     }
 
@@ -106,13 +118,22 @@ function checkAnswer(correct, selected, element, currentScoreId, titleId) {
 
         // Update the score display with animation
         const scoreElement = document.getElementById('current-score');
-        scoreElement.classList.add('score-updated');
-        scoreElement.textContent = `Score actuel : ${currentScore} / ${maxScore}`;
+        if (scoreElement) {
+            scoreElement.classList.add('score-updated');
+            // Ensure we have valid numbers for display
+            const displayCurrentScore = isNaN(currentScore) ? 0 : currentScore;
+            const displayMaxScore = isNaN(maxScore) ? 0 : maxScore;
+            scoreElement.textContent = `Score actuel : ${displayCurrentScore} / ${displayMaxScore}`;
+        }
 
         // Remove animation class after animation completes
-        setTimeout(() => {
-            scoreElement.classList.remove('score-updated');
-        }, 1000);
+        if (scoreElement) {
+            setTimeout(() => {
+                if (scoreElement) {
+                    scoreElement.classList.remove('score-updated');
+                }
+            }, 1000);
+        }
 
         // Check if all questions are answered
         answersCount += 1;
@@ -211,10 +232,22 @@ function checkImage(correct, selected, element) {
     if (isReverseMode) {
         answersCount = 1;
         // Use innerHTML for reverse mode to maintain the span
-        document.getElementById('current-score').innerHTML = `Score actuel : <span class="score">${currentScore} / ${maxScore}</span>`;
+        const scoreElement = document.getElementById('current-score');
+        if (scoreElement) {
+            // Ensure we have valid numbers for display
+            const displayCurrentScore = isNaN(currentScore) ? 0 : currentScore;
+            const displayMaxScore = isNaN(maxScore) ? 0 : maxScore;
+            scoreElement.innerHTML = `Score actuel : <span class="score">${displayCurrentScore} / ${displayMaxScore}</span>`;
+        }
     } else {
         answersCount += 1;
-        document.getElementById('current-score').textContent = `Score actuel : ${currentScore} / ${maxScore}`;
+        const scoreElement = document.getElementById('current-score');
+        if (scoreElement) {
+            // Ensure we have valid numbers for display
+            const displayCurrentScore = isNaN(currentScore) ? 0 : currentScore;
+            const displayMaxScore = isNaN(maxScore) ? 0 : maxScore;
+            scoreElement.textContent = `Score actuel : ${displayCurrentScore} / ${displayMaxScore}`;
+        }
     }
 
     if (answersCount === 1 || (isReverseMode && answersCount === 1)) {
@@ -225,6 +258,11 @@ function checkImage(correct, selected, element) {
 
 function updateProgressBar(current, total) {
     const progressBarFill = document.querySelector('.progress-bar-fill');
+    if (!progressBarFill) return;
+
+    // Ensure current and total are valid numbers
+    current = parseInt(current) || 0;
+    total = parseInt(total) || 1; // Default to 1 to avoid division by zero
 
     // Ensure current is at least 1 to make the progress bar visible at the beginning
     const displayCurrent = Math.max(1, current);
@@ -255,6 +293,12 @@ function startTimer() {
     timerValue = 60;
     updateTimer();
     clearInterval(timerInterval);
+
+    // Remove the game-over class to restart the timer animation
+    const timerElement = document.getElementById('timer');
+    if (timerElement) {
+        timerElement.classList.remove('game-over');
+    }
     timerInterval = setInterval(function() {
         timerValue--;
         updateTimer();
@@ -310,6 +354,12 @@ function enableNextButton() {
     nextButton.disabled = false;
     nextButton.classList.remove('disabled-btn');
     document.getElementById('score-increment').value = correctAnswers;
+
+    // Stop the timer animation by adding the game-over class
+    const timerElement = document.getElementById('timer');
+    if (timerElement) {
+        timerElement.classList.add('game-over');
+    }
 
     // Check if we're in reverse mode
     const isReverseMode = document.getElementById('image-choices') !== null;
@@ -530,12 +580,16 @@ document.addEventListener('keydown', function(e) {
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize progress bar if elements exist
     const progressBarFill = document.querySelector('.progress-bar-fill');
-    const totalQuestionsElement = document.getElementById('total-questions');
-    const maxScoreElement = document.getElementById('max-score');
+    const totalQuestionsElement = document.getElementById('total-questions') || document.getElementById('total_questions');
+    const maxScoreElement = document.getElementById('max-score') || document.getElementById('maxScore') || document.getElementById('max_score');
 
     if (progressBarFill && totalQuestionsElement && maxScoreElement) {
-        const totalQuestions = parseInt(totalQuestionsElement.value);
-        const maxScore = parseInt(maxScoreElement.value);
+        const totalQuestions = parseInt(totalQuestionsElement.value) || 0;
+        const maxScoreValue = parseInt(maxScoreElement.value) || 0;
+        // Update global maxScore if it's still 0
+        if (maxScore === 0 && maxScoreValue > 0) {
+            maxScore = maxScoreValue;
+        }
         updateProgressBar(totalQuestions, maxScore / 4);
     }
 

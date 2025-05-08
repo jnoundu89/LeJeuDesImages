@@ -6,8 +6,14 @@
     <title>Qui qui c'est le monsieur / la madame ?</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='normal-mode.css') }}">
+    {% if use_score_section_styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='score-section.css') }}">
+    {% endif %}
     <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
     <script src="{{ url_for('static', filename='normal-mode.js') }}" defer></script>
+    {% if use_score_section_styles %}
+    <script src="{{ url_for('static', filename='score-section.js') }}" defer></script>
+    {% endif %}
     <style>
         .choice-btn {
             width: 100%;
@@ -166,7 +172,6 @@
         <div class="stats">
             <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
             <div id="stats-banner" class="stats-banner">
-                <h2>Statistiques de jeu</h2>
                 <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
                 <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
                 <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
@@ -244,7 +249,7 @@
         </div>
     </form>
     <div id="fireworks-container" class="fireworks"></div>
-    
+
     <script>
         // Initialize the game when the page loads
         document.addEventListener('DOMContentLoaded', function() {
@@ -252,7 +257,7 @@
             const totalQuestions = document.getElementById('total-questions').value;
             const maxScore = document.getElementById('max-score').value;
             updateProgressBar(totalQuestions, maxScore / 4);
-            
+
             // Reset answers count
             resetAnswersCount();
         });

@@ -1,0 +1,181 @@
+/* Enhanced Score Section Styling for LeJeuDesImages
+ * This file contains styles for the score section across all game modes
+ */
+
+/* Base score section styling */
+.score-section {
+    background: linear-gradient(135deg, rgba(0, 51, 102, 0.9), rgba(0, 51, 102, 0.7));
+    border: none;
+    border-radius: var(--border-radius-lg);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    padding: 1.2rem;
+    margin-top: 1rem;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    transform-origin: center;
+    animation: scoreSection-appear 0.5s ease-out forwards;
+}
+
+/* Glowing border effect */
+.score-section::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, var(--accent-dark), var(--primary), var(--secondary), var(--accent-dark));
+    z-index: -1;
+    border-radius: calc(var(--border-radius-lg) + 2px);
+    background-size: 400% 400%;
+    animation: borderGlow 3s ease infinite;
+    opacity: 0.7;
+}
+
+/* Score section heading */
+.score-section h2 {
+    color: var(--accent-dark);
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    padding-bottom: 0.8rem;
+}
+
+/* Animated underline for heading */
+.score-section h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, var(--accent-dark), transparent);
+    border-radius: 3px;
+}
+
+/* Score text styling */
+.score-section .score {
+    color: var(--accent-dark);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    display: inline-block;
+    position: relative;
+}
+
+/* Score value glow effect */
+.score-section .score::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+    z-index: -1;
+    opacity: 0.7;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+/* Score paragraphs */
+.score-section p {
+    margin: 0.7rem 0;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.8rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-md);
+    transition: all 0.3s ease;
+}
+
+/* Current score highlight */
+#current-score {
+    background: rgba(76, 175, 80, 0.1) !important;
+    border: 1px solid rgba(76, 175, 80, 0.3) !important;
+    border-radius: var(--border-radius-md);
+    padding: 0.7rem 1rem !important;
+    margin: 1rem 0 !important;
+    position: relative;
+    overflow: hidden;
+    animation: currentScore-pulse 2s infinite alternate;
+}
+
+/* High score styling */
+#high-score {
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: var(--border-radius-md);
+    padding: 0.7rem 1rem;
+}
+
+/* Hover effects */
+.score-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.score-section p:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+/* Score update animation enhancement */
+.score-updated {
+    animation: scoreUpdated 1s ease, scoreGlow 1.5s ease !important;
+}
+
+/* Animations */
+@keyframes scoreSection-appear {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+    50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+    100% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+@keyframes currentScore-pulse {
+    from { box-shadow: 0 0 10px rgba(76, 175, 80, 0.2); }
+    to { box-shadow: 0 0 20px rgba(76, 175, 80, 0.4); }
+}
+
+@keyframes scoreGlow {
+    0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+    50% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6); }
+    100% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .score-section {
+        padding: 1rem;
+    }
+    
+    .score-section h2 {
+        font-size: 1.2rem;
+    }
+    
+    .score-section .score {
+        font-size: 1.3rem;
+    }
+}

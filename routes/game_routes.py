@@ -121,7 +121,8 @@ def init_routes(game_mode_factory: GameModeFactory):
             'total_questions': len(session['used_indices']),
             'current_question': session.get('current_question', 0),
             'total_employees': len(mode.game_manager.get_game_data(session['data_id'])),
-            'use_normal_mode_styles': mode_name == "normal"  # Flag to include normal mode styles
+            'use_normal_mode_styles': mode_name == "normal",  # Flag to include normal mode styles
+            'use_score_section_styles': True  # Flag to include enhanced score section styles
         }
 
         # Add question-specific data
