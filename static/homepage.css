@@ -133,7 +133,7 @@
 
 /* Mode card styles */
 .mode-card {
-    background: rgba(30, 30, 30, 0.7);
+    background: rgba(26, 28, 108, 0.75);
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius-lg);
     padding: var(--space-lg);
@@ -142,7 +142,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
     position: relative;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(63, 81, 181, 0.4);
     cursor: pointer;
     min-height: 450px;
     display: flex;
@@ -150,7 +150,7 @@
 }
 
 .mode-card:hover {
-    background: rgba(40, 40, 40, 0.8);
+    background: rgba(39, 42, 125, 0.85);
     transform: translateY(-10px) scale(1.02);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
 }
@@ -211,7 +211,7 @@
 /* Mode button styles */
 .mode-button {
     display: inline-block;
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    background: linear-gradient(135deg, var(--success), var(--secondary-dark));
     color: white;
     border: none;
     padding: var(--space-sm) var(--space-lg);
@@ -240,14 +240,14 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+    background: linear-gradient(135deg, var(--secondary-dark), var(--success));
     transition: all 0.3s ease;
     z-index: -1;
 }
 
 .mode-button:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2), 0 0 15px rgba(76, 175, 80, 0.5);
 }
 
 .mode-button:hover::before {
@@ -316,6 +316,7 @@
 .mode-features li {
     margin-bottom: var(--space-xs);
     position: relative;
+    color: var(--light);
 }
 
 .mode-features li::before {
@@ -337,7 +338,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(200, 200, 200, 0.5);
     margin: 0 3px;
 }
 
