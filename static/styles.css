@@ -846,6 +846,134 @@ button:focus, .btn:focus {
     opacity: 1;
 }
 
+/* Next person button styling */
+.next-person-btn {
+    display: block;
+    width: 300px;
+    margin: var(--space-lg) auto;
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(135deg, var(--accent-dark), var(--primary));
+    color: var(--light);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.next-person-btn:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+.next-person-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.next-person-btn:hover:before {
+    width: 100%;
+}
+
+.next-person-btn:active {
+    transform: translateY(-2px);
+}
+
+/* Form styling for next person button */
+form[action="/check"] {
+    display: block;
+    margin-top: 0;
+}
+
+/* Position the button in the right column */
+.main-layout {
+    position: relative;
+}
+
+.right-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-content .score-section {
+    margin-bottom: 10px;
+}
+
+.right-content::after {
+    content: "";
+    display: block;
+    height: 60px; /* Space for the button */
+}
+
+/* Move the button to the right column */
+.main-layout ~ form[action="/check"] {
+    position: relative;
+}
+
+.main-layout ~ form[action="/check"] button[type="submit"] {
+    position: absolute;
+    top: -70px; /* Position below the score section */
+    right: 0; /* Align to the right edge */
+    width: 25%; /* Match the width of the right column */
+    margin: 0;
+    padding: var(--space-md) var(--space-xl);
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    background: linear-gradient(135deg, var(--accent-dark), var(--primary));
+    color: var(--light);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    transition: all var(--transition-medium);
+    overflow: hidden;
+    z-index: 100;
+}
+
+form[action="/check"] button[type="submit"]:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--accent-dark));
+    transition: all 0.4s ease;
+    z-index: -1;
+}
+
+form[action="/check"] button[type="submit"]:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+form[action="/check"] button[type="submit"]:hover:before {
+    width: 100%;
+}
+
+form[action="/check"] button[type="submit"]:active {
+    transform: translateY(-2px);
+}
+
+form[action="/check"] button[type="submit"].disabled-btn {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.5), rgba(63, 81, 181, 0.5));
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
 .btn-large {
     padding: var(--space-md) var(--space-xl);
     font-size: 1.2rem;
