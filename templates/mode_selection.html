@@ -35,6 +35,8 @@
 
     <!-- Game modes container -->
     <main class="mode-container">
+        <!-- Regular game modes section -->
+        <h2 class="section-title">Modes de jeu classiques</h2>
         <div class="mode-grid">
             {% for mode in modes %}
             <div class="mode-card">
@@ -117,6 +119,37 @@
                     <li>Défi personnalisé</li>
                 </ul>
                 {% endif %}
+
+                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Experimental game modes section -->
+        <h2 class="section-title">Modes de jeu expérimentaux</h2>
+        <p class="section-description">Découvrez nos modes de jeu uniques et défis personnalisés</p>
+        <div class="mode-grid">
+            {% for mode in experimental_modes %}
+            <div class="mode-card">
+                <i class="fas fa-flask mode-icon"></i>
+                <span class="mode-badge experimental">Expérimental</span>
+
+                <h2>{{ mode.name|capitalize }}</h2>
+
+                <!-- Difficulty indicator -->
+                <div class="difficulty-indicator">
+                    <div class="difficulty-dot active"></div>
+                    <div class="difficulty-dot active"></div>
+                    <div class="difficulty-dot active"></div>
+                </div>
+
+                <p>{{ mode.description }}</p>
+
+                <!-- Mode features -->
+                <ul class="mode-features">
+                    <li>Mode de jeu unique</li>
+                    <li>Défi personnalisé</li>
+                </ul>
 
                 <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
             </div>

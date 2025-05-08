@@ -22,9 +22,29 @@ def init_routes(game_mode_factory: GameModeFactory):
         # Get all available game modes for display
         modes = game_mode_factory.get_all_modes()
         # Exclude ARR mode from the regular modes list (only accessible via Konami code)
-        mode_info = [{'name': mode.name, 'description': mode.description} for mode in modes.values() if mode.name != "arr"]
 
-        return render_template('mode_selection.html', modes=mode_info)
+        # Define experimental game modes (new and fun/crazy modes)
+        experimental_modes = ["speed", "team_guess", "missing_person", "position_match", "progressive_hint", 
+                             "scrambled_face", "emoji_challenge", "silhouette", "mirror"]
+
+        # Separate regular and experimental modes
+        regular_modes = []
+        experimental_mode_info = []
+
+        for mode in modes.values():
+            if mode.name == "arr":
+                continue  # Skip ARR mode
+
+            mode_data = {'name': mode.name, 'description': mode.description}
+
+            if mode.name in experimental_modes:
+                experimental_mode_info.append(mode_data)
+            else:
+                regular_modes.append(mode_data)
+
+        return render_template('mode_selection.html', 
+                              modes=regular_modes, 
+                              experimental_modes=experimental_mode_info)
 
     @game_bp.route('/mode_selection')
     def mode_selection():
