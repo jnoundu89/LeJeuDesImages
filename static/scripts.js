@@ -361,15 +361,24 @@ function enableNextButton() {
         timerElement.classList.add('game-over');
     }
 
+    // Stop the timer when the next button becomes clickable
+    clearInterval(timerInterval);
+
     // Check if we're in reverse mode
     const isReverseMode = document.getElementById('image-choices') !== null;
 
     // Determine if we should show confetti based on game mode and success
     let showConfetti = false;
 
+    // Check if we're in pixelation mode
+    const isPixelationMode = document.getElementById('pixelated-image') !== null;
+
+    // Check if the answer was correct
+    const isCorrectAnswer = document.getElementById('correct-answer').value === "1";
+
     if (isReverseMode) {
         // In reverse mode, show confetti if the answer was correct
-        showConfetti = document.getElementById('correct-answer').value === "1";
+        showConfetti = isCorrectAnswer;
     } else {
         // In normal mode, show confetti if all answers are correct
         showConfetti = correctAnswers === 4;
@@ -436,8 +445,9 @@ function enableNextButton() {
                 }
             }, 1500);
         }
-    } else {
-        // Only add shake effect if confetti is not shown
+    } else if (!(isPixelationMode && isCorrectAnswer)) {
+        // Only add shake effect if confetti is not shown AND
+        // we're not in pixelation mode with a correct answer
         document.body.classList.add('shake');
         setTimeout(() => {
             document.body.classList.remove('shake');

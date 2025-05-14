@@ -194,6 +194,8 @@
             element.classList.add('correct');
             document.getElementById('correct-answer').value = 1;
             document.getElementById('score-increment').value = 1;
+            // Add confetti effect for correct answer
+            createConfetti(element);
         } else {
             element.classList.add('incorrect');
             buttons.forEach(btn => {

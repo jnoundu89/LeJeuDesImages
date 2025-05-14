@@ -47,6 +47,17 @@ class GameManager:
         """
         return self.game_data_cache.get(data_id, [])
 
+    def update_game_data(self, data_id: int, data: Any) -> None:
+        """
+        Update game data in the cache.
+
+        Args:
+            data_id: ID of the data to update
+            data: New data to store
+        """
+        if data_id in self.game_data_cache:
+            self.game_data_cache[data_id] = data
+
     def initialize_normal_mode(self, user_id: Optional[int] = None) -> Dict[str, Any]:
         """
         Initialize the normal game mode.
