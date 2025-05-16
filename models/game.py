@@ -188,7 +188,7 @@ class GameManager:
 
         return {
             'game_over': False,
-            'image_url': selected_employee['image_url'],
+            'image_url': selected_employee['picture_href'],
             'correct_values': correct_values,
             'choices': {
                 'companies': companies,
