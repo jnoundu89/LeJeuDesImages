@@ -59,13 +59,13 @@ def download_image(url, save_path):
     try:
         # Check if the URL is from ilucca.net
         if "ilucca.net" in url:
-            # Modify the URL to request 300x300 images
+            # Modify the URL to request 400x400 images
             if "?a=0" in url:
-                url = url.replace("?a=0", "?a=0&width=200")
+                url = url.replace("?a=0", "?a=0&width=400")
             elif "?" in url:
-                url = url + "&width=200"
+                url = url + "&width=400"
             else:
-                url = url + "?a=0&width=200"
+                url = url + "?a=0&width=400"
 
             print(f"Modified URL for Lucca API: {url}")
 

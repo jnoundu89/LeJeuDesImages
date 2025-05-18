@@ -166,15 +166,42 @@
 }
 
 /* Responsive adjustments */
+@media (min-width: 1921px) {
+    .score-section {
+        padding: 1.5rem;
+    }
+
+    .score-section h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .score-section .score {
+        font-size: 2rem;
+    }
+
+    .score-section p {
+        font-size: 1.3rem;
+        padding: 0.7rem 1rem;
+        margin: 1rem 0;
+    }
+
+    #current-score, #high-score {
+        padding: 1rem 1.2rem !important;
+        margin: 1.2rem 0 !important;
+    }
+}
+
 @media (max-width: 768px) {
     .score-section {
         padding: 1rem;
     }
-    
+
     .score-section h2 {
         font-size: 1.2rem;
     }
-    
+
     .score-section .score {
         font-size: 1.3rem;
     }

@@ -402,6 +402,78 @@
 }
 
 /* Responsive adjustments */
+@media (min-width: 1921px) {
+    .typing-container {
+        max-width: 1200px;
+    }
+
+    .game-logo {
+        max-width: 300px;
+    }
+
+    .game-title {
+        font-size: 4.5rem;
+    }
+
+    .game-tagline {
+        font-size: 1.8rem;
+        max-width: 1200px;
+    }
+
+    .mode-container {
+        max-width: 1600px;
+    }
+
+    .mode-grid {
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: var(--space-xxl);
+    }
+
+    .mode-card {
+        min-height: 500px;
+        padding: var(--space-xl);
+    }
+
+    .mode-card h2 {
+        font-size: 2.2rem;
+    }
+
+    .mode-card p {
+        font-size: 1.3rem;
+    }
+
+    .mode-icon {
+        font-size: 4rem;
+    }
+
+    .mode-button {
+        font-size: 1.3rem;
+        padding: var(--space-md) var(--space-xl);
+    }
+
+    .footer-content {
+        max-width: 1200px;
+    }
+
+    .section-title {
+        font-size: 3rem;
+    }
+
+    .section-description {
+        font-size: 1.5rem;
+        max-width: 1200px;
+    }
+
+    .toggle-animation-btn {
+        width: 50px;
+        height: 50px;
+    }
+
+    .toggle-animation-btn i {
+        font-size: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
     .game-title {
         font-size: 2.5rem;

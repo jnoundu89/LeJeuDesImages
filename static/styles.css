@@ -218,6 +218,70 @@ p {
 }
 
 /* Responsive adjustments */
+@media (min-width: 1921px) {
+    .container, .main-layout {
+        max-width: 1600px;
+    }
+
+    .image-container img {
+        max-width: 400px;
+        max-height: 400px;
+    }
+
+    .photo-next-container img {
+        max-width: 380px;
+        max-height: 380px;
+    }
+
+    .profile-image {
+        max-width: 380px;
+        max-height: 380px;
+    }
+
+    .timer {
+        max-width: 400px;
+        font-size: 1.8rem;
+    }
+
+    .stats {
+        max-width: 350px;
+    }
+
+    .next-person-btn {
+        width: 400px;
+        font-size: 1.4rem;
+    }
+
+    .game-section {
+        max-width: 1000px;
+        max-height: calc(100vh - 400px);
+    }
+
+    h1 {
+        font-size: 3rem;
+    }
+
+    h2 {
+        font-size: 2.5rem;
+    }
+
+    h3 {
+        font-size: 2rem;
+    }
+
+    p, .choice-btn {
+        font-size: 1.2rem;
+    }
+
+    .score {
+        font-size: 1.5rem;
+    }
+
+    #current-score, #high-score {
+        font-size: 1.5rem;
+    }
+}
+
 @media (max-width: 1024px) {
     .main-layout {
         grid-template-columns: 1fr 2fr;
