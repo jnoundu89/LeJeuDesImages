@@ -169,11 +169,12 @@ class GameManager:
             Dictionary with question data
         """
         # Get correct values
+        # Map the new CSV column names to the expected fields
         correct_values = {
-            'company': selected_employee['company'],
-            'team': selected_employee['team'],
-            'name': selected_employee['name'],
-            'position': selected_employee['position']
+            'company': selected_employee['legalEntity_name'],
+            'team': selected_employee['department_name'],
+            'name': f"{selected_employee['firstName']} {selected_employee['lastName']}",
+            'position': selected_employee['jobTitle']
         }
 
         # Get choices for each category
@@ -182,13 +183,15 @@ class GameManager:
         # For team, name, and position, filter by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
 
-        teams = self.employee_data.get_random_choices('team', correct_values['team'])
-        names = self.employee_data.get_random_choices('name', correct_values['name'], filter_dict=sex_filter)
-        positions = self.employee_data.get_random_choices('position', correct_values['position'], filter_dict=sex_filter)
+        teams = self.employee_data.get_random_choices('department_name', correct_values['team'])
+        # For names, we need to create a combined field for comparison
+        names = self.employee_data.get_random_choices('firstName', selected_employee['firstName'], filter_dict=sex_filter)
+        names = [f"{selected_employee['firstName']} {selected_employee['lastName']}"] + [n for n in names if n != selected_employee['firstName']][:3]
+        positions = self.employee_data.get_random_choices('jobTitle', correct_values['position'], filter_dict=sex_filter)
 
         return {
             'game_over': False,
-            'image_url': selected_employee['picture_href'],
+            'image_url': selected_employee['image_path'],
             'correct_values': correct_values,
             'choices': {
                 'companies': companies,
@@ -214,14 +217,19 @@ class GameManager:
             Dictionary with question data
         """
         # In reverse mode, we show the name and ask to identify the person
-        correct_value = selected_employee['name']
+        # Create the full name by joining firstName and lastName
+        correct_value = f"{selected_employee['firstName']} {selected_employee['lastName']}"
 
         # Filter employees by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
         filtered_employees = self.employee_data.get_filtered_employees(sex_filter)
 
+        # Add a full name field to each employee for comparison
+        for employee in filtered_employees:
+            employee['full_name'] = f"{employee['firstName']} {employee['lastName']}"
+
         # Select 3 random employees of the same sex (plus the correct one)
-        other_employees = [e for e in filtered_employees if e['name'] != correct_value]
+        other_employees = [e for e in filtered_employees if e['full_name'] != correct_value]
         if len(other_employees) > 3:
             other_employees = random.sample(other_employees, 3)
 

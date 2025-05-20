@@ -11,7 +11,7 @@ def get_auth_headers():
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
         "cache-control": "max-age=0",
-        "cookie": "authToken=48e8edf3-b1b1-4c5f-8d92-a61407e2c1e3; _dd_s=rum=2&id=bfcb3a68-f816-492b-ac42-6ca96a15ea5c&created=1747354549425&expire=1747355449425",
+        "cookie": "authToken=9168b3ae-6e43-4da5-a82e-b7a5132a1a5b; _dd_s=rum=2&id=d46f5714-5ab1-460f-b3fd-cbb4f2f0b444&created=1747704019630&expire=1747704921932",
         "priority": "u=0, i",
         "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Opera GX\";v=\"118\", \"Chromium\";v=\"133\"",
         "sec-ch-ua-mobile": "?0",

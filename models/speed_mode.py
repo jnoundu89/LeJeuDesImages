@@ -85,17 +85,33 @@ class SpeedMode(GameMode):
 
         # Get correct values
         correct_values = {
-            'name': selected_employee['name'],
+            'name': f"{selected_employee['firstName']} {selected_employee['lastName']}",
         }
 
         # For name choices, filter by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
-        names = self.game_manager.employee_data.get_random_choices('name', correct_values['name'], filter_dict=sex_filter)
+        # Create full name by joining firstName and lastName
+        full_name = f"{selected_employee['firstName']} {selected_employee['lastName']}"
+
+        # Get random first names and create full names for choices
+        first_names = self.game_manager.employee_data.get_random_choices(
+            'firstName',
+            selected_employee['firstName'],
+            filter_dict=sex_filter
+        )
+
+        # Create a list of full names, ensuring the correct one is included
+        names = [full_name]
+        for first_name in first_names:
+            if first_name != selected_employee['firstName']:
+                names.append(f"{first_name} {selected_employee['lastName']}")
+                if len(names) >= 4:  # Limit to 4 choices
+                    break
 
         return {
             'game_over': False,
-            'image_url': selected_employee['picture_href'],
-            'correct_name': correct_values['name'],
+            'image_url': selected_employee['image_path'],
+            'correct_name': full_name,
             'name_choices': names,
             'current_question': current_question,
             'total_questions': len(game_data)

@@ -102,9 +102,9 @@ class TeamGuessMode(GameMode):
 
         return {
             'game_over': False,
-            'image_url': selected_employee['picture_href'],
-            'name': selected_employee['name'],
-            'position': selected_employee['position'],
+            'image_url': selected_employee['image_path'],
+            'name': f"{selected_employee['firstName']} {selected_employee['lastName']}",
+            'position': selected_employee['jobTitle'],
             'correct_team': correct_team,
             'team_choices': team_choices,
             'current_question': current_question,
