@@ -71,24 +71,30 @@ class PixelationMode(GameMode):
         selected_employee = question_data.get('correct_values', {})
 
         # Get choices for name only, filtered by sex
-        sex_filter = {'sex': question_data.get('sex', 'man')}  # Default to 'man' if sex is not provided
-        # Create full name by joining firstName and lastName
-        full_name = f"{selected_employee['firstName']} {selected_employee['lastName']}"
+        sex_filter = {'sex': selected_employee.get('sex', 'man')}  # Default to 'man' if sex is not provided
+        # Create full name by joining firstName and lastName, safely accessing with get() to avoid KeyError
+        first_name = selected_employee.get('firstName', '')
+        last_name = selected_employee.get('lastName', '')
+        full_name = f"{first_name} {last_name}"
 
         # Get random first names and create full names for choices
         first_names = self.game_manager.employee_data.get_random_choices(
             'firstName',
-            selected_employee['firstName'],
+            first_name,  # Use the safely accessed first_name variable
             filter_dict=sex_filter
         )
 
         # Create a list of full names, ensuring the correct one is included
         names = [full_name]
-        for first_name in first_names:
-            if first_name != selected_employee['firstName']:
-                names.append(f"{first_name} {selected_employee['lastName']}")
+        correct_first_name = first_name  # Store the correct first name
+        for name in first_names:
+            if name != correct_first_name:
+                names.append(f"{name} {last_name}")  # Use the safely accessed last_name
                 if len(names) >= 4:  # Limit to 4 choices
                     break
+
+        # Shuffle the names to randomize the order
+        random.shuffle(names)
 
         return {
             'game_over': False,

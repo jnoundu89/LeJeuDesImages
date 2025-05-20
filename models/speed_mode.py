@@ -83,30 +83,38 @@ class SpeedMode(GameMode):
         # Get the selected employee
         selected_employee = game_data[index]
 
+        # Safely access firstName and lastName
+        first_name = selected_employee.get('firstName', '')
+        last_name = selected_employee.get('lastName', '')
+
         # Get correct values
         correct_values = {
-            'name': f"{selected_employee['firstName']} {selected_employee['lastName']}",
+            'name': f"{first_name} {last_name}",
         }
 
         # For name choices, filter by sex for more realistic choices
-        sex_filter = {'sex': selected_employee['sex']}
+        sex_filter = {'sex': selected_employee.get('sex', 'man')}  # Default to 'man' if sex is not provided
         # Create full name by joining firstName and lastName
-        full_name = f"{selected_employee['firstName']} {selected_employee['lastName']}"
+        full_name = f"{first_name} {last_name}"
 
         # Get random first names and create full names for choices
         first_names = self.game_manager.employee_data.get_random_choices(
             'firstName',
-            selected_employee['firstName'],
+            first_name,  # Use the safely accessed first_name variable
             filter_dict=sex_filter
         )
 
         # Create a list of full names, ensuring the correct one is included
         names = [full_name]
-        for first_name in first_names:
-            if first_name != selected_employee['firstName']:
-                names.append(f"{first_name} {selected_employee['lastName']}")
+        correct_first_name = first_name  # Store the correct first name
+        for name in first_names:
+            if name != correct_first_name:
+                names.append(f"{name} {last_name}")  # Use the safely accessed last_name
                 if len(names) >= 4:  # Limit to 4 choices
                     break
+
+        # Shuffle the names to randomize the order
+        random.shuffle(names)
 
         return {
             'game_over': False,

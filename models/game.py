@@ -178,15 +178,25 @@ class GameManager:
         }
 
         # Get choices for each category
-        companies = ['Infolegale', 'Eloficash']  # Fixed options
+        companies = ['INFOLEGALE', 'ELOFICASH']  # Fixed options to match the case in the CSV file
 
         # For team, name, and position, filter by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
 
         teams = self.employee_data.get_random_choices('department_name', correct_values['team'])
-        # For names, we need to create a combined field for comparison
-        names = self.employee_data.get_random_choices('firstName', selected_employee['firstName'], filter_dict=sex_filter)
-        names = [f"{selected_employee['firstName']} {selected_employee['lastName']}"] + [n for n in names if n != selected_employee['firstName']][:3]
+        # For names, we need to get 3 other employees with the same sex and create full name combinations
+        filtered_employees = self.employee_data.get_filtered_employees(sex_filter)
+        # Remove the selected employee from the filtered list
+        other_employees = [e for e in filtered_employees if e['firstName'] != selected_employee['firstName'] or e['lastName'] != selected_employee['lastName']]
+        # Select 3 random employees if we have enough
+        if len(other_employees) >= 3:
+            other_employees = random.sample(other_employees, 3)
+        # Create full names for all employees
+        names = [f"{selected_employee['firstName']} {selected_employee['lastName']}"]
+        for employee in other_employees:
+            names.append(f"{employee['firstName']} {employee['lastName']}")
+        # Shuffle the names to randomize the order
+        random.shuffle(names)
         positions = self.employee_data.get_random_choices('jobTitle', correct_values['position'], filter_dict=sex_filter)
 
         return {
@@ -220,6 +230,9 @@ class GameManager:
         # Create the full name by joining firstName and lastName
         correct_value = f"{selected_employee['firstName']} {selected_employee['lastName']}"
 
+        # Add full_name to the selected employee first to avoid KeyError
+        selected_employee['full_name'] = correct_value
+
         # Filter employees by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
         filtered_employees = self.employee_data.get_filtered_employees(sex_filter)
@@ -236,6 +249,13 @@ class GameManager:
         # Combine with the correct employee
         choices = [selected_employee] + other_employees
         random.shuffle(choices)
+
+        # Add necessary fields for the template
+        for employee in choices:
+            # Add image_url field (template expects this name)
+            employee['image_url'] = employee['image_path']
+            # Add name field for alt text and comparison in the template
+            employee['name'] = employee['full_name']
 
         # Convert choices to a pandas DataFrame for compatibility with the template
         choices_df = pd.DataFrame(choices)
