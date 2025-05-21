@@ -82,8 +82,9 @@ function initModeCards() {
         card.classList.add('shine');
     });
 
-    // Add click effect for classic mode cards - 3D flip animation
-    classicModeCards.forEach(card => {
+    // Add 3D-flip animation effect to classic mode cards
+    const classicCarouselCards = document.querySelectorAll('#classic-modes-track .mode-card');
+    classicCarouselCards.forEach(card => {
         card.addEventListener('click', function(e) {
             // Don't trigger if clicking on the button (it has its own handler now)
             if (e.target.classList.contains('mode-button')) return;
@@ -112,8 +113,9 @@ function initModeCards() {
         });
     });
 
-    // Add click effect for experimental mode cards - jello animation
-    experimentalModeCards.forEach(card => {
+    // Add jello animation effect to experimental mode cards
+    const experimentalCarouselCards = document.querySelectorAll('#experimental-modes-track .mode-card');
+    experimentalCarouselCards.forEach(card => {
         card.addEventListener('click', function(e) {
             // Don't trigger if clicking on the button (it has its own handler now)
             if (e.target.classList.contains('mode-button')) return;
@@ -404,43 +406,47 @@ function initCarousel(trackId, indicatorsId) {
         createIndicators();
     });
 
-    // Touch events for swiping
-    track.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-        isDragging = true;
-    }, { passive: true });
+    // Touch events for swiping - only on navigation buttons and indicators
+    // We're removing touch events from the track to prevent slide changes when touching cards
 
-    track.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        moveX = e.touches[0].clientX;
-        const diff = moveX - startX;
+    // Add touch events to navigation buttons
+    if (prevButton) {
+        prevButton.addEventListener('touchstart', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to track
+        }, { passive: true });
 
-        // Prevent default only if swiping horizontally
-        if (Math.abs(diff) > 5) {
-            e.preventDefault();
-        }
-    }, { passive: false });
+        prevButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to track
+        });
+    }
 
-    track.addEventListener('touchend', (e) => {
-        if (!isDragging) return;
-        isDragging = false;
+    if (nextButton) {
+        nextButton.addEventListener('touchstart', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to track
+        }, { passive: true });
 
-        const diff = moveX - startX;
-        if (diff > 50) {
-            // Swipe right - go to previous slide
-            goToSlide(currentIndex - itemsPerSlide);
-        } else if (diff < -50) {
-            // Swipe left - go to next slide
-            goToSlide(currentIndex + itemsPerSlide);
-        }
+        nextButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to track
+        });
+    }
+
+    // Add touch events to indicators
+    const indicators = indicatorsContainer.querySelectorAll('.carousel-indicator');
+    indicators.forEach(indicator => {
+        indicator.addEventListener('touchstart', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to track
+        }, { passive: true });
+
+        indicator.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent event from bubbling to track
+        });
     });
 
     // Mouse events for swiping (desktop)
-    track.addEventListener('mousedown', (e) => {
-        startX = e.clientX;
-        isDragging = true;
-    });
+    // Only allow swiping when initiated on the navigation buttons or indicators
+    // We're removing the mousedown event on the track to prevent slide changes when clicking on cards
 
+    // We still need mousemove and mouseup events for when dragging is initiated by touch events
     track.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
         moveX = e.clientX;
