@@ -119,20 +119,20 @@
 
 /* Mode container styles */
 .mode-container {
-    max-width: 1200px;
+    max-width: 1400px; /* Increased from 1200px */
     margin: 0 auto;
     padding: 0 var(--space-md);
 }
 
 @media (min-width: 1200px) {
     .mode-container {
-        max-width: 90%;
+        max-width: 95%; /* Increased from 90% */
     }
 }
 
 @media (min-width: 1600px) {
     .mode-container {
-        max-width: 80%;
+        max-width: 90%; /* Increased from 80% */
     }
 }
 
@@ -154,6 +154,8 @@
     background: rgba(10, 12, 50, 0.3);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(63, 81, 181, 0.1);
     border: 1px solid rgba(63, 81, 181, 0.2);
+    width: 100%; /* Ensure it takes full width of its container */
+    max-width: 100%; /* Maximize width */
 }
 
 .carousel-navigation {
@@ -186,10 +188,24 @@
 }
 
 /* Responsive carousel - show multiple cards on larger screens */
+@media (min-width: 576px) {
+    .carousel-item {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
 @media (min-width: 768px) {
     .carousel-item {
         flex: 0 0 50%;
         max-width: 50%;
+    }
+}
+
+@media (min-width: 992px) {
+    .carousel-item {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
     }
 }
 
@@ -202,7 +218,7 @@
 
 @media (min-width: 1600px) {
     .carousel-item {
-        flex: 0 0 33.333%;
+        flex: 0 0 33.333%; /* Maintain 3 cards per row even on very large screens */
         max-width: 33.333%;
     }
 }
@@ -337,7 +353,8 @@
     overflow: hidden;
     border: 1px solid rgba(63, 81, 181, 0.4);
     cursor: pointer;
-    height: 650px;
+    min-height: 700px; /* Minimum height to avoid scrolling */
+    height: auto; /* Allow cards to expand if needed */
     display: flex;
     flex-direction: column;
 }
@@ -396,9 +413,12 @@
     color: var(--light);
     margin-bottom: var(--space-lg);
     font-size: 1.2rem;
-    line-height: 1.6;
-    height: 150px;
+    line-height: 1.8; /* Increased line height for better readability */
+    height: auto; /* Auto height instead of fixed */
+    min-height: 180px; /* Minimum height */
+    max-height: 200px; /* Maximum height */
     overflow: auto;
+    padding: 0 var(--space-xs); /* Add some horizontal padding */
 }
 
 .mode-icon {
@@ -515,16 +535,20 @@
     text-align: left;
     margin-bottom: var(--space-md);
     padding-left: var(--space-lg);
-    height: 150px;
+    height: auto; /* Auto height instead of fixed */
+    min-height: 180px; /* Minimum height */
+    max-height: 200px; /* Maximum height */
     overflow: auto;
+    padding-right: var(--space-xs); /* Add some right padding */
 }
 
 .mode-features li {
-    margin-bottom: var(--space-xs);
+    margin-bottom: var(--space-sm); /* Increased bottom margin for more spacing */
     position: relative;
     color: var(--light);
     font-size: 1.1rem;
-    line-height: 1.4;
+    line-height: 1.6; /* Increased line height for better readability */
+    padding: 2px 0; /* Add vertical padding */
 }
 
 .mode-features li::before {
@@ -698,6 +722,32 @@
 
     .mode-card {
         min-height: 400px;
+        height: auto; /* Allow cards to expand based on content */
+        padding: var(--space-md); /* Reduce padding on small screens */
+    }
+
+    .mode-card p {
+        min-height: auto; /* Reset min-height */
+        height: auto; /* Allow paragraphs to expand based on content */
+        max-height: 160px; /* Slightly increased maximum height */
+        line-height: 1.6; /* Adjusted line height for smaller screens */
+        margin-bottom: var(--space-md); /* Reduced margin for smaller screens */
+    }
+
+    .mode-features {
+        min-height: auto; /* Reset min-height */
+        height: auto; /* Allow features to expand based on content */
+        max-height: 160px; /* Slightly increased maximum height */
+        margin-bottom: var(--space-md); /* Reduced margin for smaller screens */
+    }
+
+    .mode-features li {
+        margin-bottom: 8px; /* Specific pixel value for consistent spacing */
+        line-height: 1.5; /* Adjusted line height for smaller screens */
+    }
+
+    .mode-button {
+        width: 100%; /* Full width buttons on small screens */
     }
 
     .toggle-animation-container {
@@ -708,6 +758,63 @@
     .toggle-animation-btn {
         width: 35px;
         height: 35px;
+    }
+
+    .carousel-nav-button {
+        width: 40px; /* Smaller navigation buttons on mobile */
+        height: 40px;
+        margin: 0 var(--space-sm);
+    }
+}
+
+/* Additional breakpoint for very small screens */
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 2rem;
+    }
+
+    .game-tagline {
+        font-size: 1rem;
+    }
+
+    .mode-card {
+        padding: var(--space-sm); /* Further reduce padding on very small screens */
+    }
+
+    .mode-card h2 {
+        font-size: 1.5rem;
+        height: 40px; /* Reduced height for title */
+        margin-top: var(--space-sm);
+        margin-bottom: var(--space-sm);
+    }
+
+    .mode-card p {
+        font-size: 1rem;
+        line-height: 1.5; /* Further reduced line height */
+        max-height: 140px; /* Reduced max height */
+        margin-bottom: var(--space-sm); /* Smaller margin */
+        padding: 0; /* Remove horizontal padding */
+    }
+
+    .mode-features {
+        padding-left: var(--space-md); /* Reduced left padding */
+        max-height: 140px; /* Reduced max height */
+        margin-bottom: var(--space-sm); /* Smaller margin */
+    }
+
+    .mode-features li {
+        font-size: 0.9rem;
+        margin-bottom: 6px; /* Reduced spacing between list items */
+        line-height: 1.4; /* Further reduced line height */
+    }
+
+    .carousel-container {
+        padding: var(--space-sm) 0;
+    }
+
+    .mode-icon {
+        font-size: 3rem; /* Smaller icon */
+        height: 60px; /* Reduced height */
     }
 }
 
