@@ -149,6 +149,11 @@
     position: relative;
     margin-bottom: var(--space-xxl);
     overflow: hidden;
+    padding: var(--space-md) 0;
+    border-radius: var(--border-radius-lg);
+    background: rgba(10, 12, 50, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(63, 81, 181, 0.1);
+    border: 1px solid rgba(63, 81, 181, 0.2);
 }
 
 .carousel-navigation {
@@ -167,9 +172,10 @@
 
 .carousel-track {
     display: flex;
-    transition: transform 0.5s ease;
+    transition: transform 0.6s cubic-bezier(0.215, 0.610, 0.355, 1.000);
     width: 100%;
     cursor: default;
+    will-change: transform;
 }
 
 .carousel-item {
@@ -202,51 +208,120 @@
 }
 
 .carousel-nav-button {
-    background: rgba(30, 30, 30, 0.7);
+    background: rgba(26, 28, 108, 0.85);
     backdrop-filter: blur(10px);
     color: var(--accent-dark);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 15px;
+    width: 60px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.3);
     z-index: 10;
-    margin: 0 var(--space-md);
+    margin: 0 var(--space-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-nav-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), transparent);
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-nav-button i {
+    font-size: 1.5rem;
+    text-shadow: 0 0 5px rgba(255, 215, 0, 0.8);
+    transition: transform 0.3s ease;
 }
 
 .carousel-nav-button:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+    transform: scale(1.15) translateY(-5px);
+    box-shadow: 0 10px 25px rgba(255, 215, 0, 0.7), inset 0 0 15px rgba(255, 215, 0, 0.5);
+    border-color: rgba(255, 215, 0, 0.8);
+}
+
+.carousel-nav-button:hover::before {
+    opacity: 0.8;
+}
+
+.carousel-nav-button:hover i {
+    transform: scale(1.2);
+}
+
+.carousel-nav-button:active {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.4);
 }
 
 .carousel-nav-button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3), inset 0 0 5px rgba(255, 215, 0, 0.1);
 }
 
 .carousel-indicators {
     display: flex;
     justify-content: center;
-    margin-top: var(--space-md);
+    margin-top: var(--space-lg);
 }
 
 .carousel-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: rgba(200, 200, 200, 0.5);
-    margin: 0 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 6px;
+    background-color: rgba(26, 28, 108, 0.5);
+    margin: 0 8px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-indicator::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.carousel-indicator:hover {
+    transform: scale(1.2);
+    background-color: rgba(26, 28, 108, 0.7);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.carousel-indicator:hover::before {
+    opacity: 0.5;
 }
 
 .carousel-indicator.active {
+    width: 24px;
     background-color: var(--accent-dark);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.6);
+    border: 1px solid rgba(255, 215, 0, 0.8);
+}
+
+.carousel-indicator.active::before {
+    opacity: 0.7;
 }
 
 /* Mode card styles */
