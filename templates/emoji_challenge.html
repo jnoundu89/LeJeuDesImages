@@ -169,7 +169,7 @@
         <div class="progress-bar">
             <div class="progress-bar-fill"></div>
         </div>
-        
+
         <div class="emoji-clues-container">
             <div class="emoji-clue">
                 <span class="emoji-clue-label">Entreprise:</span>
@@ -187,11 +187,11 @@
                 {{ emoji_clues.personality }}
             </div>
         </div>
-        
+
         <div class="employee-image-container" id="employee-image-container">
             <img id="employee-image" src="{{ image_url }}" alt="Photo d'employé" class="employee-image">
         </div>
-        
+
         <button id="reveal-image-btn" class="reveal-image-btn" onclick="revealImage()">Révéler la photo</button>
         <div id="timer" class="timer">Temps restant: 60s</div>
     </div>
@@ -216,7 +216,7 @@
         <div class="emoji-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="emoji-choice-btn choice-btn"
-                    onclick="checkEmojiAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkEmojiAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -262,7 +262,7 @@
     function revealImage() {
         // Show the employee image
         document.getElementById('employee-image-container').style.display = 'block';
-        
+
         // Disable the reveal button
         document.getElementById('reveal-image-btn').disabled = true;
         document.getElementById('reveal-image-btn').style.opacity = '0.5';

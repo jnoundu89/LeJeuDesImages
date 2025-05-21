@@ -67,32 +67,33 @@ class TimedMode(GameMode):
         if question_data.get('game_over', False):
             return question_data
 
-        # Get the selected employee data
-        selected_employee = question_data.get('correct_values', {})
+        # Get the selected employee data directly from the game data
+        game_data = self.game_manager.get_game_data(data_id)
+        index = used_indices[-1]  # Get the last used index
+        selected_employee = game_data[index]
 
-        # Get choices for name, filtered by sex
-        sex_filter = {'sex': selected_employee.get('sex', 'man')}  # Default to 'man' if sex is not provided
-        # Safely access firstName and lastName
-        first_name = selected_employee.get('firstName', '')
-        last_name = selected_employee.get('lastName', '')
         # Create full name by joining firstName and lastName
+        first_name = selected_employee['firstName']
+        last_name = selected_employee['lastName']
         full_name = f"{first_name} {last_name}"
 
-        # Get random first names and create full names for choices
-        first_names = self.game_manager.employee_data.get_random_choices(
-            'firstName',
-            first_name,  # Use the safely accessed first_name variable
-            filter_dict=sex_filter
-        )
+        # Get choices for name only, filtered by sex
+        sex_filter = {'sex': selected_employee['sex']}
 
-        # Create a list of full names, ensuring the correct one is included
+        # Get other employees with the same sex
+        filtered_employees = self.game_manager.employee_data.get_filtered_employees(sex_filter)
+
+        # Remove the selected employee from the filtered list
+        other_employees = [e for e in filtered_employees if e['firstName'] != first_name or e['lastName'] != last_name]
+
+        # Select 3 random employees if we have enough
+        if len(other_employees) >= 3:
+            other_employees = random.sample(other_employees, 3)
+
+        # Create full names for all employees
         names = [full_name]
-        correct_first_name = first_name  # Store the correct first name
-        for name in first_names:
-            if name != correct_first_name:
-                names.append(f"{name} {last_name}")  # Use the safely accessed last_name
-                if len(names) >= 4:  # Limit to 4 choices
-                    break
+        for employee in other_employees:
+            names.append(f"{employee['firstName']} {employee['lastName']}")
 
         # Shuffle the names to randomize the order
         random.shuffle(names)

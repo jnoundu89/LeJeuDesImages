@@ -154,7 +154,7 @@
         <div class="pixelation-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="pixelation-choice-btn choice-btn"
-                    onclick="checkPixelationAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkPixelationAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>

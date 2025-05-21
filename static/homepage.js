@@ -46,7 +46,8 @@ function initAnimations() {
 
 // Initialize mode cards interaction
 function initModeCards() {
-    const modeCards = document.querySelectorAll('.mode-card');
+    const classicModeCards = document.querySelectorAll('.mode-container > .mode-grid:first-of-type .mode-card');
+    const experimentalModeCards = document.querySelectorAll('.mode-container > .mode-grid:last-of-type .mode-card');
     const modeButtons = document.querySelectorAll('.mode-button');
 
     // Add fireworks effect to all play buttons
@@ -64,18 +65,52 @@ function initModeCards() {
             // Navigate after a delay to enjoy the fireworks
             setTimeout(() => {
                 window.location.href = href;
-            }, 500); // 1 second delay to enjoy the fireworks
+            }, 500); // 0.5 second delay to enjoy the fireworks
         });
     });
 
-    modeCards.forEach(card => {
+    // Add effects to all mode cards
+    const allModeCards = document.querySelectorAll('.mode-card');
+    allModeCards.forEach(card => {
         // Add hover effect class
         card.classList.add('card-hover');
 
         // Add shine effect
         card.classList.add('shine');
+    });
 
-        // Add click effect
+    // Add click effect for classic mode cards - 3D flip animation
+    classicModeCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Don't trigger if clicking on the button (it has its own handler now)
+            if (e.target.classList.contains('mode-button')) return;
+
+            // Find the button in this card
+            const button = this.querySelector('.mode-button');
+            if (button) {
+                // Ensure opacity is 1 before animation starts
+                this.style.opacity = '1';
+
+                // Add 3D flip animation
+                this.classList.add('flip-3d');
+
+                // Add glow effect
+                this.classList.add('glow');
+
+                // Remove the animations after they complete
+                setTimeout(() => {
+                    this.classList.remove('flip-3d');
+                    this.classList.remove('glow');
+
+                    // Ensure opacity remains 1 after animation ends
+                    this.style.opacity = '1';
+                }, 1000); // 1 second delay for animation
+            }
+        });
+    });
+
+    // Add click effect for experimental mode cards - jello animation
+    experimentalModeCards.forEach(card => {
         card.addEventListener('click', function(e) {
             // Don't trigger if clicking on the button (it has its own handler now)
             if (e.target.classList.contains('mode-button')) return;
@@ -108,7 +143,7 @@ function initParticleBackground() {
 
     // Particle settings
     const particleCount = 100;
-    const particles = [];
+    let particles = [];
     const colors = [
         'rgba(255, 215, 0, 0.7)',  // Gold
         'rgba(63, 81, 181, 0.5)',  // Primary
@@ -116,17 +151,23 @@ function initParticleBackground() {
         'rgba(255, 255, 255, 0.5)' // White
     ];
 
-    // Create particles
-    for (let i = 0; i < particleCount; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            radius: Math.random() * 3 + 1,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            speedX: Math.random() * 0.5 - 0.25,
-            speedY: Math.random() * 0.5 - 0.25
-        });
+    // Function to create particles
+    function createParticles() {
+        particles = []; // Clear existing particles
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 3 + 1,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                speedX: Math.random() * 0.5 - 0.25,
+                speedY: Math.random() * 0.5 - 0.25
+            });
+        }
     }
+
+    // Create initial particles
+    createParticles();
 
     // Animation loop
     function animate() {
@@ -162,6 +203,8 @@ function initParticleBackground() {
     window.addEventListener('resize', function() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
+        // Recreate particles to distribute them across the new canvas size
+        createParticles();
     });
 }
 

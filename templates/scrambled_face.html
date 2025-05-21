@@ -156,7 +156,7 @@
         <div class="scrambled-image-container">
             <!-- Original image (hidden initially) -->
             <img id="original-image" src="{{ image_url }}" alt="Photo d'employé" class="scrambled-image" style="display: none;">
-            
+
             <!-- Scrambled parts container -->
             <div class="scrambled-parts">
                 <div class="scrambled-part eyes">
@@ -194,7 +194,7 @@
         <div class="scrambled-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="scrambled-choice-btn choice-btn"
-                    onclick="checkScrambledAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkScrambledAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -240,11 +240,11 @@
     function revealOriginal() {
         // Hide the scrambled parts
         document.querySelector('.scrambled-parts').style.display = 'none';
-        
+
         // Show the original image
         const originalImage = document.getElementById('original-image');
         originalImage.style.display = 'block';
-        
+
         // Disable the reveal button
         document.getElementById('reveal-btn').disabled = true;
         document.getElementById('reveal-btn').style.opacity = '0.5';

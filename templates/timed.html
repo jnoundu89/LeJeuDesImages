@@ -150,7 +150,7 @@
         <div class="timed-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="timed-choice-btn choice-btn"
-                    onclick="checkTimedAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkTimedAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -165,7 +165,7 @@
     // Function to check the answer in timed mode
     function checkTimedAnswer(correct, selected, element) {
         if (gameEnded) return;
-        
+
         const buttons = document.querySelectorAll('#name-choices button');
         buttons.forEach(btn => {
             btn.disabled = true;
@@ -197,7 +197,7 @@
     // Function to update the global timer
     function updateGlobalTimer() {
         if (gameEnded) return;
-        
+
         globalTimerValue--;
         const globalTimerElement = document.getElementById('global-timer');
         globalTimerElement.textContent = `Temps restant: ${globalTimerValue}s`;
@@ -220,17 +220,17 @@
     // Function to end the game
     function endGame() {
         if (gameEnded) return;
-        
+
         gameEnded = true;
         clearInterval(globalTimerInterval);
         clearInterval(timerInterval);
-        
+
         // Disable all buttons
         const buttons = document.querySelectorAll('#name-choices button');
         buttons.forEach(btn => {
             btn.disabled = true;
         });
-        
+
         // Show the correct answer
         const correctName = '{{ correct_name }}';
         buttons.forEach(btn => {
@@ -238,7 +238,7 @@
                 btn.classList.add('correct');
             }
         });
-        
+
         // Redirect to results page
         setTimeout(() => {
             window.location.href = '/result';
@@ -261,7 +261,7 @@
         const originalUpdateTimer = window.updateTimer;
         window.updateTimer = function () {
             if (gameEnded) return;
-            
+
             originalUpdateTimer.apply(this, arguments);
 
             // If timer reaches 0, show the correct answer and move to next question

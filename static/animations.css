@@ -231,6 +231,24 @@
     backface-visibility: hidden;
 }
 
+/* 3D Flip Animation with Bounce */
+@keyframes flip3D {
+    0% { transform: perspective(800px) rotateY(0) scale(1); opacity: 1; }
+    25% { transform: perspective(800px) rotateY(15deg) scale(1.05); opacity: 1; }
+    50% { transform: perspective(800px) rotateY(0) scale(1.1); opacity: 1; }
+    75% { transform: perspective(800px) rotateY(-15deg) scale(1.05); opacity: 1; }
+    100% { transform: perspective(800px) rotateY(0) scale(1); opacity: 1; }
+}
+
+.flip-3d {
+    animation: flip3D 1s ease-in-out;
+    transform-style: preserve-3d;
+    /* Removed backface-visibility: hidden; to prevent cards from disappearing */
+    z-index: 10; /* Ensure the card is visible during animation */
+    position: relative; /* Create a new stacking context */
+    transition: none !important; /* Override any transitions that might interfere */
+}
+
 /* Heartbeat Animation */
 @keyframes heartbeat {
     0% { transform: scale(1); }
@@ -254,6 +272,11 @@
     66.6% { transform: skewX(-0.78125deg) skewY(-0.78125deg); }
     77.7% { transform: skewX(0.390625deg) skewY(0.390625deg); }
     88.8% { transform: skewX(-0.1953125deg) skewY(-0.1953125deg); }
+}
+
+.jello {
+    animation: jello 1s both;
+    transform-origin: center;
 }
 
 .jello:hover {

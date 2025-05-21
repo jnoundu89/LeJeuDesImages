@@ -101,7 +101,7 @@
         <div class="example-container">
             <div class="example-choices" id="name-choices">
                 {% for name in name_choices %}
-                <button type="button" class="example-choice-btn" onclick="checkExampleAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}</button>
+                <button type="button" class="example-choice-btn" onclick="checkExampleAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}</button>
                 {% endfor %}
             </div>
         </div>

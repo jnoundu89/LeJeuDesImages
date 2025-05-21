@@ -294,6 +294,6 @@ def init_routes(game_mode_factory: GameModeFactory):
         employees = employee_data.get_all_employees()
 
         # Extract image URLs
-        image_urls = [employee['image_url'] for employee in employees]
+        image_urls = [employee['image_path'] for employee in employees]
 
         return jsonify(image_urls)

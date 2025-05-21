@@ -160,11 +160,11 @@
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
         </div>
-        
+
         <div class="team-banner">
             Équipe: {{ team_name }}
         </div>
-        
+
         <div class="team-members-container">
             {% for member in displayed_members %}
             <div class="team-member">
@@ -200,7 +200,7 @@
         <div class="missing-person-choices" id="person-choices">
             {% for person in choices %}
             <button type="button" class="missing-person-choice-btn choice-btn"
-                    onclick="checkMissingPersonAnswer('{{ missing_person.name }}', '{{ person.name }}', this)">
+                    onclick="checkMissingPersonAnswer('{{ missing_person.name }}'.trim(), '{{ person.name }}'.trim(), this)">
                 <img src="{{ person.image_url }}" alt="{{ person.name }}">
                 {{ person.name }}
             </button>
@@ -220,7 +220,7 @@
         if (correct === selected) {
             element.classList.add('correct');
             document.getElementById('correct-answer').value = 1;
-            
+
             // Update progress bar
             const progressBar = document.getElementById('progress-bar');
             const currentQuestion = parseInt(document.getElementById('current-question').value);
@@ -250,16 +250,16 @@
         const totalQuestions = parseInt(document.getElementById('total-questions').value);
         const maxScore = parseInt(document.getElementById('max-score').value);
         const currentQuestion = parseInt(document.getElementById('current-question').value);
-        
+
         // Update progress counter
         document.getElementById('question-counter').textContent = 
             `${currentQuestion} / ${totalQuestions}`;
-        
+
         // Update progress bar
         const progressBar = document.getElementById('progress-bar');
         const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
         progressBar.style.width = `${progressPercentage}%`;
-        
+
         // Reset for new question
         resetAnswersCount();
         toggleStats();

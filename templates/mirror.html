@@ -183,7 +183,7 @@
         <div class="mirror-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="mirror-choice-btn choice-btn"
-                    onclick="checkMirrorAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkMirrorAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -231,7 +231,7 @@
     // Function to flip the image
     function flipImage() {
         const mirrorImage = document.getElementById('mirror-image');
-        
+
         if (isFlipped) {
             // Show normal image
             mirrorImage.style.transform = 'scaleX(1)';
@@ -241,7 +241,7 @@
             mirrorImage.style.transform = 'scaleX(-1)';
             document.getElementById('flip-btn').textContent = 'Voir normal';
         }
-        
+
         isFlipped = !isFlipped;
     }
 
@@ -249,11 +249,11 @@
     function showOriginal() {
         // Hide the mirror image
         document.getElementById('mirror-image').style.display = 'none';
-        
+
         // Show the original image
         const originalImage = document.getElementById('original-image');
         originalImage.style.display = 'block';
-        
+
         // Disable the flip button
         document.getElementById('flip-btn').disabled = true;
         document.getElementById('flip-btn').style.opacity = '0.5';

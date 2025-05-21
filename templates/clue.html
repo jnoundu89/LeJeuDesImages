@@ -201,7 +201,7 @@
         <div class="clue-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="clue-choice-btn choice-btn"
-                    onclick="checkClueAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkClueAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -220,14 +220,14 @@
             // Reveal the next clue
             revealedClues++;
             document.getElementById(`clue-${revealedClues}`).classList.add('revealed');
-            
+
             // Update possible points
             possiblePoints = Math.max(1, 4 - revealedClues);
             document.getElementById('score-info').textContent = `Points possibles: ${possiblePoints}`;
-            
+
             // Update hidden field
             document.getElementById('clues-used').value = revealedClues;
-            
+
             // Disable the button if all clues are revealed
             if (revealedClues >= totalClues) {
                 document.getElementById('reveal-clue-btn').disabled = true;
@@ -240,15 +240,15 @@
     // Function to check the answer
     function checkClueAnswer(correct, selected, element) {
         if (answered) return;
-        
+
         answered = true;
-        
+
         // Disable the reveal button
         document.getElementById('reveal-clue-btn').disabled = true;
-        
+
         // Show the image
         document.getElementById('clue-image-container').style.display = 'block';
-        
+
         const buttons = document.querySelectorAll('#name-choices button');
         buttons.forEach(btn => {
             btn.disabled = true;
@@ -273,7 +273,7 @@
         // Enable the next button
         document.getElementById('next').disabled = false;
         document.getElementById('next').classList.remove('disabled-btn');
-        
+
         // Stop the timer
         clearInterval(timerInterval);
     }
@@ -285,10 +285,10 @@
 
         updateProgressBar(totalQuestions, maxScore);
         toggleStats();
-        
+
         // Reveal the first clue automatically
         revealNextClue();
-        
+
         // Override the timer function
         const originalUpdateTimer = window.updateTimer;
         window.updateTimer = function () {
@@ -302,13 +302,13 @@
                 }
                 revealedClues = totalClues;
                 document.getElementById('clues-used').value = revealedClues;
-                
+
                 // Show the image
                 document.getElementById('clue-image-container').style.display = 'block';
-                
+
                 // Disable the reveal button
                 document.getElementById('reveal-clue-btn').disabled = true;
-                
+
                 // Show the correct answer
                 const buttons = document.querySelectorAll('#name-choices button');
                 const correctName = '{{ correct_name }}';
@@ -319,11 +319,11 @@
                         btn.classList.add('correct');
                     }
                 });
-                
+
                 // Enable the next button
                 document.getElementById('next').disabled = false;
                 document.getElementById('next').classList.remove('disabled-btn');
-                
+
                 // Mark as answered
                 answered = true;
             }

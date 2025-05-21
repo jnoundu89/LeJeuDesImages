@@ -160,7 +160,7 @@
         <div class="quiz-choices" id="quiz-choices">
             {% for choice in choices %}
             <button type="button" class="quiz-choice-btn"
-                    onclick="checkQuizAnswer('{{ correct_answer }}', '{{ choice }}', this)">{{ choice }}
+                    onclick="checkQuizAnswer('{{ correct_answer }}'.trim(), '{{ choice }}'.trim(), this)">{{ choice }}
             </button>
             {% endfor %}
         </div>
@@ -174,9 +174,9 @@
     // Function to check the quiz answer
     function checkQuizAnswer(correct, selected, element) {
         if (answered) return;
-        
+
         answered = true;
-        
+
         const buttons = document.querySelectorAll('#quiz-choices button');
         buttons.forEach(btn => {
             btn.disabled = true;
@@ -196,20 +196,20 @@
             });
             document.getElementById('quiz-score').textContent = "Incorrect! La bonne réponse est: " + correct;
             document.getElementById('quiz-score').style.color = "#f44336";
-            
+
             document.body.classList.add('shake');
             setTimeout(() => {
                 document.body.classList.remove('shake');
             }, 500);
         }
-        
+
         // Show the score message
         document.getElementById('quiz-score').style.display = 'block';
 
         // Enable the next button
         document.getElementById('next').disabled = false;
         document.getElementById('next').classList.remove('disabled-btn');
-        
+
         // Stop the timer
         clearInterval(timerInterval);
     }
@@ -221,7 +221,7 @@
 
         updateProgressBar(totalQuestions, maxScore);
         toggleStats();
-        
+
         // Override the timer function
         const originalUpdateTimer = window.updateTimer;
         window.updateTimer = function () {
@@ -230,7 +230,7 @@
             // If timer reaches 0, show the correct answer
             if (timerValue <= 0 && !answered) {
                 answered = true;
-                
+
                 // Show the correct answer
                 const buttons = document.querySelectorAll('#quiz-choices button');
                 const correctAnswer = document.getElementById('correct-value').value;
@@ -241,12 +241,12 @@
                         btn.classList.add('correct');
                     }
                 });
-                
+
                 // Show the score message
                 document.getElementById('quiz-score').textContent = "Temps écoulé! La bonne réponse est: " + correctAnswer;
                 document.getElementById('quiz-score').style.color = "#f44336";
                 document.getElementById('quiz-score').style.display = 'block';
-                
+
                 // Enable the next button
                 document.getElementById('next').disabled = false;
                 document.getElementById('next').classList.remove('disabled-btn');

@@ -12,6 +12,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     loaderScript.defer = true;
     document.head.appendChild(loaderScript);
 
+    // Load the fireworks responsive script
+    const fireworksScript = document.createElement('script');
+    fireworksScript.src = '/static/fireworks-responsive.js';
+    fireworksScript.defer = true;
+    document.head.appendChild(fireworksScript);
+
     // Initialize current score and max score if they exist
     const currentScoreElement = document.getElementById('current-score');
     if (currentScoreElement) {

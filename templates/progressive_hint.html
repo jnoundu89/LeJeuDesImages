@@ -185,7 +185,7 @@
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
         </div>
-        
+
         <div class="hint-container">
             {% for hint in hints %}
             <div class="hint {% if loop.index == 1 %}active{% endif %}" id="hint-{{ hint.level }}">
@@ -194,7 +194,7 @@
                 <div class="hint-points">Valeur: {{ hint.points }} points</div>
             </div>
             {% endfor %}
-            
+
             <button id="next-hint-btn" class="next-hint-btn">Indice suivant</button>
             <div id="bonus-points" class="bonus-points" style="display: none;"></div>
         </div>
@@ -224,7 +224,7 @@
         <div class="progressive-hint-choices" id="person-choices">
             {% for person in choices %}
             <button type="button" class="progressive-hint-choice-btn choice-btn"
-                    onclick="checkProgressiveHintAnswer('{{ employee.name }}', '{{ person.name }}', this)">
+                    onclick="checkProgressiveHintAnswer('{{ employee.name }}'.trim(), '{{ person.name }}'.trim(), this)">
                 <img src="{{ person.image_url }}" alt="{{ person.name }}">
                 {{ person.name }}
             </button>
@@ -237,42 +237,42 @@
     // Initialize variables
     let currentHintLevel = 1;
     let maxHintLevel = parseInt(document.getElementById('max-hint-level').value);
-    
+
     // Function to show the next hint
     document.getElementById('next-hint-btn').addEventListener('click', function() {
         if (currentHintLevel < maxHintLevel) {
             currentHintLevel++;
-            
+
             // Update the hint level in the form
             document.getElementById('hint-level').value = currentHintLevel;
-            
+
             // Update the active hint
             document.querySelectorAll('.hint').forEach(hint => {
                 hint.classList.remove('active');
             });
             document.getElementById(`hint-${currentHintLevel}`).classList.add('active');
-            
+
             // Disable the button if we've reached the maximum hint level
             if (currentHintLevel >= maxHintLevel) {
                 this.disabled = true;
             }
         }
     });
-    
+
     // Function to check the answer in progressive hint mode
     function checkProgressiveHintAnswer(correct, selected, element) {
         const buttons = document.querySelectorAll('#person-choices button');
         buttons.forEach(btn => {
             btn.disabled = true;
         });
-        
+
         // Disable the next hint button
         document.getElementById('next-hint-btn').disabled = true;
 
         if (correct === selected) {
             element.classList.add('correct');
             document.getElementById('correct-answer').value = 1;
-            
+
             // Display bonus points based on hint level
             let bonusPoints = 0;
             if (currentHintLevel === 1) {
@@ -282,11 +282,11 @@
             } else {
                 bonusPoints = 1;
             }
-            
+
             const bonusPointsElement = document.getElementById('bonus-points');
             bonusPointsElement.textContent = `+${bonusPoints} points!`;
             bonusPointsElement.style.display = 'block';
-            
+
             // Update progress bar
             const progressBar = document.getElementById('progress-bar');
             const currentQuestion = parseInt(document.getElementById('current-question').value);
@@ -316,16 +316,16 @@
         const totalQuestions = parseInt(document.getElementById('total-questions').value);
         const maxScore = parseInt(document.getElementById('max-score').value);
         const currentQuestion = parseInt(document.getElementById('current-question').value);
-        
+
         // Update progress counter
         document.getElementById('question-counter').textContent = 
             `${currentQuestion} / ${totalQuestions}`;
-        
+
         // Update progress bar
         const progressBar = document.getElementById('progress-bar');
         const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
         progressBar.style.width = `${progressPercentage}%`;
-        
+
         // Reset for new question
         resetAnswersCount();
         toggleStats();

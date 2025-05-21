@@ -178,7 +178,7 @@
         <div class="silhouette-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="silhouette-choice-btn choice-btn"
-                    onclick="checkSilhouetteAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkSilhouetteAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -224,11 +224,11 @@
     function revealOriginal() {
         // Hide the silhouette
         document.getElementById('silhouette-image').style.display = 'none';
-        
+
         // Show the original image
         const originalImage = document.getElementById('original-image');
         originalImage.style.display = 'block';
-        
+
         // Disable the reveal button
         document.getElementById('reveal-btn').disabled = true;
         document.getElementById('reveal-btn').style.opacity = '0.5';

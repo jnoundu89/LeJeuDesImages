@@ -161,7 +161,7 @@
         <div class="speed-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="speed-choice-btn choice-btn"
-                    onclick="checkSpeedAnswer('{{ correct_name }}', '{{ name }}', this)">{{ name }}
+                    onclick="checkSpeedAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -188,7 +188,7 @@
         if (correct === selected) {
             element.classList.add('correct');
             document.getElementById('correct-answer').value = 1;
-            
+
             // Display time bonus based on response time
             let bonusPoints = 0;
             if (responseTime < 1000) {
@@ -198,7 +198,7 @@
             } else {
                 bonusPoints = 1;
             }
-            
+
             const timeBonus = document.getElementById('time-bonus');
             timeBonus.textContent = `+${bonusPoints} points!`;
             timeBonus.style.display = 'block';
@@ -226,32 +226,32 @@
         timerValue--;
         const timerElement = document.getElementById('timer');
         timerElement.textContent = `Temps restant: ${timerValue}s`;
-        
+
         // Update progress bar
         const progressBar = document.getElementById('progress-bar');
         const progressPercentage = (timerValue / timeLimit) * 100;
         progressBar.style.width = `${progressPercentage}%`;
-        
+
         // Add warning class when time is running out
         if (timerValue <= 10) {
             timerElement.classList.add('warning');
         }
-        
+
         // Time's up
         if (timerValue <= 0) {
             clearInterval(timerInterval);
-            
+
             // Show the correct answer
             const buttons = document.querySelectorAll('#name-choices button');
             const correctName = '{{ correct_name }}';
-            
+
             buttons.forEach(btn => {
                 btn.disabled = true;
                 if (btn.textContent.trim() === correctName) {
                     btn.classList.add('correct');
                 }
             });
-            
+
             // Enable the next button
             answersCount = 1;
             enableNextButton();
@@ -263,15 +263,15 @@
         const totalQuestions = parseInt(document.getElementById('total-questions').value);
         const maxScore = parseInt(document.getElementById('max-score').value);
         const currentQuestion = parseInt(document.getElementById('current-question').value);
-        
+
         // Update progress counter
         document.getElementById('question-counter').textContent = 
             `${currentQuestion} / ${totalQuestions}`;
-        
+
         // Initialize timer
         startTime = new Date().getTime();
         timerInterval = setInterval(updateTimer, 1000);
-        
+
         // Reset for new question
         resetAnswersCount();
         toggleStats();
