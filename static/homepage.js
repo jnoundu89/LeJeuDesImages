@@ -1,5 +1,8 @@
 // homepage.js - Enhanced interactions for the homepage
 
+// Global variable to track if an animation is currently playing
+let isAnimationPlaying = false;
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize animations
     initAnimations();
@@ -59,6 +62,14 @@ function initModeCards() {
             // Prevent default to stop immediate navigation
             e.preventDefault();
 
+            // If an animation is already playing, ignore this click
+            if (isAnimationPlaying) {
+                return;
+            }
+
+            // Set animation playing flag to true
+            isAnimationPlaying = true;
+
             // Store the href to navigate to later
             const href = this.getAttribute('href');
 
@@ -82,14 +93,19 @@ function initModeCards() {
                 // Create warp speed effect
                 createWarpSpeedEffect(card);
 
+                // Create black hole effect that sucks in the card
+                createBlackHoleEffect(card);
+
                 // Add cartoon sound effect
                 playCartoonSound();
             }
 
-            // Navigate after a longer delay to enjoy the animations
+            // Navigate after a delay to enjoy the animations
             setTimeout(() => {
+                // Reset animation playing flag before navigation
+                isAnimationPlaying = false;
                 window.location.href = href;
-            }, 1500); // 1.5 second delay to enjoy the animations
+            }, 1300); // 1.3 second delay to enjoy the animations
         });
     });
 
@@ -501,14 +517,14 @@ function initCarousel(trackId, indicatorsId) {
 function playCartoonSound() {
     // Create an array of cartoon-like sounds
     const sounds = [
-        { frequency: 500, duration: 100, type: 'sine', volume: 0.3 },
-        { frequency: 1000, duration: 100, type: 'sine', volume: 0.3 },
-        { frequency: 1500, duration: 100, type: 'sine', volume: 0.3 },
-        { frequency: 2000, duration: 100, type: 'sine', volume: 0.3 },
-        { frequency: 2500, duration: 100, type: 'sine', volume: 0.3 },
-        { frequency: 3000, duration: 100, type: 'sine', volume: 0.2 },
-        { frequency: 3500, duration: 100, type: 'sine', volume: 0.2 },
-        { frequency: 4000, duration: 100, type: 'sine', volume: 0.1 }
+        { frequency: 500, duration: 80, type: 'sine', volume: 0.2 },
+        { frequency: 1000, duration: 80, type: 'sine', volume: 0.2 },
+        { frequency: 1500, duration: 80, type: 'sine', volume: 0.2 },
+        { frequency: 2000, duration: 80, type: 'sine', volume: 0.2 },
+        { frequency: 2500, duration: 80, type: 'sine', volume: 0.15 },
+        { frequency: 3000, duration: 80, type: 'sine', volume: 0.15 },
+        { frequency: 3500, duration: 80, type: 'sine', volume: 0.15 },
+        { frequency: 4000, duration: 80, type: 'sine', volume: 0.1 }
     ];
 
     // Check if Web Audio API is supported
@@ -542,7 +558,7 @@ function playCartoonSound() {
                 setTimeout(() => {
                     oscillator.stop();
                 }, sound.duration);
-            }, index * 50); // Stagger the sounds
+            }, index * 50); // Reduced delay between sounds for a faster effect
         });
     }
 }
@@ -556,17 +572,19 @@ function createWarpSpeedEffect(card) {
 
     // Colors for the warp lines
     const colors = [
-        'rgba(255, 215, 0, 0.8)',  // Gold
-        'rgba(255, 0, 255, 0.8)',  // Magenta
-        'rgba(0, 255, 255, 0.8)',  // Cyan
-        'rgba(255, 255, 255, 0.8)', // White
-        'rgba(0, 255, 0, 0.8)',    // Green
-        'rgba(255, 0, 0, 0.8)',    // Red
-        'rgba(0, 0, 255, 0.8)',    // Blue
+        'rgba(255, 215, 0, 0.9)',  // Gold
+        'rgba(255, 0, 255, 0.9)',  // Magenta
+        'rgba(0, 255, 255, 0.9)',  // Cyan
+        'rgba(255, 255, 255, 0.9)', // White
+        'rgba(0, 255, 0, 0.9)',    // Green
+        'rgba(255, 0, 0, 0.9)',    // Red
+        'rgba(0, 0, 255, 0.9)',    // Blue
+        'rgba(255, 165, 0, 0.9)',  // Orange
+        'rgba(128, 0, 128, 0.9)',  // Purple
     ];
 
     // Create multiple warp lines with different angles
-    const lineCount = 24; // 24 lines for a full 360-degree effect
+    const lineCount = 18; // Increased for more dynamic effect
 
     for (let i = 0; i < lineCount; i++) {
         // Calculate angle for this line
@@ -601,7 +619,30 @@ function createWarpSpeedEffect(card) {
     // Remove the container after animation completes
     setTimeout(() => {
         warpContainer.remove();
-    }, 2000);
+    }, 1300); // Slightly longer than the animation duration to ensure it completes
+}
+
+// Create black hole effect that sucks in the card
+function createBlackHoleEffect(card) {
+    // Create container for black hole
+    const blackHoleContainer = document.createElement('div');
+    blackHoleContainer.classList.add('black-hole-container');
+    card.appendChild(blackHoleContainer);
+
+    // Create the black hole element
+    const blackHole = document.createElement('div');
+    blackHole.classList.add('black-hole');
+    blackHoleContainer.appendChild(blackHole);
+
+    // Add gravitational pull effect to the card after a delay
+    setTimeout(() => {
+        card.classList.add('gravitational-pull');
+    }, 500); // Start after the black hole begins to appear
+
+    // Remove the container after animation completes
+    setTimeout(() => {
+        blackHoleContainer.remove();
+    }, 1300); // Same timing as the warp speed effect
 }
 
 // Create fireworks effect
@@ -612,22 +653,22 @@ function createFireworks() {
     document.body.appendChild(fireworksContainer);
 
     // Create multiple fireworks with different colors, positions and timings
-    const fireworksCount = 20;
+    const fireworksCount = 15; // Increased for more dynamic effect
     const colors = [
-        'rgba(255, 0, 0, 0.8)',    // Red
-        'rgba(0, 255, 0, 0.8)',    // Green
-        'rgba(0, 0, 255, 0.8)',    // Blue
-        'rgba(255, 255, 0, 0.8)',  // Yellow
-        'rgba(255, 0, 255, 0.8)',  // Magenta
-        'rgba(0, 255, 255, 0.8)',  // Cyan
-        'rgba(255, 215, 0, 0.8)',  // Gold
-        'rgba(255, 255, 255, 0.8)' // White
+        'rgba(255, 0, 0, 0.8)',    // Red (increased opacity)
+        'rgba(0, 255, 0, 0.8)',    // Green (increased opacity)
+        'rgba(0, 0, 255, 0.8)',    // Blue (increased opacity)
+        'rgba(255, 255, 0, 0.8)',  // Yellow (increased opacity)
+        'rgba(255, 0, 255, 0.8)',  // Magenta (increased opacity)
+        'rgba(0, 255, 255, 0.8)',  // Cyan (increased opacity)
+        'rgba(255, 215, 0, 0.8)',  // Gold (increased opacity)
+        'rgba(255, 255, 255, 0.8)' // White (increased opacity)
     ];
 
     for (let i = 0; i < fireworksCount; i++) {
         setTimeout(() => {
             launchFirework(fireworksContainer, colors);
-        }, i * 150); // Stagger the fireworks
+        }, i * 80); // Reduced delay between fireworks for faster effect
     }
 }
 
@@ -648,7 +689,7 @@ function launchFirework(container, colors) {
     firework.style.setProperty('--duration', `${duration}s`);
 
     // Create multiple particles from this firework
-    const particleCount = 12;
+    const particleCount = 12; // Increased for more dynamic effect
     for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.classList.add('firework');
@@ -682,5 +723,5 @@ function launchFirework(container, colors) {
         if (container.parentNode) {
             container.remove();
         }
-    }, 3000);
+    }, 1500); // Reduced to match the faster animation timing
 }

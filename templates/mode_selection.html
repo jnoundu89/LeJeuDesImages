@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='music-player.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -196,8 +197,42 @@
         ↑↑↓↓←→←→BA
     </div>
 
+    <!-- Music Player -->
+    <div class="music-player-container">
+        <div class="music-player-handle">
+            Musique de fond
+        </div>
+        <div id="music-player">
+            <div class="music-player-header">
+                <h3 class="music-player-title">Lecteur de musique</h3>
+                <div class="music-player-controls">
+                    <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="track-info">
+                <p id="track-title">Chargement...</p>
+                <p id="track-artist">Artiste</p>
+            </div>
+            <div class="music-controls">
+                <button id="music-prev" class="music-control-btn" title="Piste précédente"><i class="fas fa-step-backward"></i></button>
+                <button id="music-play-pause" class="music-control-btn" title="Jouer la musique"><i class="fas fa-play"></i></button>
+                <button id="music-next" class="music-control-btn" title="Piste suivante"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <div class="volume-control">
+                <button id="music-mute" class="music-control-btn" title="Couper le son"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="70">
+            </div>
+            <div class="visualizer-container">
+                <canvas id="music-visualizer"></canvas>
+                <div class="visualizer-controls">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='homepage.js') }}"></script>
     <script src="{{ url_for('static', filename='bouncing-images.js') }}"></script>
+    <script src="{{ url_for('static', filename='music-player.js') }}"></script>
 </body>
 </html>
