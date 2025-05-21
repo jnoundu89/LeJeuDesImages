@@ -37,123 +37,145 @@
     <main class="mode-container">
         <!-- Regular game modes section -->
         <h2 class="section-title">Modes de jeu classiques</h2>
-        <div class="mode-grid">
-            {% for mode in modes %}
-            <div class="mode-card">
-                {% if mode.name == "pixelation" %}
-                    <i class="fas fa-puzzle-piece mode-icon"></i>
-                    <span class="mode-badge popular">Populaire</span>
-                {% elif mode.name == "normal" %}
-                    <i class="fas fa-user-tie mode-icon"></i>
-                {% elif mode.name == "reverse" %}
-                    <i class="fas fa-sync-alt mode-icon"></i>
-                {% elif mode.name == "timed" %}
-                    <i class="fas fa-stopwatch mode-icon"></i>
-                    <span class="mode-badge">Chronométré</span>
-                {% elif mode.name == "team" %}
-                    <i class="fas fa-users mode-icon"></i>
-                {% elif mode.name == "clue" %}
-                    <i class="fas fa-lightbulb mode-icon"></i>
-                {% elif mode.name == "memory" %}
-                    <i class="fas fa-brain mode-icon"></i>
-                    <span class="mode-badge new">Nouveau</span>
-                {% elif mode.name == "quiz" %}
-                    <i class="fas fa-question-circle mode-icon"></i>
-                {% elif mode.name == "arr" %}
-                    <i class="fas fa-star mode-icon"></i>
-                    <span class="mode-badge">Spécial</span>
-                {% else %}
-                    <i class="fas fa-gamepad mode-icon"></i>
-                {% endif %}
+        <div class="carousel-container">
+            <div class="carousel-navigation">
+                <button class="carousel-nav-button prev-button"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="classic-modes-track">
+                        {% for mode in modes %}
+                        <div class="carousel-item">
+                            <div class="mode-card">
+                                {% if mode.name == "pixelation" %}
+                                    <i class="fas fa-puzzle-piece mode-icon"></i>
+                                    <span class="mode-badge popular">Populaire</span>
+                                {% elif mode.name == "normal" %}
+                                    <i class="fas fa-user-tie mode-icon"></i>
+                                {% elif mode.name == "reverse" %}
+                                    <i class="fas fa-sync-alt mode-icon"></i>
+                                {% elif mode.name == "timed" %}
+                                    <i class="fas fa-stopwatch mode-icon"></i>
+                                    <span class="mode-badge">Chronométré</span>
+                                {% elif mode.name == "team" %}
+                                    <i class="fas fa-users mode-icon"></i>
+                                {% elif mode.name == "clue" %}
+                                    <i class="fas fa-lightbulb mode-icon"></i>
+                                {% elif mode.name == "memory" %}
+                                    <i class="fas fa-brain mode-icon"></i>
+                                    <span class="mode-badge new">Nouveau</span>
+                                {% elif mode.name == "quiz" %}
+                                    <i class="fas fa-question-circle mode-icon"></i>
+                                {% elif mode.name == "arr" %}
+                                    <i class="fas fa-star mode-icon"></i>
+                                    <span class="mode-badge">Spécial</span>
+                                {% else %}
+                                    <i class="fas fa-gamepad mode-icon"></i>
+                                {% endif %}
 
-                <h2>{{ mode.name|capitalize }}</h2>
+                                <h2>{{ mode.name|capitalize }}</h2>
 
-                <!-- Difficulty indicator -->
-                <div class="difficulty-indicator">
-                    {% if mode.name in ["normal", "team"] %}
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                        <div class="difficulty-dot"></div>
-                    {% elif mode.name in ["reverse", "clue", "quiz"] %}
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot"></div>
-                    {% else %}
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                        <div class="difficulty-dot active"></div>
-                    {% endif %}
+                                <!-- Difficulty indicator -->
+                                <div class="difficulty-indicator">
+                                    {% if mode.name in ["normal", "team"] %}
+                                        <div class="difficulty-dot active"></div>
+                                        <div class="difficulty-dot"></div>
+                                        <div class="difficulty-dot"></div>
+                                    {% elif mode.name in ["reverse", "clue", "quiz"] %}
+                                        <div class="difficulty-dot active"></div>
+                                        <div class="difficulty-dot active"></div>
+                                        <div class="difficulty-dot"></div>
+                                    {% else %}
+                                        <div class="difficulty-dot active"></div>
+                                        <div class="difficulty-dot active"></div>
+                                        <div class="difficulty-dot active"></div>
+                                    {% endif %}
+                                </div>
+
+                                <p>{{ mode.description }}</p>
+
+                                <!-- Mode features -->
+                                {% if mode.name == "normal" %}
+                                <ul class="mode-features">
+                                    <li>Identifiez l'entreprise, l'équipe, le nom et le poste</li>
+                                    <li>Gagnez des points pour chaque bonne réponse</li>
+                                </ul>
+                                {% elif mode.name == "reverse" %}
+                                <ul class="mode-features">
+                                    <li>Identifiez la personne à partir d'un nom</li>
+                                    <li>Testez votre mémoire visuelle</li>
+                                </ul>
+                                {% elif mode.name == "pixelation" %}
+                                <ul class="mode-features">
+                                    <li>Image progressivement plus nette</li>
+                                    <li>Identifiez la personne le plus vite possible</li>
+                                </ul>
+                                {% elif mode.name == "timed" %}
+                                <ul class="mode-features">
+                                    <li>Course contre la montre</li>
+                                    <li>Répondez avant la fin du temps</li>
+                                </ul>
+                                {% elif mode.name == "memory" %}
+                                <ul class="mode-features">
+                                    <li>Testez votre mémoire</li>
+                                    <li>Retrouvez les paires correspondantes</li>
+                                </ul>
+                                {% else %}
+                                <ul class="mode-features">
+                                    <li>Mode de jeu unique</li>
+                                    <li>Défi personnalisé</li>
+                                </ul>
+                                {% endif %}
+
+                                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-
-                <p>{{ mode.description }}</p>
-
-                <!-- Mode features -->
-                {% if mode.name == "normal" %}
-                <ul class="mode-features">
-                    <li>Identifiez l'entreprise, l'équipe, le nom et le poste</li>
-                    <li>Gagnez des points pour chaque bonne réponse</li>
-                </ul>
-                {% elif mode.name == "reverse" %}
-                <ul class="mode-features">
-                    <li>Identifiez la personne à partir d'un nom</li>
-                    <li>Testez votre mémoire visuelle</li>
-                </ul>
-                {% elif mode.name == "pixelation" %}
-                <ul class="mode-features">
-                    <li>Image progressivement plus nette</li>
-                    <li>Identifiez la personne le plus vite possible</li>
-                </ul>
-                {% elif mode.name == "timed" %}
-                <ul class="mode-features">
-                    <li>Course contre la montre</li>
-                    <li>Répondez avant la fin du temps</li>
-                </ul>
-                {% elif mode.name == "memory" %}
-                <ul class="mode-features">
-                    <li>Testez votre mémoire</li>
-                    <li>Retrouvez les paires correspondantes</li>
-                </ul>
-                {% else %}
-                <ul class="mode-features">
-                    <li>Mode de jeu unique</li>
-                    <li>Défi personnalisé</li>
-                </ul>
-                {% endif %}
-
-                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+                <button class="carousel-nav-button next-button"><i class="fas fa-chevron-right"></i></button>
             </div>
-            {% endfor %}
+            <div class="carousel-indicators" id="classic-modes-indicators"></div>
         </div>
 
         <!-- Experimental game modes section -->
         <h2 class="section-title">Modes de jeu expérimentaux</h2>
         <p class="section-description">Découvrez nos modes de jeu uniques et défis personnalisés</p>
-        <div class="mode-grid">
-            {% for mode in experimental_modes %}
-            <div class="mode-card">
-                <i class="fas fa-flask mode-icon"></i>
-                <span class="mode-badge experimental">Expérimental</span>
+        <div class="carousel-container">
+            <div class="carousel-navigation">
+                <button class="carousel-nav-button prev-button"><i class="fas fa-chevron-left"></i></button>
+                <div class="carousel-wrapper">
+                    <div class="carousel-track" id="experimental-modes-track">
+                        {% for mode in experimental_modes %}
+                        <div class="carousel-item">
+                            <div class="mode-card">
+                                <i class="fas fa-flask mode-icon"></i>
+                                <span class="mode-badge experimental">Expérimental</span>
 
-                <h2>{{ mode.name|capitalize }}</h2>
+                                <h2>{{ mode.name|capitalize }}</h2>
 
-                <!-- Difficulty indicator -->
-                <div class="difficulty-indicator">
-                    <div class="difficulty-dot active"></div>
-                    <div class="difficulty-dot active"></div>
-                    <div class="difficulty-dot active"></div>
+                                <!-- Difficulty indicator -->
+                                <div class="difficulty-indicator">
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                    <div class="difficulty-dot active"></div>
+                                </div>
+
+                                <p>{{ mode.description }}</p>
+
+                                <!-- Mode features -->
+                                <ul class="mode-features">
+                                    <li>Mode de jeu unique</li>
+                                    <li>Défi personnalisé</li>
+                                </ul>
+
+                                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
                 </div>
-
-                <p>{{ mode.description }}</p>
-
-                <!-- Mode features -->
-                <ul class="mode-features">
-                    <li>Mode de jeu unique</li>
-                    <li>Défi personnalisé</li>
-                </ul>
-
-                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+                <button class="carousel-nav-button next-button"><i class="fas fa-chevron-right"></i></button>
             </div>
-            {% endfor %}
+            <div class="carousel-indicators" id="experimental-modes-indicators"></div>
         </div>
     </main>
 

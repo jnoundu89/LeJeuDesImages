@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize Easter egg
     initKonamiCode();
+
+    // Initialize carousels
+    initCarousels();
 });
 
 // Initialize animations for various elements
@@ -281,6 +284,190 @@ function activateEasterEgg() {
     setTimeout(() => {
         window.location.href = '/arr';
     }, 3000); // 3 seconds delay to enjoy the fireworks
+}
+
+// Initialize carousels
+function initCarousels() {
+    // Initialize classic modes carousel
+    initCarousel('classic-modes-track', 'classic-modes-indicators');
+
+    // Initialize experimental modes carousel
+    initCarousel('experimental-modes-track', 'experimental-modes-indicators');
+}
+
+// Initialize a single carousel
+function initCarousel(trackId, indicatorsId) {
+    const track = document.getElementById(trackId);
+    if (!track) return;
+
+    const wrapper = track.parentElement;
+    const container = wrapper.parentElement.parentElement;
+    const items = track.querySelectorAll('.carousel-item');
+    const prevButton = container.querySelector('.prev-button');
+    const nextButton = container.querySelector('.next-button');
+    const indicatorsContainer = document.getElementById(indicatorsId);
+
+    let currentIndex = 0;
+    let startX, moveX;
+    let isDragging = false;
+    let itemsPerSlide = 1;
+
+    // Function to determine how many items per slide based on screen width
+    function updateItemsPerSlide() {
+        if (window.innerWidth >= 1200) {
+            itemsPerSlide = 3;
+        } else if (window.innerWidth >= 768) {
+            itemsPerSlide = 2;
+        } else {
+            itemsPerSlide = 1;
+        }
+
+        // Update the current slide position after resize
+        goToSlide(Math.floor(currentIndex / itemsPerSlide) * itemsPerSlide);
+    }
+
+    // Create indicators based on number of slides (not items)
+    function createIndicators() {
+        // Clear existing indicators
+        indicatorsContainer.innerHTML = '';
+
+        // Calculate number of slides
+        const slideCount = Math.ceil(items.length / itemsPerSlide);
+
+        // Create new indicators
+        for (let i = 0; i < slideCount; i++) {
+            const indicator = document.createElement('div');
+            indicator.classList.add('carousel-indicator');
+            if (i === Math.floor(currentIndex / itemsPerSlide)) {
+                indicator.classList.add('active');
+            }
+            indicator.addEventListener('click', () => goToSlide(i * itemsPerSlide));
+            indicatorsContainer.appendChild(indicator);
+        }
+    }
+
+    // Update indicators
+    function updateIndicators() {
+        const indicators = indicatorsContainer.querySelectorAll('.carousel-indicator');
+        const currentSlide = Math.floor(currentIndex / itemsPerSlide);
+
+        indicators.forEach((indicator, index) => {
+            if (index === currentSlide) {
+                indicator.classList.add('active');
+            } else {
+                indicator.classList.remove('active');
+            }
+        });
+    }
+
+    // Go to a specific slide
+    function goToSlide(index) {
+        // Ensure index is a multiple of itemsPerSlide, except for the last slide
+        if (index % itemsPerSlide !== 0 && index + itemsPerSlide < items.length) {
+            index = Math.floor(index / itemsPerSlide) * itemsPerSlide;
+        }
+
+        // Calculate max index that ensures we show the last items correctly
+        const lastSlideIndex = Math.floor((items.length - 1) / itemsPerSlide) * itemsPerSlide;
+
+        if (index < 0) index = lastSlideIndex;
+        if (index > lastSlideIndex) index = 0;
+
+        currentIndex = index;
+        // Calculate the percentage to move based on the item width and number of items per slide
+        const itemWidth = 100 / itemsPerSlide; // Width of each item as a percentage
+        const translatePercentage = (currentIndex * itemWidth);
+        track.style.transform = `translateX(-${translatePercentage}%)`;
+        updateIndicators();
+    }
+
+    // Event listeners for buttons
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            goToSlide(currentIndex - itemsPerSlide);
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            goToSlide(currentIndex + itemsPerSlide);
+        });
+    }
+
+    // Initialize responsive behavior
+    updateItemsPerSlide();
+    createIndicators();
+
+    // Update on window resize
+    window.addEventListener('resize', () => {
+        updateItemsPerSlide();
+        createIndicators();
+    });
+
+    // Touch events for swiping
+    track.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+        isDragging = true;
+    }, { passive: true });
+
+    track.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        moveX = e.touches[0].clientX;
+        const diff = moveX - startX;
+
+        // Prevent default only if swiping horizontally
+        if (Math.abs(diff) > 5) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    track.addEventListener('touchend', (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const diff = moveX - startX;
+        if (diff > 50) {
+            // Swipe right - go to previous slide
+            goToSlide(currentIndex - itemsPerSlide);
+        } else if (diff < -50) {
+            // Swipe left - go to next slide
+            goToSlide(currentIndex + itemsPerSlide);
+        }
+    });
+
+    // Mouse events for swiping (desktop)
+    track.addEventListener('mousedown', (e) => {
+        startX = e.clientX;
+        isDragging = true;
+    });
+
+    track.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        moveX = e.clientX;
+    });
+
+    track.addEventListener('mouseup', () => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const diff = moveX - startX;
+        if (diff > 50) {
+            // Swipe right - go to previous slide
+            goToSlide(currentIndex - itemsPerSlide);
+        } else if (diff < -50) {
+            // Swipe left - go to next slide
+            goToSlide(currentIndex + itemsPerSlide);
+        }
+    });
+
+    track.addEventListener('mouseleave', () => {
+        if (isDragging) {
+            isDragging = false;
+        }
+    });
+
+    // Initialize the carousel
+    goToSlide(0);
 }
 
 // Create fireworks effect

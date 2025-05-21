@@ -117,13 +117,26 @@
     hyphens: auto;
 }
 
-/* Mode grid styles */
+/* Mode container styles */
 .mode-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 var(--space-md);
 }
 
+@media (min-width: 1200px) {
+    .mode-container {
+        max-width: 90%;
+    }
+}
+
+@media (min-width: 1600px) {
+    .mode-container {
+        max-width: 80%;
+    }
+}
+
+/* Legacy Mode grid styles - kept for backward compatibility */
 .mode-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -131,12 +144,117 @@
     margin-bottom: var(--space-xxl);
 }
 
+/* Carousel styles */
+.carousel-container {
+    position: relative;
+    margin-bottom: var(--space-xxl);
+    overflow: hidden;
+}
+
+.carousel-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+}
+
+.carousel-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
+    width: 100%;
+    cursor: default;
+}
+
+.carousel-item {
+    flex: 0 0 100%;
+    max-width: 100%;
+    padding: 0 var(--space-md);
+    box-sizing: border-box;
+}
+
+/* Responsive carousel - show multiple cards on larger screens */
+@media (min-width: 768px) {
+    .carousel-item {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .carousel-item {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+    }
+}
+
+@media (min-width: 1600px) {
+    .carousel-item {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+    }
+}
+
+.carousel-nav-button {
+    background: rgba(30, 30, 30, 0.7);
+    backdrop-filter: blur(10px);
+    color: var(--accent-dark);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    z-index: 10;
+    margin: 0 var(--space-md);
+}
+
+.carousel-nav-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+}
+
+.carousel-nav-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.carousel-indicators {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-md);
+}
+
+.carousel-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: rgba(200, 200, 200, 0.5);
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.carousel-indicator.active {
+    background-color: var(--accent-dark);
+}
+
 /* Mode card styles */
 .mode-card {
     background: rgba(26, 28, 108, 0.75);
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius-lg);
-    padding: var(--space-lg);
+    padding: var(--space-xl);
     text-align: center;
     box-shadow: var(--shadow-lg);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
@@ -144,7 +262,7 @@
     overflow: hidden;
     border: 1px solid rgba(63, 81, 181, 0.4);
     cursor: pointer;
-    min-height: 450px;
+    height: 650px;
     display: flex;
     flex-direction: column;
 }
@@ -173,9 +291,13 @@
     color: var(--accent-dark);
     margin-top: var(--space-md);
     margin-bottom: var(--space-md);
-    font-size: 1.8rem;
+    font-size: 2rem;
     position: relative;
-    display: inline-block;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
 }
 
 .mode-card h2::after {
@@ -198,14 +320,20 @@
 .mode-card p {
     color: var(--light);
     margin-bottom: var(--space-lg);
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     line-height: 1.6;
+    height: 150px;
+    overflow: auto;
 }
 
 .mode-icon {
-    font-size: 3rem;
+    font-size: 3.5rem;
     margin-bottom: var(--space-sm);
     color: var(--accent-dark);
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Mode button styles */
@@ -217,7 +345,7 @@
     padding: var(--space-sm) var(--space-lg);
     text-align: center;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     margin-top: auto;
     margin-bottom: var(--space-md);
@@ -231,6 +359,7 @@
     overflow: hidden;
     z-index: 1;
     align-self: center;
+    width: 90%;
 }
 
 .mode-button::before {
@@ -311,12 +440,16 @@
     text-align: left;
     margin-bottom: var(--space-md);
     padding-left: var(--space-lg);
+    height: 150px;
+    overflow: auto;
 }
 
 .mode-features li {
     margin-bottom: var(--space-xs);
     position: relative;
     color: var(--light);
+    font-size: 1.1rem;
+    line-height: 1.4;
 }
 
 .mode-features li::before {
@@ -332,6 +465,7 @@
     justify-content: center;
     margin-top: var(--space-sm);
     margin-bottom: var(--space-md);
+    height: 20px;
 }
 
 .difficulty-dot {
