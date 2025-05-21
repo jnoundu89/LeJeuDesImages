@@ -62,13 +62,34 @@ function initModeCards() {
             // Store the href to navigate to later
             const href = this.getAttribute('href');
 
+            // Get the parent card
+            const card = this.closest('.mode-card');
+
             // Create fireworks effect
             createFireworks();
 
-            // Navigate after a delay to enjoy the fireworks
+            // Apply vortex animation to the card
+            if (card) {
+                // Add vortex animation class
+                card.classList.add('vortex-animation');
+
+                // Add glow effect
+                card.classList.add('super-glow');
+
+                // Add spinning effect
+                card.classList.add('spin-and-shrink');
+
+                // Create warp speed effect
+                createWarpSpeedEffect(card);
+
+                // Add cartoon sound effect
+                playCartoonSound();
+            }
+
+            // Navigate after a longer delay to enjoy the animations
             setTimeout(() => {
                 window.location.href = href;
-            }, 500); // 0.5 second delay to enjoy the fireworks
+            }, 1500); // 1.5 second delay to enjoy the animations
         });
     });
 
@@ -474,6 +495,113 @@ function initCarousel(trackId, indicatorsId) {
 
     // Initialize the carousel
     goToSlide(0);
+}
+
+// Play cartoon sound effect
+function playCartoonSound() {
+    // Create an array of cartoon-like sounds
+    const sounds = [
+        { frequency: 500, duration: 100, type: 'sine', volume: 0.3 },
+        { frequency: 1000, duration: 100, type: 'sine', volume: 0.3 },
+        { frequency: 1500, duration: 100, type: 'sine', volume: 0.3 },
+        { frequency: 2000, duration: 100, type: 'sine', volume: 0.3 },
+        { frequency: 2500, duration: 100, type: 'sine', volume: 0.3 },
+        { frequency: 3000, duration: 100, type: 'sine', volume: 0.2 },
+        { frequency: 3500, duration: 100, type: 'sine', volume: 0.2 },
+        { frequency: 4000, duration: 100, type: 'sine', volume: 0.1 }
+    ];
+
+    // Check if Web Audio API is supported
+    if (window.AudioContext || window.webkitAudioContext) {
+        // Create audio context
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Play each sound with a delay
+        sounds.forEach((sound, index) => {
+            setTimeout(() => {
+                // Create oscillator
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                // Set oscillator properties
+                oscillator.type = sound.type;
+                oscillator.frequency.value = sound.frequency;
+                gainNode.gain.value = sound.volume;
+
+                // Connect nodes
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                // Start and stop the sound
+                oscillator.start();
+
+                // Fade out the sound
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + sound.duration / 1000);
+
+                // Stop the oscillator after the duration
+                setTimeout(() => {
+                    oscillator.stop();
+                }, sound.duration);
+            }, index * 50); // Stagger the sounds
+        });
+    }
+}
+
+// Create warp speed lines effect
+function createWarpSpeedEffect(card) {
+    // Create container for warp speed lines
+    const warpContainer = document.createElement('div');
+    warpContainer.classList.add('warp-speed-container');
+    card.appendChild(warpContainer);
+
+    // Colors for the warp lines
+    const colors = [
+        'rgba(255, 215, 0, 0.8)',  // Gold
+        'rgba(255, 0, 255, 0.8)',  // Magenta
+        'rgba(0, 255, 255, 0.8)',  // Cyan
+        'rgba(255, 255, 255, 0.8)', // White
+        'rgba(0, 255, 0, 0.8)',    // Green
+        'rgba(255, 0, 0, 0.8)',    // Red
+        'rgba(0, 0, 255, 0.8)',    // Blue
+    ];
+
+    // Create multiple warp lines with different angles
+    const lineCount = 24; // 24 lines for a full 360-degree effect
+
+    for (let i = 0; i < lineCount; i++) {
+        // Calculate angle for this line
+        const angle = (i / lineCount) * 360;
+
+        // Create the line element
+        const line = document.createElement('div');
+        line.classList.add('warp-line');
+
+        // Set custom properties
+        line.style.setProperty('--angle', `${angle}deg`);
+        line.style.setProperty('--color', colors[i % colors.length]);
+
+        // Determine direction based on angle
+        if (angle >= 0 && angle < 90) {
+            line.style.setProperty('--direction', 'right');
+        } else if (angle >= 90 && angle < 180) {
+            line.style.setProperty('--direction', 'bottom');
+        } else if (angle >= 180 && angle < 270) {
+            line.style.setProperty('--direction', 'left');
+        } else {
+            line.style.setProperty('--direction', 'top');
+        }
+
+        // Add a slight delay based on the angle for a more dynamic effect
+        line.style.animationDelay = `${(i / lineCount) * 0.5}s`;
+
+        // Add to container
+        warpContainer.appendChild(line);
+    }
+
+    // Remove the container after animation completes
+    setTimeout(() => {
+        warpContainer.remove();
+    }, 2000);
 }
 
 // Create fireworks effect
