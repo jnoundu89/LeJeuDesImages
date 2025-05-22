@@ -185,9 +185,9 @@
         <div class="footer-content">
             <p class="footer-text">Le Jeu Des Images - Un jeu interactif pour identifier les membres de l'équipe Infolegale et Eloficash.</p>
             <div class="footer-links">
-                <a href="#" class="footer-link">À propos</a>
-                <a href="#" class="footer-link">Comment jouer</a>
-                <a href="#" class="footer-link">Scores</a>
+                <a href="{{ url_for('game.about') }}" class="footer-link">À propos</a>
+                <a href="{{ url_for('game.how_to_play') }}" class="footer-link">Comment jouer</a>
+                <a href="{{ url_for('game.scores_page') }}" class="footer-link">Scores</a>
             </div>
         </div>
     </footer>

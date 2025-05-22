@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Jeu Des Images - Scores</title>
+    <meta name="description" content="Consultez les meilleurs scores du Jeu Des Images et voyez comment vous vous classez parmi les autres joueurs.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='music-player.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Dark overlay for better readability -->
+    <div class="dark-overlay"></div>
+
+    <!-- Toggle animation button -->
+    <div class="toggle-animation-container">
+        <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="Afficher l'animation">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
+
+    <!-- Particle background -->
+    <div class="particles-container">
+        <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <!-- Game header -->
+    <header class="game-header">
+        <img src="https://www.infolegale.fr/hs-fs/hubfs/Logo-Infolegale-fond-noir.png?width=569&height=569&name=Logo-Infolegale-fond-noir.png" alt="Logo du Jeu Des Images" class="game-logo">
+        <h1 class="game-title gradient-bg">Scores</h1>
+        <p class="game-tagline">Découvrez les meilleurs scores et voyez comment vous vous classez</p>
+    </header>
+
+    <!-- Main content -->
+    <main class="mode-container">
+        <div class="about-section">
+            <h2 class="section-title">Meilleurs scores par mode de jeu</h2>
+            <div class="about-content">
+                <p>Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-vous battre ces records ?</p>
+                
+                <div class="scores-container">
+                    <!-- Mode Normal -->
+                    <div class="score-card">
+                        <h3 class="subsection-title"><i class="fas fa-user-tie"></i> Mode Normal</h3>
+                        <div class="score-list">
+                            {% if top_scores and 'normal' in top_scores %}
+                                {% for score in top_scores['normal'] %}
+                                <div class="score-item">
+                                    <span class="score-rank">{{ loop.index }}</span>
+                                    <span class="score-user">{{ score.user_id }}</span>
+                                    <span class="score-value">{{ score.score }} pts</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="score-item no-scores">
+                                    <span>Aucun score enregistré</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Mode Inversé -->
+                    <div class="score-card">
+                        <h3 class="subsection-title"><i class="fas fa-sync-alt"></i> Mode Inversé</h3>
+                        <div class="score-list">
+                            {% if top_scores and 'reverse' in top_scores %}
+                                {% for score in top_scores['reverse'] %}
+                                <div class="score-item">
+                                    <span class="score-rank">{{ loop.index }}</span>
+                                    <span class="score-user">{{ score.user_id }}</span>
+                                    <span class="score-value">{{ score.score }} pts</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="score-item no-scores">
+                                    <span>Aucun score enregistré</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Mode Pixelation -->
+                    <div class="score-card">
+                        <h3 class="subsection-title"><i class="fas fa-puzzle-piece"></i> Mode Pixelation</h3>
+                        <div class="score-list">
+                            {% if top_scores and 'pixelation' in top_scores %}
+                                {% for score in top_scores['pixelation'] %}
+                                <div class="score-item">
+                                    <span class="score-rank">{{ loop.index }}</span>
+                                    <span class="score-user">{{ score.user_id }}</span>
+                                    <span class="score-value">{{ score.score }} pts</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="score-item no-scores">
+                                    <span>Aucun score enregistré</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Mode Chronométré -->
+                    <div class="score-card">
+                        <h3 class="subsection-title"><i class="fas fa-stopwatch"></i> Mode Chronométré</h3>
+                        <div class="score-list">
+                            {% if top_scores and 'timed' in top_scores %}
+                                {% for score in top_scores['timed'] %}
+                                <div class="score-item">
+                                    <span class="score-rank">{{ loop.index }}</span>
+                                    <span class="score-user">{{ score.user_id }}</span>
+                                    <span class="score-value">{{ score.score }} pts</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="score-item no-scores">
+                                    <span>Aucun score enregistré</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Statistiques globales</h2>
+            <div class="about-content">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <i class="fas fa-users stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Nombre de joueurs</h3>
+                            <p class="stat-value">{{ total_players if total_players else 'N/A' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fas fa-gamepad stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Parties jouées</h3>
+                            <p class="stat-value">{{ total_games if total_games else 'N/A' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fas fa-trophy stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Score moyen</h3>
+                            <p class="stat-value">{{ average_score if average_score else 'N/A' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <i class="fas fa-star stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">Score maximum</h3>
+                            <p class="stat-value">{{ highest_score if highest_score else 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-to-home">
+            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">Retour à l'accueil</a>
+        </div>
+    </main>
+
+    <!-- Game footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <p class="footer-text">Le Jeu Des Images - Un jeu interactif pour identifier les membres de l'équipe Infolegale et Eloficash.</p>
+            <div class="footer-links">
+                <a href="{{ url_for('game.about') }}" class="footer-link">À propos</a>
+                <a href="{{ url_for('game.how_to_play') }}" class="footer-link">Comment jouer</a>
+                <a href="{{ url_for('game.scores_page') }}" class="footer-link">Scores</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Music Player -->
+    <div class="music-player-container">
+        <div class="music-player-handle">
+            Musique de fond
+        </div>
+        <div id="music-player">
+            <div class="music-player-header">
+                <h3 class="music-player-title">Lecteur de musique</h3>
+                <div class="music-player-controls">
+                    <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="track-info">
+                <p id="track-title">Chargement...</p>
+                <p id="track-artist">Artiste</p>
+            </div>
+            <div class="music-controls">
+                <button id="music-prev" class="music-control-btn" title="Piste précédente"><i class="fas fa-step-backward"></i></button>
+                <button id="music-play-pause" class="music-control-btn" title="Jouer la musique"><i class="fas fa-play"></i></button>
+                <button id="music-next" class="music-control-btn" title="Piste suivante"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <div class="volume-control">
+                <button id="music-mute" class="music-control-btn" title="Couper le son"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="70">
+            </div>
+            <div class="visualizer-container">
+                <canvas id="music-visualizer"></canvas>
+                <div class="visualizer-controls">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='homepage.js') }}"></script>
+    <script src="{{ url_for('static', filename='bouncing-images.js') }}"></script>
+    <script src="{{ url_for('static', filename='music-player.js') }}"></script>
+</body>
+</html>

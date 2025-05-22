@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Jeu Des Images - Comment jouer</title>
+    <meta name="description" content="Apprenez à jouer au Jeu Des Images et découvrez les règles des différents modes de jeu pour identifier les membres de l'équipe Infolegale et Eloficash.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='music-player.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Dark overlay for better readability -->
+    <div class="dark-overlay"></div>
+
+    <!-- Toggle animation button -->
+    <div class="toggle-animation-container">
+        <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="Afficher l'animation">
+            <i class="fas fa-eye"></i>
+        </button>
+    </div>
+
+    <!-- Particle background -->
+    <div class="particles-container">
+        <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <!-- Game header -->
+    <header class="game-header">
+        <img src="https://www.infolegale.fr/hs-fs/hubfs/Logo-Infolegale-fond-noir.png?width=569&height=569&name=Logo-Infolegale-fond-noir.png" alt="Logo du Jeu Des Images" class="game-logo">
+        <h1 class="game-title gradient-bg">Comment jouer</h1>
+        <p class="game-tagline">Découvrez les règles et astuces pour maîtriser tous les modes de jeu</p>
+    </header>
+
+    <!-- Main content -->
+    <main class="mode-container">
+        <div class="about-section">
+            <h2 class="section-title">Principes de base</h2>
+            <div class="about-content">
+                <p>Le Jeu Des Images est conçu pour vous aider à mémoriser les visages et les noms de vos collègues de manière ludique et interactive.</p>
+                <p>Chaque mode de jeu propose un défi différent, mais l'objectif reste le même : associer correctement les visages aux noms, équipes et postes.</p>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Modes de jeu classiques</h2>
+            <div class="about-content">
+                <h3 class="subsection-title"><i class="fas fa-user-tie"></i> Mode Normal</h3>
+                <p>Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier son entreprise, son équipe, son nom et son poste. Vous gagnez des points pour chaque bonne réponse.</p>
+                
+                <h3 class="subsection-title"><i class="fas fa-sync-alt"></i> Mode Inversé</h3>
+                <p>À l'inverse du mode normal, vous voyez un nom et devez identifier la personne parmi plusieurs photos. Ce mode teste votre mémoire visuelle.</p>
+                
+                <h3 class="subsection-title"><i class="fas fa-puzzle-piece"></i> Mode Pixelation</h3>
+                <p>L'image d'un collaborateur apparaît progressivement, devenant de plus en plus nette. Plus vite vous identifiez la personne, plus vous gagnez de points.</p>
+                
+                <h3 class="subsection-title"><i class="fas fa-stopwatch"></i> Mode Chronométré</h3>
+                <p>Similaire au mode normal, mais avec une limite de temps pour répondre. La pression est à son comble !</p>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Modes de jeu expérimentaux</h2>
+            <div class="about-content">
+                <p>Découvrez nos modes de jeu expérimentaux pour des défis encore plus variés :</p>
+                <ul class="features-list">
+                    <li><strong>Mode Mémoire</strong> : Retrouvez les paires correspondantes, comme dans un jeu de memory.</li>
+                    <li><strong>Mode Équipe</strong> : Identifiez les membres d'une équipe spécifique.</li>
+                    <li><strong>Mode Indice</strong> : Utilisez des indices pour identifier la personne.</li>
+                    <li><strong>Et bien d'autres</strong> à découvrir par vous-même !</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">Astuces pour progresser</h2>
+            <div class="about-content">
+                <ul class="features-list">
+                    <li>Commencez par le mode normal pour vous familiariser avec les visages et les noms.</li>
+                    <li>Utilisez le mode pixelation pour tester votre capacité à reconnaître rapidement vos collègues.</li>
+                    <li>Jouez régulièrement pour améliorer votre mémoire des visages et des noms.</li>
+                    <li>N'hésitez pas à explorer tous les modes de jeu pour une expérience complète.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="back-to-home">
+            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">Retour à l'accueil</a>
+        </div>
+    </main>
+
+    <!-- Game footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <p class="footer-text">Le Jeu Des Images - Un jeu interactif pour identifier les membres de l'équipe Infolegale et Eloficash.</p>
+            <div class="footer-links">
+                <a href="{{ url_for('game.about') }}" class="footer-link">À propos</a>
+                <a href="{{ url_for('game.how_to_play') }}" class="footer-link">Comment jouer</a>
+                <a href="{{ url_for('game.scores_page') }}" class="footer-link">Scores</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Music Player -->
+    <div class="music-player-container">
+        <div class="music-player-handle">
+            Musique de fond
+        </div>
+        <div id="music-player">
+            <div class="music-player-header">
+                <h3 class="music-player-title">Lecteur de musique</h3>
+                <div class="music-player-controls">
+                    <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
+                </div>
+            </div>
+            <div class="track-info">
+                <p id="track-title">Chargement...</p>
+                <p id="track-artist">Artiste</p>
+            </div>
+            <div class="music-controls">
+                <button id="music-prev" class="music-control-btn" title="Piste précédente"><i class="fas fa-step-backward"></i></button>
+                <button id="music-play-pause" class="music-control-btn" title="Jouer la musique"><i class="fas fa-play"></i></button>
+                <button id="music-next" class="music-control-btn" title="Piste suivante"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <div class="volume-control">
+                <button id="music-mute" class="music-control-btn" title="Couper le son"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="70">
+            </div>
+            <div class="visualizer-container">
+                <canvas id="music-visualizer"></canvas>
+                <div class="visualizer-controls">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='homepage.js') }}"></script>
+    <script src="{{ url_for('static', filename='bouncing-images.js') }}"></script>
+    <script src="{{ url_for('static', filename='music-player.js') }}"></script>
+</body>
+</html>

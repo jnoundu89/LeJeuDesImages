@@ -312,3 +312,46 @@ def init_routes(game_mode_factory: GameModeFactory):
         image_urls = [employee['image_path'] for employee in employees]
 
         return jsonify(image_urls)
+
+    @game_bp.route('/about')
+    def about():
+        """
+        Render the about page.
+        """
+        return render_template('about.html')
+
+    @game_bp.route('/how-to-play')
+    def how_to_play():
+        """
+        Render the how to play page.
+        """
+        return render_template('how_to_play.html')
+
+    @game_bp.route('/scores')
+    def scores_page():
+        """
+        Render the scores page.
+        """
+        # Get the score manager from any game mode
+        score_manager = game_mode_factory.get_mode("normal").game_manager.score_manager
+
+        # Get top scores for different modes
+        top_scores = {
+            'normal': score_manager.get_top_scores('normal', 5),
+            'reverse': score_manager.get_top_scores('reverse', 5),
+            'pixelation': score_manager.get_top_scores('pixelation', 5),
+            'timed': score_manager.get_top_scores('timed', 5)
+        }
+
+        # Get global statistics
+        total_players = score_manager.get_total_players()
+        total_games = score_manager.get_total_games()
+        average_score = score_manager.get_average_score()
+        highest_score = score_manager.get_highest_score()
+
+        return render_template('scores.html', 
+                              top_scores=top_scores,
+                              total_players=total_players,
+                              total_games=total_games,
+                              average_score=average_score,
+                              highest_score=highest_score)
