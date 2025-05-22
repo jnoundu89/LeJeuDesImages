@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Ancienneté</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .employee-container {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        .employee-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-info {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .quiz-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+        }
+
+        .quiz-choice-btn {
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .quiz-choice-btn:hover {
+            background: linear-gradient(90deg, #2575fc, #6a11cb);
+            transform: scale(1.05);
+        }
+
+        .quiz-choice-btn.correct {
+            background-color: #4CAF50;
+            animation: pulse 1.5s infinite;
+        }
+
+        .quiz-choice-btn.incorrect {
+            background-color: #f44336;
+        }
+
+        .quiz-score {
+            color: #FFD700;
+            font-size: 20px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-container">
+        <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+    </div>
+
+    <div class="main-layout">
+        <!-- Colonne gauche - Statistiques -->
+        <div class="stats">
+            <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+            <div id="stats-banner" class="stats-banner">
+                <h2>Statistiques de jeu</h2>
+                <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+                <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+                <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+                <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+            </div>
+        </div>
+
+        <!-- Colonne centrale - Photo et titre -->
+        <div class="center-content">
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <div id="timer" class="timer">Temps restant: 30s</div>
+            <h1 class="title">Combien d'années d'ancienneté ?</h1>
+            
+            <!-- Employee information -->
+            <div class="employee-container">
+                <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.firstName }} {{ employee.lastName }}">
+                <div class="employee-info">
+                    <p>{{ employee.firstName }} {{ employee.lastName }}</p>
+                    <p>{{ employee.jobTitle }}</p>
+                    <p>{{ employee.department_name }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite - Scores et timer -->
+        <div class="right-content">
+            <div class="stats score-section">
+                <h2>Scores</h2>
+                <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+                <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <form action="/check" method="post" id="quiz-form">
+        <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+        <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+        <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="max-score" value="{{ maxScore }}">
+        <input type="hidden" id="correct-value" value="{{ seniority_years }}">
+
+        <div class="quiz-container">
+            <div class="quiz-choices" id="quiz-choices">
+                {% for choice in choices %}
+                <button type="button" class="quiz-choice-btn"
+                        onclick="checkSeniorityAnswer('{{ seniority_years }}', '{{ choice }}', this)">{{ choice }} an{% if choice != 1 %}s{% endif %}
+                </button>
+                {% endfor %}
+            </div>
+            <div class="quiz-score" id="quiz-score" style="display: none;"></div>
+        </div>
+    </form>
+
+    <script>
+        let answered = false;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalQuestions = parseInt(document.getElementById('total-questions').value);
+            const maxScore = parseInt(document.getElementById('max-score').value);
+            
+            updateProgressBar(totalQuestions, maxScore);
+            toggleStats();
+        });
+
+        // Function to check the seniority answer
+        function checkSeniorityAnswer(correct, selected, element) {
+            if (answered) return;
+
+            answered = true;
+
+            // Convert string values to integers
+            correct = parseInt(correct);
+            selected = parseInt(selected);
+
+            const buttons = document.querySelectorAll('#quiz-choices button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+            });
+
+            if (correct === selected) {
+                element.classList.add('correct');
+                document.getElementById('correct-answer').value = 1;
+                document.getElementById('quiz-score').textContent = "Correct! +1 point";
+                document.getElementById('quiz-score').style.color = "#4CAF50";
+            } else {
+                element.classList.add('incorrect');
+                buttons.forEach(btn => {
+                    const btnText = btn.textContent.trim();
+                    const btnValue = parseInt(btnText);
+                    if (btnValue === correct) {
+                        btn.classList.add('correct');
+                    }
+                });
+                document.getElementById('quiz-score').textContent = "Incorrect! La bonne réponse est: " + correct + (correct === 1 ? " an" : " ans");
+                document.getElementById('quiz-score').style.color = "#f44336";
+            }
+
+            // Show the score message
+            document.getElementById('quiz-score').style.display = 'block';
+
+            // Enable the next button
+            document.getElementById('next').disabled = false;
+            document.getElementById('next').classList.remove('disabled-btn');
+
+            // Stop the timer
+            clearInterval(timerInterval);
+        }
+
+        function toggleStats() {
+            const statsBanner = document.getElementById('stats-banner');
+            if (statsBanner.style.display === 'none' || statsBanner.style.display === '') {
+                statsBanner.style.display = 'block';
+            } else {
+                statsBanner.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

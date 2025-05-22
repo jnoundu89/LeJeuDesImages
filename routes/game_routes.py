@@ -25,7 +25,7 @@ def init_routes(game_mode_factory: GameModeFactory):
 
         # Define experimental game modes (new and fun/crazy modes)
         experimental_modes = ["speed", "team_guess", "missing_person", "position_match", "progressive_hint", 
-                             "scrambled_face", "emoji_challenge", "silhouette", "mirror"]
+                             "scrambled_face", "emoji_challenge", "silhouette", "mirror", "card_game"]
 
         # Separate regular and experimental modes
         regular_modes = []
@@ -232,6 +232,21 @@ def init_routes(game_mode_factory: GameModeFactory):
                 data_id=data_id,
                 action=action
             )
+        elif mode_name == "memory":
+            # Special handling for Memory mode
+            matched_pairs = int(request.form.get('matched_pairs', 0))
+
+            # Update the session to indicate all pairs have been found
+            if matched_pairs > 0:
+                # Create indices for all matched pairs
+                # This signals to memory_mode.py that all pairs have been found
+                session['used_indices'] = list(range(matched_pairs))
+                session.modified = True
+
+                logging.info(f"Memory mode: {matched_pairs} pairs matched, used_indices updated")
+
+            # Update the score
+            mode.update_score(user_id, matched_pairs=matched_pairs)
         else:  # reverse mode or other modes (like pixelation)
             correct_answer = int(request.form.get('correct_answer', 0))
             mode.update_score(user_id, correct_answer=correct_answer)

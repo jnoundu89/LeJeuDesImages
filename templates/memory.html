@@ -91,27 +91,53 @@
         }
 
         .memory-info {
-            background-color: rgba(0, 51, 102, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            margin: 20px auto;
-            max-width: 600px;
+            background: linear-gradient(135deg, rgba(0, 51, 102, 0.8), rgba(0, 102, 204, 0.8));
+            border-radius: 15px;
+            padding: 20px;
+            margin: 25px auto;
+            max-width: 650px;
             color: white;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+        }
+
+        .memory-info:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.25);
         }
 
         .memory-stats {
             display: flex;
             justify-content: space-around;
             margin: 10px 0;
+            flex-wrap: wrap;
         }
 
         .memory-stat {
             font-size: 18px;
             font-weight: bold;
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .memory-stat:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
         }
 
         .memory-stat span {
             color: #FFD700;
+            margin-left: 5px;
+            font-size: 20px;
+            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
         }
 
         .memory-complete {
@@ -191,7 +217,7 @@
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
     <input type="hidden" id="total-pairs-value" value="{{ total_pairs }}">
-    
+
     {% for card in cards %}
     <input type="hidden" class="card-data" 
            data-type="{{ card.type }}" 
@@ -216,7 +242,7 @@
     let attempts = 0;
     let canFlip = true;
     let gameCompleted = false;
-    
+
     // Function to load card data from hidden inputs
     function loadCardData() {
         const cardElements = document.querySelectorAll('.card-data');
@@ -229,17 +255,17 @@
             });
         });
     }
-    
+
     // Function to create the memory grid
     function createMemoryGrid() {
         const grid = document.getElementById('memory-grid');
         grid.innerHTML = '';
-        
+
         cards.forEach((card, index) => {
             const cardElement = document.createElement('div');
             cardElement.className = 'memory-card';
             cardElement.dataset.index = index;
-            
+
             cardElement.innerHTML = `
                 <div class="card-inner">
                     <div class="card-front">
@@ -250,12 +276,12 @@
                     </div>
                 </div>
             `;
-            
+
             cardElement.addEventListener('click', () => flipCard(cardElement, index));
             grid.appendChild(cardElement);
         });
     }
-    
+
     // Function to flip a card
     function flipCard(cardElement, index) {
         // Don't allow flipping if the game is completed or the card is already flipped/matched
@@ -264,38 +290,38 @@
             cardElement.classList.contains('matched')) {
             return;
         }
-        
+
         // Don't allow more than 2 cards to be flipped at once
         if (flippedCards.length >= 2) {
             return;
         }
-        
+
         // Flip the card
         cardElement.classList.add('flipped');
         flippedCards.push({ element: cardElement, index: index });
-        
+
         // Check for a match if 2 cards are flipped
         if (flippedCards.length === 2) {
             attempts++;
             document.getElementById('attempts').textContent = attempts;
-            
+
             const card1 = cards[flippedCards[0].index];
             const card2 = cards[flippedCards[1].index];
-            
+
             // Check if the cards match
             if (card1.matchId === card2.matchId && card1.type !== card2.type) {
                 // Match found
                 matchedPairs++;
                 document.getElementById('pairs-found').textContent = matchedPairs;
                 document.getElementById('matched-pairs').value = matchedPairs;
-                
+
                 // Mark cards as matched
                 flippedCards.forEach(card => {
                     card.element.classList.add('matched');
                 });
-                
+
                 flippedCards = [];
-                
+
                 // Check if all pairs are found
                 if (matchedPairs === totalPairs) {
                     gameCompleted = true;
@@ -317,7 +343,7 @@
             }
         }
     }
-    
+
     // Initialize the page
     document.addEventListener('DOMContentLoaded', function () {
         const totalQuestions = parseInt(document.getElementById('total-questions').value);
@@ -325,11 +351,11 @@
 
         updateProgressBar(totalQuestions, maxScore);
         toggleStats();
-        
+
         // Load card data and create the memory grid
         loadCardData();
         createMemoryGrid();
-        
+
         // Override the timer function
         const originalUpdateTimer = window.updateTimer;
         window.updateTimer = function () {
@@ -338,12 +364,12 @@
             // If timer reaches 0, end the game
             if (timerValue <= 0 && !gameCompleted) {
                 gameCompleted = true;
-                
+
                 // Reveal all cards
                 document.querySelectorAll('.memory-card').forEach((card, index) => {
                     card.classList.add('flipped');
                 });
-                
+
                 // Enable the next button
                 document.getElementById('next').disabled = false;
                 document.getElementById('next').classList.remove('disabled-btn');

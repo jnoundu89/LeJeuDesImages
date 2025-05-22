@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mode Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>
+        .employee-container {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+
+        .employee-image {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .employee-info {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+            max-width: 95%;
+        }
+
+        .image-container {
+            text-align: center;
+        }
+
+        .choice-btn {
+            width: 100%;
+            height: auto;
+            padding: 0;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+            overflow: hidden;
+            border-radius: 5px;
+        }
+
+        .choice-btn img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .choice-btn:hover img {
+            transform: scale(1.03);
+        }
+
+        .choice-btn.disabled {
+            filter: grayscale(100%);
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-container">
+        <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+    </div>
+
+    <div class="main-layout">
+        <!-- Colonne gauche - Statistiques -->
+        <div class="stats">
+            <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+            <div id="stats-banner" class="stats-banner">
+                <h2>Statistiques de jeu</h2>
+                <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+                <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+                <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+                <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+            </div>
+        </div>
+
+        <!-- Colonne centrale - Photo et titre -->
+        <div class="center-content">
+            <div class="progress-bar">
+                <div class="progress-bar-fill"></div>
+            </div>
+            <div id="timer" class="timer">Temps restant: 60s</div>
+            <h1 class="title">Qui est le manager de cette personne ?</h1>
+            
+            <!-- Employee information -->
+            <div class="employee-container">
+                <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.firstName }} {{ employee.lastName }}">
+                <div class="employee-info">
+                    <p>{{ employee.firstName }} {{ employee.lastName }}</p>
+                    <p>{{ employee.jobTitle }}</p>
+                    <p>{{ employee.department_name }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Colonne droite - Scores et timer -->
+        <div class="right-content">
+            <div class="stats score-section">
+                <h2>Scores</h2>
+                <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+                <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            </div>
+        </div>
+    </div>
+
+    <form action="/check" method="post">
+        <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+        <input type="hidden" name="correct_value" value="{{ manager.id }}">
+        <input type="hidden" id="score-increment" name="score_increment" value="0">
+        <input type="hidden" id="correct-answer" name="correct_answer" value="0">
+        <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="max-score" value="{{ maxScore }}">
+
+        <div class="image-grid" id="image-choices">
+            {% for choice in choices %}
+            <div class="image-container">
+                <button type="button" class="choice-btn" onclick="checkImage('{{ manager.id }}', '{{ choice.id }}', this)">
+                    <img src="{{ choice.image_path }}" alt="{{ choice.firstName }} {{ choice.lastName }}">
+                    <p>{{ choice.firstName }} {{ choice.lastName }}</p>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+    </form>
+    <div id="fireworks-container" class="fireworks"></div>
+
+    <script>
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalQuestions = parseInt(document.getElementById('total-questions').value);
+            const maxScore = parseInt(document.getElementById('max-score').value);
+            
+            updateProgressBar(totalQuestions, maxScore);
+            resetAnswersCount();
+            toggleStats();
+        });
+
+        function checkImage(correct, selected, element) {
+            const buttons = document.querySelectorAll('#image-choices .choice-btn');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.opacity = "0.6";
+            });
+
+            if (correct === selected) {
+                element.classList.add('correct');
+                correctAnswers += 1;
+                currentScore += 1;
+                document.getElementById('correct-answer').value = 1;
+            } else {
+                element.classList.add('incorrect');
+                buttons.forEach(btn => {
+                    if (btn.querySelector('img').alt.includes(correct)) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            answersCount = 1;
+            document.getElementById('current-score').innerHTML = `Score actuel : <span class="score">${currentScore} / ${maxScore}</span>`;
+
+            enableNextButton();
+            clearInterval(timerInterval);
+        }
+
+        function toggleStats() {
+            const statsBanner = document.getElementById('stats-banner');
+            if (statsBanner.style.display === 'none' || statsBanner.style.display === '') {
+                statsBanner.style.display = 'block';
+            } else {
+                statsBanner.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

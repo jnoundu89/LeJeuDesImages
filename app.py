@@ -20,7 +20,12 @@ from models.scrambled_face_mode import ScrambledFaceMode
 from models.emoji_challenge_mode import EmojiChallengeMode
 from models.silhouette_mode import SilhouetteMode
 from models.mirror_mode import MirrorMode
+from models.manager_mode import ManagerMode
+from models.seniority_mode import SeniorityMode
+from models.age_mode import AgeMode
+from models.card_game_mode import CardGameMode
 from routes.game_routes import game_bp, init_routes
+from routes.card_game_routes import card_game_bp, register_card_game_blueprint
 
 # Configuration du logging
 logging.basicConfig(level=logging.INFO)
@@ -63,8 +68,20 @@ def create_app():
     game_mode_factory.register_mode(SilhouetteMode(game_manager))
     game_mode_factory.register_mode(MirrorMode(game_manager))
 
+    # Register new classic game modes
+    game_mode_factory.register_mode(ManagerMode(game_manager))
+    game_mode_factory.register_mode(SeniorityMode(game_manager))
+    game_mode_factory.register_mode(AgeMode(game_manager))
+
+    # Register card game mode
+    card_game_mode = CardGameMode(game_manager)
+    game_mode_factory.register_mode(card_game_mode)
+
     # Initialize routes
     init_routes(game_mode_factory)
+
+    # Register card game routes
+    register_card_game_blueprint(app, card_game_mode)
 
     # Register blueprints
     app.register_blueprint(game_bp)

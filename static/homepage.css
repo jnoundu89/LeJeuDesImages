@@ -46,60 +46,120 @@
         filter: hue-rotate(0deg) brightness(1);
         box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
     }
+    2.5% {
+        transform: rotate(9deg) scale(0.985) skewX(1.5deg);
+        filter: hue-rotate(60deg) brightness(1.05);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.75);
+    }
     5% {
         transform: rotate(18deg) scale(0.97) skewX(3deg);
         filter: hue-rotate(120deg) brightness(1.1);
         box-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+    }
+    7.5% {
+        transform: rotate(27deg) scale(0.96) skewX(4deg);
+        filter: hue-rotate(180deg) brightness(1.15);
+        box-shadow: 0 0 30px rgba(255, 100, 255, 0.75);
     }
     10% {
         transform: rotate(36deg) scale(0.95) skewX(5deg);
         filter: hue-rotate(240deg) brightness(1.2);
         box-shadow: 0 0 30px rgba(255, 0, 255, 0.7);
     }
+    12.5% {
+        transform: rotate(45deg) scale(0.935) skewX(1deg);
+        filter: hue-rotate(300deg) brightness(1.25);
+        box-shadow: 0 0 32px rgba(255, 0, 255, 0.75);
+    }
     15% {
         transform: rotate(54deg) scale(0.92) skewX(-3deg);
         filter: hue-rotate(360deg) brightness(1.3);
         box-shadow: 0 0 35px rgba(255, 0, 255, 0.8);
+    }
+    17.5% {
+        transform: rotate(63deg) scale(0.91) skewX(-4deg);
+        filter: hue-rotate(420deg) brightness(1.35);
+        box-shadow: 0 0 37px rgba(100, 100, 255, 0.75);
     }
     20% {
         transform: rotate(72deg) scale(0.9) skewX(-5deg);
         filter: hue-rotate(480deg) brightness(1.4);
         box-shadow: 0 0 40px rgba(0, 255, 255, 0.7);
     }
+    25% {
+        transform: rotate(90deg) scale(0.875) skewY(2.5deg);
+        filter: hue-rotate(540deg) brightness(1.45);
+        box-shadow: 0 0 45px rgba(0, 255, 255, 0.75);
+    }
     30% { 
         transform: rotate(108deg) scale(0.85) skewY(5deg); 
         filter: hue-rotate(600deg) brightness(1.5);
         box-shadow: 0 0 50px rgba(0, 255, 255, 0.8);
+    }
+    35% {
+        transform: rotate(126deg) scale(0.825) skewY(0deg);
+        filter: hue-rotate(660deg) brightness(1.55);
+        box-shadow: 0 0 55px rgba(100, 255, 100, 0.8);
     }
     40% {
         transform: rotate(144deg) scale(0.8) skewY(-5deg);
         filter: hue-rotate(720deg) brightness(1.6);
         box-shadow: 0 0 60px rgba(255, 255, 0, 0.8);
     }
+    45% {
+        transform: rotate(162deg) scale(0.75) perspective(500px) rotateX(5deg);
+        filter: hue-rotate(780deg) brightness(1.65);
+        box-shadow: 0 0 65px rgba(255, 255, 0, 0.85);
+    }
     50% { 
         transform: rotate(180deg) scale(0.7) perspective(500px) rotateX(10deg); 
         filter: hue-rotate(840deg) brightness(1.7);
         box-shadow: 0 0 70px rgba(255, 255, 0, 0.9);
+    }
+    55% {
+        transform: rotate(198deg) scale(0.65) perspective(500px) rotateY(5deg);
+        filter: hue-rotate(900deg) brightness(1.75);
+        box-shadow: 0 0 75px rgba(255, 100, 255, 0.9);
     }
     60% {
         transform: rotate(216deg) scale(0.6) perspective(500px) rotateY(10deg);
         filter: hue-rotate(960deg) brightness(1.8);
         box-shadow: 0 0 80px rgba(255, 0, 255, 0.9);
     }
+    65% {
+        transform: rotate(234deg) scale(0.55) perspective(500px) rotateX(-5deg);
+        filter: hue-rotate(1020deg) brightness(1.85);
+        box-shadow: 0 0 85px rgba(255, 0, 255, 0.95);
+    }
     70% {
         transform: rotate(252deg) scale(0.5) perspective(500px) rotateX(-10deg);
         filter: hue-rotate(1080deg) brightness(1.9);
         box-shadow: 0 0 90px rgba(255, 0, 255, 1);
+    }
+    75% {
+        transform: rotate(270deg) scale(0.45) perspective(500px) rotateY(-5deg);
+        filter: hue-rotate(1140deg) brightness(1.95);
+        box-shadow: 0 0 95px rgba(100, 200, 255, 1);
     }
     80% { 
         transform: rotate(288deg) scale(0.4) perspective(500px) rotateY(-10deg); 
         filter: hue-rotate(1200deg) brightness(2);
         box-shadow: 0 0 100px rgba(0, 255, 255, 1);
     }
+    85% {
+        transform: rotate(306deg) scale(0.3) perspective(500px) rotate3d(1, 1, 0, 22.5deg);
+        filter: hue-rotate(1260deg) brightness(2.05);
+        box-shadow: 0 0 105px rgba(100, 255, 255, 1);
+    }
     90% {
         transform: rotate(324deg) scale(0.2) perspective(500px) rotate3d(1, 1, 0, 45deg);
         filter: hue-rotate(1320deg) brightness(2.1);
         box-shadow: 0 0 110px rgba(255, 255, 255, 1);
+    }
+    95% {
+        transform: rotate(342deg) scale(0.15) perspective(500px) rotate3d(1, 1, 1, 67.5deg);
+        filter: hue-rotate(1380deg) brightness(2.15);
+        box-shadow: 0 0 115px rgba(255, 255, 255, 1);
     }
     100% { 
         transform: rotate(360deg) scale(0.1) perspective(500px) rotate3d(1, 1, 1, 90deg); 
@@ -153,11 +213,23 @@
         height: 0;
         transform: scale(0);
     }
+    5% {
+        opacity: 0.15;
+        width: 5%;
+        height: 5%;
+        transform: scale(0.1) rotate(2.5deg);
+    }
     10% {
         opacity: 0.3;
         width: 10%;
         height: 10%;
         transform: scale(0.2) rotate(5deg);
+    }
+    15% {
+        opacity: 0.4;
+        width: 20%;
+        height: 20%;
+        transform: scale(0.3) rotate(0deg);
     }
     20% {
         opacity: 0.5;
@@ -165,11 +237,23 @@
         height: 30%;
         transform: scale(0.4) rotate(-5deg);
     }
+    25% {
+        opacity: 0.6;
+        width: 40%;
+        height: 40%;
+        transform: scale(0.5) rotate(2.5deg);
+    }
     30% {
         opacity: 0.7;
         width: 50%;
         height: 50%;
         transform: scale(0.6) rotate(10deg);
+    }
+    35% {
+        opacity: 0.8;
+        width: 60%;
+        height: 60%;
+        transform: scale(0.7) rotate(0deg);
     }
     40% {
         opacity: 0.9;
@@ -177,11 +261,23 @@
         height: 70%;
         transform: scale(0.8) rotate(-10deg);
     }
+    45% {
+        opacity: 0.95;
+        width: 85%;
+        height: 85%;
+        transform: scale(0.9) rotate(-5deg);
+    }
     50% {
         opacity: 1;
         width: 100%;
         height: 100%;
         transform: scale(1) rotate(0deg);
+    }
+    55% {
+        opacity: 0.95;
+        width: 115%;
+        height: 115%;
+        transform: scale(1.05) rotate(-2.5deg);
     }
     60% {
         opacity: 0.9;
@@ -189,11 +285,23 @@
         height: 130%;
         transform: scale(1.1) rotate(-5deg);
     }
+    65% {
+        opacity: 0.85;
+        width: 145%;
+        height: 145%;
+        transform: scale(1.15) rotate(0deg);
+    }
     70% {
         opacity: 0.8;
         width: 160%;
         height: 160%;
         transform: scale(1.2) rotate(5deg);
+    }
+    75% {
+        opacity: 0.7;
+        width: 175%;
+        height: 175%;
+        transform: scale(1.25) rotate(0deg);
     }
     80% {
         opacity: 0.6;
@@ -201,11 +309,23 @@
         height: 190%;
         transform: scale(1.3) rotate(-10deg);
     }
+    85% {
+        opacity: 0.45;
+        width: 205%;
+        height: 205%;
+        transform: scale(1.35) rotate(0deg);
+    }
     90% {
         opacity: 0.3;
         width: 220%;
         height: 220%;
         transform: scale(1.4) rotate(10deg);
+    }
+    95% {
+        opacity: 0.15;
+        width: 235%;
+        height: 235%;
+        transform: scale(1.45) rotate(5deg);
     }
     100% {
         opacity: 0;
@@ -222,25 +342,50 @@
         opacity: 0;
         box-shadow: 0 0 0 rgba(0, 0, 0, 0);
     }
+    10% {
+        transform: scale(0.1);
+        opacity: 0.5;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
     20% {
         transform: scale(0.2);
         opacity: 0.7;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    }
+    30% {
+        transform: scale(0.3);
+        opacity: 0.75;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.75);
     }
     40% {
         transform: scale(0.4);
         opacity: 0.8;
         box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
     }
+    50% {
+        transform: scale(0.5);
+        opacity: 0.85;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.85);
+    }
     60% {
         transform: scale(0.6);
         opacity: 0.9;
         box-shadow: 0 0 60px rgba(0, 0, 0, 0.9);
     }
+    70% {
+        transform: scale(0.7);
+        opacity: 0.95;
+        box-shadow: 0 0 70px rgba(0, 0, 0, 0.95);
+    }
     80% {
         transform: scale(0.8);
         opacity: 1;
         box-shadow: 0 0 80px rgba(0, 0, 0, 1);
+    }
+    90% {
+        transform: scale(1.15);
+        opacity: 1;
+        box-shadow: 0 0 90px rgba(0, 0, 0, 1);
     }
     100% {
         transform: scale(1.5);
@@ -255,9 +400,41 @@
         transform: scale(1) rotate(0deg);
         filter: brightness(1);
     }
+    10% {
+        transform: scale(0.9) rotate(36deg);
+        filter: brightness(0.94);
+    }
+    20% {
+        transform: scale(0.8) rotate(72deg);
+        filter: brightness(0.88);
+    }
+    30% {
+        transform: scale(0.7) rotate(108deg);
+        filter: brightness(0.82);
+    }
+    40% {
+        transform: scale(0.6) rotate(144deg);
+        filter: brightness(0.76);
+    }
     50% {
         transform: scale(0.5) rotate(180deg);
         filter: brightness(0.7);
+    }
+    60% {
+        transform: scale(0.4) rotate(216deg);
+        filter: brightness(0.5);
+    }
+    70% {
+        transform: scale(0.3) rotate(252deg);
+        filter: brightness(0.35);
+    }
+    80% {
+        transform: scale(0.2) rotate(288deg);
+        filter: brightness(0.2);
+    }
+    90% {
+        transform: scale(0.1) rotate(324deg);
+        filter: brightness(0.1);
     }
     100% {
         transform: scale(0) rotate(360deg);
@@ -306,7 +483,7 @@
 }
 
 .game-logo {
-    max-width: 200px;
+    max-width: 500px;
     margin: 0 auto var(--space-md) auto;
     display: block;
     transition: transform 0.3s ease;
@@ -997,7 +1174,7 @@
     }
 
     .game-logo {
-        max-width: 300px;
+        max-width: 450px;
     }
 
     .game-title {

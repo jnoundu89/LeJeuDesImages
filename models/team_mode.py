@@ -107,7 +107,7 @@ class TeamMode(GameMode):
         # Get image URLs for the selected members
         member_data = []
         for member in selected_members:
-            image_url = member.get('image_url', '')
+            image_url = member.get('image_path', '')
             name = f"{member.get('firstName', '')} {member.get('lastName', '')}"
             member_data.append({
                 'image_url': image_url,
@@ -132,7 +132,7 @@ class TeamMode(GameMode):
             random.shuffle(choices)
 
             member_choices.append({
-                'image_url': member.get('image_url', ''),
+                'image_url': member.get('image_path', ''),
                 'name': correct_name,
                 'choices': choices
             })

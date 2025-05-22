@@ -122,46 +122,53 @@ class ClueMode(GameMode):
         """
         clues = []
 
-        # Clue 1: Initials
-        first_name = employee.get('firstName', '')
-        last_name = employee.get('lastName', '')
-        full_name = f"{first_name} {last_name}"
-
-        if full_name:
-            initials = ''.join([word[0] for word in full_name.split() if word])
-            clues.append({
-                'type': 'initials',
-                'text': f"Initiales : {initials}",
-                'level': 1,
-                'points': 3
-            })
-
-        # Clue 2: Team
+        # Clue 1: Team
         team = employee.get('department_name', '')
         if team:
             clues.append({
                 'type': 'team',
                 'text': f"Équipe : {team}",
+                'level': 1,
+                'points': 3
+            })
+
+        # Clue 2: Manager
+        manager = employee.get('manager_name', '')
+        if manager:
+            clues.append({
+                'type': 'manager',
+                'text': f"Manager : {manager}",
                 'level': 2,
                 'points': 2
             })
 
-        # Clue 3: Position
+        # Clue 3: Age (calculated from birthDate)
+        birth_date = employee.get('birthDate', '')
+        if birth_date:
+            from datetime import datetime
+            try:
+                # Parse the birthDate (format: YYYY-MM-DDT00:00:00)
+                birth_date = datetime.strptime(birth_date, '%Y-%m-%dT%H:%M:%S')
+                # Calculate age
+                today = datetime.now()
+                age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+
+                clues.append({
+                    'type': 'age',
+                    'text': f"Âge : {age} ans",
+                    'level': 3,
+                    'points': 1
+                })
+            except (ValueError, TypeError):
+                # If there's an error parsing the date, skip this clue
+                pass
+
+        # Clue 4: Position
         position = employee.get('jobTitle', '')
         if position:
             clues.append({
                 'type': 'position',
                 'text': f"Poste : {position}",
-                'level': 3,
-                'points': 1
-            })
-
-        # Clue 4: Company (if available)
-        company = employee.get('legalEntity_name', '')
-        if company:
-            clues.append({
-                'type': 'company',
-                'text': f"Entreprise : {company}",
                 'level': 4,
                 'points': 1
             })
