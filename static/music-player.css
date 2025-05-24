@@ -18,7 +18,7 @@
     width: 300px;
     max-width: 90vw;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform: translateY(calc(100% - 40px)); /* Show just the handle by default */
+    transform: translateY(100%); /* Hidden by default */
     opacity: 0.7; /* Slightly transparent when visible */
 }
 
@@ -27,38 +27,6 @@
     transform: translateY(0);
 }
 
-.music-player-container.playing .music-player-handle::before {
-    content: '♫';
-    animation: musicNotes 1.5s infinite alternate;
-}
-
-.music-player-container:not(.playing) .music-player-handle::before {
-    content: '♪';
-}
-
-/* Music Player Handle */
-.music-player-handle {
-    background: var(--music-player-bg);
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    padding: 8px 15px;
-    cursor: pointer;
-    text-align: center;
-    border: 1px solid var(--music-player-border);
-    border-bottom: none;
-    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.2);
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    color: var(--music-player-text);
-}
-
-.music-player-handle::before {
-    margin-right: 10px;
-    font-size: 1.2rem;
-}
 
 /* Music Player Main */
 #music-player {

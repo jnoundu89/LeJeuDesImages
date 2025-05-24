@@ -20,6 +20,9 @@
         <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="Afficher l'animation">
             <i class="fas fa-eye"></i>
         </button>
+        <button id="toggle-music-btn" class="toggle-animation-btn" style="margin-top: 10px;" title="Afficher le lecteur de musique">
+            <i class="fas fa-music"></i>
+        </button>
     </div>
 
     <!-- Particle background -->
@@ -87,14 +90,12 @@
 
     <!-- Music Player -->
     <div class="music-player-container">
-        <div class="music-player-handle">
-            Musique de fond
-        </div>
         <div id="music-player">
             <div class="music-player-header">
                 <h3 class="music-player-title">Lecteur de musique</h3>
                 <div class="music-player-controls">
                     <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
+                    <button id="minimize-player-btn" title="Réduire le lecteur"><i class="fas fa-minus"></i></button>
                 </div>
             </div>
             <div class="track-info">

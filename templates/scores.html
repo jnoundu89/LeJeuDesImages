@@ -20,6 +20,9 @@
         <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="Afficher l'animation">
             <i class="fas fa-eye"></i>
         </button>
+        <button id="toggle-music-btn" class="toggle-animation-btn" style="margin-top: 10px;" title="Afficher le lecteur de musique">
+            <i class="fas fa-music"></i>
+        </button>
     </div>
 
     <!-- Particle background -->
@@ -40,7 +43,7 @@
             <h2 class="section-title">Meilleurs scores par mode de jeu</h2>
             <div class="about-content">
                 <p>Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-vous battre ces records ?</p>
-                
+
                 <div class="scores-container">
                     <!-- Mode Normal -->
                     <div class="score-card">
@@ -61,7 +64,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    
+
                     <!-- Mode Inversé -->
                     <div class="score-card">
                         <h3 class="subsection-title"><i class="fas fa-sync-alt"></i> Mode Inversé</h3>
@@ -81,7 +84,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    
+
                     <!-- Mode Pixelation -->
                     <div class="score-card">
                         <h3 class="subsection-title"><i class="fas fa-puzzle-piece"></i> Mode Pixelation</h3>
@@ -101,7 +104,7 @@
                             {% endif %}
                         </div>
                     </div>
-                    
+
                     <!-- Mode Chronométré -->
                     <div class="score-card">
                         <h3 class="subsection-title"><i class="fas fa-stopwatch"></i> Mode Chronométré</h3>
@@ -136,7 +139,7 @@
                             <p class="stat-value">{{ total_players if total_players else 'N/A' }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="stat-card">
                         <i class="fas fa-gamepad stat-icon"></i>
                         <div class="stat-info">
@@ -144,7 +147,7 @@
                             <p class="stat-value">{{ total_games if total_games else 'N/A' }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="stat-card">
                         <i class="fas fa-trophy stat-icon"></i>
                         <div class="stat-info">
@@ -152,7 +155,7 @@
                             <p class="stat-value">{{ average_score if average_score else 'N/A' }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="stat-card">
                         <i class="fas fa-star stat-icon"></i>
                         <div class="stat-info">
@@ -183,14 +186,12 @@
 
     <!-- Music Player -->
     <div class="music-player-container">
-        <div class="music-player-handle">
-            Musique de fond
-        </div>
         <div id="music-player">
             <div class="music-player-header">
                 <h3 class="music-player-title">Lecteur de musique</h3>
                 <div class="music-player-controls">
                     <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
+                    <button id="minimize-player-btn" title="Réduire le lecteur"><i class="fas fa-minus"></i></button>
                 </div>
             </div>
             <div class="track-info">

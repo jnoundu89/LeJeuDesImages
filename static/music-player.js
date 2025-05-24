@@ -506,19 +506,13 @@ function startAudioSpectrumEffect() {
 
 // Start the audio spectrum effect when music starts playing
 document.addEventListener('DOMContentLoaded', function() {
-    // Add click event to the music player handle to toggle expanded state
-    const musicPlayerHandle = document.querySelector('.music-player-handle');
     const musicPlayerContainer = document.querySelector('.music-player-container');
 
-    // Make sure music player is visible by default with just the handle showing
-    if (musicPlayerContainer) {
-        // Show just the handle by default, not fully hidden
-        musicPlayerContainer.style.transform = 'translateY(calc(100% - 40px))';
-    }
-
-    if (musicPlayerHandle && musicPlayerContainer) {
-        musicPlayerHandle.addEventListener('click', function() {
-            musicPlayerContainer.classList.toggle('expanded');
+    // Add click event to the music toggle button to show the music player
+    const toggleMusicBtn = document.getElementById('toggle-music-btn');
+    if (toggleMusicBtn && musicPlayerContainer) {
+        toggleMusicBtn.addEventListener('click', function() {
+            musicPlayerContainer.classList.add('expanded');
         });
     }
 
