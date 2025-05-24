@@ -714,14 +714,17 @@
 .carousel-container {
     position: relative;
     margin-bottom: var(--space-xxl);
-    overflow: hidden;
-    padding: var(--space-md) 0;
+    overflow: visible; /* Changed from hidden to visible to show hovered cards */
+    padding: var(--space-xl) 0;
     border-radius: var(--border-radius-lg);
     background: rgba(10, 12, 50, 0.3);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), inset 0 0 20px rgba(63, 81, 181, 0.1);
     border: 1px solid rgba(63, 81, 181, 0.2);
     width: 100%; /* Ensure it takes full width of its container */
     max-width: 100%; /* Maximize width */
+    box-sizing: border-box; /* Include padding in width calculation */
+    margin-left: auto; /* Center the container */
+    margin-right: auto; /* Center the container */
 }
 
 .carousel-navigation {
@@ -730,12 +733,16 @@
     justify-content: center;
     width: 100%;
     position: relative;
+    padding: var(--space-md) 0; /* Added padding to top and bottom */
 }
 
 .carousel-wrapper {
     width: 100%;
+    max-width: 100%; /* Ensure it doesn't exceed its container */
     overflow: hidden;
     position: relative;
+    margin: 0 auto; /* Center the wrapper */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .carousel-track {
@@ -744,48 +751,78 @@
     width: 100%;
     cursor: default;
     will-change: transform;
+    padding-top: var(--space-xl); /* Added significant top padding as requested */
 }
 
 .carousel-item {
     flex: 0 0 100%;
     max-width: 100%;
-    padding: 0 var(--space-md);
+    padding: 0 var(--space-lg); /* Increased padding for better spacing */
     box-sizing: border-box;
+    display: flex; /* Use flexbox for better alignment */
+    justify-content: center; /* Center the card horizontally */
+    align-items: stretch; /* Stretch the card to fill the height */
 }
 
-/* Responsive carousel - show multiple cards on larger screens */
+/* Responsive carousel - show multiple cards on larger screens with improved sizing */
 @media (min-width: 576px) {
     .carousel-item {
         flex: 0 0 100%;
         max-width: 100%;
+        /* Flexbox properties are inherited from the base class */
     }
 }
 
-@media (min-width: 768px) {
+/* Dynamically adjust from 1 to 2 cards when there's enough space */
+@media (min-width: 768px) and (max-width: 1079px) {
     .carousel-item {
         flex: 0 0 50%;
         max-width: 50%;
+        /* Flexbox properties are inherited from the base class */
     }
 }
 
-@media (min-width: 992px) {
+/* Dynamically adjust from 2 to 3 cards when there's enough space */
+@media (min-width: 1080px) {
     .carousel-item {
         flex: 0 0 33.333%;
         max-width: 33.333%;
+        /* Flexbox properties are inherited from the base class */
     }
 }
 
+/* Ensure smooth transition from 2 to 3 cards */
+@media (min-width: 1080px) and (max-width: 1199px) {
+    .carousel-item {
+        flex: 0 0 33.333%;
+        max-width: 33.333%;
+        padding: 0 var(--space-md); /* Standard padding */
+    }
+
+    .mode-card {
+        min-height: 500px; /* Slightly reduced height for better proportions */
+        max-width: 450px; /* Limit width for better readability */
+        margin: 0 auto; /* Center the card */
+    }
+}
+
+/* Ensure cards maintain good proportions on larger screens */
 @media (min-width: 1200px) {
     .carousel-item {
         flex: 0 0 33.333%;
         max-width: 33.333%;
+        padding: 0 var(--space-lg); /* Increased padding for better spacing */
+        /* Flexbox properties are inherited from the base class */
     }
 }
 
+/* Maintain 3 cards per row even on very large screens with improved spacing */
 @media (min-width: 1600px) {
     .carousel-item {
-        flex: 0 0 33.333%; /* Maintain 3 cards per row even on very large screens */
+        flex: 0 0 33.333%;
         max-width: 33.333%;
+        padding: 0 var(--space-xl); /* Further increased padding for better spacing */
+        /* Flexbox properties are inherited from the base class */
     }
 }
 
@@ -919,11 +956,15 @@
     overflow: hidden;
     border: 1px solid rgba(63, 81, 181, 0.4);
     cursor: pointer;
-    min-height: 700px; /* Minimum height to avoid scrolling */
+    min-height: 600px; /* Reduced minimum height for better responsiveness */
     height: auto; /* Allow cards to expand if needed */
     display: flex;
     flex-direction: column;
     transform-origin: center center;
+    width: 100%; /* Ensure cards take full width of their container */
+    max-width: 100%; /* Prevent overflow */
+    margin: 0 auto; /* Center cards */
+    box-sizing: border-box; /* Include padding in width calculation */
 }
 
 /* Vortex animation class */
@@ -1059,6 +1100,8 @@
     background: rgba(39, 42, 125, 0.85);
     transform: translateY(-10px) scale(1.02);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    z-index: 20; /* Added z-index to ensure it appears above carousel-navigation */
+    position: relative; /* Ensure z-index works properly */
 }
 
 .mode-card::before {
@@ -1359,8 +1402,11 @@
     }
 
     .mode-card {
-        min-height: 500px;
+        min-height: 550px; /* Slightly increased for better content display */
         padding: var(--space-xl);
+        /* Ensure good proportions on larger screens */
+        max-width: 600px; /* Limit maximum width for better readability */
+        margin: 0 auto; /* Center the card */
     }
 
     .mode-card h2 {
@@ -1412,14 +1458,41 @@
         font-size: 1.2rem;
     }
 
+    .section-title {
+        font-size: 2.2rem;
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.6rem;
+    }
+
+    .section-title::before {
+        width: 30px;
+        height: 30px;
+        top: -8px;
+    }
+
+    .section-title::after {
+        width: 100px;
+        height: 2px;
+    }
+
+    .section-description {
+        font-size: 1.1rem;
+        margin: 0 0 2rem;
+        line-height: 1.6;
+        padding: 0 var(--space-sm);
+    }
+
     .mode-grid {
         grid-template-columns: 1fr;
     }
 
     .mode-card {
-        min-height: 400px;
+        min-height: 450px; /* Slightly increased for better content display */
         height: auto; /* Allow cards to expand based on content */
         padding: var(--space-md); /* Reduce padding on small screens */
+        max-width: 500px; /* Limit maximum width for better readability */
+        margin: 0 auto; /* Center the card */
+        justify-content: space-between; /* Better spacing of internal elements */
     }
 
     .mode-card p {
@@ -1461,10 +1534,24 @@
         height: 40px;
         margin: 0 var(--space-sm);
     }
+
+    .carousel-navigation {
+        padding: var(--space-sm) 0; /* Reduced padding for mobile screens */
+    }
+}
+
+/* Responsive adjustment for carousel-track padding */
+@media (max-width: 768px) {
+    .carousel-track {
+        padding-top: var(--space-md); /* Reduced top padding for smaller screens */
+    }
 }
 
 /* Additional breakpoint for very small screens */
 @media (max-width: 480px) {
+    .carousel-track {
+        padding-top: var(--space-sm); /* Further reduced top padding for very small screens */
+    }
     .game-title {
         font-size: 2rem;
     }
@@ -1473,8 +1560,38 @@
         font-size: 1rem;
     }
 
+    .section-title {
+        font-size: 1.8rem;
+        margin: 1.5rem 0 0.8rem;
+        padding-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .section-title::before {
+        width: 20px;
+        height: 20px;
+        top: -5px;
+    }
+
+    .section-title::after {
+        width: 80px;
+        height: 2px;
+    }
+
+    .section-description {
+        font-size: 1rem;
+        margin: 0 0 1.5rem;
+        line-height: 1.5;
+        letter-spacing: 0.3px;
+        padding: 0 var(--space-xs);
+    }
+
     .mode-card {
+        min-height: 400px; /* Reduced height for very small screens */
         padding: var(--space-sm); /* Further reduce padding on very small screens */
+        max-width: 100%; /* Take full width on very small screens */
+        margin: 0 auto; /* Center the card */
+        justify-content: space-between; /* Better spacing of internal elements */
     }
 
     .mode-card h2 {
@@ -1505,7 +1622,11 @@
     }
 
     .carousel-container {
-        padding: var(--space-sm) 0;
+        padding: var(--space-md) 0;
+    }
+
+    .carousel-navigation {
+        padding: var(--space-sm) 0; /* Reduced padding for very small screens */
     }
 
     .mode-icon {
@@ -1525,15 +1646,51 @@
     z-index: -1;
 }
 
-/* Section titles */
+/* Section titles with enhanced cosmic styling */
+@keyframes glow-pulse {
+    0% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(63, 81, 181, 0.4); }
+    50% { text-shadow: 0 0 15px rgba(255, 215, 0, 0.7), 0 0 30px rgba(63, 81, 181, 0.6); }
+    100% { text-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(63, 81, 181, 0.4); }
+}
+
+@keyframes underline-expand {
+    0% { width: 0; opacity: 0; }
+    100% { width: 120px; opacity: 1; }
+}
+
 .section-title {
     text-align: center;
-    font-size: 2.5rem;
-    margin: 2rem 0 1rem;
-    color: #fff;
-    text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-size: 2.8rem;
+    margin: 2.5rem 0 1.2rem;
+    background: linear-gradient(135deg, var(--accent-dark), #45caff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 215, 0, 0.5), 0 0 25px rgba(63, 81, 181, 0.4);
     position: relative;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    animation: glow-pulse 3s infinite ease-in-out;
+    transform: perspective(500px) translateZ(0);
+    transition: transform 0.3s ease;
+}
+
+.section-title:hover {
+    transform: perspective(500px) translateZ(10px);
+}
+
+.section-title::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: -1;
 }
 
 .section-title::after {
@@ -1542,20 +1699,35 @@
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
+    width: 120px;
     height: 3px;
-    background: linear-gradient(90deg, #4a6bff, #45caff);
+    background: linear-gradient(90deg, transparent, var(--accent-dark), #45caff, var(--accent-dark), transparent);
     border-radius: 3px;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5), 0 0 20px rgba(63, 81, 181, 0.3);
+    animation: underline-expand 1.5s ease-out forwards;
 }
 
 .section-description {
     text-align: center;
-    font-size: 1.2rem;
-    margin: 0 0 2rem;
-    color: #ccc;
+    font-size: 1.3rem;
+    margin: 0 0 2.5rem;
+    color: rgba(255, 255, 255, 0.85);
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.7;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    position: relative;
+    padding: 0 var(--space-md);
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeIn 1s ease-out 0.5s forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Experimental badge */

@@ -353,11 +353,14 @@ function initCarousel(trackId, indicatorsId) {
 
     // Function to determine how many items per slide based on screen width
     function updateItemsPerSlide() {
-        if (window.innerWidth >= 1200) {
+        if (window.innerWidth >= 1080) {
+            // Show 3 cards on larger screens (1080px and above)
             itemsPerSlide = 3;
         } else if (window.innerWidth >= 768) {
+            // Show 2 cards on medium screens (768px to 1079px)
             itemsPerSlide = 2;
         } else {
+            // Show 1 card on small screens (below 768px)
             itemsPerSlide = 1;
         }
 
@@ -437,10 +440,14 @@ function initCarousel(trackId, indicatorsId) {
     updateItemsPerSlide();
     createIndicators();
 
-    // Update on window resize
-    window.addEventListener('resize', () => {
-        updateItemsPerSlide();
-        createIndicators();
+    // Add resize event listener to update carousel when window is resized
+    window.addEventListener('resize', function() {
+        // Debounce the resize event to prevent excessive updates
+        clearTimeout(window.resizeTimeout);
+        window.resizeTimeout = setTimeout(function() {
+            updateItemsPerSlide();
+            createIndicators();
+        }, 250); // Wait 250ms after resize ends before updating
     });
 
     // Touch events for swiping - only on navigation buttons and indicators

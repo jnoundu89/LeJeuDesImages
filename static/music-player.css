@@ -18,7 +18,8 @@
     width: 300px;
     max-width: 90vw;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    transform: translateY(70%);
+    transform: translateY(calc(100% - 40px)); /* Show just the handle by default */
+    opacity: 0.7; /* Slightly transparent when visible */
 }
 
 .music-player-container:hover,
@@ -345,21 +346,21 @@
         right: 10px;
         width: 250px;
     }
-    
+
     .music-controls {
         gap: 10px;
     }
-    
+
     .music-control-btn {
         width: 35px;
         height: 35px;
     }
-    
+
     #music-play-pause {
         width: 45px;
         height: 45px;
     }
-    
+
     .visualizer-container {
         height: 50px;
     }
@@ -369,15 +370,15 @@
     .music-player-container {
         width: 220px;
     }
-    
+
     .music-player-title {
         font-size: 1rem;
     }
-    
+
     .track-title {
         font-size: 1rem;
     }
-    
+
     .track-artist {
         font-size: 0.8rem;
     }
