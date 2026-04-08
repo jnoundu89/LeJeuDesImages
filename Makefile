@@ -7,7 +7,7 @@ run:
 	uv run python app.py
 
 test:
-	uv run --extra dev pytest tests/ -v -m "not e2e"
+	APP_CONFIG=tests/fixtures/test_config.yaml uv run --extra dev pytest tests/ -v -m "not e2e"
 
 test-e2e:
 	uv run pytest tests/test_e2e.py -v -m e2e
