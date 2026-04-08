@@ -146,7 +146,6 @@ class TestInitialize:
         assert result['user_id'] == 123
         assert result['data_id'] == 456
         assert result['max_score'] == len(employees)
-        assert result['reverse_mode'] is False
 
     def test_calls_store_game_data(self, test_employee_data):
         gm = MagicMock()

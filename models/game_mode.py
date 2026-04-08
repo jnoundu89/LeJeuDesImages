@@ -39,7 +39,6 @@ class GameMode(ABC):
         return {
             'user_id': user_id,
             'data_id': data_id,
-            'reverse_mode': False,
             'max_score': len(employees)
         }
 
@@ -128,12 +127,11 @@ class GameMode(ABC):
 
 
 class NormalMode(GameMode):
-    """
-    Normal game mode where users identify company, team, name, and position from an image.
-    """
+    """Normal game mode: identify company, team, name, and position from an image."""
+
     @property
     def name(self) -> str:
-        return "normal"
+        return 'normal'
 
     @property
     def description(self) -> str:
@@ -141,25 +139,61 @@ class NormalMode(GameMode):
 
     @property
     def template(self) -> str:
-        return "index.html"
+        return 'normal.html'
 
     def initialize(self, user_id: Optional[int] = None) -> Dict[str, Any]:
-        return self.game_manager.initialize_normal_mode(user_id)
+        user_id = self.game_manager.score_manager.initialize_user(user_id)
+        employees = self.game_manager.employee_data.get_all_employees()
+        random.shuffle(employees)
+        data_id = self.game_manager.store_game_data(employees)
+        return {
+            'user_id': user_id,
+            'data_id': data_id,
+            'max_score': len(employees) * 4,
+        }
 
     def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
-        return self.game_manager.get_question_data(data_id, used_indices, current_question, False)
+        selected, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected.get('game_over'):
+            return selected
+
+        correct_values = {
+            'company': selected['company'],
+            'team': selected['team'],
+            'name': self._make_full_name(selected),
+            'position': selected['job_title'],
+        }
+
+        companies = self.game_manager.employee_data.get_unique_values('company')
+        teams = self.game_manager.employee_data.get_random_choices('team', correct_values['team'])
+        names = self._get_name_choices(selected)
+        sex_filter = {'sex': selected['sex']}
+        positions = self.game_manager.employee_data.get_random_choices(
+            'job_title', correct_values['position'], filter_dict=sex_filter
+        )
+
+        return {
+            'game_over': False,
+            'image_url': selected['photo'],
+            'correct_values': correct_values,
+            'choices': {
+                'companies': companies,
+                'teams': teams,
+                'names': names,
+                'positions': positions,
+            },
+            'current_question': current_question,
+        }
 
     def update_score(self, user_id: int, **kwargs) -> None:
         score_increment = kwargs.get('score_increment', 0)
-        company_correct = kwargs.get('company_correct', 0)
-        team_correct = kwargs.get('team_correct', 0)
-        name_correct = kwargs.get('name_correct', 0)
-        position_correct = kwargs.get('position_correct', 0)
-
-        self.game_manager.update_score_normal_mode(
-            user_id, score_increment, company_correct, team_correct, name_correct, position_correct
-        )
+        stat_updates = {}
+        for key in ('company', 'team', 'name', 'position'):
+            val = kwargs.get(f'{key}_correct', 0)
+            if val:
+                stat_updates[key] = val
+        self.game_manager.score_manager.update_score(user_id, score_increment, stat_updates=stat_updates)
 
     def handle_answer(self, user_id: int, form_data: dict, session_data: dict) -> dict:
         self.update_score(
@@ -174,12 +208,11 @@ class NormalMode(GameMode):
 
 
 class ReverseMode(GameMode):
-    """
-    Reverse game mode where users identify the person from a name.
-    """
+    """Reverse game mode: identify the person from a name."""
+
     @property
     def name(self) -> str:
-        return "reverse"
+        return 'reverse'
 
     @property
     def description(self) -> str:
@@ -187,18 +220,47 @@ class ReverseMode(GameMode):
 
     @property
     def template(self) -> str:
-        return "reverse.html"
+        return 'reverse.html'
 
     def initialize(self, user_id: Optional[int] = None) -> Dict[str, Any]:
-        return self.game_manager.initialize_reverse_mode(user_id)
+        user_id = self.game_manager.score_manager.initialize_user(user_id)
+        employees = self.game_manager.employee_data.get_all_employees()
+        random.shuffle(employees)
+        data_id = self.game_manager.store_game_data(employees)
+        return {
+            'user_id': user_id,
+            'data_id': data_id,
+            'max_score': len(employees),
+        }
 
     def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
-        return self.game_manager.get_question_data(data_id, used_indices, current_question, True)
+        selected, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected.get('game_over'):
+            return selected
+
+        correct_value = self._make_full_name(selected)
+        sex_filter = {'sex': selected['sex']}
+        filtered = self.game_manager.employee_data.get_filtered_employees(sex_filter)
+        others = [e for e in filtered if self._make_full_name(e) != correct_value]
+        if len(others) > 3:
+            others = random.sample(others, 3)
+
+        choices = [selected] + others
+        random.shuffle(choices)
+
+        return {
+            'game_over': False,
+            'correct_value': correct_value,
+            'choices': choices,
+            'current_question': current_question,
+        }
 
     def update_score(self, user_id: int, **kwargs) -> None:
-        correct_answer = kwargs.get('correct_answer', 0)
-        self.game_manager.update_score_reverse_mode(user_id, correct_answer)
+        if kwargs.get('correct_answer', 0):
+            self.game_manager.score_manager.update_score(user_id, 1, stat_updates={'name': 1})
+        else:
+            self.game_manager.score_manager.update_score(user_id, 0)
 
 
 class GameModeFactory:

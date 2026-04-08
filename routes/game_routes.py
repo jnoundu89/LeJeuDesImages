@@ -78,7 +78,6 @@ def init_routes(game_mode_factory: GameModeFactory):
         # Store game data in session
         session['user_id'] = game_data['user_id']
         session['data_id'] = game_data['data_id']
-        session['reverse_mode'] = game_data.get('reverse_mode', False)
         session['max_score'] = game_data.get('max_score', 0)
         session['all_indices'] = []
         session['used_indices'] = []
@@ -98,10 +97,7 @@ def init_routes(game_mode_factory: GameModeFactory):
             return redirect(url_for('game.index'))
 
         # Get the game mode
-        mode_name = session.get('mode_name')
-        if not mode_name:
-            # Fallback to reverse/normal for backward compatibility
-            mode_name = "reverse" if session.get('reverse_mode', False) else "normal"
+        mode_name = session.get('mode_name', 'normal')
         mode = game_mode_factory.get_mode(mode_name)
         if mode is None:
             logging.error(f"Game mode {mode_name} not found")
@@ -148,39 +144,10 @@ def init_routes(game_mode_factory: GameModeFactory):
             'use_score_section_styles': True  # Flag to include enhanced score section styles
         }
 
-        # Add question-specific data
-        if mode_name == "normal":
-            template_data.update({
-                'image_url': question_data['image_url'],
-                'company': question_data['correct_values']['company'],
-                'team': question_data['correct_values']['team'],
-                'name': question_data['correct_values']['name'],
-                'position': question_data['correct_values']['position'],
-                'companies': question_data['choices']['companies'],
-                'teams': question_data['choices']['teams'],
-                'names': question_data['choices']['names'],
-                'positions': question_data['choices']['positions']
-            })
-        elif mode_name == "reverse":
-            template_data.update({
-                'correct_value': question_data['correct_value'],
-                'choices': question_data['choices']
-            })
-        elif mode_name == "pixelation":
-            template_data.update({
-                'image_url': question_data['image_url'],
-                'correct_name': question_data['correct_name'],
-                'name_choices': question_data['name_choices']
-            })
-        else:  # Handle any other modes generically
-            # Just pass all question data to the template
-            template_data.update(question_data)
+        # Pass all question data to the template (generic for all modes)
+        template_data.update(question_data)
 
-        # Use a specific template for normal mode
-        if mode_name == "normal":
-            return render_template('normal.html', **template_data)
-        else:
-            return render_template(mode.template, **template_data)
+        return render_template(mode.template, **template_data)
 
     @game_bp.route('/check', methods=['POST'])
     def check():
@@ -193,10 +160,7 @@ def init_routes(game_mode_factory: GameModeFactory):
             return redirect(url_for('game.index'))
 
         # Get the game mode
-        mode_name = session.get('mode_name')
-        if not mode_name:
-            # Fallback to reverse/normal for backward compatibility
-            mode_name = "reverse" if session.get('reverse_mode', False) else "normal"
+        mode_name = session.get('mode_name', 'normal')
         mode = game_mode_factory.get_mode(mode_name)
         if mode is None:
             logging.error(f"Game mode {mode_name} not found")
@@ -224,10 +188,7 @@ def init_routes(game_mode_factory: GameModeFactory):
             return redirect(url_for('game.index'))
 
         # Get the game mode
-        mode_name = session.get('mode_name')
-        if not mode_name:
-            # Fallback to reverse/normal for backward compatibility
-            mode_name = "reverse" if session.get('reverse_mode', False) else "normal"
+        mode_name = session.get('mode_name', 'normal')
         mode = game_mode_factory.get_mode(mode_name)
         if mode is None:
             logging.error(f"Game mode {mode_name} not found")

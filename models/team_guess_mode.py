@@ -46,7 +46,6 @@ class TeamGuessMode(GameMode):
         return {
             'user_id': user_id,
             'data_id': data_id,
-            'reverse_mode': False,
             'max_score': len(employees)  # 1 point per correct team guess
         }
 

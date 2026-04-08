@@ -45,7 +45,6 @@ class ExampleMode(GameMode):
         return {
             'user_id': user_id,
             'data_id': data_id,
-            'reverse_mode': False,  # Not a reverse mode
             'max_score': len(employees)  # 1 question (name only) per employee
         }
 

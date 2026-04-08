@@ -54,7 +54,6 @@ class PositionMatchMode(GameMode):
         return {
             'user_id': user_id,
             'data_id': data_id,
-            'reverse_mode': False,
             'max_score': 15  # 5 employees per round, 3 rounds
         }
 

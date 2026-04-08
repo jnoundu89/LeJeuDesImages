@@ -67,7 +67,6 @@ class ARRMode(GameMode):
         return {
             'user_id': user_id,
             'data_id': data_id,
-            'reverse_mode': False,
             'max_score': 1000  # Maximum possible score
         }
 

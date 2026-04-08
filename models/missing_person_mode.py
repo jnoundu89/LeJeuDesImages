@@ -72,7 +72,6 @@ class MissingPersonMode(GameMode):
         return {
             'user_id': user_id,
             'data_id': data_id,
-            'reverse_mode': False,
             'max_score': max_score  # 1 point per correct missing person
         }
 
