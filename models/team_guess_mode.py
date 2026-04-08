@@ -63,27 +63,9 @@ class TeamGuessMode(GameMode):
         Returns:
             Dictionary with question data
         """
-        # Get the game data
-        game_data = self.game_manager.get_game_data(data_id)
-
-        # If all indices have been used, return None
-        if len(used_indices) >= len(game_data):
-            return {'game_over': True}
-
-        # Get all available indices
-        all_indices = list(range(len(game_data)))
-        available_indices = [i for i in all_indices if i not in used_indices]
-
-        if not available_indices:
-            return {'game_over': True}
-
-        # Get the next index
-        index = available_indices[0]
-        used_indices.append(index)
-        current_question += 1
-
-        # Get the selected employee
-        selected_employee = game_data[index]
+        selected_employee, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected_employee.get('game_over'):
+            return selected_employee
 
         # Get all unique teams for choices
         all_teams = self.game_manager.employee_data.get_unique_values('team')
@@ -112,7 +94,7 @@ class TeamGuessMode(GameMode):
             'correct_team': correct_team,
             'team_choices': team_choices,
             'current_question': current_question,
-            'total_questions': len(game_data)
+            'total_questions': len(self.game_manager.get_game_data(data_id))
         }
 
     def update_score(self, user_id: int, **kwargs) -> None:

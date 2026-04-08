@@ -66,23 +66,9 @@ class SeniorityMode(GameMode):
         Returns:
             Dictionary with question data
         """
-        # Get the game data
-        employees_with_start_date = self.game_manager.get_game_data(data_id)
-
-        # If all questions used, game over
-        if len(used_indices) >= len(employees_with_start_date):
-            return {'game_over': True}
-
-        # Select a random employee that hasn't been used yet
-        available_indices = [i for i in range(len(employees_with_start_date)) if i not in used_indices]
-        if not available_indices:
-            return {'game_over': True}
-
-        selected_index = random.choice(available_indices)
-        used_indices.append(selected_index)
-        current_question += 1
-
-        selected_employee = employees_with_start_date[selected_index]
+        selected_employee, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected_employee.get('game_over'):
+            return selected_employee
 
         # Calculate seniority in years
         start_date_str = selected_employee.get('contract_start')
@@ -121,7 +107,7 @@ class SeniorityMode(GameMode):
                 'seniority_years': seniority_years,
                 'choices': choices,
                 'current_question': current_question,
-                'total_questions': len(employees_with_start_date)
+                'total_questions': len(self.game_manager.get_game_data(data_id))
             }
         except Exception as e:
             # If error parsing date, skip this question

@@ -65,23 +65,10 @@ class ManagerMode(GameMode):
         Returns:
             Dictionary with question data
         """
-        # Get the game data
-        employees_with_manager = self.game_manager.get_game_data(data_id)
+        selected_employee, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected_employee.get('game_over'):
+            return selected_employee
 
-        # If all questions used, game over
-        if len(used_indices) >= len(employees_with_manager):
-            return {'game_over': True}
-
-        # Select a random employee that hasn't been used yet
-        available_indices = [i for i in range(len(employees_with_manager)) if i not in used_indices]
-        if not available_indices:
-            return {'game_over': True}
-
-        selected_index = random.choice(available_indices)
-        used_indices.append(selected_index)
-        current_question += 1
-
-        selected_employee = employees_with_manager[selected_index]
         manager_name = selected_employee.get('manager_name', '')
 
         # Find the manager in the employee list by name
@@ -115,7 +102,7 @@ class ManagerMode(GameMode):
             'manager': manager,
             'choices': choices,
             'current_question': current_question,
-            'total_questions': len(employees_with_manager)
+            'total_questions': len(self.game_manager.get_game_data(data_id))
         }
 
     def update_score(self, user_id: int, **kwargs) -> None:
