@@ -60,6 +60,9 @@ logs/
 # Uploads (temp directory for admin setup)
 uploads/
 
+# Company-specific config (use config.example.yaml as template)
+config.yaml
+
 # Company data (CSV + photos) -- do not commit
 data/*
 !data/.gitkeep
