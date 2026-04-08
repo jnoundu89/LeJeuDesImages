@@ -132,6 +132,12 @@ class ARRMode(GameMode):
             'game_started': game_data['game_state']['started']
         }
 
+    def handle_answer(self, user_id: int, form_data: dict, session_data: dict) -> dict:
+        data_id = int(form_data.get('data_id', 0))
+        action = form_data.get('action', '')
+        self.update_score(user_id, data_id=data_id, action=action)
+        return {}
+
     def update_score(self, user_id: int, **kwargs) -> None:
         """
         Update the score for this game mode.

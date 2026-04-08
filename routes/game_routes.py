@@ -204,54 +204,11 @@ def init_routes(game_mode_factory: GameModeFactory):
         # Get user ID
         user_id = session.get('user_id')
 
-        # Update score based on game mode
-        if mode_name == "normal":
-            score_increment = int(request.form.get('score_increment', 0))
-            company_correct = int(request.form.get('company_correct', 0))
-            team_correct = int(request.form.get('team_correct', 0))
-            name_correct = int(request.form.get('name_correct', 0))
-            position_correct = int(request.form.get('position_correct', 0))
-
-            mode.update_score(
-                user_id,
-                score_increment=score_increment,
-                company_correct=company_correct,
-                team_correct=team_correct,
-                name_correct=name_correct,
-                position_correct=position_correct
-            )
-        elif mode_name == "arr":
-            # Special handling for ARR mode
-            data_id = int(request.form.get('data_id', 0))
-            action = request.form.get('action', '')
-
-            # Log the action for debugging
-            logging.info(f"ARR mode action: {action}, data_id: {data_id}")
-
-            # Update the game state based on the action
-            mode.update_score(
-                user_id,
-                data_id=data_id,
-                action=action
-            )
-        elif mode_name == "memory":
-            # Special handling for Memory mode
-            matched_pairs = int(request.form.get('matched_pairs', 0))
-
-            # Update the session to indicate all pairs have been found
-            if matched_pairs > 0:
-                # Create indices for all matched pairs
-                # This signals to memory_mode.py that all pairs have been found
-                session['used_indices'] = list(range(matched_pairs))
-                session.modified = True
-
-                logging.info(f"Memory mode: {matched_pairs} pairs matched, used_indices updated")
-
-            # Update the score
-            mode.update_score(user_id, matched_pairs=matched_pairs)
-        else:  # reverse mode or other modes (like pixelation)
-            correct_answer = int(request.form.get('correct_answer', 0))
-            mode.update_score(user_id, correct_answer=correct_answer)
+        # Delegate form parsing + score update to the mode
+        session_updates = mode.handle_answer(user_id, request.form, session)
+        if session_updates:
+            session.update(session_updates)
+            session.modified = True
 
         return redirect(url_for('game.question'))
 

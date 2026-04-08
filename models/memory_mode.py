@@ -197,18 +197,15 @@ class MemoryMode(GameMode):
                 'total_pairs': len(game_data['employees'])
             }
 
+    def handle_answer(self, user_id: int, form_data: dict, session_data: dict) -> dict:
+        matched_pairs = int(form_data.get('matched_pairs', 0))
+        self.update_score(user_id, matched_pairs=matched_pairs)
+        if matched_pairs > 0:
+            return {'used_indices': list(range(matched_pairs))}
+        return {}
+
     def update_score(self, user_id: int, **kwargs) -> None:
-        """
-        Update the score for this game mode.
-
-        Args:
-            user_id: The user ID
-            **kwargs: Additional arguments specific to the game mode
-        """
-        # In this mode, we count matched pairs
         matched_pairs = kwargs.get('matched_pairs', 0)
-
-        # Update the score
         self.game_manager.score_manager.update_score(
             user_id,
             score_increment=matched_pairs,

@@ -50,6 +50,19 @@ class GameMode(ABC):
     def update_score(self, user_id: int, **kwargs) -> None:
         pass
 
+    def handle_answer(self, user_id: int, form_data: dict, session_data: dict) -> dict:
+        """Parse submitted form, update score, return session changes.
+
+        Default: reads ``correct_answer`` from form and delegates to
+        ``update_score``.  Override in modes that need different form
+        fields or session mutations (e.g. NormalMode, MemoryMode).
+
+        Returns a dict of session keys to update (empty by default).
+        """
+        correct_answer = int(form_data.get('correct_answer', 0))
+        self.update_score(user_id, correct_answer=correct_answer)
+        return {}
+
     # ------------------------------------------------------------------
     # Protected helpers – shared boilerplate for simple modes
     # ------------------------------------------------------------------
@@ -145,6 +158,17 @@ class NormalMode(GameMode):
         self.game_manager.update_score_normal_mode(
             user_id, score_increment, company_correct, team_correct, name_correct, position_correct
         )
+
+    def handle_answer(self, user_id: int, form_data: dict, session_data: dict) -> dict:
+        self.update_score(
+            user_id,
+            score_increment=int(form_data.get('score_increment', 0)),
+            company_correct=int(form_data.get('company_correct', 0)),
+            team_correct=int(form_data.get('team_correct', 0)),
+            name_correct=int(form_data.get('name_correct', 0)),
+            position_correct=int(form_data.get('position_correct', 0)),
+        )
+        return {}
 
 
 class ReverseMode(GameMode):
