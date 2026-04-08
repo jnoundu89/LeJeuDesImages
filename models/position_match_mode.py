@@ -113,8 +113,11 @@ class PositionMatchMode(GameMode):
         # Create a list of employees with their correct positions and shuffled positions
         employees_with_positions = []
         for i, employee in enumerate(current_round_employees):
+            enriched = dict(employee)
+            enriched['image_url'] = enriched.get('photo', '')
+            enriched['name'] = f"{enriched.get('first_name', '')} {enriched.get('last_name', '')}".strip()
             employees_with_positions.append({
-                'employee': employee,
+                'employee': enriched,
                 'correct_position': employee['job_title'],
                 'position_options': shuffled_positions
             })

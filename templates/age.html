@@ -86,11 +86,11 @@
 {% block game_content %}
             <!-- Employee information -->
             <div class="employee-container">
-                <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.firstName }} {{ employee.lastName }}">
+                <img class="employee-image" src="{{ employee.photo }}" alt="{{ employee.first_name }} {{ employee.last_name }}">
                 <div class="employee-info">
-                    <p>{{ employee.firstName }} {{ employee.lastName }}</p>
-                    <p>{{ employee.jobTitle }}</p>
-                    <p>{{ employee.department_name }}</p>
+                    <p>{{ employee.first_name }} {{ employee.last_name }}</p>
+                    <p>{{ employee.job_title }}</p>
+                    <p>{{ employee.team }}</p>
                 </div>
             </div>
 {% endblock %}
@@ -105,6 +105,7 @@
 {% block form_fields %}
     <input type="hidden" name="correct_answer" id="correct-answer" value="0">
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
     <input type="hidden" id="correct-value" value="{{ age }}">
 {% endblock %}

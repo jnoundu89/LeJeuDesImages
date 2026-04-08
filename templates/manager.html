@@ -68,11 +68,11 @@
 {% block game_content %}
             <!-- Employee information -->
             <div class="employee-container">
-                <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.firstName }} {{ employee.lastName }}">
+                <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.name }}">
                 <div class="employee-info">
-                    <p>{{ employee.firstName }} {{ employee.lastName }}</p>
-                    <p>{{ employee.jobTitle }}</p>
-                    <p>{{ employee.department_name }}</p>
+                    <p>{{ employee.name }}</p>
+                    <p>{{ employee.job_title }}</p>
+                    <p>{{ employee.team }}</p>
                 </div>
             </div>
 {% endblock %}
@@ -87,6 +87,7 @@
     <input type="hidden" id="score-increment" name="score_increment" value="0">
     <input type="hidden" id="correct-answer" name="correct_answer" value="0">
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
 {% endblock %}
 
@@ -95,8 +96,8 @@
             {% for choice in choices %}
             <div class="image-container">
                 <button type="button" class="choice-btn" onclick="checkImage('{{ manager.id }}', '{{ choice.id }}', this)">
-                    <img src="{{ choice.image_path }}" alt="{{ choice.firstName }} {{ choice.lastName }}">
-                    <p>{{ choice.firstName }} {{ choice.lastName }}</p>
+                    <img src="{{ choice.image_path }}" alt="{{ choice.name }}">
+                    <p>{{ choice.name }}</p>
                 </button>
             </div>
             {% endfor %}

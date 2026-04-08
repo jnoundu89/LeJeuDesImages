@@ -41,7 +41,7 @@ class ManagerMode(GameMode):
         all_employees = self.game_manager.employee_data.get_all_employees()
 
         # Filter employees with a manager
-        employees_with_manager = [emp for emp in all_employees if emp.get('manager_id') is not None]
+        employees_with_manager = [emp for emp in all_employees if emp.get('manager_name')]
 
         # Store data and return initialization info
         data_id = self.game_manager.store_game_data(employees_with_manager)
@@ -82,43 +82,48 @@ class ManagerMode(GameMode):
         current_question += 1
 
         selected_employee = employees_with_manager[selected_index]
-        manager_id = selected_employee.get('manager_id')
+        manager_name = selected_employee.get('manager_name', '')
 
-        # Find the manager in the employee list
-        manager = next((emp for emp in self.game_manager.employee_data.get_all_employees()
-                        if emp.get('id') == manager_id), None)
+        # Find the manager in the employee list by name
+        all_employees = self.game_manager.employee_data.get_all_employees()
+        manager = next(
+            (emp for emp in all_employees
+             if f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip() == manager_name),
+            None
+        )
 
         if not manager:
             # If manager not found, skip this question
             return self.get_question_data(data_id, used_indices, current_question - 1)
 
-        # Get 3 other random managers (different from the correct one)
-        other_managers = [emp for emp in self.game_manager.employee_data.get_all_employees()
-                         if emp.get('id') != manager_id and emp.get('id') in
-                         [e.get('manager_id') for e in employees_with_manager]]
+        # Enrich employee dicts with template-friendly keys
+        def enrich(emp):
+            e = dict(emp)
+            e['image_path'] = e.get('photo', '')
+            e['name'] = f"{e.get('first_name', '')} {e.get('last_name', '')}".strip()
+            e['id'] = e['name']  # Use name as ID for matching
+            return e
 
-        # If not enough other managers, use random employees
-        if len(other_managers) < 3:
-            additional_employees = [emp for emp in self.game_manager.employee_data.get_all_employees()
-                                  if emp.get('id') != manager_id and emp.get('id') != selected_employee.get('id')]
-            if additional_employees:
-                other_managers.extend(random.sample(additional_employees,
-                                                   min(3 - len(other_managers), len(additional_employees))))
+        enriched_manager = enrich(manager)
 
-        # Select choices
-        if len(other_managers) >= 3:
-            choices = random.sample(other_managers, 3)
+        # Get 3 other random employees as wrong choices
+        other_employees = [emp for emp in all_employees
+                          if f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip() != manager_name
+                          and emp != selected_employee]
+
+        if len(other_employees) >= 3:
+            choices = [enrich(e) for e in random.sample(other_employees, 3)]
         else:
-            choices = other_managers
+            choices = [enrich(e) for e in other_employees]
 
         # Add the correct answer
-        choices.append(manager)
+        choices.append(enriched_manager)
         random.shuffle(choices)
 
         return {
             'game_over': False,
-            'employee': selected_employee,
-            'manager': manager,
+            'employee': enrich(selected_employee),
+            'manager': enriched_manager,
             'choices': choices,
             'current_question': current_question,
             'total_questions': len(employees_with_manager)
