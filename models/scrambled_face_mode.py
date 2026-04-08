@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class ScrambledFaceMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé avec d'autres"
+        return _l("Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé avec d'autres")
 
     @property
     def template(self) -> str:

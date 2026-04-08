@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Défi Emoji{% endblock %}
+{% block title %}{{ _('Mode Défi Emoji') }}{% endblock %}
 
 {% block mode_styles %}
         .emoji-container {
@@ -141,20 +141,20 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Défi Emoji - Qui suis-je?{% endblock %}
+{% block game_title %}{{ _('Mode Défi Emoji - Qui suis-je?') }}{% endblock %}
 
 {% block game_content %}
         <div class="emoji-clues-container">
             <div class="emoji-clue">
-                <span class="emoji-clue-label">Entreprise:</span>
+                <span class="emoji-clue-label">{{ _('Entreprise') }}:</span>
                 <span class="emoji-clue-value">{{ emoji_clues.company }}</span>
             </div>
             <div class="emoji-clue">
-                <span class="emoji-clue-label">Équipe:</span>
+                <span class="emoji-clue-label">{{ _('Équipe') }}:</span>
                 <span class="emoji-clue-value">{{ emoji_clues.team }}</span>
             </div>
             <div class="emoji-clue">
-                <span class="emoji-clue-label">Poste:</span>
+                <span class="emoji-clue-label">{{ _('Poste') }}:</span>
                 <span class="emoji-clue-value">{{ emoji_clues.position }}</span>
             </div>
             <div class="emoji-personality">
@@ -166,7 +166,7 @@
             <img id="employee-image" src="{{ image_url }}" alt="Photo d'employé" class="employee-image">
         </div>
 
-        <button id="reveal-image-btn" class="reveal-image-btn" onclick="revealImage()">Révéler la photo</button>
+        <button id="reveal-image-btn" class="reveal-image-btn" onclick="revealImage()">{{ _('Révéler la photo') }}</button>
 {% endblock %}
 
 {% block game_choices %}

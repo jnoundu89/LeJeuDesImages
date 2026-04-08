@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Exemple{% endblock %}
+{% block title %}{{ _('Mode Exemple') }}{% endblock %}
 
 {% block mode_styles %}
         .example-container {
@@ -51,7 +51,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Exemple - Identifiez le nom{% endblock %}
+{% block game_title %}{{ _('Mode Exemple - Identifiez le nom') }}{% endblock %}
 
 {% block game_content %}
         <img src="{{ image_url }}" alt="Photo d'employé" class="example-image">

@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Reverse{% endblock %}
+{% block title %}{{ _('Mode Reverse') }}{% endblock %}
 
 {% block mode_styles %}
         .image-grid {
@@ -45,11 +45,11 @@
         }
 {% endblock %}
 
-{% block game_title %}Cliquez sur l'image correspondant à : {% endblock %}
+{% block game_title %}{{ _("Cliquez sur l'image correspondant à") }} : {% endblock %}
 
 {% block score_display %}
-            <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
-            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
 {% endblock %}
 
 {% block form_fields %}
@@ -97,7 +97,7 @@
         }
 
         answersCount = 1;
-        document.getElementById('current-score').innerHTML = `Score actuel : <span class="score">${currentScore} / ${maxScore}</span>`;
+        document.getElementById('current-score').innerHTML = `{{ _('Score actuel') }} : <span class="score">${currentScore} / ${maxScore}</span>`;
 
         enableNextButton();
         clearInterval(timerInterval);

@@ -1,6 +1,8 @@
 # models/speed_mode.py
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class SpeedMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode vitesse : identifiez un maximum d'employés en un temps limité, plus vous êtes rapide, plus vous gagnez de points"
+        return _l("Mode vitesse : identifiez un maximum d'employés en un temps limité, plus vous êtes rapide, plus vous gagnez de points")
 
     @property
     def template(self) -> str:

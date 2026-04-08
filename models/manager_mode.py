@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class ManagerMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Qui est le manager de qui ? Identifiez le manager de la personne affichée"
+        return _l("Qui est le manager de qui ? Identifiez le manager de la personne affichée")
 
     @property
     def template(self) -> str:

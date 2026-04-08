@@ -2,7 +2,7 @@
 
 {% block lang %}fr{% endblock %}
 
-{% block title %}Mode Association de Postes{% endblock %}
+{% block title %}{{ _('Mode Association de Postes') }}{% endblock %}
 
 {% block mode_styles %}
         .position-match-container {
@@ -202,7 +202,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Association de Postes{% endblock %}
+{% block game_title %}{{ _('Mode Association de Postes') }}{% endblock %}
 
 {% block progress_bar %}
         <div class="progress-container">
@@ -212,7 +212,7 @@
 
 {% block game_content %}
         <div class="round-banner">
-            Manche {{ current_round }} / {{ total_rounds }}
+            {{ _('Manche') }} {{ current_round }} / {{ total_rounds }}
         </div>
 {% endblock %}
 
@@ -230,7 +230,7 @@
 
 {% block game_choices %}
     <div class="position-match-container">
-        <h2>Associez chaque employé avec son poste correct</h2>
+        <h2>{{ _('Associez chaque employé avec son poste correct') }}</h2>
         <div class="employees-container">
             {% for employee_data in employees %}
             <div class="employee-card" id="employee-{{ loop.index }}">
@@ -239,7 +239,7 @@
                     <h4>{{ employee_data.employee.name }}</h4>
                     <div class="position-selector">
                         <select name="position-{{ loop.index }}" id="position-{{ loop.index }}" data-correct="{{ employee_data.correct_position }}">
-                            <option value="">-- Sélectionnez un poste --</option>
+                            <option value="">-- {{ _('Sélectionnez un poste') }} --</option>
                             {% for position in employee_data.position_options %}
                             <option value="{{ position }}">{{ position }}</option>
                             {% endfor %}
@@ -250,16 +250,16 @@
             {% endfor %}
         </div>
 
-        <button type="button" id="submit-matches" class="submit-matches-btn" disabled>Vérifier les associations</button>
+        <button type="button" id="submit-matches" class="submit-matches-btn" disabled>{{ _('Vérifier les associations') }}</button>
     </div>
 
     <!-- Result overlay -->
     <div id="result-overlay" class="result-overlay">
         <div class="result-content">
-            <h2>Résultats</h2>
-            <p>Vous avez correctement associé <span id="correct-count">0</span> employés avec leurs postes.</p>
-            <div class="result-score">Score: <span id="round-score">0</span> points</div>
-            <button id="continue-btn" class="continue-btn">Continuer</button>
+            <h2>{{ _('Résultats') }}</h2>
+            <p>{{ _('Vous avez correctement associé') }} <span id="correct-count">0</span> {{ _('employés avec leurs postes.') }}</p>
+            <div class="result-score">{{ _('Score') }}: <span id="round-score">0</span> {{ _('points') }}</div>
+            <button id="continue-btn" class="continue-btn">{{ _('Continuer') }}</button>
         </div>
     </div>
 {% endblock %}

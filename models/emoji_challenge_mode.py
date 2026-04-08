@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class EmojiChallengeMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode Défi Emoji : devinez qui est la personne représentée par ces emojis"
+        return _l("Mode Défi Emoji : devinez qui est la personne représentée par ces emojis")
 
     @property
     def template(self) -> str:

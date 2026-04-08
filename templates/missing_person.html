@@ -2,7 +2,7 @@
 
 {% block lang %}fr{% endblock %}
 
-{% block title %}Mode Personne Manquante{% endblock %}
+{% block title %}{{ _('Mode Personne Manquante') }}{% endblock %}
 
 {% block mode_styles %}
         .missing-person-container {
@@ -134,7 +134,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Personne Manquante{% endblock %}
+{% block game_title %}{{ _('Mode Personne Manquante') }}{% endblock %}
 
 {% block progress_bar %}
         <div class="progress-container">
@@ -144,7 +144,7 @@
 
 {% block game_content %}
         <div class="team-banner">
-            Équipe: {{ team_name }}
+            {{ _('Équipe') }}: {{ team_name }}
         </div>
 
         <div class="team-members-container">
@@ -161,8 +161,8 @@
 {% endblock %}
 
 {% block score_display %}
-            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-            <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>{{ _('Question') }} : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
 {% endblock %}
 
 {% block form_fields %}
@@ -174,7 +174,7 @@
 
 {% block game_choices %}
     <div class="missing-person-container">
-        <h2>Qui manque dans cette équipe ?</h2>
+        <h2>{{ _('Qui manque dans cette équipe ?') }}</h2>
         <div class="missing-person-choices" id="person-choices">
             {% for person in choices %}
             <button type="button" class="missing-person-choice-btn choice-btn"

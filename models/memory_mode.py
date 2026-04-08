@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class MemoryMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode mémoire : associez les photos avec les noms en retournant des cartes"
+        return _l("Mode mémoire : associez les photos avec les noms en retournant des cartes")
 
     @property
     def template(self) -> str:

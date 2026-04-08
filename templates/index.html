@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Qui qui c'est le monsieur / la madame ?{% endblock %}
+{% block title %}{{ _("Qui qui c'est le monsieur / la madame ?") }}{% endblock %}
 
 {% block mode_styles %}
         .choice-btn {
@@ -150,15 +150,15 @@
         }
 {% endblock %}
 
-{% block game_title %}Qui qui c'est le monsieur / la madame sur la photo ?{% endblock %}
+{% block game_title %}{{ _("Qui qui c'est le monsieur / la madame sur la photo ?") }}{% endblock %}
 
 {% block game_content %}
             <img src="{{ image_url }}" alt="Photo d'employé" style="max-width: 360px;">
 {% endblock %}
 
 {% block score_display %}
-            <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
-            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
 {% endblock %}
 
 {% block form_fields %}
@@ -176,7 +176,7 @@
 {% block game_choices %}
         <div class="game-section" style="margin-top: -10px;"> <!-- Ajout de la marge négative -->
             <div>
-                <p id="company-title" class="text-align-center"><strong>ENTREPRISE :</strong> <span class="score" id="company-score">0/1</span></p>
+                <p id="company-title" class="text-align-center"><strong>{{ _('ENTREPRISE') }} :</strong> <span class="score" id="company-score">0/1</span></p>
                 <div class="normal-choices" id="company-choices">
                     {% for comp in companies %}
                     <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ company }}', '{{ comp }}', this, 'company-choices', 'company-title')">{{ comp }}</button>
@@ -184,7 +184,7 @@
                 </div>
             </div>
             <div>
-                <p id="team-title" class="text-align-center"><strong>ÉQUIPE :</strong> <span class="score" id="team-score">0/1</span></p>
+                <p id="team-title" class="text-align-center"><strong>{{ _('ÉQUIPE') }} :</strong> <span class="score" id="team-score">0/1</span></p>
                 <div class="normal-choices" id="team-choices">
                     {% for tm in teams %}
                     <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ team }}', '{{ tm }}', this, 'team-choices', 'team-title')">{{ tm }}</button>
@@ -192,7 +192,7 @@
                 </div>
             </div>
             <div>
-                <p id="name-title" class="text-align-center"><strong>NOM :</strong> <span class="score" id="name-score">0/1</span></p>
+                <p id="name-title" class="text-align-center"><strong>{{ _('NOM') }} :</strong> <span class="score" id="name-score">0/1</span></p>
                 <div class="normal-choices" id="name-choices">
                     {% for nm in names %}
                     <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ name }}', '{{ nm }}', this, 'name-choices', 'name-title')">{{ nm }}</button>
@@ -200,7 +200,7 @@
                 </div>
             </div>
             <div>
-                <p id="position-title" class="text-align-center"><strong>POSTE :</strong> <span class="score" id="position-score">0/1</span></p>
+                <p id="position-title" class="text-align-center"><strong>{{ _('POSTE') }} :</strong> <span class="score" id="position-score">0/1</span></p>
                 <div class="normal-choices" id="position-choices">
                     {% for pos in positions %}
                     <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ position }}', '{{ pos }}', this, 'position-choices', 'position-title')">{{ pos }}</button>
@@ -251,7 +251,7 @@
         }
 
         answersCount += 1;
-        document.getElementById('current-score').textContent = `Score actuel : ${currentScore} / {{ maxScore }}`;
+        document.getElementById('current-score').textContent = `{{ _('Score actuel') }} : ${currentScore} / {{ maxScore }}`;
 
         if (answersCount === 4) {
             enableNextButton();
@@ -295,9 +295,9 @@
     function updateTimer() {
         const timerElement = document.getElementById('timer');
         if (timerValue > 0) {
-            timerElement.textContent = `Temps restant: ${timerValue}s`;
+            timerElement.textContent = `{{ _('Temps restant') }}: ${timerValue}s`;
         } else {
-            timerElement.textContent = "Temps écoulé ! :(";
+            timerElement.textContent = "{{ _('Temps écoulé !') }} :(";
             timerElement.style.color = "#ff6b6b";
         }
     }

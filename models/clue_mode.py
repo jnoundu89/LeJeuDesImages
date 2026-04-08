@@ -1,6 +1,8 @@
 # models/clue_mode.py
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class ClueMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode indices : devinez qui est la personne avec le minimum d'indices"
+        return _l("Mode indices : devinez qui est la personne avec le minimum d'indices")
 
     @property
     def template(self) -> str:

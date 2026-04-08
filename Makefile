@@ -1,4 +1,4 @@
-.PHONY: run test lint format validate-data install
+.PHONY: run test lint format validate-data install babel-extract babel-init babel-update babel-compile
 
 install:
 	uv sync --extra dev
@@ -17,3 +17,16 @@ format:
 
 validate-data:
 	uv run python tools/validate_data.py
+
+babel-extract:
+	uv run pybabel extract -F babel.cfg -k _l -o translations/messages.pot .
+
+babel-init:
+	uv run pybabel init -i translations/messages.pot -d translations -l en
+	uv run pybabel init -i translations/messages.pot -d translations -l fr
+
+babel-update:
+	uv run pybabel update -i translations/messages.pot -d translations
+
+babel-compile:
+	uv run pybabel compile -d translations

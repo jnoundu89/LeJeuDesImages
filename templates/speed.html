@@ -2,7 +2,7 @@
 
 {% block lang %}fr{% endblock %}
 
-{% block title %}Mode Vitesse{% endblock %}
+{% block title %}{{ _('Mode Vitesse') }}{% endblock %}
 
 {% block mode_styles %}
         .speed-container {
@@ -106,7 +106,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Vitesse - Identifiez rapidement la personne{% endblock %}
+{% block game_title %}{{ _('Mode Vitesse - Identifiez rapidement la personne') }}{% endblock %}
 
 {% block progress_bar %}
         <div class="progress-container">
@@ -125,8 +125,8 @@
 {% endblock %}
 
 {% block score_display %}
-            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-            <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>{{ _('Question') }} : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
 {% endblock %}
 
 {% block form_fields %}
@@ -206,7 +206,7 @@
     function updateTimer() {
         timerValue--;
         const timerElement = document.getElementById('timer');
-        timerElement.textContent = `Temps restant: ${timerValue}s`;
+        timerElement.textContent = `{{ _('Temps restant') }}: ${timerValue}s`;
 
         // Update progress bar
         const progressBar = document.getElementById('progress-bar');

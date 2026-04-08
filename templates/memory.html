@@ -160,17 +160,17 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Mémoire - Associez les photos avec les noms{% endblock %}
+{% block game_title %}{{ _('Mode Mémoire - Associez les photos avec les noms') }}{% endblock %}
 
 {% block game_content %}
         <div class="memory-info">
             <div class="memory-stats">
-                <div class="memory-stat">Paires trouvées: <span id="pairs-found">0</span>/<span id="total-pairs">{{ total_pairs }}</span></div>
-                <div class="memory-stat">Essais: <span id="attempts">0</span></div>
+                <div class="memory-stat">{{ _('Paires trouvées') }}: <span id="pairs-found">0</span>/<span id="total-pairs">{{ total_pairs }}</span></div>
+                <div class="memory-stat">{{ _('Essais') }}: <span id="attempts">0</span></div>
             </div>
         </div>
         <div class="memory-complete" id="memory-complete">
-            Félicitations! Vous avez trouvé toutes les paires!
+            {{ _('Félicitations! Vous avez trouvé toutes les paires!') }}
         </div>
 {% endblock %}
 

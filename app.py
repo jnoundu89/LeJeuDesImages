@@ -4,7 +4,8 @@ import os
 import pkgutil
 
 from dotenv import load_dotenv
-from flask import Flask
+from flask import Flask, request
+from flask_babel import Babel
 
 import models
 from models.config import CompanyConfig
@@ -22,6 +23,13 @@ logging.basicConfig(level=logging.INFO)
 def create_app():
     app = Flask(__name__)
     app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
+    app.config['BABEL_DEFAULT_LOCALE'] = 'fr'
+    app.config['BABEL_SUPPORTED_LOCALES'] = ['fr', 'en']
+
+    def get_locale():
+        return request.cookies.get('lang', 'fr')
+
+    Babel(app, locale_selector=get_locale)
 
     # Initialize models
     config = CompanyConfig('config.yaml')
@@ -55,15 +63,25 @@ def create_app():
     # Register blueprints
     app.register_blueprint(game_bp)
 
-    # Inject company branding into all templates
+    # Inject company branding + current locale into all templates
     @app.context_processor
-    def inject_company():
+    def inject_globals():
         return {
             'company_name': config.company_name,
             'company_logo_url': config.logo_url,
             'company_tagline': config.tagline,
             'company_email': config.contact_email,
+            'current_lang': get_locale(),
         }
+
+    @app.route('/lang/<lang_code>')
+    def set_language(lang_code):
+        from flask import make_response, redirect
+        from flask import request as req
+        resp = make_response(redirect(req.referrer or '/'))
+        if lang_code in app.config['BABEL_SUPPORTED_LOCALES']:
+            resp.set_cookie('lang', lang_code, max_age=365 * 24 * 3600)
+        return resp
 
     return app
 

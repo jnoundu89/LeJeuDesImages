@@ -1,6 +1,6 @@
 {% extends 'base_page.html' %}
 
-{% block title %}Le Jeu Des Images - Découvrez tous les modes de jeu{% endblock %}
+{% block title %}{{ _('Le Jeu Des Images - Decouvrez tous les modes de jeu') }}{% endblock %}
 
 {% block meta %}
     <meta name="description" content="{{ company_tagline }}">
@@ -15,7 +15,7 @@
 
 {% block content %}
         <!-- Regular game modes section -->
-        <h2 class="section-title">Modes de jeu classiques</h2>
+        <h2 class="section-title">{{ _('Modes de jeu classiques') }}</h2>
         <div class="carousel-container">
             <div class="carousel-navigation">
                 <button class="carousel-nav-button prev-button"><i class="fas fa-chevron-left"></i></button>
@@ -26,26 +26,26 @@
                             <div class="mode-card">
                                 {% if mode.name == "pixelation" %}
                                     <i class="fas fa-puzzle-piece mode-icon"></i>
-                                    <span class="mode-badge popular">Populaire</span>
+                                    <span class="mode-badge popular">{{ _('Populaire') }}</span>
                                 {% elif mode.name == "normal" %}
                                     <i class="fas fa-user-tie mode-icon"></i>
                                 {% elif mode.name == "reverse" %}
                                     <i class="fas fa-sync-alt mode-icon"></i>
                                 {% elif mode.name == "timed" %}
                                     <i class="fas fa-stopwatch mode-icon"></i>
-                                    <span class="mode-badge">Chronométré</span>
+                                    <span class="mode-badge">{{ _('Chronometre') }}</span>
                                 {% elif mode.name == "team" %}
                                     <i class="fas fa-users mode-icon"></i>
                                 {% elif mode.name == "clue" %}
                                     <i class="fas fa-lightbulb mode-icon"></i>
                                 {% elif mode.name == "memory" %}
                                     <i class="fas fa-brain mode-icon"></i>
-                                    <span class="mode-badge new">Nouveau</span>
+                                    <span class="mode-badge new">{{ _('Nouveau') }}</span>
                                 {% elif mode.name == "quiz" %}
                                     <i class="fas fa-question-circle mode-icon"></i>
                                 {% elif mode.name == "arr" %}
                                     <i class="fas fa-star mode-icon"></i>
-                                    <span class="mode-badge">Spécial</span>
+                                    <span class="mode-badge">{{ _('Special') }}</span>
                                 {% else %}
                                     <i class="fas fa-gamepad mode-icon"></i>
                                 {% endif %}
@@ -74,37 +74,37 @@
                                 <!-- Mode features -->
                                 {% if mode.name == "normal" %}
                                 <ul class="mode-features">
-                                    <li>Identifiez l'entreprise, l'équipe, le nom et le poste</li>
-                                    <li>Gagnez des points pour chaque bonne réponse</li>
+                                    <li>{{ _("Identifiez l'entreprise, l'equipe, le nom et le poste") }}</li>
+                                    <li>{{ _('Gagnez des points pour chaque bonne reponse') }}</li>
                                 </ul>
                                 {% elif mode.name == "reverse" %}
                                 <ul class="mode-features">
-                                    <li>Identifiez la personne à partir d'un nom</li>
-                                    <li>Testez votre mémoire visuelle</li>
+                                    <li>{{ _("Identifiez la personne a partir d'un nom") }}</li>
+                                    <li>{{ _('Testez votre memoire visuelle') }}</li>
                                 </ul>
                                 {% elif mode.name == "pixelation" %}
                                 <ul class="mode-features">
-                                    <li>Image progressivement plus nette</li>
-                                    <li>Identifiez la personne le plus vite possible</li>
+                                    <li>{{ _('Image progressivement plus nette') }}</li>
+                                    <li>{{ _('Identifiez la personne le plus vite possible') }}</li>
                                 </ul>
                                 {% elif mode.name == "timed" %}
                                 <ul class="mode-features">
-                                    <li>Course contre la montre</li>
-                                    <li>Répondez avant la fin du temps</li>
+                                    <li>{{ _('Course contre la montre') }}</li>
+                                    <li>{{ _('Repondez avant la fin du temps') }}</li>
                                 </ul>
                                 {% elif mode.name == "memory" %}
                                 <ul class="mode-features">
-                                    <li>Testez votre mémoire</li>
-                                    <li>Retrouvez les paires correspondantes</li>
+                                    <li>{{ _('Testez votre memoire') }}</li>
+                                    <li>{{ _('Retrouvez les paires correspondantes') }}</li>
                                 </ul>
                                 {% else %}
                                 <ul class="mode-features">
-                                    <li>Mode de jeu unique</li>
-                                    <li>Défi personnalisé</li>
+                                    <li>{{ _('Mode de jeu unique') }}</li>
+                                    <li>{{ _('Defi personnalise') }}</li>
                                 </ul>
                                 {% endif %}
 
-                                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+                                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">{{ _('Jouer maintenant') }}</a>
                             </div>
                         </div>
                         {% endfor %}
@@ -116,8 +116,8 @@
         </div>
 
         <!-- Experimental game modes section -->
-        <h2 class="section-title">Modes de jeu expérimentaux</h2>
-        <p class="section-description">Découvrez nos modes de jeu uniques et défis personnalisés</p>
+        <h2 class="section-title">{{ _('Modes de jeu experimentaux') }}</h2>
+        <p class="section-description">{{ _('Decouvrez nos modes de jeu uniques et defis personnalises') }}</p>
         <div class="carousel-container">
             <div class="carousel-navigation">
                 <button class="carousel-nav-button prev-button"><i class="fas fa-chevron-left"></i></button>
@@ -127,7 +127,7 @@
                         <div class="carousel-item">
                             <div class="mode-card">
                                 <i class="fas fa-flask mode-icon"></i>
-                                <span class="mode-badge experimental">Expérimental</span>
+                                <span class="mode-badge experimental">{{ _('Experimental') }}</span>
 
                                 <h2>{{ mode.name|capitalize }}</h2>
 
@@ -142,11 +142,11 @@
 
                                 <!-- Mode features -->
                                 <ul class="mode-features">
-                                    <li>Mode de jeu unique</li>
-                                    <li>Défi personnalisé</li>
+                                    <li>{{ _('Mode de jeu unique') }}</li>
+                                    <li>{{ _('Defi personnalise') }}</li>
                                 </ul>
 
-                                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">Jouer maintenant</a>
+                                <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">{{ _('Jouer maintenant') }}</a>
                             </div>
                         </div>
                         {% endfor %}

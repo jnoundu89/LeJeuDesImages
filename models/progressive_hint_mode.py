@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class ProgressiveHintMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode indices progressifs : identifiez l'employé avec le moins d'indices possible pour gagner plus de points"
+        return _l("Mode indices progressifs : identifiez l'employé avec le moins d'indices possible pour gagner plus de points")
 
     @property
     def template(self) -> str:

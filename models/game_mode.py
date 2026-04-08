@@ -3,6 +3,8 @@ import random
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Tuple
 
+from flask_babel import lazy_gettext as _l
+
 from .game import GameManager
 
 
@@ -135,7 +137,7 @@ class NormalMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur l'image"
+        return _l("Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur l'image")
 
     @property
     def template(self) -> str:
@@ -181,7 +183,7 @@ class ReverseMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Identifiez la personne correspondant au nom affiché"
+        return _l("Identifiez la personne correspondant au nom affiché")
 
     @property
     def template(self) -> str:

@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Équipe{% endblock %}
+{% block title %}{{ _('Mode Équipe') }}{% endblock %}
 
 {% block mode_styles %}
         .team-container {
@@ -122,10 +122,10 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Équipe - Identifiez les membres{% endblock %}
+{% block game_title %}{{ _('Mode Équipe - Identifiez les membres') }}{% endblock %}
 
 {% block game_content %}
-        <div class="team-title">Équipe : {{ team_name }}</div>
+        <div class="team-title">{{ _('Équipe') }} : {{ team_name }}</div>
 {% endblock %}
 
 {% block form_attrs %}id="team-form"{% endblock %}
@@ -160,7 +160,7 @@
             {% endfor %}
         </div>
         <button type="button" id="submit-team" class="submit-team" disabled onclick="submitTeam()">
-            Valider l'équipe
+            {{ _("Valider l'équipe") }}
         </button>
     </div>
 {% endblock %}

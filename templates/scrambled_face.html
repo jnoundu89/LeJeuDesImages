@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Visage Mélangé{% endblock %}
+{% block title %}{{ _('Mode Visage Mélangé') }}{% endblock %}
 
 {% block mode_styles %}
         .scrambled-container {
@@ -125,7 +125,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Visage Mélangé - Identifiez la personne{% endblock %}
+{% block game_title %}{{ _('Mode Visage Mélangé - Identifiez la personne') }}{% endblock %}
 
 {% block game_content %}
         <div class="scrambled-image-container">
@@ -145,7 +145,7 @@
                 </div>
             </div>
         </div>
-        <button id="reveal-btn" class="reveal-btn" onclick="revealOriginal()">Révéler le visage original</button>
+        <button id="reveal-btn" class="reveal-btn" onclick="revealOriginal()">{{ _('Révéler le visage original') }}</button>
 {% endblock %}
 
 {% block game_choices %}

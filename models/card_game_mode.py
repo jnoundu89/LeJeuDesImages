@@ -4,6 +4,8 @@ import os
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -18,7 +20,7 @@ class CardGameMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode Jeu de Cartes : Affrontez l'IA dans un duel de cartes stratégique"
+        return _l("Mode Jeu de Cartes : Affrontez l'IA dans un duel de cartes stratégique")
 
     @property
     def template(self) -> str:

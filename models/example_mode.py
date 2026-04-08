@@ -1,6 +1,8 @@
 # models/example_mode.py
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class ExampleMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode exemple : identifiez uniquement le nom de la personne sur l'image"
+        return _l("Mode exemple : identifiez uniquement le nom de la personne sur l'image")
 
     @property
     def template(self) -> str:

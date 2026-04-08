@@ -2,7 +2,7 @@
 
 {% block lang %}fr{% endblock %}
 
-{% block title %}Mode Indices Progressifs{% endblock %}
+{% block title %}{{ _('Mode Indices Progressifs') }}{% endblock %}
 
 {% block mode_styles %}
         .progressive-hint-container {
@@ -159,7 +159,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Indices Progressifs{% endblock %}
+{% block game_title %}{{ _('Mode Indices Progressifs') }}{% endblock %}
 
 {% block progress_bar %}
         <div class="progress-container">
@@ -171,20 +171,20 @@
         <div class="hint-container">
             {% for hint in hints %}
             <div class="hint {% if loop.index == 1 %}active{% endif %}" id="hint-{{ hint.level }}">
-                <div class="hint-level">Indice {{ hint.level }}</div>
+                <div class="hint-level">{{ _('Indice') }} {{ hint.level }}</div>
                 <div class="hint-text">{{ hint.text }}</div>
-                <div class="hint-points">Valeur: {{ hint.points }} points</div>
+                <div class="hint-points">{{ _('Valeur') }}: {{ hint.points }} {{ _('points') }}</div>
             </div>
             {% endfor %}
 
-            <button id="next-hint-btn" class="next-hint-btn">Indice suivant</button>
+            <button id="next-hint-btn" class="next-hint-btn">{{ _('Indice suivant') }}</button>
             <div id="bonus-points" class="bonus-points" style="display: none;"></div>
         </div>
 {% endblock %}
 
 {% block score_display %}
-            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-            <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>{{ _('Question') }} : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
 {% endblock %}
 
 {% block form_fields %}
@@ -198,7 +198,7 @@
 
 {% block game_choices %}
     <div class="progressive-hint-container">
-        <h2>Qui est cette personne ?</h2>
+        <h2>{{ _('Qui est cette personne ?') }}</h2>
         <div class="progressive-hint-choices" id="person-choices">
             {% for person in choices %}
             <button type="button" class="progressive-hint-choice-btn choice-btn"

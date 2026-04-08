@@ -1,48 +1,48 @@
 {% extends 'base_page.html' %}
 
-{% block title %}Le Jeu Des Images - À propos{% endblock %}
+{% block title %}{{ _('Le Jeu Des Images - A propos') }}{% endblock %}
 
 {% block meta %}
-    <meta name="description" content="Découvrez l'histoire et l'équipe derrière Le Jeu Des Images, un jeu interactif pour identifier les membres de l'équipe {{ company_name }}.">
+    <meta name="description" content="{{ _("Decouvrez l'histoire et l'equipe derriere Le Jeu Des Images, un jeu interactif pour identifier les membres de l'equipe %(company_name)s.", company_name=company_name) }}">
 {% endblock %}
 
-{% block page_title %}À propos{% endblock %}
-{% block page_tagline %}Découvrez l'histoire et l'équipe derrière Le Jeu Des Images{% endblock %}
+{% block page_title %}{{ _('A propos') }}{% endblock %}
+{% block page_tagline %}{{ _("Decouvrez l'histoire et l'equipe derriere Le Jeu Des Images") }}{% endblock %}
 
 {% block content %}
         <div class="about-section">
-            <h2 class="section-title">Notre histoire</h2>
+            <h2 class="section-title">{{ _('Notre histoire') }}</h2>
             <div class="about-content">
-                <p>Le Jeu Des Images est né d'une volonté de créer un outil ludique et interactif pour aider les nouveaux collaborateurs à se familiariser avec les membres de l'équipe {{ company_name }}.</p>
-                <p>Ce projet a été développé avec passion pour favoriser l'intégration et renforcer la cohésion d'équipe au sein de notre entreprise.</p>
+                <p>{{ _("Le Jeu Des Images est ne d'une volonte de creer un outil ludique et interactif pour aider les nouveaux collaborateurs a se familiariser avec les membres de l'equipe %(company_name)s.", company_name=company_name) }}</p>
+                <p>{{ _("Ce projet a ete developpe avec passion pour favoriser l'integration et renforcer la cohesion d'equipe au sein de notre entreprise.") }}</p>
             </div>
         </div>
 
         <div class="about-section">
-            <h2 class="section-title">Notre mission</h2>
+            <h2 class="section-title">{{ _('Notre mission') }}</h2>
             <div class="about-content">
-                <p>Notre mission est de faciliter l'apprentissage des visages et des noms de vos collègues de manière amusante et engageante.</p>
-                <p>Grâce à différents modes de jeu, vous pouvez tester et améliorer votre connaissance de l'équipe tout en vous amusant.</p>
+                <p>{{ _("Notre mission est de faciliter l'apprentissage des visages et des noms de vos collegues de maniere amusante et engageante.") }}</p>
+                <p>{{ _("Grace a differents modes de jeu, vous pouvez tester et ameliorer votre connaissance de l'equipe tout en vous amusant.") }}</p>
             </div>
         </div>
 
         <div class="about-section">
-            <h2 class="section-title">L'équipe de développement</h2>
+            <h2 class="section-title">{{ _("L'equipe de developpement") }}</h2>
             <div class="about-content">
-                <p>Le Jeu Des Images a été conçu et développé par une équipe passionnée de développeurs et de designers de {{ company_name }}.</p>
-                <p>Nous travaillons constamment à améliorer l'expérience utilisateur et à ajouter de nouveaux modes de jeu pour rendre l'apprentissage encore plus amusant.</p>
+                <p>{{ _("Le Jeu Des Images a ete concu et developpe par une equipe passionnee de developpeurs et de designers de %(company_name)s.", company_name=company_name) }}</p>
+                <p>{{ _("Nous travaillons constamment a ameliorer l'experience utilisateur et a ajouter de nouveaux modes de jeu pour rendre l'apprentissage encore plus amusant.") }}</p>
             </div>
         </div>
 
         <div class="about-section">
-            <h2 class="section-title">Contactez-nous</h2>
+            <h2 class="section-title">{{ _('Contactez-nous') }}</h2>
             <div class="about-content">
-                <p>Vous avez des suggestions ou des commentaires pour améliorer Le Jeu Des Images ? N'hésitez pas à nous contacter !</p>
-                <p>Envoyez-nous un email à <a href="mailto:{{ company_email }}" class="contact-link">{{ company_email }}</a> ou parlez-en directement à un membre de l'équipe de développement.</p>
+                <p>{{ _("Vous avez des suggestions ou des commentaires pour ameliorer Le Jeu Des Images ? N'hesitez pas a nous contacter !") }}</p>
+                <p>{{ _("Envoyez-nous un email a %(email_link)s ou parlez-en directement a un membre de l'equipe de developpement.", email_link='<a href="mailto:' ~ company_email ~ '" class="contact-link">' ~ company_email ~ '</a>') }}</p>
             </div>
         </div>
 
         <div class="back-to-home">
-            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">Retour à l'accueil</a>
+            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">{{ _("Retour a l'accueil") }}</a>
         </div>
 {% endblock %}

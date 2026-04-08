@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Miroir{% endblock %}
+{% block title %}{{ _('Mode Miroir') }}{% endblock %}
 
 {% block mode_styles %}
         .mirror-container {
@@ -124,7 +124,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Miroir - Identifiez la personne{% endblock %}
+{% block game_title %}{{ _('Mode Miroir - Identifiez la personne') }}{% endblock %}
 
 {% block game_content %}
         <div class="mirror-image-container">
@@ -134,7 +134,7 @@
         <div class="fact-container">
             <div class="fact-text">{{ mirror_fact }}</div>
         </div>
-        <button id="flip-btn" class="flip-btn" onclick="flipImage()">Retourner l'image</button>
+        <button id="flip-btn" class="flip-btn" onclick="flipImage()">{{ _("Retourner l'image") }}</button>
 {% endblock %}
 
 {% block game_choices %}
@@ -194,11 +194,11 @@
         if (isFlipped) {
             // Show normal image
             mirrorImage.style.transform = 'scaleX(1)';
-            document.getElementById('flip-btn').textContent = 'Voir en miroir';
+            document.getElementById('flip-btn').textContent = '{{ _("Voir en miroir") }}';
         } else {
             // Show mirrored image
             mirrorImage.style.transform = 'scaleX(-1)';
-            document.getElementById('flip-btn').textContent = 'Voir normal';
+            document.getElementById('flip-btn').textContent = '{{ _("Voir normal") }}';
         }
 
         isFlipped = !isFlipped;

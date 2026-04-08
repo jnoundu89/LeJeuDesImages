@@ -3,6 +3,8 @@ import random
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -18,7 +20,7 @@ class AgeMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Quel âge a la personne ? Devinez l'âge de la personne affichée"
+        return _l("Quel âge a la personne ? Devinez l'âge de la personne affichée")
 
     @property
     def template(self) -> str:

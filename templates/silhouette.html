@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Silhouette{% endblock %}
+{% block title %}{{ _('Mode Silhouette') }}{% endblock %}
 
 {% block mode_styles %}
         .silhouette-container {
@@ -118,7 +118,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Silhouette - Identifiez la personne{% endblock %}
+{% block game_title %}{{ _('Mode Silhouette - Identifiez la personne') }}{% endblock %}
 
 {% block game_content %}
         <div class="silhouette-image-container">
@@ -126,10 +126,10 @@
             <img id="original-image" src="{{ image_url }}" alt="Photo d'employé" class="original-image">
         </div>
         <div class="hint-container">
-            <span class="hint-label">Indice ({{ hint_type }}):</span>
+            <span class="hint-label">{{ _('Indice') }} ({{ hint_type }}):</span>
             <span class="hint-value">{{ hint }}</span>
         </div>
-        <button id="reveal-btn" class="reveal-btn" onclick="revealOriginal()">Révéler la photo</button>
+        <button id="reveal-btn" class="reveal-btn" onclick="revealOriginal()">{{ _('Révéler la photo') }}</button>
 {% endblock %}
 
 {% block game_choices %}

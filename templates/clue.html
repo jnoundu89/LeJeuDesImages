@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Indices{% endblock %}
+{% block title %}{{ _('Mode Indices') }}{% endblock %}
 
 {% block mode_styles %}
         .clue-container {
@@ -139,7 +139,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Indices - Devinez avec le minimum d'indices{% endblock %}
+{% block game_title %}{{ _("Mode Indices - Devinez avec le minimum d'indices") }}{% endblock %}
 
 {% block game_content %}
         <div class="clue-box">
@@ -148,8 +148,8 @@
                 <li class="clue-item" id="clue-{{ loop.index }}">{{ clue.text }}</li>
                 {% endfor %}
             </ul>
-            <button id="reveal-clue-btn" class="reveal-clue-btn" onclick="revealNextClue()">Révéler un indice</button>
-            <div class="score-info" id="score-info">Points possibles: 3</div>
+            <button id="reveal-clue-btn" class="reveal-clue-btn" onclick="revealNextClue()">{{ _('Révéler un indice') }}</button>
+            <div class="score-info" id="score-info">{{ _('Points possibles') }}: 3</div>
         </div>
         <div class="clue-image-container" id="clue-image-container">
             <img id="clue-image" src="{{ image_url }}" alt="Photo d'employé" class="clue-image">
@@ -193,7 +193,7 @@
 
             // Update possible points
             possiblePoints = Math.max(1, 4 - revealedClues);
-            document.getElementById('score-info').textContent = `Points possibles: ${possiblePoints}`;
+            document.getElementById('score-info').textContent = `{{ _('Points possibles') }}: ${possiblePoints}`;
 
             // Update hidden field
             document.getElementById('clues-used').value = revealedClues;

@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Ancienneté{% endblock %}
+{% block title %}{{ _('Mode Ancienneté') }}{% endblock %}
 
 {% block mode_styles %}
         .employee-container {
@@ -81,7 +81,7 @@
         }
 {% endblock %}
 
-{% block game_title %}Combien d'années d'ancienneté ?{% endblock %}
+{% block game_title %}{{ _("Combien d'années d'ancienneté ?") }}{% endblock %}
 
 {% block game_content %}
             <!-- Employee information -->
@@ -96,8 +96,8 @@
 {% endblock %}
 
 {% block score_display %}
-            <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
-            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
 {% endblock %}
 
 {% block form_attrs %}id="quiz-form"{% endblock %}
@@ -152,7 +152,7 @@
             if (correct === selected) {
                 element.classList.add('correct');
                 document.getElementById('correct-answer').value = 1;
-                document.getElementById('quiz-score').textContent = "Correct! +1 point";
+                document.getElementById('quiz-score').textContent = "{{ _('Correct! +1 point') }}";
                 document.getElementById('quiz-score').style.color = "#4CAF50";
             } else {
                 element.classList.add('incorrect');
@@ -163,7 +163,7 @@
                         btn.classList.add('correct');
                     }
                 });
-                document.getElementById('quiz-score').textContent = "Incorrect! La bonne réponse est: " + correct + (correct === 1 ? " an" : " ans");
+                document.getElementById('quiz-score').textContent = "{{ _('Incorrect! La bonne réponse est') }}: " + correct + (correct === 1 ? " {{ _('an') }}" : " {{ _('ans') }}");
                 document.getElementById('quiz-score').style.color = "#f44336";
             }
 

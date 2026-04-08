@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class ARRMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode ARR : Arcade Retro Racing - Évitez les obstacles et atteignez la ligne d'arrivée !"
+        return _l("Mode ARR : Arcade Retro Racing - Évitez les obstacles et atteignez la ligne d'arrivée !")
 
     @property
     def template(self) -> str:

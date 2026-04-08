@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class SilhouetteMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode Silhouette : identifiez la personne à partir de sa silhouette"
+        return _l("Mode Silhouette : identifiez la personne à partir de sa silhouette")
 
     @property
     def template(self) -> str:

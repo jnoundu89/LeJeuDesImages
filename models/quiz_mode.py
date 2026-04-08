@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class QuizMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode quiz : répondez à des questions variées sur vos collègues"
+        return _l("Mode quiz : répondez à des questions variées sur vos collègues")
 
     @property
     def template(self) -> str:

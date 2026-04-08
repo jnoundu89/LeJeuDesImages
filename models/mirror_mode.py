@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -24,7 +26,7 @@ class MirrorMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode Miroir : identifiez la personne dont l'image est inversée horizontalement"
+        return _l("Mode Miroir : identifiez la personne dont l'image est inversée horizontalement")
 
     @property
     def template(self) -> str:

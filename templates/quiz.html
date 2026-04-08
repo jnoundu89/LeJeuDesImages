@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Quiz{% endblock %}
+{% block title %}{{ _('Mode Quiz') }}{% endblock %}
 
 {% block mode_styles %}
         .quiz-container {
@@ -100,10 +100,10 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Quiz - Testez vos connaissances{% endblock %}
+{% block game_title %}{{ _('Mode Quiz - Testez vos connaissances') }}{% endblock %}
 
 {% block game_content %}
-        <div class="quiz-progress">Question <span id="current-question">{{ current_question }}</span> / 10</div>
+        <div class="quiz-progress">{{ _('Question') }} <span id="current-question">{{ current_question }}</span> / 10</div>
         <div class="quiz-question">
             <div class="question-text">{{ question_text }}</div>
             {% if image_url %}
@@ -153,7 +153,7 @@
         if (correct === selected) {
             element.classList.add('correct');
             document.getElementById('correct-answer').value = 1;
-            document.getElementById('quiz-score').textContent = "Correct! +1 point";
+            document.getElementById('quiz-score').textContent = "{{ _('Correct! +1 point') }}";
             document.getElementById('quiz-score').style.color = "#4CAF50";
         } else {
             element.classList.add('incorrect');
@@ -162,7 +162,7 @@
                     btn.classList.add('correct');
                 }
             });
-            document.getElementById('quiz-score').textContent = "Incorrect! La bonne réponse est: " + correct;
+            document.getElementById('quiz-score').textContent = "{{ _('Incorrect! La bonne réponse est') }}: " + correct;
             document.getElementById('quiz-score').style.color = "#f44336";
 
             document.body.classList.add('shake');
@@ -211,7 +211,7 @@
                 });
 
                 // Show the score message
-                document.getElementById('quiz-score').textContent = "Temps écoulé! La bonne réponse est: " + correctAnswer;
+                document.getElementById('quiz-score').textContent = "{{ _('Temps écoulé! La bonne réponse est') }}: " + correctAnswer;
                 document.getElementById('quiz-score').style.color = "#f44336";
                 document.getElementById('quiz-score').style.display = 'block';
 

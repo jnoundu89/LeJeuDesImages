@@ -1,0 +1,1023 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-04-08 14:55+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: models/age_mode.py:23
+msgid "Quel âge a la personne ? Devinez l'âge de la personne affichée"
+msgstr ""
+
+#: models/arr_mode.py:21
+msgid ""
+"Mode ARR : Arcade Retro Racing - Évitez les obstacles et atteignez la "
+"ligne d'arrivée !"
+msgstr ""
+
+#: models/card_game_mode.py:23
+msgid "Mode Jeu de Cartes : Affrontez l'IA dans un duel de cartes stratégique"
+msgstr ""
+
+#: models/clue_mode.py:20
+msgid "Mode indices : devinez qui est la personne avec le minimum d'indices"
+msgstr ""
+
+#: models/emoji_challenge_mode.py:21
+msgid "Mode Défi Emoji : devinez qui est la personne représentée par ces emojis"
+msgstr ""
+
+#: models/example_mode.py:20
+msgid "Mode exemple : identifiez uniquement le nom de la personne sur l'image"
+msgstr ""
+
+#: models/game_mode.py:140
+msgid ""
+"Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur "
+"l'image"
+msgstr ""
+
+#: models/game_mode.py:186
+msgid "Identifiez la personne correspondant au nom affiché"
+msgstr ""
+
+#: models/manager_mode.py:21
+msgid "Qui est le manager de qui ? Identifiez le manager de la personne affichée"
+msgstr ""
+
+#: models/memory_mode.py:20
+msgid "Mode mémoire : associez les photos avec les noms en retournant des cartes"
+msgstr ""
+
+#: models/mirror_mode.py:29
+msgid ""
+"Mode Miroir : identifiez la personne dont l'image est inversée "
+"horizontalement"
+msgstr ""
+
+#: models/missing_person_mode.py:21
+msgid "Mode personne manquante : identifiez qui manque dans l'équipe affichée"
+msgstr ""
+
+#: models/pixelation_mode.py:20
+msgid ""
+"Mode pixelisation : identifiez la personne sur l'image qui devient "
+"progressivement plus nette"
+msgstr ""
+
+#: models/position_match_mode.py:20
+msgid "Mode poste : associez chaque employé avec son poste correct"
+msgstr ""
+
+#: models/progressive_hint_mode.py:21
+msgid ""
+"Mode indices progressifs : identifiez l'employé avec le moins d'indices "
+"possible pour gagner plus de points"
+msgstr ""
+
+#: models/quiz_mode.py:21
+msgid "Mode quiz : répondez à des questions variées sur vos collègues"
+msgstr ""
+
+#: models/scrambled_face_mode.py:21
+msgid ""
+"Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé"
+" avec d'autres"
+msgstr ""
+
+#: models/seniority_mode.py:22
+msgid ""
+"Combien d'années d'ancienneté ? Devinez depuis combien d'années la "
+"personne travaille dans l'entreprise"
+msgstr ""
+
+#: models/silhouette_mode.py:20
+msgid "Mode Silhouette : identifiez la personne à partir de sa silhouette"
+msgstr ""
+
+#: models/speed_mode.py:20
+msgid ""
+"Mode vitesse : identifiez un maximum d'employés en un temps limité, plus "
+"vous êtes rapide, plus vous gagnez de points"
+msgstr ""
+
+#: models/team_guess_mode.py:20
+msgid "Mode équipe : devinez à quelle équipe appartient chaque employé"
+msgstr ""
+
+#: models/team_mode.py:21
+msgid "Mode équipe : identifiez tous les membres d'une équipe spécifique"
+msgstr ""
+
+#: models/timed_mode.py:20
+msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
+msgstr ""
+
+#: templates/about.html:3
+msgid "Le Jeu Des Images - A propos"
+msgstr ""
+
+#: templates/about.html:6
+#, python-format
+msgid ""
+"Decouvrez l'histoire et l'equipe derriere Le Jeu Des Images, un jeu "
+"interactif pour identifier les membres de l'equipe %(company_name)s."
+msgstr ""
+
+#: templates/about.html:9 templates/base_page.html:54
+msgid "A propos"
+msgstr ""
+
+#: templates/about.html:10
+msgid "Decouvrez l'histoire et l'equipe derriere Le Jeu Des Images"
+msgstr ""
+
+#: templates/about.html:14
+msgid "Notre histoire"
+msgstr ""
+
+#: templates/about.html:16
+#, python-format
+msgid ""
+"Le Jeu Des Images est ne d'une volonte de creer un outil ludique et "
+"interactif pour aider les nouveaux collaborateurs a se familiariser avec "
+"les membres de l'equipe %(company_name)s."
+msgstr ""
+
+#: templates/about.html:17
+msgid ""
+"Ce projet a ete developpe avec passion pour favoriser l'integration et "
+"renforcer la cohesion d'equipe au sein de notre entreprise."
+msgstr ""
+
+#: templates/about.html:22
+msgid "Notre mission"
+msgstr ""
+
+#: templates/about.html:24
+msgid ""
+"Notre mission est de faciliter l'apprentissage des visages et des noms de"
+" vos collegues de maniere amusante et engageante."
+msgstr ""
+
+#: templates/about.html:25
+msgid ""
+"Grace a differents modes de jeu, vous pouvez tester et ameliorer votre "
+"connaissance de l'equipe tout en vous amusant."
+msgstr ""
+
+#: templates/about.html:30
+msgid "L'equipe de developpement"
+msgstr ""
+
+#: templates/about.html:32
+#, python-format
+msgid ""
+"Le Jeu Des Images a ete concu et developpe par une equipe passionnee de "
+"developpeurs et de designers de %(company_name)s."
+msgstr ""
+
+#: templates/about.html:33
+msgid ""
+"Nous travaillons constamment a ameliorer l'experience utilisateur et a "
+"ajouter de nouveaux modes de jeu pour rendre l'apprentissage encore plus "
+"amusant."
+msgstr ""
+
+#: templates/about.html:38
+msgid "Contactez-nous"
+msgstr ""
+
+#: templates/about.html:40
+msgid ""
+"Vous avez des suggestions ou des commentaires pour ameliorer Le Jeu Des "
+"Images ? N'hesitez pas a nous contacter !"
+msgstr ""
+
+#: templates/about.html:41
+#, python-format
+msgid ""
+"Envoyez-nous un email a %(email_link)s ou parlez-en directement a un "
+"membre de l'equipe de developpement."
+msgstr ""
+
+#: templates/about.html:46 templates/how_to_play.html:64
+#: templates/scores.html:142
+msgid "Retour a l'accueil"
+msgstr ""
+
+#: templates/age.html:3
+msgid "Mode Âge"
+msgstr ""
+
+#: templates/age.html:84
+msgid "Quel âge a cette personne ?"
+msgstr ""
+
+#: templates/age.html:99 templates/index.html:160 templates/manager.html:81
+#: templates/normal.html:172 templates/reverse.html:51
+#: templates/seniority.html:99
+msgid "Meilleur score"
+msgstr ""
+
+#: templates/age.html:100 templates/base_game.html:49 templates/index.html:161
+#: templates/index.html:254 templates/manager.html:82
+#: templates/manager.html:143 templates/missing_person.html:164
+#: templates/normal.html:173 templates/progressive_hint.html:186
+#: templates/reverse.html:52 templates/reverse.html:100
+#: templates/seniority.html:100 templates/speed.html:128
+#: templates/team_guess.html:117
+msgid "Score actuel"
+msgstr ""
+
+#: templates/age.html:155 templates/quiz.html:156 templates/seniority.html:155
+msgid "Correct! +1 point"
+msgstr ""
+
+#: templates/age.html:166 templates/quiz.html:165 templates/seniority.html:166
+msgid "Incorrect! La bonne réponse est"
+msgstr ""
+
+#: templates/age.html:166 templates/seniority.html:166
+msgid "ans"
+msgstr ""
+
+#: templates/base.html:6 templates/base_page.html:40
+msgid "Le Jeu Des Images"
+msgstr ""
+
+#: templates/base_game.html:11 templates/result.html:271
+msgid "Recommencer"
+msgstr ""
+
+#: templates/base_game.html:21
+msgid "Afficher les statistiques"
+msgstr ""
+
+#: templates/base_game.html:23 templates/result.html:247
+msgid "Statistiques de jeu"
+msgstr ""
+
+#: templates/base_game.html:24
+msgid "Bonnes reponses pour l'entreprise"
+msgstr ""
+
+#: templates/base_game.html:25
+msgid "Bonnes reponses pour l'equipe"
+msgstr ""
+
+#: templates/base_game.html:26
+msgid "Bonnes reponses pour le nom"
+msgstr ""
+
+#: templates/base_game.html:27
+msgid "Bonnes reponses pour le poste"
+msgstr ""
+
+#: templates/base_game.html:40
+msgid "Temps restant: 60s"
+msgstr ""
+
+#: templates/base_game.html:47 templates/base_page.html:56
+#: templates/scores.html:9
+msgid "Scores"
+msgstr ""
+
+#: templates/base_game.html:56
+msgid "Personne suivante"
+msgstr ""
+
+#: templates/base_page.html:18
+msgid "Afficher l'animation"
+msgstr ""
+
+#: templates/base_page.html:21
+msgid "Afficher le lecteur de musique"
+msgstr ""
+
+#: templates/base_page.html:52
+#, python-format
+msgid ""
+"Le Jeu Des Images - Un jeu interactif pour identifier les membres de "
+"l'equipe %(company_name)s."
+msgstr ""
+
+#: templates/base_page.html:55 templates/how_to_play.html:9
+msgid "Comment jouer"
+msgstr ""
+
+#: templates/base_page.html:67
+msgid "Lecteur de musique"
+msgstr ""
+
+#: templates/base_page.html:69
+msgid "Afficher le visualiseur"
+msgstr ""
+
+#: templates/base_page.html:70
+msgid "Reduire le lecteur"
+msgstr ""
+
+#: templates/base_page.html:74
+msgid "Chargement..."
+msgstr ""
+
+#: templates/base_page.html:75
+msgid "Artiste"
+msgstr ""
+
+#: templates/base_page.html:78
+msgid "Piste precedente"
+msgstr ""
+
+#: templates/base_page.html:79
+msgid "Jouer la musique"
+msgstr ""
+
+#: templates/base_page.html:80
+msgid "Piste suivante"
+msgstr ""
+
+#: templates/base_page.html:83
+msgid "Couper le son"
+msgstr ""
+
+#: templates/clue.html:3
+msgid "Mode Indices"
+msgstr ""
+
+#: templates/clue.html:142
+msgid "Mode Indices - Devinez avec le minimum d'indices"
+msgstr ""
+
+#: templates/clue.html:151
+msgid "Révéler un indice"
+msgstr ""
+
+#: templates/clue.html:152 templates/clue.html:196
+msgid "Points possibles"
+msgstr ""
+
+#: templates/emoji_challenge.html:3
+msgid "Mode Défi Emoji"
+msgstr ""
+
+#: templates/emoji_challenge.html:144
+msgid "Mode Défi Emoji - Qui suis-je?"
+msgstr ""
+
+#: templates/emoji_challenge.html:149
+msgid "Entreprise"
+msgstr ""
+
+#: templates/emoji_challenge.html:153 templates/missing_person.html:147
+#: templates/team.html:128
+msgid "Équipe"
+msgstr ""
+
+#: templates/emoji_challenge.html:157
+msgid "Poste"
+msgstr ""
+
+#: templates/emoji_challenge.html:169 templates/silhouette.html:132
+msgid "Révéler la photo"
+msgstr ""
+
+#: templates/example.html:3
+msgid "Mode Exemple"
+msgstr ""
+
+#: templates/example.html:54
+msgid "Mode Exemple - Identifiez le nom"
+msgstr ""
+
+#: templates/how_to_play.html:3
+msgid "Le Jeu Des Images - Comment jouer"
+msgstr ""
+
+#: templates/how_to_play.html:6
+#, python-format
+msgid ""
+"Apprenez a jouer au Jeu Des Images et decouvrez les regles des differents"
+" modes de jeu pour identifier les membres de l'equipe %(company_name)s."
+msgstr ""
+
+#: templates/how_to_play.html:10
+msgid "Decouvrez les regles et astuces pour maitriser tous les modes de jeu"
+msgstr ""
+
+#: templates/how_to_play.html:14
+msgid "Principes de base"
+msgstr ""
+
+#: templates/how_to_play.html:16
+msgid ""
+"Le Jeu Des Images est concu pour vous aider a memoriser les visages et "
+"les noms de vos collegues de maniere ludique et interactive."
+msgstr ""
+
+#: templates/how_to_play.html:17
+msgid ""
+"Chaque mode de jeu propose un defi different, mais l'objectif reste le "
+"meme : associer correctement les visages aux noms, equipes et postes."
+msgstr ""
+
+#: templates/how_to_play.html:22 templates/mode_selection.html:18
+msgid "Modes de jeu classiques"
+msgstr ""
+
+#: templates/how_to_play.html:24 templates/scores.html:21
+msgid "Mode Normal"
+msgstr ""
+
+#: templates/how_to_play.html:25
+msgid ""
+"Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier "
+"son entreprise, son equipe, son nom et son poste. Vous gagnez des points "
+"pour chaque bonne reponse."
+msgstr ""
+
+#: templates/how_to_play.html:27 templates/scores.html:41
+msgid "Mode Inverse"
+msgstr ""
+
+#: templates/how_to_play.html:28
+msgid ""
+"A l'inverse du mode normal, vous voyez un nom et devez identifier la "
+"personne parmi plusieurs photos. Ce mode teste votre memoire visuelle."
+msgstr ""
+
+#: templates/how_to_play.html:30 templates/scores.html:61
+msgid "Mode Pixelation"
+msgstr ""
+
+#: templates/how_to_play.html:31
+msgid ""
+"L'image d'un collaborateur apparait progressivement, devenant de plus en "
+"plus nette. Plus vite vous identifiez la personne, plus vous gagnez de "
+"points."
+msgstr ""
+
+#: templates/how_to_play.html:33 templates/scores.html:81
+msgid "Mode Chronometre"
+msgstr ""
+
+#: templates/how_to_play.html:34
+msgid ""
+"Similaire au mode normal, mais avec une limite de temps pour repondre. La"
+" pression est a son comble !"
+msgstr ""
+
+#: templates/how_to_play.html:39 templates/mode_selection.html:119
+msgid "Modes de jeu experimentaux"
+msgstr ""
+
+#: templates/how_to_play.html:41
+msgid ""
+"Decouvrez nos modes de jeu experimentaux pour des defis encore plus "
+"varies :"
+msgstr ""
+
+#: templates/how_to_play.html:43
+msgid "Mode Memoire"
+msgstr ""
+
+#: templates/how_to_play.html:43
+msgid "Retrouvez les paires correspondantes, comme dans un jeu de memory."
+msgstr ""
+
+#: templates/how_to_play.html:44
+msgid "Mode Equipe"
+msgstr ""
+
+#: templates/how_to_play.html:44
+msgid "Identifiez les membres d'une equipe specifique."
+msgstr ""
+
+#: templates/how_to_play.html:45
+msgid "Mode Indice"
+msgstr ""
+
+#: templates/how_to_play.html:45
+msgid "Utilisez des indices pour identifier la personne."
+msgstr ""
+
+#: templates/how_to_play.html:46
+msgid "Et bien d'autres"
+msgstr ""
+
+#: templates/how_to_play.html:46
+msgid "a decouvrir par vous-meme !"
+msgstr ""
+
+#: templates/how_to_play.html:52
+msgid "Astuces pour progresser"
+msgstr ""
+
+#: templates/how_to_play.html:55
+msgid ""
+"Commencez par le mode normal pour vous familiariser avec les visages et "
+"les noms."
+msgstr ""
+
+#: templates/how_to_play.html:56
+msgid ""
+"Utilisez le mode pixelation pour tester votre capacite a reconnaitre "
+"rapidement vos collegues."
+msgstr ""
+
+#: templates/how_to_play.html:57
+msgid "Jouez regulierement pour ameliorer votre memoire des visages et des noms."
+msgstr ""
+
+#: templates/how_to_play.html:58
+msgid ""
+"N'hesitez pas a explorer tous les modes de jeu pour une experience "
+"complete."
+msgstr ""
+
+#: templates/index.html:3 templates/normal.html:3
+msgid "Qui qui c'est le monsieur / la madame ?"
+msgstr ""
+
+#: templates/index.html:153 templates/normal.html:165
+msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
+msgstr ""
+
+#: templates/index.html:179 templates/normal.html:193
+msgid "ENTREPRISE"
+msgstr ""
+
+#: templates/index.html:187 templates/normal.html:201
+msgid "ÉQUIPE"
+msgstr ""
+
+#: templates/index.html:195 templates/normal.html:209
+msgid "NOM"
+msgstr ""
+
+#: templates/index.html:203 templates/normal.html:217
+msgid "POSTE"
+msgstr ""
+
+#: templates/index.html:298 templates/speed.html:209 templates/timed.html:100
+#: templates/timed.html:169
+msgid "Temps restant"
+msgstr ""
+
+#: templates/index.html:300
+msgid "Temps écoulé !"
+msgstr ""
+
+#: templates/manager.html:3
+msgid "Mode Manager"
+msgstr ""
+
+#: templates/manager.html:66
+msgid "Qui est le manager de cette personne ?"
+msgstr ""
+
+#: templates/memory.html:163
+msgid "Mode Mémoire - Associez les photos avec les noms"
+msgstr ""
+
+#: templates/memory.html:168
+msgid "Paires trouvées"
+msgstr ""
+
+#: templates/memory.html:169
+msgid "Essais"
+msgstr ""
+
+#: templates/memory.html:173
+msgid "Félicitations! Vous avez trouvé toutes les paires!"
+msgstr ""
+
+#: templates/mirror.html:3
+msgid "Mode Miroir"
+msgstr ""
+
+#: templates/mirror.html:127
+msgid "Mode Miroir - Identifiez la personne"
+msgstr ""
+
+#: templates/mirror.html:137
+msgid "Retourner l'image"
+msgstr ""
+
+#: templates/mirror.html:197
+msgid "Voir en miroir"
+msgstr ""
+
+#: templates/mirror.html:201
+msgid "Voir normal"
+msgstr ""
+
+#: templates/missing_person.html:5 templates/missing_person.html:137
+msgid "Mode Personne Manquante"
+msgstr ""
+
+#: templates/missing_person.html:165 templates/progressive_hint.html:187
+#: templates/quiz.html:106 templates/speed.html:129
+#: templates/team_guess.html:118
+msgid "Question"
+msgstr ""
+
+#: templates/missing_person.html:177
+msgid "Qui manque dans cette équipe ?"
+msgstr ""
+
+#: templates/mode_selection.html:3
+msgid "Le Jeu Des Images - Decouvrez tous les modes de jeu"
+msgstr ""
+
+#: templates/mode_selection.html:29
+msgid "Populaire"
+msgstr ""
+
+#: templates/mode_selection.html:36
+msgid "Chronometre"
+msgstr ""
+
+#: templates/mode_selection.html:43
+msgid "Nouveau"
+msgstr ""
+
+#: templates/mode_selection.html:48
+msgid "Special"
+msgstr ""
+
+#: templates/mode_selection.html:77
+msgid "Identifiez l'entreprise, l'equipe, le nom et le poste"
+msgstr ""
+
+#: templates/mode_selection.html:78
+msgid "Gagnez des points pour chaque bonne reponse"
+msgstr ""
+
+#: templates/mode_selection.html:82
+msgid "Identifiez la personne a partir d'un nom"
+msgstr ""
+
+#: templates/mode_selection.html:83
+msgid "Testez votre memoire visuelle"
+msgstr ""
+
+#: templates/mode_selection.html:87
+msgid "Image progressivement plus nette"
+msgstr ""
+
+#: templates/mode_selection.html:88
+msgid "Identifiez la personne le plus vite possible"
+msgstr ""
+
+#: templates/mode_selection.html:92
+msgid "Course contre la montre"
+msgstr ""
+
+#: templates/mode_selection.html:93
+msgid "Repondez avant la fin du temps"
+msgstr ""
+
+#: templates/mode_selection.html:97
+msgid "Testez votre memoire"
+msgstr ""
+
+#: templates/mode_selection.html:98
+msgid "Retrouvez les paires correspondantes"
+msgstr ""
+
+#: templates/mode_selection.html:102 templates/mode_selection.html:145
+msgid "Mode de jeu unique"
+msgstr ""
+
+#: templates/mode_selection.html:103 templates/mode_selection.html:146
+msgid "Defi personnalise"
+msgstr ""
+
+#: templates/mode_selection.html:107 templates/mode_selection.html:149
+msgid "Jouer maintenant"
+msgstr ""
+
+#: templates/mode_selection.html:120
+msgid "Decouvrez nos modes de jeu uniques et defis personnalises"
+msgstr ""
+
+#: templates/mode_selection.html:130
+msgid "Experimental"
+msgstr ""
+
+#: templates/pixelation.html:3
+msgid "Mode Pixelisation"
+msgstr ""
+
+#: templates/pixelation.html:102
+msgid "Mode Pixelisation - Identifiez la personne"
+msgstr ""
+
+#: templates/position_match.html:5 templates/position_match.html:205
+msgid "Mode Association de Postes"
+msgstr ""
+
+#: templates/position_match.html:215
+msgid "Manche"
+msgstr ""
+
+#: templates/position_match.html:233
+msgid "Associez chaque employé avec son poste correct"
+msgstr ""
+
+#: templates/position_match.html:242
+msgid "Sélectionnez un poste"
+msgstr ""
+
+#: templates/position_match.html:253
+msgid "Vérifier les associations"
+msgstr ""
+
+#: templates/position_match.html:259
+msgid "Résultats"
+msgstr ""
+
+#: templates/position_match.html:260
+msgid "Vous avez correctement associé"
+msgstr ""
+
+#: templates/position_match.html:260
+msgid "employés avec leurs postes."
+msgstr ""
+
+#: templates/position_match.html:261
+msgid "Score"
+msgstr ""
+
+#: templates/position_match.html:261 templates/progressive_hint.html:176
+msgid "points"
+msgstr ""
+
+#: templates/position_match.html:262
+msgid "Continuer"
+msgstr ""
+
+#: templates/progressive_hint.html:5 templates/progressive_hint.html:162
+msgid "Mode Indices Progressifs"
+msgstr ""
+
+#: templates/progressive_hint.html:174 templates/silhouette.html:129
+msgid "Indice"
+msgstr ""
+
+#: templates/progressive_hint.html:176
+msgid "Valeur"
+msgstr ""
+
+#: templates/progressive_hint.html:180
+msgid "Indice suivant"
+msgstr ""
+
+#: templates/progressive_hint.html:201
+msgid "Qui est cette personne ?"
+msgstr ""
+
+#: templates/quiz.html:3
+msgid "Mode Quiz"
+msgstr ""
+
+#: templates/quiz.html:103
+msgid "Mode Quiz - Testez vos connaissances"
+msgstr ""
+
+#: templates/quiz.html:214
+msgid "Temps écoulé! La bonne réponse est"
+msgstr ""
+
+#: templates/result.html:3
+msgid "Game Over"
+msgstr ""
+
+#: templates/result.html:199
+msgid "Résultat final"
+msgstr ""
+
+#: templates/result.html:212
+msgid "Votre score est de"
+msgstr ""
+
+#: templates/result.html:219
+#, python-format
+msgid ""
+"Félicitations ! Vous avez atteint l'objectif de +15% d'ARR ! Les employés"
+" recevront leur prime de participation."
+msgstr ""
+
+#: templates/result.html:221 templates/result.html:228
+msgid "ARR Initial"
+msgstr ""
+
+#: templates/result.html:222 templates/result.html:229
+msgid "ARR Final"
+msgstr ""
+
+#: templates/result.html:223 templates/result.html:230
+msgid "Augmentation"
+msgstr ""
+
+#: templates/result.html:226
+#, python-format
+msgid ""
+"Malheureusement, vous n'avez pas atteint l'objectif de +15% d'ARR. Les "
+"employés ne recevront pas de prime cette année."
+msgstr ""
+
+#: templates/result.html:235
+msgid "Tu es un imbattable concernant tes collègues de"
+msgstr ""
+
+#: templates/result.html:235
+msgid "! Félicitations pour ton score parfait !"
+msgstr ""
+
+#: templates/result.html:237
+msgid ""
+"Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde et tu as "
+"fait un excellent travail !"
+msgstr ""
+
+#: templates/result.html:239
+msgid ""
+"Bravo pour ton effort ! Continue à apprendre à connaître tes collègues et"
+" essaie de faire encore mieux la prochaine fois."
+msgstr ""
+
+#: templates/result.html:241
+msgid ""
+"Il semble que tu aies encore beaucoup à apprendre sur tes collègues. Ne "
+"t'inquiète pas, c'est l'occasion parfaite pour faire de nouvelles "
+"rencontres !"
+msgstr ""
+
+#: templates/result.html:250
+msgid "Actions prises"
+msgstr ""
+
+#: templates/result.html:254
+msgid "Mois"
+msgstr ""
+
+#: templates/result.html:257
+msgid "Impact"
+msgstr ""
+
+#: templates/result.html:264
+msgid "Bonnes réponses pour l'entreprise"
+msgstr ""
+
+#: templates/result.html:265
+msgid "Bonnes réponses pour l'équipe"
+msgstr ""
+
+#: templates/result.html:266
+msgid "Bonnes réponses pour le nom"
+msgstr ""
+
+#: templates/result.html:267
+msgid "Bonnes réponses pour le poste"
+msgstr ""
+
+#: templates/reverse.html:3
+msgid "Mode Reverse"
+msgstr ""
+
+#: templates/reverse.html:48
+msgid "Cliquez sur l'image correspondant à"
+msgstr ""
+
+#: templates/scores.html:3
+msgid "Le Jeu Des Images - Scores"
+msgstr ""
+
+#: templates/scores.html:6
+msgid ""
+"Consultez les meilleurs scores du Jeu Des Images et voyez comment vous "
+"vous classez parmi les autres joueurs."
+msgstr ""
+
+#: templates/scores.html:10
+msgid "Decouvrez les meilleurs scores et voyez comment vous vous classez"
+msgstr ""
+
+#: templates/scores.html:14
+msgid "Meilleurs scores par mode de jeu"
+msgstr ""
+
+#: templates/scores.html:16
+msgid ""
+"Voici les meilleurs scores enregistres pour chaque mode de jeu. Pouvez-"
+"vous battre ces records ?"
+msgstr ""
+
+#: templates/scores.html:33 templates/scores.html:53 templates/scores.html:73
+#: templates/scores.html:93
+msgid "Aucun score enregistre"
+msgstr ""
+
+#: templates/scores.html:103
+msgid "Statistiques globales"
+msgstr ""
+
+#: templates/scores.html:109
+msgid "Nombre de joueurs"
+msgstr ""
+
+#: templates/scores.html:117
+msgid "Parties jouees"
+msgstr ""
+
+#: templates/scores.html:125
+msgid "Score moyen"
+msgstr ""
+
+#: templates/scores.html:133
+msgid "Score maximum"
+msgstr ""
+
+#: templates/scrambled_face.html:3
+msgid "Mode Visage Mélangé"
+msgstr ""
+
+#: templates/scrambled_face.html:128
+msgid "Mode Visage Mélangé - Identifiez la personne"
+msgstr ""
+
+#: templates/scrambled_face.html:148
+msgid "Révéler le visage original"
+msgstr ""
+
+#: templates/seniority.html:3
+msgid "Mode Ancienneté"
+msgstr ""
+
+#: templates/seniority.html:84
+msgid "Combien d'années d'ancienneté ?"
+msgstr ""
+
+#: templates/seniority.html:166
+msgid "an"
+msgstr ""
+
+#: templates/silhouette.html:3
+msgid "Mode Silhouette"
+msgstr ""
+
+#: templates/silhouette.html:121
+msgid "Mode Silhouette - Identifiez la personne"
+msgstr ""
+
+#: templates/speed.html:5
+msgid "Mode Vitesse"
+msgstr ""
+
+#: templates/speed.html:109
+msgid "Mode Vitesse - Identifiez rapidement la personne"
+msgstr ""
+
+#: templates/team.html:3 templates/team_guess.html:5
+msgid "Mode Équipe"
+msgstr ""
+
+#: templates/team.html:125
+msgid "Mode Équipe - Identifiez les membres"
+msgstr ""
+
+#: templates/team.html:163
+msgid "Valider l'équipe"
+msgstr ""
+
+#: templates/team_guess.html:98
+msgid "Mode Équipe - Devinez l'équipe de l'employé"
+msgstr ""
+
+#: templates/team_guess.html:130
+msgid "À quelle équipe appartient cette personne ?"
+msgstr ""
+
+#: templates/timed.html:3
+msgid "Mode Chronométré"
+msgstr ""
+
+#: templates/timed.html:97
+msgid "Mode Chronométré - Identifiez le maximum de personnes en 2 minutes"
+msgstr ""
+

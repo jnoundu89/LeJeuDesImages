@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class TeamMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode équipe : identifiez tous les membres d'une équipe spécifique"
+        return _l("Mode équipe : identifiez tous les membres d'une équipe spécifique")
 
     @property
     def template(self) -> str:

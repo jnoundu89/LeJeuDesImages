@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -16,7 +18,7 @@ class MissingPersonMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode personne manquante : identifiez qui manque dans l'équipe affichée"
+        return _l("Mode personne manquante : identifiez qui manque dans l'équipe affichée")
 
     @property
     def template(self) -> str:

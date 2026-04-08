@@ -2,6 +2,8 @@
 import random
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class PositionMatchMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode poste : associez chaque employé avec son poste correct"
+        return _l("Mode poste : associez chaque employé avec son poste correct")
 
     @property
     def template(self) -> str:

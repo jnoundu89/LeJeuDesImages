@@ -1,6 +1,8 @@
 # models/pixelation_mode.py
 from typing import Any, Dict, List
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class PixelationMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode pixelisation : identifiez la personne sur l'image qui devient progressivement plus nette"
+        return _l("Mode pixelisation : identifiez la personne sur l'image qui devient progressivement plus nette")
 
     @property
     def template(self) -> str:

@@ -3,6 +3,8 @@ import random
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -17,7 +19,7 @@ class SeniorityMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Combien d'années d'ancienneté ? Devinez depuis combien d'années la personne travaille dans l'entreprise"
+        return _l("Combien d'années d'ancienneté ? Devinez depuis combien d'années la personne travaille dans l'entreprise")
 
     @property
     def template(self) -> str:

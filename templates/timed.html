@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}Mode Chronométré{% endblock %}
+{% block title %}{{ _('Mode Chronométré') }}{% endblock %}
 
 {% block mode_styles %}
         .timed-container {
@@ -94,10 +94,10 @@
         }
 {% endblock %}
 
-{% block game_title %}Mode Chronométré - Identifiez le maximum de personnes en 2 minutes{% endblock %}
+{% block game_title %}{{ _('Mode Chronométré - Identifiez le maximum de personnes en 2 minutes') }}{% endblock %}
 
 {% block game_content %}
-        <div id="global-timer" class="global-timer">Temps restant: 120s</div>
+        <div id="global-timer" class="global-timer">{{ _('Temps restant') }}: 120s</div>
         <div class="timed-image-container">
             <img id="timed-image" src="{{ image_url }}" alt="Photo d'employé" class="timed-image">
         </div>
@@ -166,7 +166,7 @@
 
         globalTimerValue--;
         const globalTimerElement = document.getElementById('global-timer');
-        globalTimerElement.textContent = `Temps restant: ${globalTimerValue}s`;
+        globalTimerElement.textContent = `{{ _('Temps restant') }}: ${globalTimerValue}s`;
 
         // Add warning classes as time decreases
         if (globalTimerValue <= 30) {

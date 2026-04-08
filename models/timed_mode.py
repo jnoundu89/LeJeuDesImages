@@ -1,6 +1,8 @@
 # models/timed_mode.py
 from typing import Any, Dict, List
 
+from flask_babel import lazy_gettext as _l
+
 from .game_mode import GameMode
 
 
@@ -15,7 +17,7 @@ class TimedMode(GameMode):
 
     @property
     def description(self) -> str:
-        return "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
+        return _l("Mode chronométré : identifiez le maximum de personnes en 2 minutes")
 
     @property
     def template(self) -> str:
