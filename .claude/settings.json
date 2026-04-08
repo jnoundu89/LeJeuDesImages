@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make test)",
+      "Bash(make lint)",
+      "Bash(make format)",
+      "Bash(make babel-extract)",
+      "Bash(make babel-compile)",
+      "Bash(make babel-update)",
+      "Bash(make validate-data)",
+      "Bash(uv run *)",
+      "Bash(uv sync *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git ls-files *)",
+      "Bash(mkdir *)"
+    ],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(git reset --hard *)",
+      "Bash(git checkout -- *)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}
