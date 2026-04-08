@@ -27,14 +27,16 @@
     ]
   },
   "hooks": {
-    "preCommit": [
+    "PreToolUse": [
       {
-        "command": "uv run --extra dev ruff check .",
-        "description": "Lint check before commit"
-      },
-      {
-        "command": "uv run --extra dev pytest tests/ -x -q",
-        "description": "Run tests before commit (fail-fast)"
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit *)",
+            "command": "uv run --extra dev ruff check . && uv run --extra dev pytest tests/ -x -q -m 'not e2e'"
+          }
+        ]
       }
     ]
   },
