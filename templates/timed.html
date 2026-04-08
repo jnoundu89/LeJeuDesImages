@@ -113,11 +113,11 @@
 {% endblock %}
 
 {% block game_choices %}
-    <div class="timed-container">
+    <div class="timed-container" x-data="singleAnswer('{{ correct_name }}')">
         <div class="timed-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="timed-choice-btn choice-btn"
-                    onclick="checkTimedAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
+                    @click="check('{{ name }}', $el)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -125,129 +125,44 @@
 {% endblock %}
 
 {% block game_scripts %}
+    // Global timer (120s countdown across all questions)
     let globalTimerValue = parseInt(document.getElementById('total-time').value);
     let globalTimerInterval;
     let gameEnded = false;
 
-    // Function to check the answer in timed mode
-    function checkTimedAnswer(correct, selected, element) {
-        if (gameEnded) return;
-
-        const buttons = document.querySelectorAll('#name-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
-            document.getElementById('score-increment').value = 1;
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
-        }
-
-        // Set answersCount to 1 to enable the next button
-        GameEngine.setState('answersCount', 1);
-        enableNextButton();
-        GameEngine.clearTimer();
-    }
-
-    // Function to update the global timer
     function updateGlobalTimer() {
         if (gameEnded) return;
-
         globalTimerValue--;
-        const globalTimerElement = document.getElementById('global-timer');
-        globalTimerElement.textContent = `{{ _('Temps restant') }}: ${globalTimerValue}s`;
+        const el = document.getElementById('global-timer');
+        el.textContent = '{{ _("Temps restant") }}: ' + globalTimerValue + 's';
 
-        // Add warning classes as time decreases
-        if (globalTimerValue <= 30) {
-            globalTimerElement.classList.add('warning');
-        }
+        if (globalTimerValue <= 30) el.classList.add('warning');
         if (globalTimerValue <= 10) {
-            globalTimerElement.classList.remove('warning');
-            globalTimerElement.classList.add('danger');
+            el.classList.remove('warning');
+            el.classList.add('danger');
         }
-
-        // If time is up, end the game
-        if (globalTimerValue <= 0) {
-            endGame();
-        }
+        if (globalTimerValue <= 0) endGame();
     }
 
-    // Function to end the game
     function endGame() {
         if (gameEnded) return;
-
         gameEnded = true;
         clearInterval(globalTimerInterval);
-        GameEngine.clearTimer();
 
-        // Disable all buttons
-        const buttons = document.querySelectorAll('#name-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
+        var buttons = document.querySelectorAll('#name-choices button');
+        buttons.forEach(function(btn) { btn.disabled = true; });
+
+        var correctName = '{{ correct_name }}';
+        buttons.forEach(function(btn) {
+            if (btn.textContent.trim() === correctName) btn.classList.add('correct');
         });
 
-        // Show the correct answer
-        const correctName = '{{ correct_name }}';
-        buttons.forEach(btn => {
-            if (btn.textContent.trim() === correctName) {
-                btn.classList.add('correct');
-            }
-        });
+        Alpine.store('game').answersCount = 1;
 
-        // Redirect to results page
-        setTimeout(() => {
-            window.location.href = '/result';
-        }, 2000);
+        setTimeout(function() { window.location.href = '/result'; }, 2000);
     }
 
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-
-        updateProgressBar(currentQuestion, totalQuestions);
-        resetAnswersCount();
-        toggleStats();
-
-        // Start the global timer
+    document.addEventListener('DOMContentLoaded', function() {
         globalTimerInterval = setInterval(updateGlobalTimer, 1000);
-
-        // Override the timer function to check if global time is up
-        const originalUpdateTimer = window.updateTimer;
-        window.updateTimer = function () {
-            if (gameEnded) return;
-
-            originalUpdateTimer.apply(this, arguments);
-
-            // If timer reaches 0, show the correct answer and move to next question
-            if (GameEngine.getState().timerValue <= 0) {
-                // Time's up - show the correct answer
-                const buttons = document.querySelectorAll('#name-choices button');
-                const correctName = '{{ correct_name }}';
-
-                buttons.forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent.trim() === correctName) {
-                        btn.classList.add('correct');
-                    }
-                });
-
-                // Enable next button to move to next question
-                GameEngine.setState('answersCount', 1);
-                enableNextButton();
-            }
-        };
     });
 {% endblock %}

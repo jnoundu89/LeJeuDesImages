@@ -168,11 +168,11 @@
 {% block form_attrs %}id="clue-form"{% endblock %}
 
 {% block game_choices %}
-    <div class="clue-container">
+    <div class="clue-container" x-data="singleAnswer('{{ correct_name }}')">
         <div class="clue-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="clue-choice-btn choice-btn"
-                    onclick="checkClueAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
+                    @click="check('{{ name }}', $el); onClueAnswered()">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -182,122 +182,57 @@
 {% block game_scripts %}
     let revealedClues = 0;
     let totalClues = parseInt(document.getElementById('total-clues').value);
-    let answered = false;
-    let possiblePoints = 3; // Start with maximum points
+    let clueAnswered = false;
+    let possiblePoints = 3;
 
     // Function to reveal the next clue
     function revealNextClue() {
-        if (revealedClues < totalClues && !answered) {
-            // Reveal the next clue
+        if (revealedClues < totalClues && !clueAnswered) {
             revealedClues++;
-            document.getElementById(`clue-${revealedClues}`).classList.add('revealed');
-
-            // Update possible points
+            document.getElementById('clue-' + revealedClues).classList.add('revealed');
             possiblePoints = Math.max(1, 4 - revealedClues);
-            document.getElementById('score-info').textContent = `{{ _('Points possibles') }}: ${possiblePoints}`;
-
-            // Update hidden field
+            document.getElementById('score-info').textContent = '{{ _("Points possibles") }}: ' + possiblePoints;
             document.getElementById('clues-used').value = revealedClues;
 
-            // Disable the button if all clues are revealed
             if (revealedClues >= totalClues) {
                 document.getElementById('reveal-clue-btn').disabled = true;
-                // Show the image as the final clue
                 document.getElementById('clue-image-container').style.display = 'block';
             }
         }
     }
 
-    // Function to check the answer
-    function checkClueAnswer(correct, selected, element) {
-        if (answered) return;
-
-        answered = true;
-
-        // Disable the reveal button
+    // Called after Alpine singleAnswer.check() runs
+    function onClueAnswered() {
+        clueAnswered = true;
         document.getElementById('reveal-clue-btn').disabled = true;
-
-        // Show the image
         document.getElementById('clue-image-container').style.display = 'block';
-
-        const buttons = document.querySelectorAll('#name-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
-        }
-
-        // Enable the next button
-        document.getElementById('next').disabled = false;
-        document.getElementById('next').classList.remove('disabled-btn');
-
-        // Stop the timer
-        GameEngine.clearTimer();
     }
 
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-
-        updateProgressBar(currentQuestion, totalQuestions);
-        toggleStats();
-
-        // Reveal the first clue automatically
+    // Initialize and watch for timer expiry
+    document.addEventListener('DOMContentLoaded', function() {
+        // Reveal first clue automatically
         revealNextClue();
 
-        // Override the timer function
-        const originalUpdateTimer = window.updateTimer;
-        window.updateTimer = function () {
-            originalUpdateTimer.apply(this, arguments);
+        // Watch for timer expiry
+        const checkExpiry = setInterval(function() {
+            var timerEl = document.querySelector('[x-data^="gameTimer"]');
+            if (!timerEl || !timerEl.__x) return;
+            var timerData = timerEl.__x.$data || timerEl._x_dataStack && timerEl._x_dataStack[0];
+            if (!timerData) return;
 
-            // If timer reaches 0, show all clues and the correct answer
-            if (GameEngine.getState().timerValue <= 0 && !answered) {
+            if (timerData.expired && !clueAnswered) {
+                clearInterval(checkExpiry);
+                clueAnswered = true;
+
                 // Reveal all clues
-                for (let i = revealedClues + 1; i <= totalClues; i++) {
-                    document.getElementById(`clue-${i}`).classList.add('revealed');
+                for (var i = revealedClues + 1; i <= totalClues; i++) {
+                    document.getElementById('clue-' + i).classList.add('revealed');
                 }
                 revealedClues = totalClues;
                 document.getElementById('clues-used').value = revealedClues;
-
-                // Show the image
                 document.getElementById('clue-image-container').style.display = 'block';
-
-                // Disable the reveal button
                 document.getElementById('reveal-clue-btn').disabled = true;
-
-                // Show the correct answer
-                const buttons = document.querySelectorAll('#name-choices button');
-                const correctName = '{{ correct_name }}';
-
-                buttons.forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent.trim() === correctName) {
-                        btn.classList.add('correct');
-                    }
-                });
-
-                // Enable the next button
-                document.getElementById('next').disabled = false;
-                document.getElementById('next').classList.remove('disabled-btn');
-
-                // Mark as answered
-                answered = true;
             }
-        };
+        }, 200);
     });
 {% endblock %}

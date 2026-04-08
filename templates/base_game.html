@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block extra_css %}
-    <script src="{{ url_for('static', filename='game-engine.js') }}"></script>
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='game-alpine.js') }}" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>{% block mode_styles %}{% endblock %}</style>
 {% endblock %}
 
@@ -15,11 +15,11 @@
     </div>
 </div>
 
-<div class="main-layout">
+<div class="main-layout" x-data x-init="$store.game.init()">
     <!-- Colonne gauche - Statistiques -->
-    <div class="stats">
-        <button class="toggle-stats-btn" onclick="toggleStats()">{{ _('Afficher les statistiques') }}</button>
-        <div id="stats-banner" class="stats-banner">
+    <div class="stats" x-data="statsToggle">
+        <button class="toggle-stats-btn" @click="toggle" x-text="open ? '{{ _('Masquer les statistiques') }}' : '{{ _('Afficher les statistiques') }}'">{{ _('Afficher les statistiques') }}</button>
+        <div id="stats-banner" class="stats-banner" x-show="open" x-transition>
             <h2>{{ _('Statistiques de jeu') }}</h2>
             <p>{{ _("Bonnes reponses pour l'entreprise") }} : <span class="score">{{ stats.company }}</span></p>
             <p>{{ _("Bonnes reponses pour l'equipe") }} : <span class="score">{{ stats.team }}</span></p>
@@ -32,12 +32,17 @@
     <div class="center-content">
         <h1 class="title">{% block game_title %}{% endblock %}</h1>
         {% block progress_bar %}
-        <div class="progress-bar">
-            <div class="progress-bar-fill"></div>
+        <div x-data="progressBar" class="progress-bar">
+            <div class="progress-bar-fill" :style="'width:' + percentage + '%'" x-text="text"></div>
         </div>
         {% endblock %}
         {% block game_content %}{% endblock %}
-        <div id="timer" class="timer" data-label="{{ _('Temps restant') }}">{{ _('Temps restant: 60s') }}</div>
+        <div x-data="gameTimer(60)" data-label="{{ _('Temps restant') }}"
+             class="timer"
+             :class="{ warning: isWarning, danger: isDanger }"
+             x-text="display"
+             id="timer">
+        </div>
         {% block after_timer %}{% endblock %}
     </div>
 
@@ -46,14 +51,19 @@
         <div class="stats score-section">
             <h2>{{ _('Scores') }}</h2>
             {% block score_display %}
-            <p id="current-score" data-label="{{ _('Score actuel') }}">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score" x-text="$store.game.score + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span></p>
             {% endblock %}
         </div>
     </div>
 </div>
 
 <form action="/check" method="post" {% block form_attrs %}{% endblock %}>
-    <button type="submit" id="next" class="disabled-btn" disabled>{{ _('Personne suivante') }}</button>
+    <button type="submit" id="next"
+            :disabled="!$store.game.nextEnabled"
+            :class="{ 'disabled-btn': !$store.game.nextEnabled }"
+            class="{% if not game_over %}disabled-btn{% endif %}">
+        {{ _('Personne suivante') }}
+    </button>
     {% block form_fields %}
     <input type="hidden" name="correct_answer" id="correct-answer" value="0">
     <input type="hidden" name="score_increment" id="score-increment" value="0">

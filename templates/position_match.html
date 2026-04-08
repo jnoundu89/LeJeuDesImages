@@ -265,84 +265,59 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Initialize variables
-    let correctMatches = 0;
-    let totalEmployees = parseInt(document.getElementById('total-employees').value);
+    var correctMatches = 0;
+    var totalEmployees = parseInt(document.getElementById('total-employees').value);
 
-    // Function to check if all positions are selected
     function checkAllSelected() {
-        const selects = document.querySelectorAll('.position-selector select');
-        let allSelected = true;
-
-        selects.forEach(select => {
-            if (select.value === '') {
-                allSelected = false;
-            }
+        var selects = document.querySelectorAll('.position-selector select');
+        var allSelected = true;
+        selects.forEach(function(select) {
+            if (select.value === '') allSelected = false;
         });
-
         document.getElementById('submit-matches').disabled = !allSelected;
     }
 
-    // Add event listeners to all select elements
-    document.querySelectorAll('.position-selector select').forEach(select => {
+    document.querySelectorAll('.position-selector select').forEach(function(select) {
         select.addEventListener('change', checkAllSelected);
     });
 
-    // Function to check matches
     document.getElementById('submit-matches').addEventListener('click', function() {
         correctMatches = 0;
-        const selects = document.querySelectorAll('.position-selector select');
+        var selects = document.querySelectorAll('.position-selector select');
 
-        selects.forEach(select => {
-            const employeeCard = select.closest('.employee-card');
-            const correctPosition = select.getAttribute('data-correct');
-            const selectedPosition = select.value;
+        selects.forEach(function(select) {
+            var employeeCard = select.closest('.employee-card');
+            var correctPosition = select.getAttribute('data-correct');
+            var selectedPosition = select.value;
 
             if (correctPosition === selectedPosition) {
                 employeeCard.classList.add('correct-match');
                 correctMatches++;
             } else {
                 employeeCard.classList.add('incorrect-match');
-                // Show the correct position
-                select.innerHTML = `<option value="${correctPosition}" selected>${correctPosition} (correct)</option>`;
+                select.innerHTML = '<option value="' + correctPosition + '" selected>' + correctPosition + ' (correct)</option>';
             }
-
-            // Disable the select
             select.disabled = true;
         });
 
-        // Update the hidden field with the number of correct matches
         document.getElementById('correct-matches').value = correctMatches;
-
-        // Show the result overlay
         document.getElementById('correct-count').textContent = correctMatches;
         document.getElementById('round-score').textContent = correctMatches;
         document.getElementById('result-overlay').classList.add('show');
 
-        // Disable the submit button
+        Alpine.store('game').answersCount = 1;
         this.disabled = true;
     });
 
-    // Continue button event listener
     document.getElementById('continue-btn').addEventListener('click', function() {
-        // Hide the overlay
         document.getElementById('result-overlay').classList.remove('show');
-
-        // Submit the form to go to the next round
         document.getElementById('position-match-form').submit();
     });
 
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const currentRound = parseInt(document.getElementById('current-round').value);
-        const totalRounds = parseInt(document.getElementById('total-rounds').value);
-
-        // Update progress bar
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = ((currentRound - 1) / totalRounds) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
-
-        // Reset for new question
-        toggleStats();
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentRound = parseInt(document.getElementById('current-round').value);
+        var totalRounds = parseInt(document.getElementById('total-rounds').value);
+        var progressBar = document.getElementById('progress-bar');
+        progressBar.style.width = ((currentRound - 1) / totalRounds * 100) + '%';
     });
 {% endblock %}

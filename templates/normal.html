@@ -186,36 +186,37 @@
 {% endblock %}
 
 {% block game_choices %}
-        <div class="game-section" style="margin-top: 20px;"> <!-- Ajout d'espace entre game-section et main-layout -->
-            <div>
+        <div class="game-section" style="margin-top: 20px;"
+             x-data="normalMode({company: '{{ correct_values.company }}', team: '{{ correct_values.team }}', name: '{{ correct_values.name }}', position: '{{ correct_values.position }}'})">
+            <div x-show="step >= 0" x-transition>
                 <p id="company-title" class="text-align-center"><strong>{{ _('ENTREPRISE') }} :</strong> <span class="score" id="company-score">0/1</span></p>
                 <div class="normal-choices" id="company-choices">
                     {% for comp in choices.companies %}
-                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ correct_values.company }}', '{{ comp }}', this, 'company-choices', 'company-title')">{{ comp }}</button>
+                    <button type="button" class="normal-choice-btn" @click="checkStep('company', '{{ comp }}', $el)">{{ comp }}</button>
                     {% endfor %}
                 </div>
             </div>
-            <div>
+            <div x-show="step >= 1" x-transition>
                 <p id="team-title" class="text-align-center"><strong>{{ _('ÉQUIPE') }} :</strong> <span class="score" id="team-score">0/1</span></p>
                 <div class="normal-choices" id="team-choices">
                     {% for tm in choices.teams %}
-                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ correct_values.team }}', '{{ tm }}', this, 'team-choices', 'team-title')">{{ tm }}</button>
+                    <button type="button" class="normal-choice-btn" @click="checkStep('team', '{{ tm }}', $el)">{{ tm }}</button>
                     {% endfor %}
                 </div>
             </div>
-            <div>
+            <div x-show="step >= 2" x-transition>
                 <p id="name-title" class="text-align-center"><strong>{{ _('NOM') }} :</strong> <span class="score" id="name-score">0/1</span></p>
                 <div class="normal-choices" id="name-choices">
                     {% for nm in choices.names %}
-                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ correct_values.name }}', '{{ nm }}', this, 'name-choices', 'name-title')">{{ nm }}</button>
+                    <button type="button" class="normal-choice-btn" @click="checkStep('name', '{{ nm }}', $el)">{{ nm }}</button>
                     {% endfor %}
                 </div>
             </div>
-            <div>
+            <div x-show="step >= 3" x-transition>
                 <p id="position-title" class="text-align-center"><strong>{{ _('POSTE') }} :</strong> <span class="score" id="position-score">0/1</span></p>
                 <div class="normal-choices" id="position-choices">
                     {% for pos in choices.positions %}
-                    <button type="button" class="normal-choice-btn" onclick="checkAnswer('{{ correct_values.position }}', '{{ pos }}', this, 'position-choices', 'position-title')">{{ pos }}</button>
+                    <button type="button" class="normal-choice-btn" @click="checkStep('position', '{{ pos }}', $el)">{{ pos }}</button>
                     {% endfor %}
                 </div>
             </div>
@@ -223,46 +224,4 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Sequential display logic (merged from normal-mode.js)
-    var currentPart = 0;
-    var parts = ['company', 'team', 'name', 'position'];
-
-    function showGamePart(index) {
-        currentPart = index;
-        var gameParts = document.querySelectorAll('.game-section > div');
-        gameParts.forEach(function(part) { part.classList.remove('active'); });
-        if (index < gameParts.length) {
-            gameParts[index].classList.add('active');
-            gameParts[index].classList.add('slide-in');
-            setTimeout(function() {
-                var firstButton = gameParts[index].querySelector('button');
-                if (firstButton) firstButton.focus();
-            }, 100);
-        }
-    }
-
-    // Override checkAnswer to add sequential behavior
-    var _origCheckAnswer = window.checkAnswer;
-    window.checkAnswer = function(correct, selected, element, currentScoreId, titleId) {
-        _origCheckAnswer(correct, selected, element, currentScoreId, titleId);
-        var partIndex = parts.indexOf(titleId.split('-')[0]);
-        setTimeout(function() {
-            if (partIndex < parts.length - 1) {
-                showGamePart(partIndex + 1);
-            }
-        }, 1000);
-    };
-
-    document.addEventListener('DOMContentLoaded', function() {
-        var currentQuestion = parseInt(document.getElementById('current-question').value);
-        var totalQuestions = parseInt(document.getElementById('total-questions').value);
-        updateProgressBar(currentQuestion, totalQuestions);
-
-        // Hide all parts, show first
-        var gameParts = document.querySelectorAll('.game-section > div');
-        gameParts.forEach(function(part) { part.classList.remove('active'); });
-        showGamePart(0);
-
-        resetAnswersCount();
-    });
 {% endblock %}

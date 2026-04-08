@@ -197,12 +197,12 @@
 {% endblock %}
 
 {% block game_choices %}
-    <div class="progressive-hint-container">
+    <div class="progressive-hint-container" x-data="singleAnswer('{{ employee.name }}')">
         <h2>{{ _('Qui est cette personne ?') }}</h2>
         <div class="progressive-hint-choices" id="person-choices">
             {% for person in choices %}
             <button type="button" class="progressive-hint-choice-btn choice-btn"
-                    onclick="checkProgressiveHintAnswer('{{ employee.name }}'.trim(), '{{ person.name }}'.trim(), this)">
+                    @click="check('{{ person.name }}', $el); onHintAnswered($el)">
                 <img src="{{ person.image_url }}" alt="{{ person.name }}">
                 {{ person.name }}
             </button>
@@ -212,7 +212,6 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Initialize variables
     let currentHintLevel = 1;
     let maxHintLevel = parseInt(document.getElementById('max-hint-level').value);
 
@@ -220,92 +219,29 @@
     document.getElementById('next-hint-btn').addEventListener('click', function() {
         if (currentHintLevel < maxHintLevel) {
             currentHintLevel++;
-
-            // Update the hint level in the form
             document.getElementById('hint-level').value = currentHintLevel;
 
-            // Update the active hint
-            document.querySelectorAll('.hint').forEach(hint => {
+            document.querySelectorAll('.hint').forEach(function(hint) {
                 hint.classList.remove('active');
             });
-            document.getElementById(`hint-${currentHintLevel}`).classList.add('active');
+            document.getElementById('hint-' + currentHintLevel).classList.add('active');
 
-            // Disable the button if we've reached the maximum hint level
             if (currentHintLevel >= maxHintLevel) {
                 this.disabled = true;
             }
         }
     });
 
-    // Function to check the answer in progressive hint mode
-    function checkProgressiveHintAnswer(correct, selected, element) {
-        const buttons = document.querySelectorAll('#person-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        // Disable the next hint button
+    // Called after Alpine singleAnswer.check() runs
+    function onHintAnswered(el) {
         document.getElementById('next-hint-btn').disabled = true;
 
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
-
-            // Display bonus points based on hint level
-            let bonusPoints = 0;
-            if (currentHintLevel === 1) {
-                bonusPoints = 3;
-            } else if (currentHintLevel === 2) {
-                bonusPoints = 2;
-            } else {
-                bonusPoints = 1;
-            }
-
-            const bonusPointsElement = document.getElementById('bonus-points');
-            bonusPointsElement.textContent = `+${bonusPoints} points!`;
-            bonusPointsElement.style.display = 'block';
-
-            // Update progress bar
-            const progressBar = document.getElementById('progress-bar');
-            const currentQuestion = parseInt(document.getElementById('current-question').value);
-            const totalQuestions = parseInt(document.getElementById('total-questions').value);
-            const progressPercentage = (currentQuestion / totalQuestions) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
+        // Show bonus points for correct answers
+        if (document.getElementById('correct-answer').value === '1') {
+            var bonusPoints = currentHintLevel === 1 ? 3 : (currentHintLevel === 2 ? 2 : 1);
+            var bonusEl = document.getElementById('bonus-points');
+            bonusEl.textContent = '+' + bonusPoints + ' points!';
+            bonusEl.style.display = 'block';
         }
-
-        // Set answersCount to 1 to enable the next button
-        GameEngine.setState('answersCount', 1);
-        enableNextButton();
     }
-
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-        const maxScore = parseInt(document.getElementById('max-score').value);
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-
-        // Update progress counter
-        document.getElementById('question-counter').textContent =
-            `${currentQuestion} / ${totalQuestions}`;
-
-        // Update progress bar
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
-
-        // Reset for new question
-        resetAnswersCount();
-        toggleStats();
-    });
 {% endblock %}

@@ -111,11 +111,11 @@
 {% endblock %}
 
 {% block game_choices %}
-        <div class="quiz-container">
+        <div class="quiz-container" x-data="singleAnswer('{{ age }}')">
             <div class="quiz-choices" id="quiz-choices">
                 {% for choice in choices %}
-                <button type="button" class="quiz-choice-btn"
-                        onclick="checkAgeAnswer('{{ age }}', '{{ choice }}', this)">{{ choice }} ans
+                <button type="button" class="quiz-choice-btn choice-btn"
+                        @click="check('{{ choice }}', $el)">{{ choice }} ans
                 </button>
                 {% endfor %}
             </div>
@@ -124,67 +124,4 @@
 {% endblock %}
 
 {% block game_scripts %}
-        let answered = false;
-
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentQuestion = parseInt(document.getElementById('current-question').value);
-            const totalQuestions = parseInt(document.getElementById('total-questions').value);
-
-            updateProgressBar(currentQuestion, totalQuestions);
-            toggleStats();
-        });
-
-        // Function to check the age answer
-        function checkAgeAnswer(correct, selected, element) {
-            if (answered) return;
-
-            answered = true;
-
-            // Convert string values to integers
-            correct = parseInt(correct);
-            selected = parseInt(selected);
-
-            const buttons = document.querySelectorAll('#quiz-choices button');
-            buttons.forEach(btn => {
-                btn.disabled = true;
-            });
-
-            if (correct === selected) {
-                element.classList.add('correct');
-                document.getElementById('correct-answer').value = 1;
-                document.getElementById('quiz-score').textContent = "{{ _('Correct! +1 point') }}";
-                document.getElementById('quiz-score').style.color = "#4CAF50";
-            } else {
-                element.classList.add('incorrect');
-                buttons.forEach(btn => {
-                    const btnText = btn.textContent.trim();
-                    const btnValue = parseInt(btnText);
-                    if (btnValue === correct) {
-                        btn.classList.add('correct');
-                    }
-                });
-                document.getElementById('quiz-score').textContent = "{{ _('Incorrect! La bonne réponse est') }}: " + correct + " {{ _('ans') }}";
-                document.getElementById('quiz-score').style.color = "#f44336";
-            }
-
-            // Show the score message
-            document.getElementById('quiz-score').style.display = 'block';
-
-            // Enable the next button
-            document.getElementById('next').disabled = false;
-            document.getElementById('next').classList.remove('disabled-btn');
-
-            // Stop the timer
-            GameEngine.clearTimer();
-        }
-
-        function toggleStats() {
-            const statsBanner = document.getElementById('stats-banner');
-            if (statsBanner.style.display === 'none' || statsBanner.style.display === '') {
-                statsBanner.style.display = 'block';
-            } else {
-                statsBanner.style.display = 'none';
-            }
-        }
 {% endblock %}

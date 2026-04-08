@@ -49,11 +49,10 @@
 
 {% block score_display %}
             <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
-            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">{{ _('Score actuel') }} : <span class="score" x-text="$store.game.score + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span></p>
 {% endblock %}
 
 {% block form_fields %}
-        <!-- Titre placé ici, après le bouton "Personne suivante" -->
         <div class="center-content">
             <h1 class="title">{{ correct_value }}</h1>
         </div>
@@ -66,24 +65,13 @@
 {% endblock %}
 
 {% block game_choices %}
-        <div class="image-grid" id="image-choices">
+        <div class="image-grid" id="image-choices" x-data="imageAnswer('{{ correct_value }}')">
             {% for choice in choices %}
             <div class="image-container">
-                <button type="button" class="choice-btn" onclick="checkImage('{{ correct_value }}', '{{ choice.name }}', this)">
+                <button type="button" class="choice-btn" @click="check('{{ choice.name }}', $el)">
                     <img src="{{ choice.image_url }}" alt="{{ choice.name }}">
                 </button>
             </div>
             {% endfor %}
         </div>
-{% endblock %}
-
-{% block game_scripts %}
-    function toggleStats() {
-        const statsBanner = document.getElementById('stats-banner');
-        if (statsBanner.style.display === 'none' || statsBanner.style.display === '') {
-            statsBanner.style.display = 'block';
-        } else {
-            statsBanner.style.display = 'none';
-        }
-    }
 {% endblock %}

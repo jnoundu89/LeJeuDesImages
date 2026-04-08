@@ -109,11 +109,11 @@
 {% endblock %}
 
 {% block game_choices %}
-    <div class="pixelation-container">
+    <div class="pixelation-container" x-data="singleAnswer('{{ correct_name }}')">
         <div class="pixelation-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="pixelation-choice-btn choice-btn"
-                    onclick="checkPixelationAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
+                    @click="check('{{ name }}', $el); document.getElementById('pixelated-image').style.filter = 'blur(0)'">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -121,101 +121,33 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Variables for pixelation effect
-    let pixelationLevel = 20; // Start with high pixelation
-    let pixelationInterval;
+    // Pixelation blur effect driven by Alpine timer
+    (function() {
+        const totalTime = 60;
+        let pixelationInterval;
 
-    // Fonction mise à jour pour augmenter l'effet de pixelisation
-    function updatePixelation() {
-        // Récupère la valeur actuelle du timer
-        const timerText = document.getElementById('timer').textContent;
-        const timeRemaining = parseInt(timerText.match(/\d+/)[0]);
-        const totalTime = 60; // Temps total en secondes
-
-        // Calcule le niveau de pixelisation (plus de temps = plus flou)
-        pixelationLevel = Math.max(1, Math.floor((timeRemaining / totalTime) * 20));
-
-        // Applique un effet de flou amplifié (2.5x) à l'image
-        const blurAmount = pixelationLevel * 2.5; // Augmenté de 2.5x pour un effet plus fort
-        document.getElementById('pixelated-image').style.filter = `blur(${blurAmount}px)`;
-    }
-
-    // Function to check the answer in pixelation mode
-    function checkPixelationAnswer(correct, selected, element) {
-        const buttons = document.querySelectorAll('#name-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
-            document.getElementById('score-increment').value = 1;
-            // Add confetti effect for correct answer
-            createConfetti(element);
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
+        function updatePixelation() {
+            const timerText = document.getElementById('timer').textContent;
+            const match = timerText.match(/\d+/);
+            if (!match) return;
+            const timeRemaining = parseInt(match[0]);
+            const pixelationLevel = Math.max(1, Math.floor((timeRemaining / totalTime) * 20));
+            const blurAmount = pixelationLevel * 2.5;
+            document.getElementById('pixelated-image').style.filter = 'blur(' + blurAmount + 'px)';
         }
 
-        // Clear the pixelation effect to show the full image
-        document.getElementById('pixelated-image').style.filter = 'blur(0)';
-
-        // Set answersCount to 1 to enable the next button
-        GameEngine.setState('answersCount', 1);
-
-        enableNextButton();
-        GameEngine.clearTimer();
-        clearInterval(pixelationInterval);
-    }
-
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-
-        updateProgressBar(currentQuestion, totalQuestions);
-        resetAnswersCount();
-        toggleStats();
-
-        // Start the pixelation effect
-        updatePixelation();
-
-        // Update pixelation more frequently for smoother effect
-        pixelationInterval = setInterval(updatePixelation, 200);
-
-        // Override the timer function to update pixelation
-        const originalUpdateTimer = window.updateTimer;
-        window.updateTimer = function () {
-            originalUpdateTimer.apply(this, arguments);
+        document.addEventListener('DOMContentLoaded', function() {
             updatePixelation();
+            pixelationInterval = setInterval(updatePixelation, 200);
 
-            // If timer reaches 0, show the correct answer
-            if (GameEngine.getState().timerValue <= 0) {
-                clearInterval(pixelationInterval);
-
-                // Time's up - show the correct answer
-                const buttons = document.querySelectorAll('#name-choices button');
-                const correctName = '{{ correct_name }}';
-
-                buttons.forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent === correctName) {
-                        btn.classList.add('correct');
-                    }
-                });
-
-                // Show full image
-                document.getElementById('pixelated-image').style.filter = 'blur(0)';
-            }
-        };
-    });
+            // Watch for timer expiry via Alpine store
+            const checkExpiry = setInterval(function() {
+                if (Alpine.store('game').answersCount > 0) {
+                    clearInterval(pixelationInterval);
+                    clearInterval(checkExpiry);
+                    document.getElementById('pixelated-image').style.filter = 'blur(0)';
+                }
+            }, 200);
+        });
+    })();
 {% endblock %}

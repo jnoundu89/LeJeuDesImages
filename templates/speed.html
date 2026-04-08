@@ -138,11 +138,11 @@
 {% endblock %}
 
 {% block game_choices %}
-    <div class="speed-container">
+    <div class="speed-container" x-data="singleAnswer('{{ correct_name }}')">
         <div class="speed-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="speed-choice-btn choice-btn"
-                    onclick="checkSpeedAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
+                    @click="check('{{ name }}', $el); recordResponseTime($el)">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -150,111 +150,22 @@
 {% endblock %}
 
 {% block game_scripts %}
-    let startTime;
-    let speedTimerInterval;
-    let timeLimit = 60; // Default time limit
-    let speedTimerValue = timeLimit;
+    let startTime = new Date().getTime();
 
-    // Function to check the answer in speed mode
-    function checkSpeedAnswer(correct, selected, element) {
-        const buttons = document.querySelectorAll('#name-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        // Calculate response time in milliseconds
-        const responseTime = new Date().getTime() - startTime;
+    function recordResponseTime(el) {
+        var responseTime = new Date().getTime() - startTime;
         document.getElementById('response-time').value = responseTime;
 
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
+        // Display time bonus for correct answers
+        if (document.getElementById('correct-answer').value === '1') {
+            var bonusPoints = 0;
+            if (responseTime < 1000) bonusPoints = 3;
+            else if (responseTime < 3000) bonusPoints = 2;
+            else bonusPoints = 1;
 
-            // Display time bonus based on response time
-            let bonusPoints = 0;
-            if (responseTime < 1000) {
-                bonusPoints = 3;
-            } else if (responseTime < 3000) {
-                bonusPoints = 2;
-            } else {
-                bonusPoints = 1;
-            }
-
-            const timeBonus = document.getElementById('time-bonus');
-            timeBonus.textContent = `+${bonusPoints} points!`;
+            var timeBonus = document.getElementById('time-bonus');
+            timeBonus.textContent = '+' + bonusPoints + ' points!';
             timeBonus.style.display = 'block';
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
-        }
-
-        // Set answersCount to 1 to enable the next button
-        GameEngine.setState('answersCount', 1);
-        enableNextButton();
-        clearInterval(speedTimerInterval);
-    }
-
-    // Update the timer
-    function updateTimer() {
-        speedTimerValue--;
-        const timerElement = document.getElementById('timer');
-        timerElement.textContent = `{{ _('Temps restant') }}: ${speedTimerValue}s`;
-
-        // Update progress bar
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = (speedTimerValue / timeLimit) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
-
-        // Add warning class when time is running out
-        if (speedTimerValue <= 10) {
-            timerElement.classList.add('warning');
-        }
-
-        // Time's up
-        if (speedTimerValue <= 0) {
-            clearInterval(speedTimerInterval);
-
-            // Show the correct answer
-            const buttons = document.querySelectorAll('#name-choices button');
-            const correctName = '{{ correct_name }}';
-
-            buttons.forEach(btn => {
-                btn.disabled = true;
-                if (btn.textContent.trim() === correctName) {
-                    btn.classList.add('correct');
-                }
-            });
-
-            // Enable the next button
-            GameEngine.setState('answersCount', 1);
-            enableNextButton();
         }
     }
-
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-        const maxScore = parseInt(document.getElementById('max-score').value);
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-
-        // Update progress counter
-        document.getElementById('question-counter').textContent =
-            `${currentQuestion} / ${totalQuestions}`;
-
-        // Initialize timer
-        startTime = new Date().getTime();
-        speedTimerInterval = setInterval(updateTimer, 1000);
-
-        // Reset for new question
-        resetAnswersCount();
-        toggleStats();
-    });
 {% endblock %}

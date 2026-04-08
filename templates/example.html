@@ -58,50 +58,14 @@
 {% endblock %}
 
 {% block game_choices %}
-        <div class="example-container">
+        <div class="example-container" x-data="singleAnswer('{{ correct_name }}')">
             <div class="example-choices" id="name-choices">
                 {% for name in name_choices %}
-                <button type="button" class="example-choice-btn" onclick="checkExampleAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}</button>
+                <button type="button" class="example-choice-btn choice-btn" @click="check('{{ name }}', $el)">{{ name }}</button>
                 {% endfor %}
             </div>
         </div>
 {% endblock %}
 
 {% block game_scripts %}
-        // Function to check the answer in example mode
-        function checkExampleAnswer(correct, selected, element) {
-            const buttons = document.querySelectorAll('#name-choices button');
-            buttons.forEach(btn => {
-                btn.disabled = true;
-            });
-
-            if (correct === selected) {
-                element.classList.add('correct');
-                document.getElementById('correct-answer').value = 1;
-            } else {
-                element.classList.add('incorrect');
-                buttons.forEach(btn => {
-                    if (btn.textContent === correct) {
-                        btn.classList.add('correct');
-                    }
-                });
-                document.body.classList.add('shake');
-                setTimeout(() => {
-                    document.body.classList.remove('shake');
-                }, 500);
-            }
-
-            enableNextButton();
-            GameEngine.clearTimer();
-        }
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', function() {
-            const currentQuestion = parseInt(document.getElementById('current-question').value);
-            const totalQuestions = parseInt(document.getElementById('total-questions').value);
-
-            updateProgressBar(currentQuestion, totalQuestions);
-            resetAnswersCount();
-            toggleStats();
-        });
 {% endblock %}

@@ -126,12 +126,12 @@
 {% endblock %}
 
 {% block game_choices %}
-    <div class="team-guess-container">
+    <div class="team-guess-container" x-data="singleAnswer('{{ correct_team }}')">
         <h2>{{ _('À quelle équipe appartient cette personne ?') }}</h2>
         <div class="team-guess-choices" id="team-choices">
             {% for team in team_choices %}
             <button type="button" class="team-guess-choice-btn choice-btn"
-                    onclick="checkTeamGuessAnswer('{{ correct_team }}'.trim(), '{{ team }}'.trim(), this)">{{ team }}
+                    @click="check('{{ team }}', $el)">{{ team }}
             </button>
             {% endfor %}
         </div>
@@ -139,58 +139,4 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Function to check the answer in team guess mode
-    function checkTeamGuessAnswer(correct, selected, element) {
-        const buttons = document.querySelectorAll('#team-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
-
-            // Update progress bar
-            const progressBar = document.getElementById('progress-bar');
-            const currentQuestion = parseInt(document.getElementById('current-question').value);
-            const totalQuestions = parseInt(document.getElementById('total-questions').value);
-            const progressPercentage = (currentQuestion / totalQuestions) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
-        }
-
-        // Set answersCount to 1 to enable the next button
-        GameEngine.setState('answersCount', 1);
-        enableNextButton();
-    }
-
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-        const maxScore = parseInt(document.getElementById('max-score').value);
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-
-        // Update progress counter
-        document.getElementById('question-counter').textContent =
-            `${currentQuestion} / ${totalQuestions}`;
-
-        // Update progress bar
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = ((currentQuestion - 1) / totalQuestions) * 100;
-        progressBar.style.width = `${progressPercentage}%`;
-
-        // Reset for new question
-        resetAnswersCount();
-        toggleStats();
-    });
 {% endblock %}

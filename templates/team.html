@@ -167,92 +167,65 @@
 {% endblock %}
 
 {% block game_scripts %}
-    let selectedMembers = 0;
-    let correctAnswers = 0;
+    var selectedMembers = 0;
+    var correctAnswers = 0;
 
-    // Get total members from hidden input
     function getTotalMembers() {
         return parseInt(document.getElementById('total-members').value);
     }
 
     function selectName(button) {
-        // Get data attributes
-        const correct = button.getAttribute('data-correct');
-        const selected = button.getAttribute('data-selected');
+        var correct = button.getAttribute('data-correct');
+        var selected = button.getAttribute('data-selected');
+        var memberDiv = button.closest('.team-member');
+        var buttons = memberDiv.querySelectorAll('.member-choice-btn');
 
-        // Get all buttons in this member's container
-        const memberDiv = button.closest('.team-member');
-        const buttons = memberDiv.querySelectorAll('.member-choice-btn');
+        buttons.forEach(function(btn) { btn.disabled = true; });
 
-        // Disable all buttons
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        // Check if answer is correct
         if (correct === selected) {
             button.classList.add('correct');
             memberDiv.querySelector('.member-correct').value = 1;
             correctAnswers++;
         } else {
             button.classList.add('incorrect');
-
-            // Highlight the correct answer
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
+            buttons.forEach(function(btn) {
+                if (btn.textContent.trim() === correct) btn.classList.add('correct');
             });
         }
 
-        // Increment selected count
         selectedMembers++;
 
-        // Enable submit button if all members have been selected
         if (selectedMembers === getTotalMembers()) {
             document.getElementById('submit-team').disabled = false;
         }
     }
 
     function submitTeam() {
-        // Update the hidden field with the number of correct answers
         document.getElementById('correct-answers').value = correctAnswers;
-
-        // Submit the form
         document.getElementById('team-form').submit();
     }
 
-    // Initialize the page
+    // Watch for timer expiry to show correct answers
     document.addEventListener('DOMContentLoaded', function() {
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        var checkExpiry = setInterval(function() {
+            var timerEl = document.querySelector('[x-data^="gameTimer"]');
+            if (!timerEl) return;
+            var timerData = timerEl._x_dataStack && timerEl._x_dataStack[0];
+            if (!timerData) return;
 
-        updateProgressBar(currentQuestion, totalQuestions);
-        toggleStats();
-
-        // Override timer function to show correct answers when time is up
-        const originalUpdateTimer = window.updateTimer;
-        window.updateTimer = function() {
-            originalUpdateTimer.apply(this, arguments);
-
-            if (GameEngine.getState().timerValue <= 0) {
-                // Time's up - show all correct answers
-                const members = document.querySelectorAll('.team-member');
-                members.forEach(memberDiv => {
-                    const buttons = memberDiv.querySelectorAll('.member-choice-btn');
-
-                    buttons.forEach(btn => {
+            if (timerData.expired) {
+                clearInterval(checkExpiry);
+                document.querySelectorAll('.team-member').forEach(function(memberDiv) {
+                    var buttons = memberDiv.querySelectorAll('.member-choice-btn');
+                    buttons.forEach(function(btn) {
                         btn.disabled = true;
-                        const correctName = btn.getAttribute('data-correct');
-                        if (btn.textContent.trim() === correctName) {
+                        if (btn.textContent.trim() === btn.getAttribute('data-correct')) {
                             btn.classList.add('correct');
                         }
                     });
                 });
-
-                // Enable submit button
                 document.getElementById('submit-team').disabled = false;
             }
-        };
+        }, 200);
     });
 {% endblock %}

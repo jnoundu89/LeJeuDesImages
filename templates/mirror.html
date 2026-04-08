@@ -138,11 +138,11 @@
 {% endblock %}
 
 {% block game_choices %}
-    <div class="mirror-container">
+    <div class="mirror-container" x-data="singleAnswer('{{ correct_name }}')">
         <div class="mirror-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="mirror-choice-btn choice-btn"
-                    onclick="checkMirrorAnswer('{{ correct_name }}'.trim(), '{{ name }}'.trim(), this)">{{ name }}
+                    @click="check('{{ name }}', $el); showOriginal()">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -150,104 +150,36 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Variable to track if the image is flipped
+    // Flip image toggle
     let isFlipped = true;
 
-    // Function to check the answer in mirror mode
-    function checkMirrorAnswer(correct, selected, element) {
-        const buttons = document.querySelectorAll('#name-choices button');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-        });
-
-        if (correct === selected) {
-            element.classList.add('correct');
-            document.getElementById('correct-answer').value = 1;
-            document.getElementById('score-increment').value = 1;
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.textContent.trim() === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-            document.body.classList.add('shake');
-            setTimeout(() => {
-                document.body.classList.remove('shake');
-            }, 500);
-        }
-
-        // Show the original image
-        showOriginal();
-
-        // Set answersCount to 1 to enable the next button
-        GameEngine.setState('answersCount', 1);
-
-        enableNextButton();
-        GameEngine.clearTimer();
-    }
-
-    // Function to flip the image
     function flipImage() {
         const mirrorImage = document.getElementById('mirror-image');
-
         if (isFlipped) {
-            // Show normal image
             mirrorImage.style.transform = 'scaleX(1)';
             document.getElementById('flip-btn').textContent = '{{ _("Voir en miroir") }}';
         } else {
-            // Show mirrored image
             mirrorImage.style.transform = 'scaleX(-1)';
             document.getElementById('flip-btn').textContent = '{{ _("Voir normal") }}';
         }
-
         isFlipped = !isFlipped;
     }
 
     // Function to show the original image
     function showOriginal() {
-        // Hide the mirror image
         document.getElementById('mirror-image').style.display = 'none';
-
-        // Show the original image
-        const originalImage = document.getElementById('original-image');
-        originalImage.style.display = 'block';
-
-        // Disable the flip button
+        document.getElementById('original-image').style.display = 'block';
         document.getElementById('flip-btn').disabled = true;
         document.getElementById('flip-btn').style.opacity = '0.5';
     }
 
-    // Initialize the page
-    document.addEventListener('DOMContentLoaded', function () {
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
-
-        updateProgressBar(currentQuestion, totalQuestions);
-        resetAnswersCount();
-        toggleStats();
-
-        // Override the timer function
-        const originalUpdateTimer = window.updateTimer;
-        window.updateTimer = function () {
-            originalUpdateTimer.apply(this, arguments);
-
-            // If timer reaches 0, show the correct answer
-            if (GameEngine.getState().timerValue <= 0) {
-                // Time's up - show the correct answer
-                const buttons = document.querySelectorAll('#name-choices button');
-                const correctName = '{{ correct_name }}';
-
-                buttons.forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent.trim() === correctName) {
-                        btn.classList.add('correct');
-                    }
-                });
-
-                // Show the original image
+    // Watch for timer expiry to auto-reveal
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkExpiry = setInterval(function() {
+            if (Alpine.store('game').answersCount > 0) {
+                clearInterval(checkExpiry);
                 showOriginal();
             }
-        };
+        }, 200);
     });
 {% endblock %}
