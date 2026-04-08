@@ -106,7 +106,7 @@ class PositionMatchMode(GameMode):
             game_data['current_round_employees'] = current_round_employees
 
         # Extract positions and shuffle them
-        positions = [employee['position'] for employee in current_round_employees]
+        positions = [employee['job_title'] for employee in current_round_employees]
         shuffled_positions = positions.copy()
         random.shuffle(shuffled_positions)
 
@@ -115,7 +115,7 @@ class PositionMatchMode(GameMode):
         for i, employee in enumerate(current_round_employees):
             employees_with_positions.append({
                 'employee': employee,
-                'correct_position': employee['position'],
+                'correct_position': employee['job_title'],
                 'position_options': shuffled_positions
             })
 

@@ -151,9 +151,9 @@
 
 {% block game_scripts %}
     let startTime;
-    let timerInterval;
+    let speedTimerInterval;
     let timeLimit = 60; // Default time limit
-    let timerValue = timeLimit;
+    let speedTimerValue = timeLimit;
 
     // Function to check the answer in speed mode
     function checkSpeedAnswer(correct, selected, element) {
@@ -199,28 +199,28 @@
         // Set answersCount to 1 to enable the next button
         answersCount = 1;
         enableNextButton();
-        clearInterval(timerInterval);
+        clearInterval(speedTimerInterval);
     }
 
     // Update the timer
     function updateTimer() {
-        timerValue--;
+        speedTimerValue--;
         const timerElement = document.getElementById('timer');
-        timerElement.textContent = `{{ _('Temps restant') }}: ${timerValue}s`;
+        timerElement.textContent = `{{ _('Temps restant') }}: ${speedTimerValue}s`;
 
         // Update progress bar
         const progressBar = document.getElementById('progress-bar');
-        const progressPercentage = (timerValue / timeLimit) * 100;
+        const progressPercentage = (speedTimerValue / timeLimit) * 100;
         progressBar.style.width = `${progressPercentage}%`;
 
         // Add warning class when time is running out
-        if (timerValue <= 10) {
+        if (speedTimerValue <= 10) {
             timerElement.classList.add('warning');
         }
 
         // Time's up
-        if (timerValue <= 0) {
-            clearInterval(timerInterval);
+        if (speedTimerValue <= 0) {
+            clearInterval(speedTimerInterval);
 
             // Show the correct answer
             const buttons = document.querySelectorAll('#name-choices button');
@@ -251,7 +251,7 @@
 
         // Initialize timer
         startTime = new Date().getTime();
-        timerInterval = setInterval(updateTimer, 1000);
+        speedTimerInterval = setInterval(updateTimer, 1000);
 
         // Reset for new question
         resetAnswersCount();

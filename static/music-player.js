@@ -17,20 +17,20 @@ let currentTrackIndex = 0;
 const musicTracks = [
     {
         title: "Cosmic Adventure",
-        path: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8e9124b46.mp3?filename=electronic-future-beats-117997.mp3",
-        artist: "Alex Productions",
+        path: "/static/audio/track1.wav",
+        artist: "Le Jeu Des Images",
         color: "rgba(63, 81, 181, 0.8)"
     },
     {
         title: "Digital Dreams",
-        path: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0c6ff1bcc.mp3?filename=digital-dreamscape-118515.mp3",
-        artist: "Music Unlimited",
+        path: "/static/audio/track2.wav",
+        artist: "Le Jeu Des Images",
         color: "rgba(0, 150, 136, 0.8)"
     },
     {
         title: "Neon Lights",
-        path: "https://cdn.pixabay.com/download/audio/2022/10/25/audio_946bc1fcc0.mp3?filename=electronic-rock-king-around-here-15045.mp3",
-        artist: "Lexin Music",
+        path: "/static/audio/track3.wav",
+        artist: "Le Jeu Des Images",
         color: "rgba(255, 87, 34, 0.8)"
     }
 ];

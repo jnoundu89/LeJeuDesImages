@@ -62,30 +62,16 @@ class ExampleMode(GameMode):
         Returns:
             Dictionary with question data
         """
-        # Use the game manager to get question data (with reverse_mode=False)
-        question_data = self.game_manager.get_question_data(data_id, used_indices, current_question, False)
-
-        # If game is over, return that info
-        if question_data.get('game_over', False):
-            return question_data
-
-        # Simplify the data for this mode (we only care about the name)
-        selected_employee = question_data.get('correct_values', {})
-
-        # Get choices for name only, filtered by sex
-        sex_filter = {'sex': question_data.get('sex', 'man')}  # Default to 'man' if sex is not provided
-        names = self.game_manager.employee_data.get_random_choices(
-            'name',
-            selected_employee.get('name', ''),
-            filter_dict=sex_filter
-        )
+        selected, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected.get('game_over'):
+            return selected
 
         return {
             'game_over': False,
-            'image_url': question_data.get('image_url', ''),
-            'correct_name': selected_employee.get('name', ''),
-            'name_choices': names,
-            'current_question': current_question
+            'image_url': selected['photo'],
+            'correct_name': self._make_full_name(selected),
+            'name_choices': self._get_name_choices(selected),
+            'current_question': current_question,
         }
 
     def update_score(self, user_id: int, **kwargs) -> None:
