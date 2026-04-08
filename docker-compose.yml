@@ -1,0 +1,14 @@
+services:
+  app:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./config.yaml:/app/config.yaml:ro
+      - ./scores_db.json:/app/scores_db.json
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - FLASK_HOST=0.0.0.0
+      - FLASK_PORT=5000
+      - FLASK_DEBUG=false
