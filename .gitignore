@@ -51,6 +51,7 @@ Thumbs.db
 
 # Environment
 .env
+.coverage
 
 # Logs
 logs/
