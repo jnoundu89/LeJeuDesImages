@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Manager</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
-    <style>
+{% extends 'base_game.html' %}
+
+{% block title %}Mode Manager{% endblock %}
+
+{% block mode_styles %}
         .employee-container {
             text-align: center;
             margin: 20px auto;
@@ -65,34 +61,11 @@
             filter: grayscale(100%);
             cursor: not-allowed;
         }
-    </style>
-</head>
-<body>
-    <div class="top-container">
-        <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
-    </div>
+{% endblock %}
 
-    <div class="main-layout">
-        <!-- Colonne gauche - Statistiques -->
-        <div class="stats">
-            <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
-            <div id="stats-banner" class="stats-banner">
-                <h2>Statistiques de jeu</h2>
-                <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-                <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-                <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-                <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
-            </div>
-        </div>
+{% block game_title %}Qui est le manager de cette personne ?{% endblock %}
 
-        <!-- Colonne centrale - Photo et titre -->
-        <div class="center-content">
-            <div class="progress-bar">
-                <div class="progress-bar-fill"></div>
-            </div>
-            <div id="timer" class="timer">Temps restant: 60s</div>
-            <h1 class="title">Qui est le manager de cette personne ?</h1>
-            
+{% block game_content %}
             <!-- Employee information -->
             <div class="employee-container">
                 <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.firstName }} {{ employee.lastName }}">
@@ -102,26 +75,22 @@
                     <p>{{ employee.department_name }}</p>
                 </div>
             </div>
-        </div>
+{% endblock %}
 
-        <!-- Colonne droite - Scores et timer -->
-        <div class="right-content">
-            <div class="stats score-section">
-                <h2>Scores</h2>
-                <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
-                <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-            </div>
-        </div>
-    </div>
+{% block score_display %}
+            <p id="high-score">Meilleur score : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score" style="color: #00FF00; border: 2px solid #00FF00;">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+{% endblock %}
 
-    <form action="/check" method="post">
-        <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
-        <input type="hidden" name="correct_value" value="{{ manager.id }}">
-        <input type="hidden" id="score-increment" name="score_increment" value="0">
-        <input type="hidden" id="correct-answer" name="correct_answer" value="0">
-        <input type="hidden" id="total-questions" value="{{ total_questions }}">
-        <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% block form_fields %}
+    <input type="hidden" name="correct_value" value="{{ manager.id }}">
+    <input type="hidden" id="score-increment" name="score_increment" value="0">
+    <input type="hidden" id="correct-answer" name="correct_answer" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% endblock %}
 
+{% block game_choices %}
         <div class="image-grid" id="image-choices">
             {% for choice in choices %}
             <div class="image-container">
@@ -132,15 +101,18 @@
             </div>
             {% endfor %}
         </div>
-    </form>
-    <div id="fireworks-container" class="fireworks"></div>
+{% endblock %}
 
-    <script>
+{% block after_timer %}
+    <div id="fireworks-container" class="fireworks"></div>
+{% endblock %}
+
+{% block game_scripts %}
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             const totalQuestions = parseInt(document.getElementById('total-questions').value);
             const maxScore = parseInt(document.getElementById('max-score').value);
-            
+
             updateProgressBar(totalQuestions, maxScore);
             resetAnswersCount();
             toggleStats();
@@ -182,6 +154,4 @@
                 statsBanner.style.display = 'none';
             }
         }
-    </script>
-</body>
-</html>
+{% endblock %}

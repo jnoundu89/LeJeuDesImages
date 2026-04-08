@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Exemple</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
-    <style>
+{% extends 'base_game.html' %}
+
+{% block title %}Mode Exemple{% endblock %}
+
+{% block mode_styles %}
         .example-container {
             max-width: 800px;
             margin: 0 auto;
@@ -53,51 +49,15 @@
         .example-choice-btn.incorrect {
             background-color: #f44336;
         }
-    </style>
-</head>
-<body>
-    <div class="top-container">
-        <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
-    </div>
+{% endblock %}
 
-    <div class="main-layout">
-        <!-- Colonne gauche - Statistiques -->
-        <div class="stats">
-            <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
-            <div id="stats-banner" class="stats-banner">
-                <h2>Statistiques de jeu</h2>
-                <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-                <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-                <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-                <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
-            </div>
-        </div>
+{% block game_title %}Mode Exemple - Identifiez le nom{% endblock %}
 
-        <!-- Colonne centrale - Photo et titre -->
-        <div class="center-content">
-            <h1 class="title">Mode Exemple - Identifiez le nom</h1>
-            <div class="progress-bar">
-                <div class="progress-bar-fill"></div>
-            </div>
-            <img src="{{ image_url }}" alt="Photo d'employé" class="example-image">
-            <div id="timer" class="timer">Temps restant: 60s</div>
-        </div>
+{% block game_content %}
+        <img src="{{ image_url }}" alt="Photo d'employé" class="example-image">
+{% endblock %}
 
-        <!-- Colonne droite - Scores et timer -->
-        <div class="right-content">
-            <div class="stats score-section">
-                <h2>Scores</h2>
-                <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-            </div>
-        </div>
-    </div>
-
-    <form action="/check" method="post">
-        <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
-        <input type="hidden" name="correct_answer" id="correct-answer" value="0">
-        <input type="hidden" id="total-questions" value="{{ total_questions }}">
-        <input type="hidden" id="max-score" value="{{ maxScore }}">
-
+{% block game_choices %}
         <div class="example-container">
             <div class="example-choices" id="name-choices">
                 {% for name in name_choices %}
@@ -105,11 +65,9 @@
                 {% endfor %}
             </div>
         </div>
-    </form>
+{% endblock %}
 
-    <!-- Fireworks container removed -->
-
-    <script>
+{% block game_scripts %}
         // Function to check the answer in example mode
         function checkExampleAnswer(correct, selected, element) {
             const buttons = document.querySelectorAll('#name-choices button');
@@ -146,6 +104,4 @@
             resetAnswersCount();
             toggleStats();
         });
-    </script>
-</body>
-</html>
+{% endblock %}

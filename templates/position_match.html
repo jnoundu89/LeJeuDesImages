@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Association de Postes</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
-    <style>
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}Mode Association de Postes{% endblock %}
+
+{% block mode_styles %}
         .position-match-container {
             max-width: 800px;
             margin: 0 auto;
@@ -197,48 +195,30 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-    </style>
-</head>
-<body>
-<div class="top-container">
-    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
-</div>
 
-<div class="main-layout">
-    <!-- Colonne gauche - Statistiques -->
-    <div class="stats">
-        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
-        <div id="stats-banner" class="stats-banner">
-            <h2>Statistiques de jeu</h2>
-            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
-        </div>
-    </div>
+        /* Hide the default next button from base_game */
+        #next {
+            display: none;
+        }
+{% endblock %}
 
-    <!-- Colonne centrale - Photo et titre -->
-    <div class="center-content">
-        <h1 class="title">Mode Association de Postes</h1>
+{% block game_title %}Mode Association de Postes{% endblock %}
+
+{% block progress_bar %}
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
         </div>
-        
+{% endblock %}
+
+{% block game_content %}
         <div class="round-banner">
             Manche {{ current_round }} / {{ total_rounds }}
         </div>
-    </div>
+{% endblock %}
 
-    <!-- Colonne droite - Scores et timer -->
-    <div class="right-content">
-        <div class="stats score-section">
-            <h2>Scores</h2>
-            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-        </div>
-    </div>
-</div>
+{% block form_attrs %}id="position-match-form"{% endblock %}
 
-<form action="/check" method="post" id="position-match-form">
+{% block form_fields %}
     <input type="hidden" name="correct_matches" id="correct-matches" value="0">
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
@@ -246,7 +226,9 @@
     <input type="hidden" id="current-round" value="{{ current_round }}">
     <input type="hidden" id="total-rounds" value="{{ total_rounds }}">
     <input type="hidden" id="total-employees" value="{{ employees|length }}">
+{% endblock %}
 
+{% block game_choices %}
     <div class="position-match-container">
         <h2>Associez chaque employé avec son poste correct</h2>
         <div class="employees-container">
@@ -267,55 +249,55 @@
             </div>
             {% endfor %}
         </div>
-        
+
         <button type="button" id="submit-matches" class="submit-matches-btn" disabled>Vérifier les associations</button>
     </div>
-</form>
 
-<!-- Result overlay -->
-<div id="result-overlay" class="result-overlay">
-    <div class="result-content">
-        <h2>Résultats</h2>
-        <p>Vous avez correctement associé <span id="correct-count">0</span> employés avec leurs postes.</p>
-        <div class="result-score">Score: <span id="round-score">0</span> points</div>
-        <button id="continue-btn" class="continue-btn">Continuer</button>
+    <!-- Result overlay -->
+    <div id="result-overlay" class="result-overlay">
+        <div class="result-content">
+            <h2>Résultats</h2>
+            <p>Vous avez correctement associé <span id="correct-count">0</span> employés avec leurs postes.</p>
+            <div class="result-score">Score: <span id="round-score">0</span> points</div>
+            <button id="continue-btn" class="continue-btn">Continuer</button>
+        </div>
     </div>
-</div>
+{% endblock %}
 
-<script>
+{% block game_scripts %}
     // Initialize variables
     let correctMatches = 0;
     let totalEmployees = parseInt(document.getElementById('total-employees').value);
-    
+
     // Function to check if all positions are selected
     function checkAllSelected() {
         const selects = document.querySelectorAll('.position-selector select');
         let allSelected = true;
-        
+
         selects.forEach(select => {
             if (select.value === '') {
                 allSelected = false;
             }
         });
-        
+
         document.getElementById('submit-matches').disabled = !allSelected;
     }
-    
+
     // Add event listeners to all select elements
     document.querySelectorAll('.position-selector select').forEach(select => {
         select.addEventListener('change', checkAllSelected);
     });
-    
+
     // Function to check matches
     document.getElementById('submit-matches').addEventListener('click', function() {
         correctMatches = 0;
         const selects = document.querySelectorAll('.position-selector select');
-        
+
         selects.forEach(select => {
             const employeeCard = select.closest('.employee-card');
             const correctPosition = select.getAttribute('data-correct');
             const selectedPosition = select.value;
-            
+
             if (correctPosition === selectedPosition) {
                 employeeCard.classList.add('correct-match');
                 correctMatches++;
@@ -324,45 +306,43 @@
                 // Show the correct position
                 select.innerHTML = `<option value="${correctPosition}" selected>${correctPosition} (correct)</option>`;
             }
-            
+
             // Disable the select
             select.disabled = true;
         });
-        
+
         // Update the hidden field with the number of correct matches
         document.getElementById('correct-matches').value = correctMatches;
-        
+
         // Show the result overlay
         document.getElementById('correct-count').textContent = correctMatches;
         document.getElementById('round-score').textContent = correctMatches;
         document.getElementById('result-overlay').classList.add('show');
-        
+
         // Disable the submit button
         this.disabled = true;
     });
-    
+
     // Continue button event listener
     document.getElementById('continue-btn').addEventListener('click', function() {
         // Hide the overlay
         document.getElementById('result-overlay').classList.remove('show');
-        
+
         // Submit the form to go to the next round
         document.getElementById('position-match-form').submit();
     });
-    
+
     // Initialize the page
     document.addEventListener('DOMContentLoaded', function () {
         const currentRound = parseInt(document.getElementById('current-round').value);
         const totalRounds = parseInt(document.getElementById('total-rounds').value);
-        
+
         // Update progress bar
         const progressBar = document.getElementById('progress-bar');
         const progressPercentage = ((currentRound - 1) / totalRounds) * 100;
         progressBar.style.width = `${progressPercentage}%`;
-        
+
         // Reset for new question
         toggleStats();
     });
-</script>
-</body>
-</html>
+{% endblock %}

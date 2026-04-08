@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Over</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% extends 'base.html' %}
+
+{% block title %}Game Over{% endblock %}
+
+{% block extra_css %}
     <style>
         body {
             text-align: center;
@@ -54,9 +52,9 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: linear-gradient(45deg, 
-                rgba(106, 17, 203, 0) 0%, 
-                rgba(106, 17, 203, 0.1) 50%, 
+            background: linear-gradient(45deg,
+                rgba(106, 17, 203, 0) 0%,
+                rgba(106, 17, 203, 0.1) 50%,
                 rgba(37, 117, 252, 0) 100%);
             animation: rotateGradient 8s linear infinite;
             z-index: -1;
@@ -108,11 +106,11 @@
         }
 
         @keyframes messageAppear {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(30px);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -123,11 +121,11 @@
         }
 
         @keyframes statsAppear {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(30px);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -158,11 +156,11 @@
         }
 
         @keyframes btnAppear {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(30px);
             }
-            to { 
+            to {
                 opacity: 1;
                 transform: translateY(0);
             }
@@ -190,11 +188,10 @@
             color: #f44336;
             font-weight: bold;
         }
-
-        /* Fireworks CSS removed */
     </style>
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <div class="confetti" id="confetti-container"></div>
 
     <div class="result-container">
@@ -273,7 +270,9 @@
 
         <button class="restart-btn" onclick="window.location.href='/restart'">Recommencer</button>
     </div>
+{% endblock %}
 
+{% block scripts %}
     <script>
         // Create confetti effect
         document.addEventListener('DOMContentLoaded', function() {
@@ -326,5 +325,4 @@
     {% if currentScore == maxScore %}
     <!-- Fireworks removed -->
     {% endif %}
-</body>
-</html>
+{% endblock %}

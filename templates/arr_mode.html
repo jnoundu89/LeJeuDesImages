@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode ARR - Arcade Retro Racing</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% extends 'base.html' %}
+
+{% block title %}Mode ARR - Arcade Retro Racing{% endblock %}
+
+{% block extra_css %}
     <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
     <style>
         @keyframes neon-flicker {
             0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-                text-shadow: 
+                text-shadow:
                     0 0 5px #fff,
                     0 0 10px #fff,
                     0 0 20px #ff00de,
@@ -363,19 +361,20 @@
             box-shadow: 0 0 15px rgba(33, 150, 243, 0.9);
         }
     </style>
-</head>
-<body>
+{% endblock %}
+
+{% block body %}
     <div class="top-container">
         <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
     </div>
 
     <h1 class="game-title">Arcade Retro Racing</h1>
 
-    <div class="game-container" id="game-container" 
-         data-obstacles='{{ visible_obstacles|tojson|safe }}' 
-         data-power-ups='{{ visible_power_ups|tojson|safe }}' 
-         data-current-segment="{{ current_segment }}" 
-         data-track-length="{{ track_length }}" 
+    <div class="game-container" id="game-container"
+         data-obstacles='{{ visible_obstacles|tojson|safe }}'
+         data-power-ups='{{ visible_power_ups|tojson|safe }}'
+         data-current-segment="{{ current_segment }}"
+         data-track-length="{{ track_length }}"
          data-game-started="{{ game_started|lower }}">
         <div class="game-road"></div>
         <div class="lane-markers">
@@ -438,7 +437,9 @@
         <button class="control-btn" onclick="submitAction('boost')">Boost</button>
         {% endif %}
     </div>
+{% endblock %}
 
+{% block scripts %}
     <script>
         // Use AJAX to submit actions without page reload
         function submitAction(action) {
@@ -478,7 +479,7 @@
         // Add keyboard controls with preventDefault to avoid page scrolling
         document.addEventListener('keydown', function(event) {
             // Only prevent default for game control keys
-            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' || 
+            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight' ||
                 event.key === 'ArrowUp' || event.key === ' ' || event.key === 'Enter') {
                 event.preventDefault();
 
@@ -664,5 +665,4 @@
             console.log(`Rendered ${obstacles.length} obstacles and ${powerUps.length} power-ups`);
         }
     </script>
-</body>
-</html>
+{% endblock %}

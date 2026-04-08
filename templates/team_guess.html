@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Équipe</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
-    <style>
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}Mode Équipe{% endblock %}
+
+{% block mode_styles %}
         .team-guess-container {
             max-width: 800px;
             margin: 0 auto;
@@ -95,32 +93,17 @@
             background: linear-gradient(90deg, #6a11cb, #2575fc);
             transition: width 0.3s ease;
         }
-    </style>
-</head>
-<body>
-<div class="top-container">
-    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
-</div>
+{% endblock %}
 
-<div class="main-layout">
-    <!-- Colonne gauche - Statistiques -->
-    <div class="stats">
-        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
-        <div id="stats-banner" class="stats-banner">
-            <h2>Statistiques de jeu</h2>
-            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
-        </div>
-    </div>
+{% block game_title %}Mode Équipe - Devinez l'équipe de l'employé{% endblock %}
 
-    <!-- Colonne centrale - Photo et titre -->
-    <div class="center-content">
-        <h1 class="title">Mode Équipe - Devinez l'équipe de l'employé</h1>
+{% block progress_bar %}
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
         </div>
+{% endblock %}
+
+{% block game_content %}
         <div class="team-guess-image-container">
             <img id="team-guess-image" src="{{ image_url }}" alt="Photo d'employé" class="team-guess-image">
         </div>
@@ -128,25 +111,21 @@
             <h3>{{ name }}</h3>
             <p>{{ position }}</p>
         </div>
-    </div>
+{% endblock %}
 
-    <!-- Colonne droite - Scores et timer -->
-    <div class="right-content">
-        <div class="stats score-section">
-            <h2>Scores</h2>
+{% block score_display %}
             <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
             <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
-        </div>
-    </div>
-</div>
+{% endblock %}
 
-<form action="/check" method="post">
-    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+{% block form_fields %}
     <input type="hidden" name="correct_answer" id="correct-answer" value="0">
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
     <input type="hidden" id="current-question" value="{{ current_question }}">
+{% endblock %}
 
+{% block game_choices %}
     <div class="team-guess-container">
         <h2>À quelle équipe appartient cette personne ?</h2>
         <div class="team-guess-choices" id="team-choices">
@@ -157,9 +136,9 @@
             {% endfor %}
         </div>
     </div>
-</form>
+{% endblock %}
 
-<script>
+{% block game_scripts %}
     // Function to check the answer in team guess mode
     function checkTeamGuessAnswer(correct, selected, element) {
         const buttons = document.querySelectorAll('#team-choices button');
@@ -202,7 +181,7 @@
         const currentQuestion = parseInt(document.getElementById('current-question').value);
 
         // Update progress counter
-        document.getElementById('question-counter').textContent = 
+        document.getElementById('question-counter').textContent =
             `${currentQuestion} / ${totalQuestions}`;
 
         // Update progress bar
@@ -214,6 +193,4 @@
         resetAnswersCount();
         toggleStats();
     });
-</script>
-</body>
-</html>
+{% endblock %}
