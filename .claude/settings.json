@@ -16,7 +16,8 @@
       "Bash(git diff *)",
       "Bash(git log *)",
       "Bash(git ls-files *)",
-      "Bash(mkdir *)"
+      "Bash(mkdir *)",
+      "mcp__playwright__*"
     ],
     "deny": [
       "Bash(git push *)",
@@ -24,5 +25,11 @@
       "Bash(git checkout -- *)",
       "Bash(rm -rf *)"
     ]
+  },
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp"]
+    }
   }
 }
