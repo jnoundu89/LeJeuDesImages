@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Indices Progressifs</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
-    <style>
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}Mode Indices Progressifs{% endblock %}
+
+{% block mode_styles %}
         .progressive-hint-container {
             max-width: 800px;
             margin: 0 auto;
@@ -159,33 +157,17 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-    </style>
-</head>
-<body>
-<div class="top-container">
-    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
-</div>
+{% endblock %}
 
-<div class="main-layout">
-    <!-- Colonne gauche - Statistiques -->
-    <div class="stats">
-        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
-        <div id="stats-banner" class="stats-banner">
-            <h2>Statistiques de jeu</h2>
-            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
-        </div>
-    </div>
+{% block game_title %}Mode Indices Progressifs{% endblock %}
 
-    <!-- Colonne centrale - Photo et titre -->
-    <div class="center-content">
-        <h1 class="title">Mode Indices Progressifs</h1>
+{% block progress_bar %}
         <div class="progress-container">
             <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
         </div>
+{% endblock %}
 
+{% block game_content %}
         <div class="hint-container">
             {% for hint in hints %}
             <div class="hint {% if loop.index == 1 %}active{% endif %}" id="hint-{{ hint.level }}">
@@ -198,27 +180,23 @@
             <button id="next-hint-btn" class="next-hint-btn">Indice suivant</button>
             <div id="bonus-points" class="bonus-points" style="display: none;"></div>
         </div>
-    </div>
+{% endblock %}
 
-    <!-- Colonne droite - Scores et timer -->
-    <div class="right-content">
-        <div class="stats score-section">
-            <h2>Scores</h2>
+{% block score_display %}
             <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
             <p>Question : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
-        </div>
-    </div>
-</div>
+{% endblock %}
 
-<form action="/check" method="post">
-    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+{% block form_fields %}
     <input type="hidden" name="correct_answer" id="correct-answer" value="0">
     <input type="hidden" name="hint_level" id="hint-level" value="1">
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
     <input type="hidden" id="current-question" value="{{ current_question }}">
     <input type="hidden" id="max-hint-level" value="{{ hints|length }}">
+{% endblock %}
 
+{% block game_choices %}
     <div class="progressive-hint-container">
         <h2>Qui est cette personne ?</h2>
         <div class="progressive-hint-choices" id="person-choices">
@@ -231,9 +209,9 @@
             {% endfor %}
         </div>
     </div>
-</form>
+{% endblock %}
 
-<script>
+{% block game_scripts %}
     // Initialize variables
     let currentHintLevel = 1;
     let maxHintLevel = parseInt(document.getElementById('max-hint-level').value);
@@ -318,7 +296,7 @@
         const currentQuestion = parseInt(document.getElementById('current-question').value);
 
         // Update progress counter
-        document.getElementById('question-counter').textContent = 
+        document.getElementById('question-counter').textContent =
             `${currentQuestion} / ${totalQuestions}`;
 
         // Update progress bar
@@ -330,6 +308,4 @@
         resetAnswersCount();
         toggleStats();
     });
-</script>
-</body>
-</html>
+{% endblock %}

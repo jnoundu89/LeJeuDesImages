@@ -1,17 +1,29 @@
-import requests
+import os
+from typing import Any, Dict, List
+
 import pandas as pd
-import json
-from typing import List, Dict, Any
+import requests
+
+LUCCA_AUTH_TOKEN = os.environ.get('LUCCA_AUTH_TOKEN', '')
+LUCCA_BASE_URL = os.environ.get('LUCCA_BASE_URL', 'https://infolegale.ilucca.net')
+
 
 def get_auth_headers():
     """
     Returns the authentication headers needed for the API requests.
+    Reads the auth token from the LUCCA_AUTH_TOKEN environment variable.
     """
+    if not LUCCA_AUTH_TOKEN:
+        raise RuntimeError(
+            'LUCCA_AUTH_TOKEN environment variable is not set. '
+            'Export it before running the scraper.'
+        )
+
     headers = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
         "cache-control": "max-age=0",
-        "cookie": "authToken=48e8edf3-b1b1-4c5f-8d92-a61407e2c1e3; _dd_s=rum=2&id=bfcb3a68-f816-492b-ac42-6ca96a15ea5c&created=1747354549425&expire=1747355449425",
+        "cookie": f"authToken={LUCCA_AUTH_TOKEN}",
         "priority": "u=0, i",
         "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Opera GX\";v=\"118\", \"Chromium\";v=\"133\"",
         "sec-ch-ua-mobile": "?0",
@@ -32,7 +44,7 @@ def get_employee_ids() -> List[int]:
     Returns:
         List[int]: A list of employee IDs.
     """
-    url = "https://infolegale.ilucca.net/api/v3/users/scope?appInstanceId=14&operations=1&fields=id,name,firstName,lastName,mail,directLine,professionalMobile,jobTitle,birthDate,picture%5Bid,name,url,href,mimetype%5D,collection.count&orderBy=lastName,asc&paging=0,200"
+    url = f"{LUCCA_BASE_URL}/api/v3/users/scope?appInstanceId=14&operations=1&fields=id,name,firstName,lastName,mail,directLine,professionalMobile,jobTitle,birthDate,picture%5Bid,name,url,href,mimetype%5D,collection.count&orderBy=lastName,asc&paging=0,200"
 
     headers = get_auth_headers()
 
@@ -63,7 +75,7 @@ def get_employee_details(employee_id: int) -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: A dictionary containing the employee's details.
     """
-    url = f"https://infolegale.ilucca.net/api/v3/users?id={employee_id}&fields=id,firstName,lastName,picture[id,name,href],jobTitle,department[name,id],legalEntity[name],dtContractStart,mail,manager[id,name,firstName,lastName,picture[id,name,href]],directLine,professionalMobile,birthDate"
+    url = f"{LUCCA_BASE_URL}/api/v3/users?id={employee_id}&fields=id,firstName,lastName,picture[id,name,href],jobTitle,department[name,id],legalEntity[name],dtContractStart,mail,manager[id,name,firstName,lastName,picture[id,name,href]],directLine,professionalMobile,birthDate"
 
     headers = get_auth_headers()
 
@@ -134,7 +146,7 @@ def create_employee_dataframe(employee_details_list: List[Dict[str, Any]]) -> pd
 
         # Get company
         legal_entity = employee.get("legalEntity", {})
-        company = legal_entity.get("name", "") if legal_entity else "Infolegale"  # Default to Infolegale if not specified
+        company = legal_entity.get("name", "") if legal_entity else ""
 
         data.append({
             "company": company,
@@ -151,7 +163,7 @@ def main():
     """
     Main function to run the scraper.
     """
-    print("Starting Infolegale scraper...")
+    print("Starting Lucca HR scraper...")
 
     # Get all employee IDs
     print("Fetching employee IDs...")
@@ -180,7 +192,7 @@ def main():
     df = create_employee_dataframe(employee_details_list)
 
     # Save to CSV
-    output_file = "infolegale_team_scraped.csv"
+    output_file = "team_scraped.csv"
     print(f"Saving to {output_file}...")
     df.to_csv(output_file, index=False, encoding='utf-8')
 

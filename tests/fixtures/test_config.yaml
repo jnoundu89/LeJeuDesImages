@@ -1,0 +1,20 @@
+company:
+  name: "Test Corp"
+  logo_url: "https://example.com/logo.png"
+  contact_email: "test@example.com"
+  tagline: "A test company tagline"
+
+data:
+  csv_path: "tests/fixtures/test_team.csv"
+  images_dir: "static/images"
+  column_mapping:
+    first_name: "firstName"
+    last_name: "lastName"
+    photo: "image_path"
+    team: "department_name"
+    job_title: "jobTitle"
+    company: "legalEntity_name"
+    sex: "sex"
+    birth_date: "birthDate"
+    contract_start: "dtContractStart"
+    manager_name: "manager_name"

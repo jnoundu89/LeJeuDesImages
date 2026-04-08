@@ -235,7 +235,7 @@
                 {% endif %}
             {% else %}
                 {% if currentScore == maxScore %}
-                    <p>Tu es un imbattable concernant tes collègues d'Infolegale ! Félicitations pour ton score parfait !</p>
+                    <p>Tu es un imbattable concernant tes collègues de {{ company_name }} ! Félicitations pour ton score parfait !</p>
                 {% elif currentScore >= (maxScore * 0.75) %}
                     <p>Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde et tu as fait un excellent travail !</p>
                 {% elif currentScore > (maxScore * 0.5) %}

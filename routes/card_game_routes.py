@@ -1,6 +1,8 @@
 # routes/card_game_routes.py
-from flask import Blueprint, request, jsonify, session
 import logging
+
+from flask import Blueprint, jsonify, request
+
 from models.card_game_mode import CardGameMode
 
 card_game_bp = Blueprint('card_game', __name__, url_prefix='/api/card_game')

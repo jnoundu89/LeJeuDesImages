@@ -1,0 +1,26 @@
+# -- Company configuration --
+# Copy this file to config.yaml and edit it for your company.
+
+company:
+  name: "Your Company Name"
+  logo_url: "/static/images/logo.png"
+  contact_email: "contact@yourcompany.com"
+  tagline: "Testez votre connaissance de vos collegues avec des modes de jeu amusants et interactifs."
+
+data:
+  csv_path: "data/team.csv"
+  images_dir: "data/photos"
+  # Maps your CSV column names to the canonical field names used by the game.
+  # Required fields: first_name, last_name, photo, team, job_title, company, sex
+  # Optional fields: birth_date, contract_start, manager_name
+  column_mapping:
+    first_name: "first_name"
+    last_name: "last_name"
+    photo: "photo_path"
+    team: "team"
+    job_title: "job_title"
+    company: "company"
+    sex: "sex"
+    birth_date: "birth_date"
+    contract_start: "contract_start"
+    manager_name: "manager_name"

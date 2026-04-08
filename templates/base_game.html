@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+    <script src="{{ url_for('static', filename='game-engine.js') }}"></script>
+    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
+    <style>{% block mode_styles %}{% endblock %}</style>
+{% endblock %}
+
+{% block body %}
+<div class="top-container">
+    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
+</div>
+
+<div class="main-layout">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats">
+        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
+        <div id="stats-banner" class="stats-banner">
+            <h2>Statistiques de jeu</h2>
+            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
+            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
+            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
+            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Photo et titre -->
+    <div class="center-content">
+        <h1 class="title">{% block game_title %}{% endblock %}</h1>
+        {% block progress_bar %}
+        <div class="progress-bar">
+            <div class="progress-bar-fill"></div>
+        </div>
+        {% endblock %}
+        {% block game_content %}{% endblock %}
+        <div id="timer" class="timer">Temps restant: 60s</div>
+        {% block after_timer %}{% endblock %}
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>Scores</h2>
+            {% block score_display %}
+            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post" {% block form_attrs %}{% endblock %}>
+    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+    {% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="score_increment" id="score-increment" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    {% endblock %}
+
+    {% block game_choices %}{% endblock %}
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    {% block game_scripts %}{% endblock %}
+</script>
+{% endblock %}

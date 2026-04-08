@@ -1,7 +1,9 @@
 # models/memory_mode.py
-from typing import Dict, Any, List, Optional
-from .game_mode import GameMode
 import random
+from typing import Any, Dict, List, Optional
+
+from .game_mode import GameMode
+
 
 class MemoryMode(GameMode):
     """
@@ -42,15 +44,15 @@ class MemoryMode(GameMode):
         # Create memory cards (pairs of images and names)
         memory_cards = []
         for employee in selected_employees:
-            # Create full name from firstName and lastName
-            full_name = f"{employee.get('firstName', '')} {employee.get('lastName', '')}".strip()
+            # Create full name from first_name and last_name
+            full_name = f"{employee.get('first_name', '')} {employee.get('last_name', '')}".strip()
 
             # Add image card
             memory_cards.append({
                 'type': 'image',
-                'value': employee.get('image_path', ''),
+                'value': employee.get('photo', ''),
                 'match_id': full_name,
-                'display': employee.get('image_path', '')
+                'display': employee.get('photo', '')
             })
 
             # Add name card
@@ -77,7 +79,7 @@ class MemoryMode(GameMode):
             'max_score': len(selected_employees)  # 1 point per matched pair
         }
 
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
         """
         Get data for the memory game.
@@ -125,8 +127,8 @@ class MemoryMode(GameMode):
                     # Check if this employee was in the previous set
                     was_in_previous = False
                     for prev_emp in previous_employees:
-                        if (employee.get('firstName') == prev_emp.get('firstName') and 
-                            employee.get('lastName') == prev_emp.get('lastName')):
+                        if (employee.get('first_name') == prev_emp.get('first_name') and
+                            employee.get('last_name') == prev_emp.get('last_name')):
                             was_in_previous = True
                             break
 
@@ -145,15 +147,15 @@ class MemoryMode(GameMode):
                 # Create memory cards (pairs of images and names)
                 memory_cards = []
                 for employee in new_employees:
-                    # Create full name from firstName and lastName
-                    full_name = f"{employee.get('firstName', '')} {employee.get('lastName', '')}".strip()
+                    # Create full name from first_name and last_name
+                    full_name = f"{employee.get('first_name', '')} {employee.get('last_name', '')}".strip()
 
                     # Add image card
                     memory_cards.append({
                         'type': 'image',
-                        'value': employee.get('image_path', ''),
+                        'value': employee.get('photo', ''),
                         'match_id': full_name,
-                        'display': employee.get('image_path', '')
+                        'display': employee.get('photo', '')
                     })
 
                     # Add name card
@@ -208,10 +210,7 @@ class MemoryMode(GameMode):
 
         # Update the score
         self.game_manager.score_manager.update_score(
-            user_id, 
+            user_id,
             score_increment=matched_pairs,
-            company_correct=0,
-            team_correct=0,
-            name_correct=matched_pairs,  # Count each pair as a correct name
-            position_correct=0
+            stat_updates={'name': matched_pairs},
         )

@@ -1,8 +1,10 @@
 # models/score.py
-from typing import Dict, Any, Optional
-from tinydb import TinyDB, Query
-import random
 import logging
+from typing import Any, Dict, Optional
+from uuid import uuid4
+
+from tinydb import Query, TinyDB
+
 
 class ScoreManager:
     """
@@ -19,33 +21,37 @@ class ScoreManager:
         self.scores_table = self.db.table('user_scores')
         self.User = Query()
 
-    def initialize_user(self, user_id: Optional[int] = None) -> int:
+    def initialize_user(self, user_id: Optional[int] = None, mode: Optional[str] = None,
+                        player_name: Optional[str] = None) -> int:
         """
         Initialize a new user or get an existing user.
 
         Args:
             user_id: Optional user ID. If not provided, a new user will be created.
+            mode: Optional game mode identifier stored alongside the score record.
+            player_name: Optional display name for the player.
 
         Returns:
             The user ID
         """
         if user_id is None:
-            user_id = random.randint(1000, 9999)
+            user_id = uuid4().int % 10**9
 
         # Check if user exists
         user_score = self.scores_table.get(self.User.user_id == user_id)
 
         if user_score is None:
             # Create new user
-            self.scores_table.insert({
+            record: Dict[str, Any] = {
                 'user_id': user_id,
+                'mode': mode,
                 'score': 0,
-                'stats_company': 0,
-                'stats_team': 0,
-                'stats_name': 0,
-                'stats_position': 0,
-                'total_correct_answers': 0
-            })
+                'stats': {},
+                'total_correct_answers': 0,
+            }
+            if player_name is not None:
+                record['player_name'] = player_name
+            self.scores_table.insert(record)
             logging.info(f"New user created: {user_id}")
 
         return user_id
@@ -69,55 +75,30 @@ class ScoreManager:
 
         return user_score
 
-    def update_score(self, user_id: int, score_increment: int, 
-                    company_correct: int = 0, team_correct: int = 0, 
-                    name_correct: int = 0, position_correct: int = 0) -> None:
+    def update_score(self, user_id: int, score_increment: int,
+                    stat_updates: Optional[Dict[str, int]] = None) -> None:
         """
         Update a user's score.
 
         Args:
             user_id: The user ID
             score_increment: The amount to increment the score by
-            company_correct: Whether the company answer was correct (0 or 1)
-            team_correct: Whether the team answer was correct (0 or 1)
-            name_correct: Whether the name answer was correct (0 or 1)
-            position_correct: Whether the position answer was correct (0 or 1)
+            stat_updates: Optional dict of stat keys to increment values,
+                          e.g. {'name': 1, 'company': 1}
         """
         user_score = self.get_user_score(user_id)
 
-        # Update score and statistics
         user_score['score'] += score_increment
         user_score['total_correct_answers'] += score_increment
 
-        if company_correct:
-            user_score['stats_company'] += 1
-        if team_correct:
-            user_score['stats_team'] += 1
-        if name_correct:
-            user_score['stats_name'] += 1
-        if position_correct:
-            user_score['stats_position'] += 1
+        if stat_updates:
+            stats = user_score.get('stats', {})
+            for key, value in stat_updates.items():
+                stats[key] = stats.get(key, 0) + value
+            user_score['stats'] = stats
 
         self.scores_table.update(user_score, self.User.user_id == user_id)
         logging.info(f"Score updated for user {user_id}: {user_score['score']}")
-
-    def update_score_reverse_mode(self, user_id: int, correct_answer: int) -> None:
-        """
-        Update a user's score in reverse mode.
-
-        Args:
-            user_id: The user ID
-            correct_answer: Whether the answer was correct (0 or 1)
-        """
-        user_score = self.get_user_score(user_id)
-
-        if correct_answer:
-            user_score['score'] += 1
-            user_score['total_correct_answers'] += 1
-            user_score['stats_name'] += 1  # In reverse mode, we're identifying names
-
-        self.scores_table.update(user_score, self.User.user_id == user_id)
-        logging.info(f"Score updated for user {user_id} in reverse mode: {user_score['score']}")
 
     def get_stats(self, user_id: int) -> Dict[str, int]:
         """
@@ -131,32 +112,36 @@ class ScoreManager:
         """
         user_score = self.get_user_score(user_id)
 
+        # Support both new flexible 'stats' dict and legacy flat fields
+        stats = user_score.get('stats')
+        if isinstance(stats, dict):
+            return stats
+
+        # Backwards compatibility: read legacy flat fields
         return {
             'company': user_score.get('stats_company', 0),
             'team': user_score.get('stats_team', 0),
             'name': user_score.get('stats_name', 0),
-            'position': user_score.get('stats_position', 0)
+            'position': user_score.get('stats_position', 0),
         }
 
-    def get_top_scores(self, mode: str, limit: int = 10) -> list:
+    def get_top_scores(self, mode: Optional[str] = None, limit: int = 10) -> list:
         """
-        Get the top scores for a specific game mode.
+        Get the top scores, optionally filtered by game mode.
 
         Args:
-            mode: The game mode (normal, reverse, pixelation, etc.)
+            mode: The game mode to filter by. When None, return all scores.
             limit: Maximum number of scores to return
 
         Returns:
             List of dictionaries containing the top scores
         """
-        # For now, we don't track scores by mode, so we'll just return the top scores overall
-        # In a future version, we could add a 'mode' field to the score records
-        all_scores = self.scores_table.all()
+        if mode is not None:
+            scores = self.scores_table.search(self.User.mode == mode)
+        else:
+            scores = self.scores_table.all()
 
-        # Sort by score in descending order
-        sorted_scores = sorted(all_scores, key=lambda x: x.get('score', 0), reverse=True)
-
-        # Return the top N scores
+        sorted_scores = sorted(scores, key=lambda x: x.get('score', 0), reverse=True)
         return sorted_scores[:limit]
 
     def get_total_players(self) -> int:

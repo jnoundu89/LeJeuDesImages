@@ -1,6 +1,8 @@
 # routes/game_routes.py
-from flask import Blueprint, render_template, request, redirect, url_for, session
 import logging
+
+from flask import Blueprint, redirect, render_template, request, session, url_for
+
 from models.game_mode import GameModeFactory
 
 # Create a Blueprint for game routes
@@ -24,7 +26,7 @@ def init_routes(game_mode_factory: GameModeFactory):
         # Exclude ARR mode from the regular modes list (only accessible via Konami code)
 
         # Define experimental game modes (new and fun/crazy modes)
-        experimental_modes = ["speed", "team_guess", "missing_person", "position_match", "progressive_hint", 
+        experimental_modes = ["speed", "team_guess", "missing_person", "position_match", "progressive_hint",
                              "scrambled_face", "emoji_challenge", "silhouette", "mirror", "card_game"]
 
         # Separate regular and experimental modes
@@ -42,8 +44,8 @@ def init_routes(game_mode_factory: GameModeFactory):
             else:
                 regular_modes.append(mode_data)
 
-        return render_template('mode_selection.html', 
-                              modes=regular_modes, 
+        return render_template('mode_selection.html',
+                              modes=regular_modes,
                               experimental_modes=experimental_mode_info)
 
     @game_bp.route('/mode_selection')
@@ -115,8 +117,8 @@ def init_routes(game_mode_factory: GameModeFactory):
 
         # Get question data
         question_data = mode.get_question_data(
-            session['data_id'], 
-            session['used_indices'], 
+            session['data_id'],
+            session['used_indices'],
             session['current_question']
         )
 
@@ -211,7 +213,7 @@ def init_routes(game_mode_factory: GameModeFactory):
             position_correct = int(request.form.get('position_correct', 0))
 
             mode.update_score(
-                user_id, 
+                user_id,
                 score_increment=score_increment,
                 company_correct=company_correct,
                 team_correct=team_correct,
@@ -309,7 +311,7 @@ def init_routes(game_mode_factory: GameModeFactory):
         employees = employee_data.get_all_employees()
 
         # Extract image URLs
-        image_urls = [employee['image_path'] for employee in employees]
+        image_urls = [employee['photo'] for employee in employees]
 
         return jsonify(image_urls)
 
@@ -349,7 +351,7 @@ def init_routes(game_mode_factory: GameModeFactory):
         average_score = score_manager.get_average_score()
         highest_score = score_manager.get_highest_score()
 
-        return render_template('scores.html', 
+        return render_template('scores.html',
                               top_scores=top_scores,
                               total_players=total_players,
                               total_games=total_games,

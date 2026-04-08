@@ -1,8 +1,9 @@
 # models/arr_mode.py
-from typing import Dict, Any, List, Optional
-from .game_mode import GameMode
 import random
-import math
+from typing import Any, Dict, List, Optional
+
+from .game_mode import GameMode
+
 
 class ARRMode(GameMode):
     """
@@ -68,7 +69,7 @@ class ARRMode(GameMode):
             'max_score': 1000  # Maximum possible score
         }
 
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
         """
         Get data for the current state of the ARR game.
@@ -105,11 +106,11 @@ class ARRMode(GameMode):
         visible_range = 20  # How far ahead the player can see
         current_segment = game_data['track']['current_segment']
         visible_obstacles = [
-            obs for obs in game_data['track']['obstacles'] 
+            obs for obs in game_data['track']['obstacles']
             if current_segment <= obs['position'] < current_segment + visible_range
         ]
         visible_power_ups = [
-            pu for pu in game_data['track']['power_ups'] 
+            pu for pu in game_data['track']['power_ups']
             if current_segment <= pu['position'] < current_segment + visible_range
         ]
 
@@ -194,12 +195,9 @@ class ARRMode(GameMode):
 
                 # Update the score in the score manager
                 self.game_manager.score_manager.update_score(
-                    user_id, 
-                    score_increment=min(final_score, 1000),  # Cap at max score
-                    company_correct=1,  # Count as company knowledge
-                    team_correct=0,
-                    name_correct=0,
-                    position_correct=0
+                    user_id,
+                    score_increment=min(final_score, 1000),
+                    stat_updates={'company': 1},
                 )
 
             # Check if player lost all lives
@@ -215,12 +213,8 @@ class ARRMode(GameMode):
 
                 # Update the score in the score manager (partial credit)
                 self.game_manager.score_manager.update_score(
-                    user_id, 
+                    user_id,
                     score_increment=partial_score,
-                    company_correct=0,
-                    team_correct=0,
-                    name_correct=0,
-                    position_correct=0
                 )
 
             # Update the game data

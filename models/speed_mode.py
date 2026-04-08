@@ -1,7 +1,8 @@
 # models/speed_mode.py
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from .game_mode import GameMode
-import random
+
 
 class SpeedMode(GameMode):
     """
@@ -10,7 +11,7 @@ class SpeedMode(GameMode):
     """
     @property
     def name(self) -> str:
-        return "speed"
+        return 'speed'
 
     @property
     def description(self) -> str:
@@ -18,140 +19,45 @@ class SpeedMode(GameMode):
 
     @property
     def template(self) -> str:
-        return "speed.html"
+        return 'speed.html'
 
     def initialize(self, user_id: Optional[int] = None) -> Dict[str, Any]:
-        """
-        Initialize the speed game mode.
+        result = super().initialize(user_id)
+        result['max_score'] = result['max_score'] * 3  # Max 3 pts per employee
+        result['time_limit'] = 60
+        return result
 
-        Args:
-            user_id: Optional user ID. If not provided, a new user will be created.
-
-        Returns:
-            Dictionary with game initialization data
-        """
-        # Initialize user
-        user_id = self.game_manager.score_manager.initialize_user(user_id)
-
-        # Get all employees
-        employees = self.game_manager.employee_data.get_all_employees()
-        random.shuffle(employees)
-
-        # Store data and return initialization info
-        data_id = self.game_manager.store_game_data(employees)
-
-        return {
-            'user_id': user_id,
-            'data_id': data_id,
-            'reverse_mode': False,
-            'max_score': len(employees) * 3,  # Maximum 3 points per employee (if answered very quickly)
-            'time_limit': 60  # 60 seconds time limit
-        }
-
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
-        """
-        Get data for the current question.
+        selected, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected.get('game_over'):
+            return selected
 
-        Args:
-            data_id: ID of the game data
-            used_indices: List of indices that have already been used
-            current_question: Current question number
-
-        Returns:
-            Dictionary with question data
-        """
-        # Get the game data
         game_data = self.game_manager.get_game_data(data_id)
-
-        # If all indices have been used, return None
-        if len(used_indices) >= len(game_data):
-            return {'game_over': True}
-
-        # Get all available indices
-        all_indices = list(range(len(game_data)))
-        available_indices = [i for i in all_indices if i not in used_indices]
-
-        if not available_indices:
-            return {'game_over': True}
-
-        # Get the next index
-        index = available_indices[0]
-        used_indices.append(index)
-        current_question += 1
-
-        # Get the selected employee
-        selected_employee = game_data[index]
-
-        # Safely access firstName and lastName
-        first_name = selected_employee.get('firstName', '')
-        last_name = selected_employee.get('lastName', '')
-
-        # Get correct values
-        correct_values = {
-            'name': f"{first_name} {last_name}",
-        }
-
-        # For name choices, filter by sex for more realistic choices
-        sex_filter = {'sex': selected_employee.get('sex', 'man')}  # Default to 'man' if sex is not provided
-        # Create full name by joining firstName and lastName
-        full_name = f"{first_name} {last_name}"
-
-        # Get random first names and create full names for choices
-        first_names = self.game_manager.employee_data.get_random_choices(
-            'firstName',
-            first_name,  # Use the safely accessed first_name variable
-            filter_dict=sex_filter
-        )
-
-        # Create a list of full names, ensuring the correct one is included
-        names = [full_name]
-        correct_first_name = first_name  # Store the correct first name
-        for name in first_names:
-            if name != correct_first_name:
-                names.append(f"{name} {last_name}")  # Use the safely accessed last_name
-                if len(names) >= 4:  # Limit to 4 choices
-                    break
-
-        # Shuffle the names to randomize the order
-        random.shuffle(names)
 
         return {
             'game_over': False,
-            'image_url': selected_employee['image_path'],
-            'correct_name': full_name,
-            'name_choices': names,
+            'image_url': selected['photo'],
+            'correct_name': self._make_full_name(selected),
+            'name_choices': self._get_name_choices(selected),
             'current_question': current_question,
-            'total_questions': len(game_data)
+            'total_questions': len(game_data),
         }
 
     def update_score(self, user_id: int, **kwargs) -> None:
-        """
-        Update the score for this game mode.
-
-        Args:
-            user_id: The user ID
-            **kwargs: Additional arguments specific to the game mode
-        """
         correct_answer = kwargs.get('correct_answer', 0)
-        response_time = kwargs.get('response_time', 0)  # Time in milliseconds
+        response_time = kwargs.get('response_time', 0)
 
         if correct_answer:
-            # Calculate score based on response time
-            # Faster responses get more points (max 3 points if < 1 second)
-            if response_time < 1000:  # Less than 1 second
+            if response_time < 1000:
                 score_increment = 3
-            elif response_time < 3000:  # Less than 3 seconds
+            elif response_time < 3000:
                 score_increment = 2
-            else:  # More than 3 seconds
+            else:
                 score_increment = 1
 
-            # Update the score
             self.game_manager.score_manager.update_score(
-                user_id, 
+                user_id,
                 score_increment=score_increment,
-                company_correct=0,
-                team_correct=0,
-                name_correct=1,
-                position_correct=0
+                stat_updates={'name': 1},
             )

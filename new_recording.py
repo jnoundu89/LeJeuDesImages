@@ -6,4 +6,5 @@ class RecorderTest(BaseCase):
         if self.recorder_ext:
             # When done recording actions,
             # type "c", and press [Enter].
-            import pdb; pdb.set_trace()
+            import pdb
+            pdb.set_trace()

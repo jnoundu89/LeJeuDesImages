@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mode Chronométré</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <script src="{{ url_for('static', filename='scripts.js') }}" defer></script>
-    <style>
+{% extends 'base_game.html' %}
+
+{% block title %}Mode Chronométré{% endblock %}
+
+{% block mode_styles %}
         .timed-container {
             max-width: 800px;
             margin: 0 auto;
@@ -96,56 +92,26 @@
                 transform: scale(1);
             }
         }
-    </style>
-</head>
-<body>
-<div class="top-container">
-    <button class="top-right" onclick="window.location.href='/restart'">Recommencer</button>
-</div>
+{% endblock %}
 
-<div class="main-layout">
-    <!-- Colonne gauche - Statistiques -->
-    <div class="stats">
-        <button class="toggle-stats-btn" onclick="toggleStats()">Afficher les statistiques</button>
-        <div id="stats-banner" class="stats-banner">
-            <h2>Statistiques de jeu</h2>
-            <p>Bonnes réponses pour l'entreprise : <span class="score">{{ stats.company }}</span></p>
-            <p>Bonnes réponses pour l'équipe : <span class="score">{{ stats.team }}</span></p>
-            <p>Bonnes réponses pour le nom : <span class="score">{{ stats.name }}</span></p>
-            <p>Bonnes réponses pour le poste : <span class="score">{{ stats.position }}</span></p>
-        </div>
-    </div>
+{% block game_title %}Mode Chronométré - Identifiez le maximum de personnes en 2 minutes{% endblock %}
 
-    <!-- Colonne centrale - Photo et titre -->
-    <div class="center-content">
-        <h1 class="title">Mode Chronométré - Identifiez le maximum de personnes en 2 minutes</h1>
-        <div class="progress-bar">
-            <div class="progress-bar-fill"></div>
-        </div>
+{% block game_content %}
         <div id="global-timer" class="global-timer">Temps restant: 120s</div>
         <div class="timed-image-container">
             <img id="timed-image" src="{{ image_url }}" alt="Photo d'employé" class="timed-image">
         </div>
-        <div id="timer" class="timer">Temps pour cette question: 10s</div>
-    </div>
+{% endblock %}
 
-    <!-- Colonne droite - Scores et timer -->
-    <div class="right-content">
-        <div class="stats score-section">
-            <h2>Scores</h2>
-            <p id="current-score">Score actuel : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
-        </div>
-    </div>
-</div>
-
-<form action="/check" method="post">
-    <button type="submit" id="next" class="disabled-btn" disabled>Personne suivante</button>
+{% block form_fields %}
     <input type="hidden" name="correct_answer" id="correct-answer" value="0">
     <input type="hidden" name="score_increment" id="score-increment" value="0">
     <input type="hidden" id="total-questions" value="{{ total_questions }}">
     <input type="hidden" id="max-score" value="{{ maxScore }}">
     <input type="hidden" id="total-time" value="{{ total_time }}">
+{% endblock %}
 
+{% block game_choices %}
     <div class="timed-container">
         <div class="timed-choices" id="name-choices">
             {% for name in name_choices %}
@@ -155,9 +121,9 @@
             {% endfor %}
         </div>
     </div>
-</form>
+{% endblock %}
 
-<script>
+{% block game_scripts %}
     let globalTimerValue = parseInt(document.getElementById('total-time').value);
     let globalTimerInterval;
     let gameEnded = false;
@@ -283,6 +249,4 @@
             }
         };
     });
-</script>
-</body>
-</html>
+{% endblock %}

@@ -1,94 +1,73 @@
-from flask import Flask
+import importlib
 import logging
-from models.employee import EmployeeData
-from models.score import ScoreManager
-from models.game import GameManager
-from models.game_mode import GameModeFactory
-from models.pixelation_mode import PixelationMode
-from models.timed_mode import TimedMode
-from models.team_mode import TeamMode
-from models.clue_mode import ClueMode
-from models.memory_mode import MemoryMode
-from models.quiz_mode import QuizMode
-from models.arr_mode import ARRMode
-from models.speed_mode import SpeedMode
-from models.team_guess_mode import TeamGuessMode
-from models.missing_person_mode import MissingPersonMode
-from models.position_match_mode import PositionMatchMode
-from models.progressive_hint_mode import ProgressiveHintMode
-from models.scrambled_face_mode import ScrambledFaceMode
-from models.emoji_challenge_mode import EmojiChallengeMode
-from models.silhouette_mode import SilhouetteMode
-from models.mirror_mode import MirrorMode
-from models.manager_mode import ManagerMode
-from models.seniority_mode import SeniorityMode
-from models.age_mode import AgeMode
-from models.card_game_mode import CardGameMode
-from routes.game_routes import game_bp, init_routes
-from routes.card_game_routes import card_game_bp, register_card_game_blueprint
+import os
+import pkgutil
 
-# Configuration du logging
+from dotenv import load_dotenv
+from flask import Flask
+
+import models
+from models.config import CompanyConfig
+from models.employee import EmployeeData
+from models.game import GameManager
+from models.game_mode import GameMode, GameModeFactory, NormalMode, ReverseMode
+from models.score import ScoreManager
+from routes.card_game_routes import register_card_game_blueprint
+from routes.game_routes import game_bp, init_routes
+
+load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
-def create_app():
-    """
-    Create and configure the Flask application.
 
-    Returns:
-        Flask application instance
-    """
+def create_app():
     app = Flask(__name__)
-    app.secret_key = 'secret123'
+    app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
 
     # Initialize models
-    employee_data = EmployeeData("infolegale_team.csv")
+    config = CompanyConfig('config.yaml')
+    employee_data = EmployeeData(config)
     score_manager = ScoreManager('scores_db.json')
     game_manager = GameManager(employee_data, score_manager)
     game_mode_factory = GameModeFactory(game_manager)
 
-    # Register all game modes
-    game_mode_factory.register_mode(PixelationMode(game_manager))
-    game_mode_factory.register_mode(TimedMode(game_manager))
-    game_mode_factory.register_mode(TeamMode(game_manager))
-    game_mode_factory.register_mode(ClueMode(game_manager))
-    game_mode_factory.register_mode(MemoryMode(game_manager))
-    game_mode_factory.register_mode(QuizMode(game_manager))
-    game_mode_factory.register_mode(ARRMode(game_manager))
-
-    # Register new game modes
-    game_mode_factory.register_mode(SpeedMode(game_manager))
-    game_mode_factory.register_mode(TeamGuessMode(game_manager))
-    game_mode_factory.register_mode(MissingPersonMode(game_manager))
-    game_mode_factory.register_mode(PositionMatchMode(game_manager))
-    game_mode_factory.register_mode(ProgressiveHintMode(game_manager))
-
-    # Register fun and crazy game modes
-    game_mode_factory.register_mode(ScrambledFaceMode(game_manager))
-    game_mode_factory.register_mode(EmojiChallengeMode(game_manager))
-    game_mode_factory.register_mode(SilhouetteMode(game_manager))
-    game_mode_factory.register_mode(MirrorMode(game_manager))
-
-    # Register new classic game modes
-    game_mode_factory.register_mode(ManagerMode(game_manager))
-    game_mode_factory.register_mode(SeniorityMode(game_manager))
-    game_mode_factory.register_mode(AgeMode(game_manager))
-
-    # Register card game mode
-    card_game_mode = CardGameMode(game_manager)
-    game_mode_factory.register_mode(card_game_mode)
+    # Auto-discover GameMode subclasses
+    card_game_mode = None
+    for importer, modname, ispkg in pkgutil.iter_modules(models.__path__):
+        if modname.endswith('_mode') and modname != 'game_mode':
+            module = importlib.import_module(f'models.{modname}')
+            for attr_name in dir(module):
+                attr = getattr(module, attr_name)
+                if (isinstance(attr, type) and issubclass(attr, GameMode)
+                        and attr is not GameMode and attr not in (NormalMode, ReverseMode)):
+                    instance = attr(game_manager)
+                    game_mode_factory.register_mode(instance)
+                    # Keep a reference to CardGameMode for its special routes
+                    if modname == 'card_game_mode':
+                        card_game_mode = instance
 
     # Initialize routes
     init_routes(game_mode_factory)
 
-    # Register card game routes
-    register_card_game_blueprint(app, card_game_mode)
+    # Register card game routes (needs the specific instance)
+    if card_game_mode is not None:
+        register_card_game_blueprint(app, card_game_mode)
 
     # Register blueprints
     app.register_blueprint(game_bp)
+
+    # Inject company branding into all templates
+    @app.context_processor
+    def inject_company():
+        return {
+            'company_name': config.company_name,
+            'company_logo_url': config.logo_url,
+            'company_tagline': config.tagline,
+            'company_email': config.contact_email,
+        }
 
     return app
 
 app = create_app()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=os.environ.get('FLASK_DEBUG', 'false').lower() == 'true')

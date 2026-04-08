@@ -1,17 +1,28 @@
-import requests
+import os
+
 import pandas as pd
-import json
-from typing import List, Dict, Any
+import requests
+
+LUCCA_AUTH_TOKEN = os.environ.get('LUCCA_AUTH_TOKEN', '')
+LUCCA_BASE_URL = os.environ.get('LUCCA_BASE_URL', 'https://infolegale.ilucca.net')
+
 
 def get_auth_headers():
     """
     Returns the authentication headers needed for the API requests.
+    Reads the auth token from the LUCCA_AUTH_TOKEN environment variable.
     """
+    if not LUCCA_AUTH_TOKEN:
+        raise RuntimeError(
+            'LUCCA_AUTH_TOKEN environment variable is not set. '
+            'Export it before running the exporter.'
+        )
+
     headers = {
         "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "accept-language": "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7",
         "cache-control": "max-age=0",
-        "cookie": "authToken=9168b3ae-6e43-4da5-a82e-b7a5132a1a5b; _dd_s=rum=2&id=d46f5714-5ab1-460f-b3fd-cbb4f2f0b444&created=1747704019630&expire=1747704921932",
+        "cookie": f"authToken={LUCCA_AUTH_TOKEN}",
         "priority": "u=0, i",
         "sec-ch-ua": "\"Not(A:Brand\";v=\"99\", \"Opera GX\";v=\"118\", \"Chromium\";v=\"133\"",
         "sec-ch-ua-mobile": "?0",
@@ -32,7 +43,7 @@ def get_users_list():
     Returns:
         List[Dict]: A list of user data dictionaries.
     """
-    url = "https://infolegale.ilucca.net/api/v3/users/scope?appInstanceId=14&operations=1&fields=id,name,firstName,lastName,mail,directLine,professionalMobile,jobTitle,birthDate,picture%5Bid,name,url,href,mimetype%5D,collection.count&orderBy=lastName,asc&paging=0,200"
+    url = f"{LUCCA_BASE_URL}/api/v3/users/scope?appInstanceId=14&operations=1&fields=id,name,firstName,lastName,mail,directLine,professionalMobile,jobTitle,birthDate,picture%5Bid,name,url,href,mimetype%5D,collection.count&orderBy=lastName,asc&paging=0,200"
 
     headers = get_auth_headers()
 
@@ -57,7 +68,7 @@ def get_user_details(user_id):
     Returns:
         Dict: A dictionary containing the user's details.
     """
-    url = f"https://infolegale.ilucca.net/api/v3/users?id={user_id}&fields=id,firstName,lastName,picture[id,name,href],jobTitle,department[name,id],legalEntity[name],dtContractStart,mail,manager[id,name,firstName,lastName,picture[id,name,href]],directLine,professionalMobile,birthDate"
+    url = f"{LUCCA_BASE_URL}/api/v3/users?id={user_id}&fields=id,firstName,lastName,picture[id,name,href],jobTitle,department[name,id],legalEntity[name],dtContractStart,mail,manager[id,name,firstName,lastName,picture[id,name,href]],directLine,professionalMobile,birthDate"
 
     headers = get_auth_headers()
 
@@ -100,7 +111,7 @@ def main():
     """
     Main function to run the scraper and export data to CSV.
     """
-    print("Starting Infolegale CSV exporter...")
+    print("Starting Lucca CSV exporter...")
 
     # Get the list of users
     print("Fetching users list...")
@@ -137,7 +148,7 @@ def main():
     df = df.dropna(axis=1, how='all')
 
     # Save to CSV
-    output_file = "infolegale_team.csv"
+    output_file = "team.csv"
     print(f"Saving to {output_file}...")
     df.to_csv(output_file, index=False, encoding='utf-8')
 

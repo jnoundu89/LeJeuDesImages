@@ -1,104 +1,106 @@
 # models/seniority_mode.py
-from typing import Dict, Any, List, Optional
 import random
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from .game_mode import GameMode
+
 
 class SeniorityMode(GameMode):
     """
     Seniority game mode where players need to identify how many years of seniority an employee has.
-    This mode uses the dtContractStart field to calculate the seniority.
+    This mode uses the contract_start field to calculate the seniority.
     """
     @property
     def name(self) -> str:
         return "seniority"
-    
+
     @property
     def description(self) -> str:
         return "Combien d'années d'ancienneté ? Devinez depuis combien d'années la personne travaille dans l'entreprise"
-    
+
     @property
     def template(self) -> str:
         return "seniority.html"
-    
+
     def initialize(self, user_id: Optional[int] = None) -> Dict[str, Any]:
         """
         Initialize the seniority game mode.
-        
+
         Args:
             user_id: Optional user ID. If not provided, a new user will be created.
-            
+
         Returns:
             Dictionary with game initialization data
         """
         # Initialize user
         user_id = self.game_manager.score_manager.initialize_user(user_id)
-        
+
         # Get all employees
         all_employees = self.game_manager.employee_data.get_all_employees()
-        
+
         # Filter employees with a contract start date
-        employees_with_start_date = [emp for emp in all_employees if emp.get('dtContractStart')]
-        
+        employees_with_start_date = [emp for emp in all_employees if emp.get('contract_start')]
+
         # Store data and return initialization info
         data_id = self.game_manager.store_game_data(employees_with_start_date)
-        
+
         return {
             'user_id': user_id,
             'data_id': data_id,
             'max_score': len(employees_with_start_date)  # 1 point per correct seniority
         }
-    
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
         """
         Get data for the current question.
-        
+
         Args:
             data_id: ID of the game data
             used_indices: List of indices that have already been used
             current_question: Current question number
-            
+
         Returns:
             Dictionary with question data
         """
         # Get the game data
         employees_with_start_date = self.game_manager.get_game_data(data_id)
-        
+
         # If all questions used, game over
         if len(used_indices) >= len(employees_with_start_date):
             return {'game_over': True}
-        
+
         # Select a random employee that hasn't been used yet
         available_indices = [i for i in range(len(employees_with_start_date)) if i not in used_indices]
         if not available_indices:
             return {'game_over': True}
-        
+
         selected_index = random.choice(available_indices)
         used_indices.append(selected_index)
         current_question += 1
-        
+
         selected_employee = employees_with_start_date[selected_index]
-        
+
         # Calculate seniority in years
-        start_date_str = selected_employee.get('dtContractStart')
+        start_date_str = selected_employee.get('contract_start')
         if not start_date_str:
             # If no start date, skip this question
             return self.get_question_data(data_id, used_indices, current_question - 1)
-        
+
         try:
             start_date = datetime.strptime(start_date_str.split('T')[0], '%Y-%m-%d')
             current_date = datetime.now()
             seniority_years = current_date.year - start_date.year
-            
+
             # Adjust for month and day
             if (current_date.month, current_date.day) < (start_date.month, start_date.day):
                 seniority_years -= 1
-                
+
             # For future dates (not yet started), set seniority to 0
             if seniority_years < 0:
                 seniority_years = 0
-                
+
             # Generate 3 other options (different from the correct one)
             other_options = []
             while len(other_options) < 3:
@@ -106,11 +108,11 @@ class SeniorityMode(GameMode):
                 option = random.randint(0, 20)
                 if option != seniority_years and option not in other_options:
                     other_options.append(option)
-            
+
             # Add the correct answer
             choices = other_options + [seniority_years]
             random.shuffle(choices)
-            
+
             return {
                 'game_over': False,
                 'employee': selected_employee,
@@ -123,24 +125,21 @@ class SeniorityMode(GameMode):
             # If error parsing date, skip this question
             print(f"Error calculating seniority: {e}")
             return self.get_question_data(data_id, used_indices, current_question - 1)
-    
+
     def update_score(self, user_id: int, **kwargs) -> None:
         """
         Update the score for this game mode.
-        
+
         Args:
             user_id: The user ID
             **kwargs: Additional arguments specific to the game mode
         """
         correct_answer = kwargs.get('correct_answer', 0)
-        
+
         if correct_answer:
             # Update the score
             self.game_manager.score_manager.update_score(
-                user_id, 
+                user_id,
                 score_increment=1,
-                company_correct=1,  # Count as company knowledge
-                team_correct=0,
-                name_correct=0,
-                position_correct=0
+                stat_updates={'company': 1}
             )

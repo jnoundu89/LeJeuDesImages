@@ -1,7 +1,9 @@
 # models/team_mode.py
-from typing import Dict, Any, List, Optional
-from .game_mode import GameMode
 import random
+from typing import Any, Dict, List, Optional
+
+from .game_mode import GameMode
+
 
 class TeamMode(GameMode):
     """
@@ -39,7 +41,7 @@ class TeamMode(GameMode):
         # Group employees by team
         teams = {}
         for employee in employees:
-            team = employee.get('department_name', 'Unknown')
+            team = employee.get('team', 'Unknown')
             if team not in teams:
                 teams[team] = []
             teams[team].append(employee)
@@ -65,7 +67,7 @@ class TeamMode(GameMode):
             'max_score': len(team_list)  # 1 point per correctly identified team
         }
 
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
         """
         Get data for the current question.
@@ -107,21 +109,21 @@ class TeamMode(GameMode):
         # Get image URLs for the selected members
         member_data = []
         for member in selected_members:
-            image_url = member.get('image_path', '')
-            name = f"{member.get('firstName', '')} {member.get('lastName', '')}"
+            image_url = member.get('photo', '')
+            name = f"{member.get('first_name', '')} {member.get('last_name', '')}"
             member_data.append({
                 'image_url': image_url,
                 'name': name
             })
 
         # Get other random names for choices
-        all_names = [f"{member.get('firstName', '')} {member.get('lastName', '')}" for member in self.game_manager.employee_data.get_all_employees()]
-        correct_names = [f"{member.get('firstName', '')} {member.get('lastName', '')}" for member in selected_members]
+        all_names = [f"{member.get('first_name', '')} {member.get('last_name', '')}" for member in self.game_manager.employee_data.get_all_employees()]
+        correct_names = [f"{member.get('first_name', '')} {member.get('last_name', '')}" for member in selected_members]
 
         # Create choices for each member
         member_choices = []
         for member in selected_members:
-            correct_name = f"{member.get('firstName', '')} {member.get('lastName', '')}"
+            correct_name = f"{member.get('first_name', '')} {member.get('last_name', '')}"
 
             # Get random names excluding the correct names
             other_names = [name for name in all_names if name not in correct_names and name != correct_name]
@@ -132,7 +134,7 @@ class TeamMode(GameMode):
             random.shuffle(choices)
 
             member_choices.append({
-                'image_url': member.get('image_path', ''),
+                'image_url': member.get('photo', ''),
                 'name': correct_name,
                 'choices': choices
             })
@@ -163,11 +165,13 @@ class TeamMode(GameMode):
             score_increment = 0
 
         # Update the score
+        stat_updates = {}
+        if score_increment > 0:
+            stat_updates['team'] = 1
+        if correct_answers:
+            stat_updates['name'] = correct_answers
         self.game_manager.score_manager.update_score(
-            user_id, 
+            user_id,
             score_increment=score_increment,
-            company_correct=0,
-            team_correct=1 if score_increment > 0 else 0,  # Team is correct if any members were identified
-            name_correct=correct_answers,
-            position_correct=0
+            stat_updates=stat_updates if stat_updates else None,
         )

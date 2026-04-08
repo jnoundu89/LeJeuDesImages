@@ -1,7 +1,9 @@
 # models/scrambled_face_mode.py
-from typing import Dict, Any, List, Optional
-from .game_mode import GameMode
 import random
+from typing import Any, Dict, List
+
+from .game_mode import GameMode
+
 
 class ScrambledFaceMode(GameMode):
     """
@@ -10,7 +12,7 @@ class ScrambledFaceMode(GameMode):
     """
     @property
     def name(self) -> str:
-        return "scrambled_face"
+        return 'scrambled_face'
 
     @property
     def description(self) -> str:
@@ -18,123 +20,43 @@ class ScrambledFaceMode(GameMode):
 
     @property
     def template(self) -> str:
-        return "scrambled_face.html"
+        return 'scrambled_face.html'
 
-    def initialize(self, user_id: Optional[int] = None) -> Dict[str, Any]:
-        """
-        Initialize the scrambled face game mode.
-
-        Args:
-            user_id: Optional user ID. If not provided, a new user will be created.
-
-        Returns:
-            Dictionary with game initialization data
-        """
-        # Initialize user
-        user_id = self.game_manager.score_manager.initialize_user(user_id)
-
-        # Get all employees
-        employees = self.game_manager.employee_data.get_all_employees()
-        random.shuffle(employees)
-
-        # Store data and return initialization info
-        data_id = self.game_manager.store_game_data(employees)
-
-        return {
-            'user_id': user_id,
-            'data_id': data_id,
-            'reverse_mode': False,
-            'max_score': len(employees)  # 1 point per correct identification
-        }
-
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
-        """
-        Get data for the current question.
+        selected, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected.get('game_over'):
+            return selected
 
-        Args:
-            data_id: ID of the game data
-            used_indices: List of indices that have already been used
-            current_question: Current question number
+        full_name = self._make_full_name(selected)
 
-        Returns:
-            Dictionary with question data
-        """
-        # Use the game manager to get question data
-        question_data = self.game_manager.get_question_data(data_id, used_indices, current_question, False)
-
-        # If game is over, return that info
-        if question_data.get('game_over', False):
-            return question_data
-
-        # Get the selected employee data directly from the game data
-        game_data = self.game_manager.get_game_data(data_id)
-        index = used_indices[-1]  # Get the last used index
-        selected_employee = game_data[index]
-
-        # Create full name by joining firstName and lastName
-        first_name = selected_employee['firstName']
-        last_name = selected_employee['lastName']
-        full_name = f"{first_name} {last_name}"
-
-        # Get additional random employees for scrambling (excluding the selected employee)
+        # Scramble logic: pick 3 random other employees for face parts
         all_employees = self.game_manager.employee_data.get_all_employees()
-        random_employees = random.sample([e for e in all_employees if e['firstName'] != first_name or e['lastName'] != last_name], 3)
+        others_for_scramble = [
+            e for e in all_employees
+            if e['first_name'] != selected['first_name'] or e['last_name'] != selected['last_name']
+        ]
+        random_employees = random.sample(others_for_scramble, min(3, len(others_for_scramble)))
 
-        # Get choices for name only, filtered by sex
-        sex_filter = {'sex': selected_employee['sex']}
-
-        # Get other employees with the same sex
-        filtered_employees = self.game_manager.employee_data.get_filtered_employees(sex_filter)
-
-        # Remove the selected employee from the filtered list
-        other_employees = [e for e in filtered_employees if e['firstName'] != first_name or e['lastName'] != last_name]
-
-        # Select 3 random employees if we have enough
-        if len(other_employees) >= 3:
-            other_employees = random.sample(other_employees, 3)
-
-        # Create full names for all employees
-        names = [full_name]
-        for employee in other_employees:
-            names.append(f"{employee['firstName']} {employee['lastName']}")
-
-        # Shuffle the names to randomize the order
-        random.shuffle(names)
-
-        # Create scrambled face data
         scrambled_data = {
-            'main_image': question_data.get('image_url', ''),
-            'scramble_images': [emp['image_url'] for emp in random_employees]
+            'main_image': selected['photo'],
+            'scramble_images': [emp['photo'] for emp in random_employees],
         }
 
         return {
             'game_over': False,
-            'image_url': question_data.get('image_url', ''),
+            'image_url': selected['photo'],
             'scrambled_data': scrambled_data,
             'correct_name': full_name,
-            'name_choices': names,
-            'current_question': current_question
+            'name_choices': self._get_name_choices(selected),
+            'current_question': current_question,
         }
 
     def update_score(self, user_id: int, **kwargs) -> None:
-        """
-        Update the score for this game mode.
-
-        Args:
-            user_id: The user ID
-            **kwargs: Additional arguments specific to the game mode
-        """
-        # In this mode, we only care about the name
         correct_answer = kwargs.get('correct_answer', 0)
-
         if correct_answer:
-            # Update the score and name statistic
             self.game_manager.score_manager.update_score(
-                user_id, 
+                user_id,
                 score_increment=1,
-                company_correct=0,
-                team_correct=0,
-                name_correct=1,
-                position_correct=0
+                stat_updates={'name': 1},
             )

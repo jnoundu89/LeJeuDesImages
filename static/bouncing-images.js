@@ -97,13 +97,7 @@ async function fetchEmployeeImages() {
         // If we couldn't get any image URLs, use a fallback array
         if (!imageUrls || imageUrls.length === 0) {
             console.warn('No image URLs found from API, using fallback array');
-            employeeImages = [
-                "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/frederic.julien@infolegale.fr.png",
-                "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/bertrand.laffay@infolegale.fr.png",
-                "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/kevin.pedrosa@infolegale.fr.png",
-                "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/romain.charret@infolegale.fr.png",
-                "https://www.infolegale.fr/hubfs/selma.desiqueira@infolegale.fr.png"
-            ];
+            employeeImages = [];
         } else {
             employeeImages = imageUrls;
         }
@@ -114,13 +108,7 @@ async function fetchEmployeeImages() {
     } catch (error) {
         console.error('Error fetching employee images:', error);
         // Use fallback array in case of error
-        employeeImages = [
-            "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/frederic.julien@infolegale.fr.png",
-            "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/bertrand.laffay@infolegale.fr.png",
-            "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/kevin.pedrosa@infolegale.fr.png",
-            "https://www.infolegale.fr/hubfs/Photo%20carr%C3%A9%20groupe/romain.charret@infolegale.fr.png",
-            "https://www.infolegale.fr/hubfs/selma.desiqueira@infolegale.fr.png"
-        ];
+        employeeImages = [];
         shuffleArray(employeeImages);
     }
 }

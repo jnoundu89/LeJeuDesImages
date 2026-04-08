@@ -49,6 +49,13 @@ scores_db.json
 ehthumbs.db
 Thumbs.db
 
+# Environment
+.env
+
 # Logs
 logs/
 *.log
+
+# Company data (CSV + photos) -- do not commit
+data/*
+!data/.gitkeep

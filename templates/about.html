@@ -1,48 +1,19 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Le Jeu Des Images - À propos</title>
-    <meta name="description" content="Découvrez l'histoire et l'équipe derrière Le Jeu Des Images, un jeu interactif pour identifier les membres de l'équipe Infolegale et Eloficash.">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='music-player.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
-<body>
-    <!-- Dark overlay for better readability -->
-    <div class="dark-overlay"></div>
+{% extends 'base_page.html' %}
 
-    <!-- Toggle animation button -->
-    <div class="toggle-animation-container">
-        <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="Afficher l'animation">
-            <i class="fas fa-eye"></i>
-        </button>
-        <button id="toggle-music-btn" class="toggle-animation-btn" style="margin-top: 10px;" title="Afficher le lecteur de musique">
-            <i class="fas fa-music"></i>
-        </button>
-    </div>
+{% block title %}Le Jeu Des Images - À propos{% endblock %}
 
-    <!-- Particle background -->
-    <div class="particles-container">
-        <canvas id="particles-canvas"></canvas>
-    </div>
+{% block meta %}
+    <meta name="description" content="Découvrez l'histoire et l'équipe derrière Le Jeu Des Images, un jeu interactif pour identifier les membres de l'équipe {{ company_name }}.">
+{% endblock %}
 
-    <!-- Game header -->
-    <header class="game-header">
-        <img src="https://www.infolegale.fr/hs-fs/hubfs/Logo-Infolegale-fond-noir.png?width=569&height=569&name=Logo-Infolegale-fond-noir.png" alt="Logo du Jeu Des Images" class="game-logo">
-        <h1 class="game-title gradient-bg">À propos</h1>
-        <p class="game-tagline">Découvrez l'histoire et l'équipe derrière Le Jeu Des Images</p>
-    </header>
+{% block page_title %}À propos{% endblock %}
+{% block page_tagline %}Découvrez l'histoire et l'équipe derrière Le Jeu Des Images{% endblock %}
 
-    <!-- Main content -->
-    <main class="mode-container">
+{% block content %}
         <div class="about-section">
             <h2 class="section-title">Notre histoire</h2>
             <div class="about-content">
-                <p>Le Jeu Des Images est né d'une volonté de créer un outil ludique et interactif pour aider les nouveaux collaborateurs à se familiariser avec les membres des équipes Infolegale et Eloficash.</p>
+                <p>Le Jeu Des Images est né d'une volonté de créer un outil ludique et interactif pour aider les nouveaux collaborateurs à se familiariser avec les membres de l'équipe {{ company_name }}.</p>
                 <p>Ce projet a été développé avec passion pour favoriser l'intégration et renforcer la cohésion d'équipe au sein de notre entreprise.</p>
             </div>
         </div>
@@ -58,7 +29,7 @@
         <div class="about-section">
             <h2 class="section-title">L'équipe de développement</h2>
             <div class="about-content">
-                <p>Le Jeu Des Images a été conçu et développé par une équipe passionnée de développeurs et de designers d'Infolegale.</p>
+                <p>Le Jeu Des Images a été conçu et développé par une équipe passionnée de développeurs et de designers de {{ company_name }}.</p>
                 <p>Nous travaillons constamment à améliorer l'expérience utilisateur et à ajouter de nouveaux modes de jeu pour rendre l'apprentissage encore plus amusant.</p>
             </div>
         </div>
@@ -67,61 +38,11 @@
             <h2 class="section-title">Contactez-nous</h2>
             <div class="about-content">
                 <p>Vous avez des suggestions ou des commentaires pour améliorer Le Jeu Des Images ? N'hésitez pas à nous contacter !</p>
-                <p>Envoyez-nous un email à <a href="mailto:contact@infolegale.fr" class="contact-link">contact@infolegale.fr</a> ou parlez-en directement à un membre de l'équipe de développement.</p>
+                <p>Envoyez-nous un email à <a href="mailto:{{ company_email }}" class="contact-link">{{ company_email }}</a> ou parlez-en directement à un membre de l'équipe de développement.</p>
             </div>
         </div>
 
         <div class="back-to-home">
             <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">Retour à l'accueil</a>
         </div>
-    </main>
-
-    <!-- Game footer -->
-    <footer class="game-footer">
-        <div class="footer-content">
-            <p class="footer-text">Le Jeu Des Images - Un jeu interactif pour identifier les membres de l'équipe Infolegale et Eloficash.</p>
-            <div class="footer-links">
-                <a href="{{ url_for('game.about') }}" class="footer-link">À propos</a>
-                <a href="{{ url_for('game.how_to_play') }}" class="footer-link">Comment jouer</a>
-                <a href="{{ url_for('game.scores_page') }}" class="footer-link">Scores</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Music Player -->
-    <div class="music-player-container">
-        <div id="music-player">
-            <div class="music-player-header">
-                <h3 class="music-player-title">Lecteur de musique</h3>
-                <div class="music-player-controls">
-                    <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
-                    <button id="minimize-player-btn" title="Réduire le lecteur"><i class="fas fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="track-info">
-                <p id="track-title">Chargement...</p>
-                <p id="track-artist">Artiste</p>
-            </div>
-            <div class="music-controls">
-                <button id="music-prev" class="music-control-btn" title="Piste précédente"><i class="fas fa-step-backward"></i></button>
-                <button id="music-play-pause" class="music-control-btn" title="Jouer la musique"><i class="fas fa-play"></i></button>
-                <button id="music-next" class="music-control-btn" title="Piste suivante"><i class="fas fa-step-forward"></i></button>
-            </div>
-            <div class="volume-control">
-                <button id="music-mute" class="music-control-btn" title="Couper le son"><i class="fas fa-volume-up"></i></button>
-                <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="70">
-            </div>
-            <div class="visualizer-container">
-                <canvas id="music-visualizer"></canvas>
-                <div class="visualizer-controls">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts -->
-    <script src="{{ url_for('static', filename='homepage.js') }}"></script>
-    <script src="{{ url_for('static', filename='bouncing-images.js') }}"></script>
-    <script src="{{ url_for('static', filename='music-player.js') }}"></script>
-</body>
-</html>
+{% endblock %}

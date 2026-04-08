@@ -1,7 +1,9 @@
 # models/team_guess_mode.py
-from typing import Dict, Any, List, Optional
-from .game_mode import GameMode
 import random
+from typing import Any, Dict, List, Optional
+
+from .game_mode import GameMode
+
 
 class TeamGuessMode(GameMode):
     """
@@ -46,7 +48,7 @@ class TeamGuessMode(GameMode):
             'max_score': len(employees)  # 1 point per correct team guess
         }
 
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
         """
         Get data for the current question.
@@ -102,9 +104,9 @@ class TeamGuessMode(GameMode):
 
         return {
             'game_over': False,
-            'image_url': selected_employee['image_path'],
-            'name': f"{selected_employee['firstName']} {selected_employee['lastName']}",
-            'position': selected_employee['jobTitle'],
+            'image_url': selected_employee['photo'],
+            'name': f"{selected_employee['first_name']} {selected_employee['last_name']}",
+            'position': selected_employee['job_title'],
             'correct_team': correct_team,
             'team_choices': team_choices,
             'current_question': current_question,
@@ -124,10 +126,7 @@ class TeamGuessMode(GameMode):
         if correct_answer:
             # Update the score
             self.game_manager.score_manager.update_score(
-                user_id, 
+                user_id,
                 score_increment=1,
-                company_correct=0,
-                team_correct=1,
-                name_correct=0,
-                position_correct=0
+                stat_updates={'team': 1},
             )

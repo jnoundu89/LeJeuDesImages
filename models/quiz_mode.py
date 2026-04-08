@@ -1,7 +1,9 @@
 # models/quiz_mode.py
-from typing import Dict, Any, List, Optional
-from .game_mode import GameMode
 import random
+from typing import Any, Dict, List, Optional
+
+from .game_mode import GameMode
+
 
 class QuizMode(GameMode):
     """
@@ -52,7 +54,7 @@ class QuizMode(GameMode):
             'max_score': len(questions)  # 1 point per correct answer
         }
 
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
         """
         Get data for the current question.
@@ -112,10 +114,10 @@ class QuizMode(GameMode):
         mapped_employees = []
         for employee in employees:
             mapped_employee = {
-                'team': employee.get('department_name', 'Unknown'),
-                'name': f"{employee.get('firstName', '')} {employee.get('lastName', '')}",
-                'position': employee.get('jobTitle', ''),
-                'image_url': employee.get('image_path', '')
+                'team': employee.get('team', 'Unknown'),
+                'name': f"{employee.get('first_name', '')} {employee.get('last_name', '')}",
+                'position': employee.get('job_title', ''),
+                'image_url': employee.get('photo', '')
             }
             mapped_employees.append(mapped_employee)
 
@@ -213,10 +215,7 @@ class QuizMode(GameMode):
         if correct_answer:
             # Update the score
             self.game_manager.score_manager.update_score(
-                user_id, 
+                user_id,
                 score_increment=1,
-                company_correct=0,
-                team_correct=1,  # Count as team knowledge
-                name_correct=0,
-                position_correct=0
+                stat_updates={'team': 1},
             )

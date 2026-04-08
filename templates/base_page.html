@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='music-player.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+{% endblock %}
+
+{% block body %}
+    <!-- Dark overlay for better readability -->
+    <div class="dark-overlay"></div>
+
+    <!-- Toggle animation button -->
+    <div class="toggle-animation-container">
+        <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="Afficher l'animation">
+            <i class="fas fa-eye"></i>
+        </button>
+        <button id="toggle-music-btn" class="toggle-animation-btn" style="margin-top: 10px;" title="Afficher le lecteur de musique">
+            <i class="fas fa-music"></i>
+        </button>
+    </div>
+
+    <!-- Particle background -->
+    <div class="particles-container">
+        <canvas id="particles-canvas"></canvas>
+    </div>
+
+    <!-- Game header -->
+    <header class="game-header">
+        <img src="{{ company_logo_url }}" alt="Logo du Jeu Des Images" class="game-logo">
+        <h1 class="game-title gradient-bg">{% block page_title %}Le Jeu Des Images{% endblock %}</h1>
+        <p class="game-tagline">{% block page_tagline %}{{ company_tagline }}{% endblock %}</p>
+    </header>
+
+    <!-- Main content -->
+    <main class="mode-container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Game footer -->
+    <footer class="game-footer">
+        <div class="footer-content">
+            <p class="footer-text">Le Jeu Des Images - Un jeu interactif pour identifier les membres de l'équipe {{ company_name }}.</p>
+            <div class="footer-links">
+                <a href="{{ url_for('game.about') }}" class="footer-link">À propos</a>
+                <a href="{{ url_for('game.how_to_play') }}" class="footer-link">Comment jouer</a>
+                <a href="{{ url_for('game.scores_page') }}" class="footer-link">Scores</a>
+            </div>
+        </div>
+    </footer>
+
+    {% block before_music_player %}{% endblock %}
+
+    <!-- Music Player -->
+    <div class="music-player-container">
+        <div id="music-player">
+            <div class="music-player-header">
+                <h3 class="music-player-title">Lecteur de musique</h3>
+                <div class="music-player-controls">
+                    <button id="visualizer-toggle" title="Afficher le visualiseur"><i class="fas fa-eye"></i></button>
+                    <button id="minimize-player-btn" title="Réduire le lecteur"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+            <div class="track-info">
+                <p id="track-title">Chargement...</p>
+                <p id="track-artist">Artiste</p>
+            </div>
+            <div class="music-controls">
+                <button id="music-prev" class="music-control-btn" title="Piste précédente"><i class="fas fa-step-backward"></i></button>
+                <button id="music-play-pause" class="music-control-btn" title="Jouer la musique"><i class="fas fa-play"></i></button>
+                <button id="music-next" class="music-control-btn" title="Piste suivante"><i class="fas fa-step-forward"></i></button>
+            </div>
+            <div class="volume-control">
+                <button id="music-mute" class="music-control-btn" title="Couper le son"><i class="fas fa-volume-up"></i></button>
+                <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="70">
+            </div>
+            <div class="visualizer-container">
+                <canvas id="music-visualizer"></canvas>
+                <div class="visualizer-controls">
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='homepage.js') }}"></script>
+    <script src="{{ url_for('static', filename='bouncing-images.js') }}"></script>
+    <script src="{{ url_for('static', filename='music-player.js') }}"></script>
+{% endblock %}

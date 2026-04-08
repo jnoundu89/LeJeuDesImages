@@ -1,9 +1,13 @@
 # models/game.py
-from typing import Dict, Any, List, Optional
 import random
+from typing import Any, Dict, List, Optional
+from uuid import uuid4
+
 import pandas as pd
+
 from .employee import EmployeeData
 from .score import ScoreManager
+
 
 class GameManager:
     """
@@ -31,7 +35,7 @@ class GameManager:
         Returns:
             Unique ID for the stored data
         """
-        data_id = random.randint(1000, 9999)
+        data_id = uuid4().int % 10**9
         self.game_data_cache[data_id] = data
         return data_id
 
@@ -112,7 +116,7 @@ class GameManager:
             'max_score': len(employees)  # 1 question per employee in reverse mode
         }
 
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int, reverse_mode: bool) -> Dict[str, Any]:
         """
         Get data for the current question.
@@ -154,8 +158,8 @@ class GameManager:
         else:
             return self._prepare_normal_mode_question(selected_employee, game_data, current_question)
 
-    def _prepare_normal_mode_question(self, selected_employee: Dict[str, Any], 
-                                     game_data: List[Dict[str, Any]], 
+    def _prepare_normal_mode_question(self, selected_employee: Dict[str, Any],
+                                     game_data: List[Dict[str, Any]],
                                      current_question: int) -> Dict[str, Any]:
         """
         Prepare data for a normal mode question.
@@ -168,40 +172,31 @@ class GameManager:
         Returns:
             Dictionary with question data
         """
-        # Get correct values
-        # Map the new CSV column names to the expected fields
         correct_values = {
-            'company': selected_employee['legalEntity_name'],
-            'team': selected_employee['department_name'],
-            'name': f"{selected_employee['firstName']} {selected_employee['lastName']}",
-            'position': selected_employee['jobTitle']
+            'company': selected_employee['company'],
+            'team': selected_employee['team'],
+            'name': f"{selected_employee['first_name']} {selected_employee['last_name']}",
+            'position': selected_employee['job_title']
         }
 
-        # Get choices for each category
-        companies = ['INFOLEGALE', 'ELOFICASH']  # Fixed options to match the case in the CSV file
+        companies = self.employee_data.get_unique_values('company')
 
-        # For team, name, and position, filter by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
 
-        teams = self.employee_data.get_random_choices('department_name', correct_values['team'])
-        # For names, we need to get 3 other employees with the same sex and create full name combinations
+        teams = self.employee_data.get_random_choices('team', correct_values['team'])
         filtered_employees = self.employee_data.get_filtered_employees(sex_filter)
-        # Remove the selected employee from the filtered list
-        other_employees = [e for e in filtered_employees if e['firstName'] != selected_employee['firstName'] or e['lastName'] != selected_employee['lastName']]
-        # Select 3 random employees if we have enough
+        other_employees = [e for e in filtered_employees if e['first_name'] != selected_employee['first_name'] or e['last_name'] != selected_employee['last_name']]
         if len(other_employees) >= 3:
             other_employees = random.sample(other_employees, 3)
-        # Create full names for all employees
-        names = [f"{selected_employee['firstName']} {selected_employee['lastName']}"]
+        names = [f"{selected_employee['first_name']} {selected_employee['last_name']}"]
         for employee in other_employees:
-            names.append(f"{employee['firstName']} {employee['lastName']}")
-        # Shuffle the names to randomize the order
+            names.append(f"{employee['first_name']} {employee['last_name']}")
         random.shuffle(names)
-        positions = self.employee_data.get_random_choices('jobTitle', correct_values['position'], filter_dict=sex_filter)
+        positions = self.employee_data.get_random_choices('job_title', correct_values['position'], filter_dict=sex_filter)
 
         return {
             'game_over': False,
-            'image_url': selected_employee['image_path'],
+            'image_url': selected_employee['photo'],
             'correct_values': correct_values,
             'choices': {
                 'companies': companies,
@@ -212,8 +207,8 @@ class GameManager:
             'current_question': current_question
         }
 
-    def _prepare_reverse_mode_question(self, selected_employee: Dict[str, Any], 
-                                      game_data: List[Dict[str, Any]], 
+    def _prepare_reverse_mode_question(self, selected_employee: Dict[str, Any],
+                                      game_data: List[Dict[str, Any]],
                                       current_question: int) -> Dict[str, Any]:
         """
         Prepare data for a reverse mode question.
@@ -226,22 +221,16 @@ class GameManager:
         Returns:
             Dictionary with question data
         """
-        # In reverse mode, we show the name and ask to identify the person
-        # Create the full name by joining firstName and lastName
-        correct_value = f"{selected_employee['firstName']} {selected_employee['lastName']}"
+        correct_value = f"{selected_employee['first_name']} {selected_employee['last_name']}"
 
-        # Add full_name to the selected employee first to avoid KeyError
         selected_employee['full_name'] = correct_value
 
-        # Filter employees by sex for more realistic choices
         sex_filter = {'sex': selected_employee['sex']}
         filtered_employees = self.employee_data.get_filtered_employees(sex_filter)
 
-        # Add a full name field to each employee for comparison
         for employee in filtered_employees:
-            employee['full_name'] = f"{employee['firstName']} {employee['lastName']}"
+            employee['full_name'] = f"{employee['first_name']} {employee['last_name']}"
 
-        # Select 3 random employees of the same sex (plus the correct one)
         other_employees = [e for e in filtered_employees if e['full_name'] != correct_value]
         if len(other_employees) > 3:
             other_employees = random.sample(other_employees, 3)
@@ -250,14 +239,9 @@ class GameManager:
         choices = [selected_employee] + other_employees
         random.shuffle(choices)
 
-        # Add necessary fields for the template
         for employee in choices:
-            # Add image_url field (template expects this name)
-            employee['image_url'] = employee['image_path']
-            # Add name field for alt text and comparison in the template
+            employee['image_url'] = employee['photo']
             employee['name'] = employee['full_name']
-
-        # Convert choices to a pandas DataFrame for compatibility with the template
         choices_df = pd.DataFrame(choices)
 
         return {
@@ -267,8 +251,8 @@ class GameManager:
             'current_question': current_question
         }
 
-    def update_score_normal_mode(self, user_id: int, score_increment: int, 
-                               company_correct: int = 0, team_correct: int = 0, 
+    def update_score_normal_mode(self, user_id: int, score_increment: int,
+                               company_correct: int = 0, team_correct: int = 0,
                                name_correct: int = 0, position_correct: int = 0) -> None:
         """
         Update score for normal mode.
@@ -281,9 +265,17 @@ class GameManager:
             name_correct: Whether the name answer was correct (0 or 1)
             position_correct: Whether the position answer was correct (0 or 1)
         """
-        self.score_manager.update_score(
-            user_id, score_increment, company_correct, team_correct, name_correct, position_correct
-        )
+        stat_updates = {}
+        if company_correct:
+            stat_updates['company'] = company_correct
+        if team_correct:
+            stat_updates['team'] = team_correct
+        if name_correct:
+            stat_updates['name'] = name_correct
+        if position_correct:
+            stat_updates['position'] = position_correct
+
+        self.score_manager.update_score(user_id, score_increment, stat_updates=stat_updates)
 
     def update_score_reverse_mode(self, user_id: int, correct_answer: int) -> None:
         """
@@ -293,7 +285,10 @@ class GameManager:
             user_id: The user ID
             correct_answer: Whether the answer was correct (0 or 1)
         """
-        self.score_manager.update_score_reverse_mode(user_id, correct_answer)
+        if correct_answer:
+            self.score_manager.update_score(user_id, 1, stat_updates={'name': 1})
+        else:
+            self.score_manager.update_score(user_id, 0)
 
     def get_result_data(self, user_id: int, max_score: int, total_questions: int) -> Dict[str, Any]:
         """

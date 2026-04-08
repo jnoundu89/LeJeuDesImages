@@ -1,7 +1,8 @@
 # models/clue_mode.py
-from typing import Dict, Any, List, Optional
+from typing import Any, Dict, List, Optional
+
 from .game_mode import GameMode
-import random
+
 
 class ClueMode(GameMode):
     """
@@ -10,7 +11,7 @@ class ClueMode(GameMode):
     """
     @property
     def name(self) -> str:
-        return "clue"
+        return 'clue'
 
     @property
     def description(self) -> str:
@@ -18,96 +19,29 @@ class ClueMode(GameMode):
 
     @property
     def template(self) -> str:
-        return "clue.html"
+        return 'clue.html'
 
     def initialize(self, user_id: Optional[int] = None) -> Dict[str, Any]:
-        """
-        Initialize the clue game mode.
+        result = super().initialize(user_id)
+        # Maximum 3 points per employee (fewer hints = more points)
+        result['max_score'] = (result['max_score']) * 3
+        return result
 
-        Args:
-            user_id: Optional user ID. If not provided, a new user will be created.
-
-        Returns:
-            Dictionary with game initialization data
-        """
-        # Initialize user
-        user_id = self.game_manager.score_manager.initialize_user(user_id)
-
-        # Get all employees
-        employees = self.game_manager.employee_data.get_all_employees()
-        random.shuffle(employees)
-
-        # Store data and return initialization info
-        data_id = self.game_manager.store_game_data(employees)
-
-        return {
-            'user_id': user_id,
-            'data_id': data_id,
-            'reverse_mode': False,
-            'max_score': len(employees) * 3  # Maximum 3 points per employee (fewer hints = more points)
-        }
-
-    def get_question_data(self, data_id: int, used_indices: List[int], 
+    def get_question_data(self, data_id: int, used_indices: List[int],
                          current_question: int) -> Dict[str, Any]:
-        """
-        Get data for the current question.
+        selected, current_question = self._pick_next_employee(data_id, used_indices, current_question)
+        if selected.get('game_over'):
+            return selected
 
-        Args:
-            data_id: ID of the game data
-            used_indices: List of indices that have already been used
-            current_question: Current question number
-
-        Returns:
-            Dictionary with question data
-        """
-        # Use the game manager to get question data (with reverse_mode=False)
-        question_data = self.game_manager.get_question_data(data_id, used_indices, current_question, False)
-
-        # If game is over, return that info
-        if question_data.get('game_over', False):
-            return question_data
-
-        # Get the selected employee data directly from the game data
-        game_data = self.game_manager.get_game_data(data_id)
-        index = used_indices[-1]  # Get the last used index
-        selected_employee = game_data[index]
-
-        # Create full name by joining firstName and lastName
-        first_name = selected_employee['firstName']
-        last_name = selected_employee['lastName']
-        full_name = f"{first_name} {last_name}"
-
-        # Generate clues
-        clues = self._generate_clues(selected_employee)
-
-        # Get choices for name only, filtered by sex
-        sex_filter = {'sex': selected_employee['sex']}
-
-        # Get other employees with the same sex
-        filtered_employees = self.game_manager.employee_data.get_filtered_employees(sex_filter)
-
-        # Remove the selected employee from the filtered list
-        other_employees = [e for e in filtered_employees if e['firstName'] != first_name or e['lastName'] != last_name]
-
-        # Select 3 random employees if we have enough
-        if len(other_employees) >= 3:
-            other_employees = random.sample(other_employees, 3)
-
-        # Create full names for all employees
-        names = [full_name]
-        for employee in other_employees:
-            names.append(f"{employee['firstName']} {employee['lastName']}")
-
-        # Shuffle the names to randomize the order
-        random.shuffle(names)
+        clues = self._generate_clues(selected)
 
         return {
             'game_over': False,
-            'image_url': question_data.get('image_url', ''),
-            'correct_name': full_name,
-            'name_choices': names,
+            'image_url': selected['photo'],
+            'correct_name': self._make_full_name(selected),
+            'name_choices': self._get_name_choices(selected),
             'current_question': current_question,
-            'clues': clues
+            'clues': clues,
         }
 
     def _generate_clues(self, employee: Dict[str, str]) -> List[Dict[str, str]]:
@@ -123,7 +57,7 @@ class ClueMode(GameMode):
         clues = []
 
         # Clue 1: Team
-        team = employee.get('department_name', '')
+        team = employee.get('team', '')
         if team:
             clues.append({
                 'type': 'team',
@@ -142,12 +76,12 @@ class ClueMode(GameMode):
                 'points': 2
             })
 
-        # Clue 3: Age (calculated from birthDate)
-        birth_date = employee.get('birthDate', '')
+        # Clue 3: Age (calculated from birth_date)
+        birth_date = employee.get('birth_date', '')
         if birth_date:
             from datetime import datetime
             try:
-                # Parse the birthDate (format: YYYY-MM-DDT00:00:00)
+                # Parse the birth_date (format: YYYY-MM-DDT00:00:00)
                 birth_date = datetime.strptime(birth_date, '%Y-%m-%dT%H:%M:%S')
                 # Calculate age
                 today = datetime.now()
@@ -164,7 +98,7 @@ class ClueMode(GameMode):
                 pass
 
         # Clue 4: Position
-        position = employee.get('jobTitle', '')
+        position = employee.get('job_title', '')
         if position:
             clues.append({
                 'type': 'position',
@@ -195,10 +129,7 @@ class ClueMode(GameMode):
 
             # Update the score and name statistic
             self.game_manager.score_manager.update_score(
-                user_id, 
+                user_id,
                 score_increment=score_increment,
-                company_correct=0,
-                team_correct=0,
-                name_correct=1,
-                position_correct=0
+                stat_updates={'name': 1},
             )

@@ -7,9 +7,10 @@ import pandas as pd
 import requests
 from PIL import Image, ImageDraw
 
-# Add the parent directory to the path to import from sibling modules
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from scraping.infolegale_csv_exporter import get_auth_headers
+# Add the project root to the path so we can import sibling modules
+sys.path.insert(0, str(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))))
+
+from tools.importers.lucca.csv_exporter import get_auth_headers
 
 
 def create_placeholder_image(save_path, sex='man'):
@@ -103,15 +104,15 @@ def download_image(url, save_path):
 
 def main():
     """
-    Generate infolegale_team.csv using only the Lucca backup as the source of truth.
+    Generate team CSV using the Lucca backup as the source of truth.
     Downloads images from picture_href URLs and adds an image_path column mapping to the local files.
     Preserves all original data from the Lucca backup.
     """
-    print("Starting generation of infolegale_team.csv...")
+    print("Starting team CSV generation...")
 
-    # Read the Lucca CSV file
-    # Use path relative to the parent directory
-    lucca_file = "../infolegale_team_bckp_lucca.csv"
+    # Read the Lucca CSV file -- path relative to project root
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    lucca_file = os.path.join(project_root, "infolegale_team_bckp_lucca.csv")
 
     print(f"Reading {lucca_file}...")
     lucca_df = pd.read_csv(lucca_file)
@@ -144,12 +145,12 @@ def main():
             # Use a placeholder image based on sex
             sex = combined_df.at[i, 'sex']
             if sex == 'woman':
-                combined_df.at[i, 'picture_href'] = 'https://www.infolegale.fr/hubfs/placeholder_woman.png'
+                combined_df.at[i, 'picture_href'] = 'placeholder_woman.png'
             else:
-                combined_df.at[i, 'picture_href'] = 'https://www.infolegale.fr/hubfs/placeholder_man.png'
+                combined_df.at[i, 'picture_href'] = 'placeholder_man.png'
 
     # Create a directory for downloaded images if it doesn't exist
-    images_dir = "../static/images"
+    images_dir = os.path.join(project_root, "static", "images")
     os.makedirs(images_dir, exist_ok=True)
 
     # Download images and update image_path to point to local files
@@ -184,7 +185,7 @@ def main():
                 else:
                     # If download fails, use a placeholder
                     sex = row.get('sex', 'man')
-                    placeholder = f"../static/images/placeholder_{sex}.jpg"
+                    placeholder = os.path.join(images_dir, f"placeholder_{sex}.jpg")
                     if not os.path.exists(placeholder):
                         # Create a placeholder image if it doesn't exist
                         create_placeholder_image(placeholder, sex)
@@ -201,7 +202,7 @@ def main():
                 else:
                     # If download fails, use a placeholder
                     sex = row.get('sex', 'man')
-                    placeholder = f"../static/images/placeholder_{sex}.jpg"
+                    placeholder = os.path.join(images_dir, f"placeholder_{sex}.jpg")
                     if not os.path.exists(placeholder):
                         # Create a placeholder image if it doesn't exist
                         create_placeholder_image(placeholder, sex)
@@ -216,7 +217,7 @@ def main():
         combined_df = combined_df.drop(columns=['full_name'])
 
     # Save the combined dataframe to a new CSV file
-    output_file = "../infolegale_team.csv"
+    output_file = os.path.join(project_root, "infolegale_team.csv")
     print(f"Saving to {output_file}...")
     combined_df.to_csv(output_file, index=False, encoding='utf-8')
 
