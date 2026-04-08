@@ -67,10 +67,10 @@
 
 {% block game_choices %}
         <div class="image-grid" id="image-choices">
-            {% for _, row in choices.iterrows() %}
+            {% for choice in choices %}
             <div class="image-container">
-                <button type="button" class="choice-btn" onclick="checkImage('{{ correct_value }}', '{{ row['name'] }}', this)">
-                    <img src="{{ row['image_url'] }}" alt="{{ row['name'] }}">
+                <button type="button" class="choice-btn" onclick="checkImage('{{ correct_value }}', '{{ choice.name }}', this)">
+                    <img src="{{ choice.image_url }}" alt="{{ choice.name }}">
                 </button>
             </div>
             {% endfor %}

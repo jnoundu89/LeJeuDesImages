@@ -239,15 +239,10 @@ class GameManager:
         choices = [selected_employee] + other_employees
         random.shuffle(choices)
 
-        for employee in choices:
-            employee['image_url'] = employee['photo']
-            employee['name'] = employee['full_name']
-        choices_df = pd.DataFrame(choices)
-
         return {
             'game_over': False,
             'correct_value': correct_value,
-            'choices': choices_df,
+            'choices': choices,
             'current_question': current_question
         }
 

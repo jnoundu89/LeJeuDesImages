@@ -68,18 +68,11 @@ class ProgressiveHintMode(GameMode):
 
         game_data = self.game_manager.get_game_data(data_id)
 
-        # Enrich employee dicts with template-friendly keys
-        def enrich(emp):
-            e = dict(emp)
-            e['image_url'] = e.get('photo', '')
-            e['name'] = self._make_full_name(e)
-            return e
-
         return {
             'game_over': False,
-            'employee': enrich(selected),
+            'employee': selected,
             'hints': hints,
-            'choices': [enrich(c) for c in choices],
+            'choices': choices,
             'current_question': current_question,
             'total_questions': len(game_data),
         }

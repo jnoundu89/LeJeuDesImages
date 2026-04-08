@@ -159,23 +159,12 @@ class MissingPersonMode(GameMode):
         choices.append(missing_person)
         random.shuffle(choices)
 
-        # Enrich employee dicts with template-friendly keys
-        def enrich(emp):
-            emp['image_url'] = emp.get('photo', '')
-            emp['name'] = self._make_full_name(emp)
-            emp['position'] = emp.get('job_title', '')
-            return emp
-
-        enriched_members = [enrich(dict(m)) for m in displayed_members]
-        enriched_choices = [enrich(dict(c)) for c in choices]
-        enriched_missing = enrich(dict(missing_person))
-
         return {
             'game_over': False,
             'team_name': selected_team,
-            'displayed_members': enriched_members,
-            'missing_person': enriched_missing,
-            'choices': enriched_choices,
+            'displayed_members': displayed_members,
+            'missing_person': missing_person,
+            'choices': choices,
             'current_question': current_question,
             'total_questions': len(all_employees)
         }

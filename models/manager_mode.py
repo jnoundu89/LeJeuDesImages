@@ -87,8 +87,7 @@ class ManagerMode(GameMode):
         # Find the manager in the employee list by name
         all_employees = self.game_manager.employee_data.get_all_employees()
         manager = next(
-            (emp for emp in all_employees
-             if f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip() == manager_name),
+            (emp for emp in all_employees if emp.full_name == manager_name),
             None
         )
 
@@ -96,34 +95,24 @@ class ManagerMode(GameMode):
             # If manager not found, skip this question
             return self.get_question_data(data_id, used_indices, current_question - 1)
 
-        # Enrich employee dicts with template-friendly keys
-        def enrich(emp):
-            e = dict(emp)
-            e['image_path'] = e.get('photo', '')
-            e['name'] = f"{e.get('first_name', '')} {e.get('last_name', '')}".strip()
-            e['id'] = e['name']  # Use name as ID for matching
-            return e
-
-        enriched_manager = enrich(manager)
-
         # Get 3 other random employees as wrong choices
         other_employees = [emp for emp in all_employees
-                          if f"{emp.get('first_name', '')} {emp.get('last_name', '')}".strip() != manager_name
+                          if emp.full_name != manager_name
                           and emp != selected_employee]
 
         if len(other_employees) >= 3:
-            choices = [enrich(e) for e in random.sample(other_employees, 3)]
+            choices = random.sample(other_employees, 3)
         else:
-            choices = [enrich(e) for e in other_employees]
+            choices = list(other_employees)
 
         # Add the correct answer
-        choices.append(enriched_manager)
+        choices.append(manager)
         random.shuffle(choices)
 
         return {
             'game_over': False,
-            'employee': enrich(selected_employee),
-            'manager': enriched_manager,
+            'employee': selected_employee,
+            'manager': manager,
             'choices': choices,
             'current_question': current_question,
             'total_questions': len(employees_with_manager)
