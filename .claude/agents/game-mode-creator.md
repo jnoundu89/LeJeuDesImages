@@ -1,3 +1,9 @@
+---
+name: game-mode-creator
+description: Create a complete new game mode (model, template, i18n, tests)
+tools: Read, Write, Edit, Bash, Glob, Grep
+---
+
 # Game Mode Creator
 
 Create a complete new game mode from scratch: Python model, HTML template, i18n strings, and tests.

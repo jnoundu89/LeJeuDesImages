@@ -1,3 +1,9 @@
+---
+name: ui-tester
+description: Verify the game works in the browser using Playwright MCP
+tools: Bash, Read, mcp__playwright__*
+---
+
 # UI Tester (Playwright MCP)
 
 Verify the game works in the browser using the Playwright MCP server.

@@ -1,3 +1,9 @@
+---
+name: template-migrator
+description: Migrate a standalone HTML template to use extends with a base template
+tools: Read, Edit, Bash, Grep, Glob
+---
+
 # Template Migrator
 
 Migrate a standalone HTML template to use `{% extends %}` with the appropriate base template.

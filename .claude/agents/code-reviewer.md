@@ -1,3 +1,10 @@
+---
+name: code-reviewer
+description: Review staged changes for regressions, convention violations, and quality issues. Use proactively after code changes.
+tools: Bash, Read, Glob, Grep
+model: sonnet
+---
+
 # Code Reviewer
 
 Review staged changes (or a specific diff) for regressions, convention violations, and quality issues.

@@ -63,6 +63,10 @@ uploads/
 # Company-specific config (use config.example.yaml as template)
 config.yaml
 
+# Node (Playwright MCP)
+node_modules/
+package-lock.json
+
 # Company data (CSV + photos) -- do not commit
 data/*
 !data/.gitkeep

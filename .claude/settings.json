@@ -29,21 +29,15 @@
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "Bash(git commit *)",
         "hooks": [
           {
             "type": "command",
-            "if": "Bash(git commit *)",
-            "command": "uv run --extra dev ruff check . && uv run --extra dev pytest tests/ -x -q -m 'not e2e'"
+            "command": "uv run --extra dev ruff check . && uv run --extra dev pytest tests/ -x -q -m 'not e2e'",
+            "timeout": 120
           }
         ]
       }
     ]
-  },
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp"]
-    }
   }
 }

@@ -1,3 +1,10 @@
+---
+name: release-preparer
+description: Verify the project is clean and ready for a release or public commit
+tools: Bash, Read, Grep, Glob
+model: sonnet
+---
+
 # Release Preparer
 
 Verify the project is clean and ready for a release or public commit.

@@ -1,3 +1,9 @@
+---
+name: i18n-updater
+description: Detect missing translations, extract new strings, and update catalogs
+tools: Bash, Read, Edit, Grep, Glob
+---
+
 # i18n Updater
 
 Detect missing translations, extract new strings, and update catalogs.

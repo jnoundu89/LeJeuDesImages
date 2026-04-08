@@ -65,8 +65,8 @@ tools/validate_data.py     # CSV + photo validation CLI
   settings.json            # Permissions, pre-commit hooks, Playwright MCP
   agents/                  # game-mode-creator, i18n-updater, template-migrator,
                            # release-preparer, code-reviewer, ui-tester
-  skills/                  # add-game-mode, update-translations, check-release,
-                           # test-ui, add-company-data
+  commands/                # add-game-mode, update-translations, check-release,
+                           # test-ui, add-company-data (slash commands)
   memory/                  # Architecture decisions, known patterns/pitfalls
 ```
 
