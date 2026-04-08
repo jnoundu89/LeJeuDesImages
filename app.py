@@ -22,7 +22,7 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
 
-def create_app():
+def create_app(config_path: str | None = None):
     app = Flask(__name__)
     app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
     app.config['BABEL_DEFAULT_LOCALE'] = 'fr'
@@ -34,7 +34,8 @@ def create_app():
     Babel(app, locale_selector=get_locale)
 
     # Initialize models
-    config = CompanyConfig('config.yaml')
+    config_file = config_path or os.environ.get('APP_CONFIG', 'config.yaml')
+    config = CompanyConfig(config_file)
     employee_data = EmployeeData(config)
     score_manager = ScoreManager('scores_db.json')
     game_manager = GameManager(employee_data, score_manager)
@@ -94,9 +95,21 @@ def create_app():
 
     return app
 
-app = create_app()
+
+def _get_app():
+    try:
+        return create_app()
+    except FileNotFoundError:
+        # config.yaml may not exist during testing; callers should
+        # use create_app(config_path=...) explicitly.
+        return None
+
+
+app = _get_app()
 
 if __name__ == '__main__':
+    if app is None:
+        raise SystemExit('Cannot start: config.yaml not found. Copy config.example.yaml to config.yaml.')
     app.run(
         host=os.environ.get('FLASK_HOST', '127.0.0.1'),
         port=int(os.environ.get('FLASK_PORT', 5000)),

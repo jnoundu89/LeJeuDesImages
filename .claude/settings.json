@@ -26,6 +26,18 @@
       "Bash(rm -rf *)"
     ]
   },
+  "hooks": {
+    "preCommit": [
+      {
+        "command": "uv run --extra dev ruff check .",
+        "description": "Lint check before commit"
+      },
+      {
+        "command": "uv run --extra dev pytest tests/ -x -q",
+        "description": "Run tests before commit (fail-fast)"
+      }
+    ]
+  },
   "mcpServers": {
     "playwright": {
       "command": "npx",

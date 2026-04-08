@@ -1,4 +1,4 @@
-.PHONY: run test lint format validate-data install babel-extract babel-init babel-update babel-compile
+.PHONY: run test test-e2e lint format validate-data install babel-extract babel-init babel-update babel-compile
 
 install:
 	uv sync --extra dev
@@ -7,7 +7,10 @@ run:
 	uv run python app.py
 
 test:
-	uv run --extra dev pytest tests/ -v
+	uv run --extra dev pytest tests/ -v -m "not e2e"
+
+test-e2e:
+	uv run pytest tests/test_e2e.py -v -m e2e
 
 lint:
 	uv run --extra dev ruff check .
