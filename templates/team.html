@@ -235,7 +235,7 @@
         window.updateTimer = function() {
             originalUpdateTimer.apply(this, arguments);
 
-            if (timerValue <= 0) {
+            if (GameEngine.getState().timerValue <= 0) {
                 // Time's up - show all correct answers
                 const members = document.querySelectorAll('.team-member');
                 members.forEach(memberDiv => {

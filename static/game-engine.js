@@ -481,5 +481,10 @@ var GameEngine = (function() {
         }
     };
 
+    // Clear the game timer (for templates that manage their own timer logic)
+    api.clearTimer = function() {
+        clearInterval(_state.timerInterval);
+    };
+
     return api;
 })();

@@ -197,7 +197,7 @@
         }
 
         // Set answersCount to 1 to enable the next button
-        answersCount = 1;
+        GameEngine.setState('answersCount', 1);
         enableNextButton();
         clearInterval(speedTimerInterval);
     }
@@ -234,7 +234,7 @@
             });
 
             // Enable the next button
-            answersCount = 1;
+            GameEngine.setState('answersCount', 1);
             enableNextButton();
         }
     }

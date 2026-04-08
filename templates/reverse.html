@@ -78,34 +78,6 @@
 {% endblock %}
 
 {% block game_scripts %}
-    function checkImage(correct, selected, element) {
-        const buttons = document.querySelectorAll('#image-choices .choice-btn');
-        buttons.forEach(btn => {
-            btn.disabled = true;
-            btn.style.opacity = "0.6";
-        });
-
-        if (correct === selected) {
-            element.classList.add('correct');
-            correctAnswers += 1;
-            currentScore += 1;
-            document.getElementById('correct-answer').value = 1;
-        } else {
-            element.classList.add('incorrect');
-            buttons.forEach(btn => {
-                if (btn.querySelector('img').alt === correct) {
-                    btn.classList.add('correct');
-                }
-            });
-        }
-
-        answersCount = 1;
-        document.getElementById('current-score').innerHTML = `{{ _('Score actuel') }} : <span class="score">${currentScore} / ${maxScore}</span>`;
-
-        enableNextButton();
-        clearInterval(timerInterval);
-    }
-
     function toggleStats() {
         const statsBanner = document.getElementById('stats-banner');
         if (statsBanner.style.display === 'none' || statsBanner.style.display === '') {

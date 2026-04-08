@@ -179,7 +179,7 @@
         document.getElementById('next').classList.remove('disabled-btn');
 
         // Stop the timer
-        clearInterval(timerInterval);
+        GameEngine.clearTimer();
     }
 
     // Initialize the page
@@ -196,7 +196,7 @@
             originalUpdateTimer.apply(this, arguments);
 
             // If timer reaches 0, show the correct answer
-            if (timerValue <= 0 && !answered) {
+            if (GameEngine.getState().timerValue <= 0 && !answered) {
                 answered = true;
 
                 // Show the correct answer

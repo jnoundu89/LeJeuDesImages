@@ -156,9 +156,9 @@
         }
 
         // Set answersCount to 1 to enable the next button
-        answersCount = 1;
+        GameEngine.setState('answersCount', 1);
         enableNextButton();
-        clearInterval(timerInterval);
+        GameEngine.clearTimer();
     }
 
     // Function to update the global timer
@@ -190,7 +190,7 @@
 
         gameEnded = true;
         clearInterval(globalTimerInterval);
-        clearInterval(timerInterval);
+        GameEngine.clearTimer();
 
         // Disable all buttons
         const buttons = document.querySelectorAll('#name-choices button');
@@ -232,7 +232,7 @@
             originalUpdateTimer.apply(this, arguments);
 
             // If timer reaches 0, show the correct answer and move to next question
-            if (timerValue <= 0) {
+            if (GameEngine.getState().timerValue <= 0) {
                 // Time's up - show the correct answer
                 const buttons = document.querySelectorAll('#name-choices button');
                 const correctName = '{{ correct_name }}';
@@ -245,7 +245,7 @@
                 });
 
                 // Enable next button to move to next question
-                answersCount = 1;
+                GameEngine.setState('answersCount', 1);
                 enableNextButton();
             }
         };

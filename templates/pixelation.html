@@ -170,10 +170,10 @@
         document.getElementById('pixelated-image').style.filter = 'blur(0)';
 
         // Set answersCount to 1 to enable the next button
-        answersCount = 1;
+        GameEngine.setState('answersCount', 1);
 
         enableNextButton();
-        clearInterval(timerInterval);
+        GameEngine.clearTimer();
         clearInterval(pixelationInterval);
     }
 
@@ -199,7 +199,7 @@
             updatePixelation();
 
             // If timer reaches 0, show the correct answer
-            if (timerValue <= 0) {
+            if (GameEngine.getState().timerValue <= 0) {
                 clearInterval(pixelationInterval);
 
                 // Time's up - show the correct answer

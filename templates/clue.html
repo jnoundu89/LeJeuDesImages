@@ -246,7 +246,7 @@
         document.getElementById('next').classList.remove('disabled-btn');
 
         // Stop the timer
-        clearInterval(timerInterval);
+        GameEngine.clearTimer();
     }
 
     // Initialize the page
@@ -266,7 +266,7 @@
             originalUpdateTimer.apply(this, arguments);
 
             // If timer reaches 0, show all clues and the correct answer
-            if (timerValue <= 0 && !answered) {
+            if (GameEngine.getState().timerValue <= 0 && !answered) {
                 // Reveal all clues
                 for (let i = revealedClues + 1; i <= totalClues; i++) {
                     document.getElementById(`clue-${i}`).classList.add('revealed');

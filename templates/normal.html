@@ -8,10 +8,7 @@
     {% if use_score_section_styles %}
     <link rel="stylesheet" href="{{ url_for('static', filename='score-section.css') }}">
     {% endif %}
-    <script src="{{ url_for('static', filename='normal-mode.js') }}" defer></script>
-    {% if use_score_section_styles %}
-    <script src="{{ url_for('static', filename='score-section.js') }}" defer></script>
-    {% endif %}
+    {# normal-mode.js and score-section.js merged into game_scripts block #}
 {% endblock %}
 
 {% block mode_styles %}
@@ -184,6 +181,7 @@
         <input type="hidden" id="name-correct" name="name_correct" value="0">
         <input type="hidden" id="position-correct" name="position_correct" value="0">
         <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="current-question" value="{{ current_question }}">
         <input type="hidden" id="max-score" value="{{ maxScore }}">
 {% endblock %}
 
@@ -225,14 +223,46 @@
 {% endblock %}
 
 {% block game_scripts %}
-    // Initialize the game when the page loads
+    // Sequential display logic (merged from normal-mode.js)
+    var currentPart = 0;
+    var parts = ['company', 'team', 'name', 'position'];
+
+    function showGamePart(index) {
+        currentPart = index;
+        var gameParts = document.querySelectorAll('.game-section > div');
+        gameParts.forEach(function(part) { part.classList.remove('active'); });
+        if (index < gameParts.length) {
+            gameParts[index].classList.add('active');
+            gameParts[index].classList.add('slide-in');
+            setTimeout(function() {
+                var firstButton = gameParts[index].querySelector('button');
+                if (firstButton) firstButton.focus();
+            }, 100);
+        }
+    }
+
+    // Override checkAnswer to add sequential behavior
+    var _origCheckAnswer = window.checkAnswer;
+    window.checkAnswer = function(correct, selected, element, currentScoreId, titleId) {
+        _origCheckAnswer(correct, selected, element, currentScoreId, titleId);
+        var partIndex = parts.indexOf(titleId.split('-')[0]);
+        setTimeout(function() {
+            if (partIndex < parts.length - 1) {
+                showGamePart(partIndex + 1);
+            }
+        }, 1000);
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
-        // Update progress bar
-        const currentQuestion = parseInt(document.getElementById('current-question').value);
-        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        var currentQuestion = parseInt(document.getElementById('current-question').value);
+        var totalQuestions = parseInt(document.getElementById('total-questions').value);
         updateProgressBar(currentQuestion, totalQuestions);
 
-        // Reset answers count
+        // Hide all parts, show first
+        var gameParts = document.querySelectorAll('.game-section > div');
+        gameParts.forEach(function(part) { part.classList.remove('active'); });
+        showGamePart(0);
+
         resetAnswersCount();
     });
 {% endblock %}

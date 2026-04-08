@@ -1,105 +1,47 @@
-// scripts.js - Thin wrapper that delegates to GameEngine (game-engine.js)
-// and exposes global functions for backwards compatibility with templates.
+// scripts.js - Thin aliases to GameEngine (game-engine.js).
+// Templates call these global functions; they delegate directly to GameEngine.
+// NO duplicate state, NO sync -- GameEngine is the single source of truth.
 
-// Global state variables kept for any external code that reads them directly.
-// GameEngine owns the authoritative state; these are synced as needed.
-var answersCount = 0;
-var correctAnswers = 0;
-var currentScore = 0;
-var maxScore = 0;
-var timerValue = 60;
-var timerInterval;
-
-// --------------- Sync helpers ---------------
-
-function _syncFromEngine() {
-    if (typeof GameEngine === 'undefined') return;
-    var s = GameEngine.getState();
-    answersCount = s.answersCount;
-    correctAnswers = s.correctAnswers;
-    currentScore = s.currentScore;
-    maxScore = s.maxScore;
-    timerValue = s.timerValue;
-}
-
-function _syncToEngine() {
-    if (typeof GameEngine === 'undefined') return;
-    // Do NOT sync answersCount/correctAnswers back -- GameEngine owns these
-    // and updates them asynchronously inside setTimeout.
-    GameEngine.setState('currentScore', currentScore);
-    GameEngine.setState('maxScore', maxScore);
-    GameEngine.setState('timerValue', timerValue);
-}
-
-// --------------- Global functions (backwards-compatible) ---------------
+// --------------- Game function aliases ---------------
 
 function checkAnswer(correct, selected, element, currentScoreId, titleId) {
-    if (typeof GameEngine !== 'undefined') {
-        _syncToEngine();
-        GameEngine.checkAnswer(correct, selected, element, currentScoreId, titleId);
-        _syncFromEngine();
-    }
+    GameEngine.checkAnswer(correct, selected, element, currentScoreId, titleId);
 }
 
 function checkImage(correct, selected, element) {
-    if (typeof GameEngine !== 'undefined') {
-        _syncToEngine();
-        GameEngine.checkImage(correct, selected, element);
-        _syncFromEngine();
-    }
+    GameEngine.checkImage(correct, selected, element);
 }
 
 function updateProgressBar(current, total) {
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.updateProgressBar(current, total);
-    }
+    GameEngine.updateProgressBar(current, total);
 }
 
 function resetAnswersCount() {
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.resetAnswersCount();
-        _syncFromEngine();
-    }
+    GameEngine.resetAnswersCount();
 }
 
 function startTimer(seconds) {
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.startTimer(seconds || 60);
-    }
+    GameEngine.startTimer(seconds || 60);
 }
 
 function updateTimer() {
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.updateTimer();
-    }
+    GameEngine.updateTimer();
 }
 
 function disableAllButtons(container) {
-    if (typeof GameEngine !== 'undefined') {
-        _syncToEngine();
-        GameEngine.disableAllButtons(container);
-        _syncFromEngine();
-    }
+    GameEngine.disableAllButtons(container);
 }
 
 function enableNextButton() {
-    if (typeof GameEngine !== 'undefined') {
-        _syncToEngine();
-        GameEngine.enableNextButton();
-        _syncFromEngine();
-    }
+    GameEngine.enableNextButton();
 }
 
 function createConfetti(element) {
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.createConfetti(element);
-    }
+    GameEngine.createConfetti(element);
 }
 
 function toggleStats() {
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.toggleStats();
-    }
+    GameEngine.toggleStats();
 }
 
 // --------------- Navigation functions ---------------
@@ -123,22 +65,11 @@ var konamiIndex = 0;
 
 function flashScreen() {
     var overlay = document.createElement('div');
-    overlay.style.position = 'fixed';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.backgroundColor = 'rgba(255, 215, 0, 0.3)';
-    overlay.style.zIndex = '9999';
-    overlay.style.pointerEvents = 'none';
-    overlay.style.transition = 'opacity 0.3s ease';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,215,0,0.3);z-index:9999;pointer-events:none;transition:opacity 0.3s ease';
     document.body.appendChild(overlay);
-
     setTimeout(function() {
         overlay.style.opacity = '0';
-        setTimeout(function() {
-            document.body.removeChild(overlay);
-        }, 300);
+        setTimeout(function() { document.body.removeChild(overlay); }, 300);
     }, 100);
 }
 
@@ -146,47 +77,29 @@ document.addEventListener('keydown', function(e) {
     if (e.code === konamiCode[konamiIndex]) {
         flashScreen();
         konamiIndex++;
-
         if (konamiIndex === konamiCode.length) {
             konamiIndex = 0;
-
             var finalOverlay = document.createElement('div');
-            finalOverlay.style.position = 'fixed';
-            finalOverlay.style.top = '0';
-            finalOverlay.style.left = '0';
-            finalOverlay.style.width = '100%';
-            finalOverlay.style.height = '100%';
-            finalOverlay.style.backgroundColor = 'rgba(255, 215, 0, 0.7)';
-            finalOverlay.style.zIndex = '9999';
-            finalOverlay.style.pointerEvents = 'none';
-            finalOverlay.style.transition = 'opacity 0.5s ease';
+            finalOverlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(255,215,0,0.7);z-index:9999;pointer-events:none;transition:opacity 0.5s ease';
             document.body.appendChild(finalOverlay);
-
-            setTimeout(function() {
-                window.location.href = '/arr';
-            }, 500);
+            setTimeout(function() { window.location.href = '/arr'; }, 500);
         }
     } else {
         konamiIndex = 0;
     }
 });
 
-// --------------- Single DOMContentLoaded listener ---------------
+// --------------- Init ---------------
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize GameEngine if available
-    if (typeof GameEngine !== 'undefined') {
-        GameEngine.init();
-        _syncFromEngine();
-    }
+    GameEngine.init();
 
-    // Load fireworks responsive script
+    // Load optional enhancement scripts
     var fireworksScript = document.createElement('script');
     fireworksScript.src = '/static/fireworks-responsive.js';
     fireworksScript.defer = true;
     document.head.appendChild(fireworksScript);
 
-    // Load animations script
     var animationsScript = document.createElement('script');
     animationsScript.src = '/static/animations.js';
     animationsScript.defer = true;

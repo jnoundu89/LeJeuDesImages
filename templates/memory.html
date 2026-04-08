@@ -295,7 +295,7 @@
                     document.getElementById('memory-complete').style.display = 'block';
                     document.getElementById('next').disabled = false;
                     document.getElementById('next').classList.remove('disabled-btn');
-                    clearInterval(timerInterval);
+                    GameEngine.clearTimer();
                 }
             } else {
                 // No match, flip cards back after a delay
@@ -329,7 +329,7 @@
             originalUpdateTimer.apply(this, arguments);
 
             // If timer reaches 0, end the game
-            if (timerValue <= 0 && !gameCompleted) {
+            if (GameEngine.getState().timerValue <= 0 && !gameCompleted) {
                 gameCompleted = true;
 
                 // Reveal all cards
