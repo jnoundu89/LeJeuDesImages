@@ -184,10 +184,10 @@
 
     // Initialize the page
     document.addEventListener('DOMContentLoaded', function () {
+        const currentQuestion = parseInt(document.getElementById('current-question').value);
         const totalQuestions = parseInt(document.getElementById('total-questions').value);
-        const maxScore = parseInt(document.getElementById('max-score').value);
 
-        updateProgressBar(totalQuestions, maxScore);
+        updateProgressBar(currentQuestion, totalQuestions);
         toggleStats();
 
         // Override the timer function

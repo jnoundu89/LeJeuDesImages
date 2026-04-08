@@ -60,6 +60,9 @@
         <input type="hidden" name="correct_value" value="{{ correct_value }}">
         <input type="hidden" id="score-increment" name="score_increment" value="0">
         <input type="hidden" id="correct-answer" name="correct_answer" value="0">
+        <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="current-question" value="{{ current_question }}">
+        <input type="hidden" id="max-score" value="{{ maxScore }}">
 {% endblock %}
 
 {% block game_choices %}

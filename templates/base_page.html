@@ -36,7 +36,7 @@
 
     <!-- Game header -->
     <header class="game-header">
-        <img src="{{ company_logo_url }}" alt="Logo du Jeu Des Images" class="game-logo">
+        {% if company_logo_url %}<img src="{{ company_logo_url }}" alt="Logo du Jeu Des Images" class="game-logo">{% endif %}
         <h1 class="game-title gradient-bg">{% block page_title %}{{ _('Le Jeu Des Images') }}{% endblock %}</h1>
         <p class="game-tagline">{% block page_tagline %}{{ company_tagline }}{% endblock %}</p>
     </header>

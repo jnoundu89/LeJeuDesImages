@@ -151,18 +151,24 @@ var GameEngine = (function() {
             element.classList.remove('processing');
 
             // Disable all buttons in this category
-            var buttons = document.querySelectorAll('#' + currentScoreId + ' button.choice-btn');
+            var buttons = document.querySelectorAll('#' + currentScoreId + ' button.choice-btn, #' + currentScoreId + ' button.normal-choice-btn');
             buttons.forEach(function(btn) {
                 btn.disabled = true;
                 btn.classList.add('disabled-btn');
             });
 
+            var titleEl = document.getElementById(titleId);
+            var labelStrong = titleEl ? titleEl.querySelector('strong') : null;
+            var labelText = labelStrong ? labelStrong.outerHTML : titleId.split('-')[0] + ' :';
+
             if (correct === selected) {
                 element.classList.add('correct');
                 element.classList.remove('disabled-btn');
 
-                document.getElementById(titleId).innerHTML =
-                    titleId.split('-')[0] + ': <span class="success-icon">\u2713</span> 1/1';
+                if (titleEl) {
+                    titleEl.innerHTML =
+                        labelText + ' <span class="success-icon">\u2713</span> 1/1';
+                }
 
                 _state.correctAnswers += 1;
                 _state.currentScore += 1;
@@ -178,8 +184,10 @@ var GameEngine = (function() {
                     }
                 });
 
-                document.getElementById(titleId).innerHTML =
-                    titleId.split('-')[0] + ': <span class="error-icon">\u2717</span> 0/1';
+                if (titleEl) {
+                    titleEl.innerHTML =
+                        labelText + ' <span class="error-icon">\u2717</span> 0/1';
+                }
             }
 
             // Update score display

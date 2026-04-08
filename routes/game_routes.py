@@ -140,7 +140,8 @@ def init_routes(game_mode_factory: GameModeFactory):
             'maxScore': session.get('max_score', 0),
             'stats': stats,
             'currentScore': user_score['score'],
-            'total_questions': len(session['used_indices']),
+            'best_score': user_score.get('best_score', 0),
+            'total_questions': len(mode.game_manager.get_game_data(session['data_id'])),
             'current_question': session.get('current_question', 0),
             'total_employees': len(mode.game_manager.get_game_data(session['data_id'])),
             'use_normal_mode_styles': mode_name == "normal",  # Flag to include normal mode styles

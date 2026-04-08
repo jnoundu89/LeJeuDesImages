@@ -228,9 +228,9 @@
     // Initialize the game when the page loads
     document.addEventListener('DOMContentLoaded', function() {
         // Update progress bar
-        const totalQuestions = document.getElementById('total-questions').value;
-        const maxScore = document.getElementById('max-score').value;
-        updateProgressBar(totalQuestions, maxScore / 4);
+        const currentQuestion = parseInt(document.getElementById('current-question').value);
+        const totalQuestions = parseInt(document.getElementById('total-questions').value);
+        updateProgressBar(currentQuestion, totalQuestions);
 
         // Reset answers count
         resetAnswersCount();

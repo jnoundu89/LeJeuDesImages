@@ -24,8 +24,8 @@ function _syncFromEngine() {
 
 function _syncToEngine() {
     if (typeof GameEngine === 'undefined') return;
-    GameEngine.setState('answersCount', answersCount);
-    GameEngine.setState('correctAnswers', correctAnswers);
+    // Do NOT sync answersCount/correctAnswers back -- GameEngine owns these
+    // and updates them asynchronously inside setTimeout.
     GameEngine.setState('currentScore', currentScore);
     GameEngine.setState('maxScore', maxScore);
     GameEngine.setState('timerValue', timerValue);
