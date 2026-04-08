@@ -642,7 +642,7 @@
 
     const OPTIONAL_FIELDS = [
         { key: 'birth_date', label: "{{ _('Date de naissance') }}" },
-        { key: 'contract_start', label: "{{ _('Date d\\'embauche') }}" },
+        { key: 'contract_start', label: "{{ _("Date d'embauche") }}" },
         { key: 'manager_name', label: "{{ _('Manager') }}" },
     ];
 
@@ -707,7 +707,7 @@
             .then(r => r.json().then(data => ({ ok: r.ok, data })))
             .then(({ ok, data }) => {
                 if (!ok) {
-                    status.textContent = data.error || "{{ _('Erreur lors de l\\'envoi') }}";
+                    status.textContent = data.error || "{{ _("Erreur lors de l'envoi") }}";
                     status.className = 'upload-status error';
                     return;
                 }
@@ -826,7 +826,7 @@
             .then(r => r.json().then(data => ({ ok: r.ok, data })))
             .then(({ ok, data }) => {
                 if (!ok) {
-                    status.textContent = data.error || "{{ _('Erreur lors de l\\'envoi') }}";
+                    status.textContent = data.error || "{{ _("Erreur lors de l'envoi") }}";
                     status.className = 'upload-status error';
                     return;
                 }

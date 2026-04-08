@@ -45,7 +45,7 @@ def live_app():
 
 
 @pytest.mark.e2e
-@pytest.mark.parametrize('path', ['/', '/about', '/how-to-play', '/scores'])
+@pytest.mark.parametrize('path', ['/', '/about', '/how-to-play', '/scores', '/setup'])
 def test_pages_load(page: Page, live_app: str, path: str):
     response = page.goto(f'{live_app}{path}')
     assert response is not None
@@ -62,9 +62,10 @@ def test_game_flow(page: Page, live_app: str):
 
 
 @pytest.mark.e2e
-@pytest.mark.skip(reason='setup.html has a pre-existing Jinja2 escape bug')
 def test_setup_wizard_loads(page: Page, live_app: str):
-    page.goto(f'{live_app}/setup')
+    response = page.goto(f'{live_app}/setup')
+    assert response is not None
+    assert response.status == 200
     company_name_input = page.locator('#company-name')
     assert company_name_input.is_visible()
 
