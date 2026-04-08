@@ -1,6 +1,6 @@
 # Le Jeu Des Images
 
-Company-agnostic team recognition game. 19+ game modes, configurable for any company via `config.yaml` or `/setup` wizard.
+Company-agnostic team recognition game. 22 game modes, configurable for any company via `config.yaml` or `/setup` wizard.
 
 ## Critical Rules
 
@@ -9,16 +9,18 @@ Company-agnostic team recognition game. 19+ game modes, configurable for any com
 3. **All user-visible text must be i18n** -- `{{ _('...') }}` in templates, `_l('...')` in Python
 4. **New templates must extend a base** -- `base_game.html`, `base_page.html`, or `base.html`
 5. **config.yaml is gitignored** -- only `config.example.yaml` is committed. No personal data in repo.
+6. **Use `Employee` class** -- `models/employee.py:Employee(dict)` provides `full_name`, `image_url`, `name`, `position`, `id` properties. Never manually enrich dicts.
 
 ## Stack
 
-Flask, Flask-Babel (FR/EN), Python 3.10+, pandas, TinyDB, vanilla JS (`GameEngine` IIFE), Docker
+Flask, Flask-Babel (FR/EN), Python 3.10+, pandas, TinyDB, Alpine.js, Docker
 
 ## Quick Reference
 
 ```bash
-make test          # 65 unit tests (excludes E2E)
+make test          # 253 tests (excludes E2E)
 make test-e2e      # 7 Playwright E2E tests (needs: uv run playwright install chromium)
+make typecheck     # pyright type checking (models/ + routes/)
 make lint          # ruff
 make format        # ruff format
 make validate-data # check CSV + photos
@@ -40,29 +42,29 @@ LICENSE                    # MIT
 
 models/
   config.py                # CompanyConfig -- load/save config.yaml
-  employee.py              # EmployeeData -- column normalization at load time
-  score.py                 # ScoreManager -- per-mode scores, flexible stat_updates dict
-  game.py                  # GameManager -- orchestration, cache
+  employee.py              # Employee(dict) class + EmployeeData (CSV loader)
+  score.py                 # ScoreManager -- per-mode scores, best_score tracking
+  game.py                  # GameManager -- data cache only (no mode logic)
   game_mode.py             # GameMode ABC + helpers + NormalMode + ReverseMode + Factory
-  *_mode.py                # 18+ modes (auto-discovered, no registration needed)
+  *_mode.py                # 20+ modes (auto-discovered, no registration needed)
 
 routes/
-  game_routes.py           # Generic /check via mode.handle_answer()
+  game_routes.py           # Generic /check via mode.handle_answer(), no mode special-casing
   card_game_routes.py      # Card game API
   admin_routes.py          # /setup wizard (password-protected via ADMIN_PASSWORD env)
 
 templates/
   base.html -> base_page.html -> page templates (mode_selection, about, scores, ...)
-  base.html -> base_game.html -> game templates (pixelation, timed, clue, ...)
+  base.html -> base_game.html -> game templates (Alpine.js powered)
   setup.html               # Admin wizard (extends base.html)
 
-static/game-engine.js      # GameEngine IIFE (single source for checkAnswer, timer, confetti)
-translations/              # FR/EN catalogs (227 strings)
-tests/                     # 72 tests (65 unit + 7 E2E Playwright)
+static/game-alpine.js      # Alpine.js components (timer, answer checking, progress bar)
+translations/              # FR/EN catalogs
+tests/                     # 253 tests (unit + integration + flow, 7 E2E Playwright)
 tools/validate_data.py     # CSV + photo validation CLI
 
 .claude/                   # Claude Code integration
-  settings.json            # Permissions, pre-commit hooks, Playwright MCP
+  settings.json            # Permissions, pre-commit hooks
   agents/                  # game-mode-creator, i18n-updater, template-migrator,
                            # release-preparer, code-reviewer, ui-tester
   commands/                # add-game-mode, update-translations, check-release,
@@ -75,7 +77,7 @@ tools/validate_data.py     # CSV + photo validation CLI
 Use the `game-mode-creator` agent or do it manually:
 
 1. Create `models/my_mode.py` -- extend `GameMode`, use helpers `_pick_next_employee()`, `_get_name_choices()`, `_make_full_name()`. Wrap description in `_l()`.
-2. Create `templates/my_mode.html` -- extend `base_game.html`. Wrap text in `_()`.
+2. Create `templates/my_mode.html` -- extend `base_game.html`. Use Alpine.js `x-data="singleAnswer('{{ correct }}')"` + `@click="check(value, $el)"`. Wrap text in `_()`.
 3. Done. Auto-discovery handles registration.
 
 Reference: `models/pixelation_mode.py` (simple), `models/clue_mode.py` (complex).
@@ -83,13 +85,13 @@ Reference: `models/pixelation_mode.py` (simple), `models/clue_mode.py` (complex)
 ## Architecture (brief)
 
 - **Auto-discovery**: `pkgutil.iter_modules` scans `models/*_mode.py` -- no imports in app.py
-- **Generic routes**: `/check` calls `mode.handle_answer(user_id, form, session)` -- no if-elif
+- **Generic routes**: `/check` calls `mode.handle_answer(user_id, form, session)` -- no if-elif, no mode special-casing
+- **Employee class**: `Employee(dict)` with computed properties (`full_name`, `image_url`, `name`, `position`, `id`). All modes return Employee objects, no manual enrichment.
 - **Column mapping**: applied once in `EmployeeData.__init__()` via `config.reverse_mapping()`
-- **Scores**: `update_score(user_id, increment, stat_updates={'name': 1})` -- flexible dict, per-mode
-- **i18n**: `_()` in templates, `_l()` for class-level strings, cookie-based locale (`/lang/fr`, `/lang/en`)
-
-For deeper architecture docs, see `.claude/memory/architecture-decisions.md`.
-For known pitfalls, see `.claude/memory/known-patterns.md`.
+- **GameManager**: pure data cache (`store_game_data`/`get_game_data`). No mode-specific logic.
+- **Scores**: `update_score(user_id, increment, stat_updates={'name': 1})` -- flexible dict, per-mode. `best_score` tracked automatically.
+- **Frontend**: Alpine.js components (`gameTimer`, `singleAnswer`, `imageAnswer`, `normalMode`, `progressBar`). No vanilla JS globals. State in `Alpine.store('game')`.
+- **i18n**: `_()` in templates, `_l()` for class-level strings, cookie-based locale (`/lang/fr`, `/lang/en`). JS reads i18n from `data-label` attributes.
 
 ## Route Map
 
@@ -107,6 +109,7 @@ GET  /lang/<code>   -> set locale cookie
 ## Conventions
 
 - **Commits**: `type(scope): description` -- feat, fix, refactor, chore, docs, test
-- **Python**: PEP 8, ruff enforced, single quotes
+- **Python**: PEP 8, ruff enforced, pyright basic mode (0 errors)
 - **Tests**: `tests/`, pytest, fixtures in `conftest.py`. E2E tests marked `@pytest.mark.e2e`
+- **JS**: Alpine.js components in `static/game-alpine.js`. No inline `game_scripts` blocks (except 5 modes with custom effects).
 - **No company data in repo**: `config.yaml`, `data/`, `static/images/` are all gitignored

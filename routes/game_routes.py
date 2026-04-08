@@ -226,7 +226,9 @@ def init_routes(game_mode_factory: GameModeFactory):
         from flask import jsonify
 
         # Get all employees from the game manager
-        employee_data = game_mode_factory.get_mode("normal").game_manager.employee_data
+        mode = game_mode_factory.get_mode("normal")
+        assert mode is not None
+        employee_data = mode.game_manager.employee_data
         employees = employee_data.get_all_employees()
 
         # Extract image URLs
@@ -254,7 +256,9 @@ def init_routes(game_mode_factory: GameModeFactory):
         Render the scores page.
         """
         # Get the score manager from any game mode
-        score_manager = game_mode_factory.get_mode("normal").game_manager.score_manager
+        mode = game_mode_factory.get_mode("normal")
+        assert mode is not None
+        score_manager = mode.game_manager.score_manager
 
         # Get top scores for different modes
         top_scores = {

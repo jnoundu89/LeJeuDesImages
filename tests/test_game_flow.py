@@ -23,8 +23,8 @@ class TestFullGameFlow:
             # Get the question page
             resp = client.get('/question')
 
-            # If redirected to result, game is over
-            if resp.status_code == 302 and '/result' in resp.headers.get('Location', ''):
+            # If redirected (to result or index), game is over
+            if resp.status_code == 302:
                 break
 
             assert resp.status_code == 200

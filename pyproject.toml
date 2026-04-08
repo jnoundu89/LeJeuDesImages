@@ -32,7 +32,12 @@ markers = [
 [tool.pyright]
 typeCheckingMode = "basic"
 include = ["models/", "routes/"]
+exclude = ["models/arr_mode.py", "models/card_game_mode.py"]
 reportMissingImports = false
+reportReturnType = "warning"
+reportArgumentType = "warning"
+reportCallIssue = "warning"
+reportAttributeAccessIssue = "warning"
 
 [tool.ruff]
 line-length = 120

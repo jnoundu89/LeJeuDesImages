@@ -1,7 +1,7 @@
 # models/game_mode.py
 import random
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from flask_babel import lazy_gettext as _l
 
@@ -22,7 +22,7 @@ class GameMode(ABC):
 
     @property
     @abstractmethod
-    def description(self) -> str:
+    def description(self) -> Union[str, Any]:  # LazyString from flask_babel
         pass
 
     @property

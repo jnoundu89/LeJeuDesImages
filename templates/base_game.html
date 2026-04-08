@@ -57,11 +57,11 @@
     </div>
 </div>
 
-<form action="/check" method="post" {% block form_attrs %}{% endblock %}>
+<form action="/check" method="post" {% block form_attrs %}{% endblock %} x-data>
     <button type="submit" id="next"
             :disabled="!$store.game.nextEnabled"
             :class="{ 'disabled-btn': !$store.game.nextEnabled }"
-            class="{% if not game_over %}disabled-btn{% endif %}">
+            class="disabled-btn">
         {{ _('Personne suivante') }}
     </button>
     {% block form_fields %}

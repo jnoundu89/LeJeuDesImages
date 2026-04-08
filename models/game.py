@@ -25,7 +25,7 @@ class GameManager:
         self.score_manager = score_manager
         self.game_data_cache = {}
 
-    def store_game_data(self, data: List[Dict[str, Any]]) -> int:
+    def store_game_data(self, data: Any) -> int:
         """
         Store game data in the cache and return a unique ID.
 
@@ -39,7 +39,7 @@ class GameManager:
         self.game_data_cache[data_id] = data
         return data_id
 
-    def get_game_data(self, data_id: int) -> List[Dict[str, Any]]:
+    def get_game_data(self, data_id: int) -> Any:
         """
         Get game data from the cache.
 
