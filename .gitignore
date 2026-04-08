@@ -56,6 +56,9 @@ Thumbs.db
 logs/
 *.log
 
+# Uploads (temp directory for admin setup)
+uploads/
+
 # Company data (CSV + photos) -- do not commit
 data/*
 !data/.gitkeep

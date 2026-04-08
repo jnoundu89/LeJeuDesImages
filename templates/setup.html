@@ -1,0 +1,932 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Configuration') }} - {{ _('Le Jeu Des Images') }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    body {
+        font-family: var(--font-primary);
+        background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+        color: var(--light);
+        min-height: 100vh;
+        margin: 0;
+    }
+
+    .setup-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+    }
+
+    .setup-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .setup-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .setup-header p {
+        opacity: 0.8;
+        font-size: 0.95rem;
+    }
+
+    /* Stepper */
+    .stepper {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .step-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--border-radius-xl);
+        background: rgba(255, 255, 255, 0.08);
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        border: 2px solid transparent;
+    }
+
+    .step-indicator:hover {
+        background: rgba(255, 255, 255, 0.12);
+    }
+
+    .step-indicator.active {
+        background: rgba(63, 81, 181, 0.3);
+        border-color: var(--primary-light);
+    }
+
+    .step-indicator.completed {
+        background: rgba(76, 175, 80, 0.2);
+        border-color: var(--success);
+    }
+
+    .step-number {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+    .step-indicator.active .step-number {
+        background: var(--primary);
+    }
+
+    .step-indicator.completed .step-number {
+        background: var(--success);
+    }
+
+    /* Panels */
+    .step-panel {
+        display: none;
+        background: var(--dark-surface);
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .step-panel.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-panel h2 {
+        margin-top: 0;
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Form elements */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.4rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: var(--primary-light);
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="url"],
+    .form-group select {
+        width: 100%;
+        padding: 0.65rem 0.85rem;
+        border-radius: var(--border-radius-md);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--light);
+        font-family: inherit;
+        font-size: 0.9rem;
+        transition: var(--transition-fast);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        background: rgba(255, 255, 255, 0.1);
+    }
+
+    .form-group select option {
+        background: var(--dark-surface);
+        color: var(--light);
+    }
+
+    /* File upload */
+    .file-drop-zone {
+        border: 2px dashed rgba(255, 255, 255, 0.2);
+        border-radius: var(--border-radius-lg);
+        padding: 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        margin-bottom: 1rem;
+    }
+
+    .file-drop-zone:hover,
+    .file-drop-zone.drag-over {
+        border-color: var(--primary-light);
+        background: rgba(63, 81, 181, 0.1);
+    }
+
+    .file-drop-zone i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--primary-light);
+    }
+
+    .file-drop-zone p {
+        margin: 0.3rem 0;
+        opacity: 0.8;
+    }
+
+    .file-drop-zone .hint {
+        font-size: 0.8rem;
+        opacity: 0.5;
+    }
+
+    /* CSV preview table */
+    .csv-preview {
+        overflow-x: auto;
+        margin-top: 1rem;
+    }
+
+    .csv-preview table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+    }
+
+    .csv-preview th,
+    .csv-preview td {
+        padding: 0.5rem 0.65rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        white-space: nowrap;
+    }
+
+    .csv-preview th {
+        background: rgba(63, 81, 181, 0.2);
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+    }
+
+    .csv-preview tr:hover td {
+        background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* Column mapping */
+    .mapping-section {
+        margin-top: 1.5rem;
+    }
+
+    .mapping-section h3 {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+        color: var(--primary-light);
+    }
+
+    .mapping-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+
+    .mapping-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .mapping-item label {
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .mapping-item .field-tag {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.4rem;
+        border-radius: 3px;
+        background: rgba(244, 67, 54, 0.2);
+        color: #ef9a9a;
+        display: inline-block;
+        margin-left: 0.3rem;
+    }
+
+    .mapping-item .field-tag.optional {
+        background: rgba(255, 152, 0, 0.2);
+        color: #ffcc80;
+    }
+
+    /* Summary */
+    .summary-section {
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-section h3 {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        color: var(--primary-light);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .summary-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .summary-table td {
+        padding: 0.4rem 0.65rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        font-size: 0.9rem;
+    }
+
+    .summary-table td:first-child {
+        font-weight: 500;
+        color: var(--primary-light);
+        width: 40%;
+    }
+
+    /* Buttons */
+    .btn-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        gap: 1rem;
+    }
+
+    .btn {
+        padding: 0.65rem 1.5rem;
+        border-radius: var(--border-radius-md);
+        border: none;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: var(--transition-fast);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-light);
+    }
+
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--light);
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-success {
+        background: var(--success);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #66bb6a;
+    }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        padding: 1rem 1.5rem;
+        border-radius: var(--border-radius-md);
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        display: none;
+    }
+
+    .toast.success {
+        background: var(--success);
+    }
+
+    .toast.error {
+        background: var(--error);
+    }
+
+    .toast.show {
+        display: block;
+    }
+
+    @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* Upload status */
+    .upload-status {
+        padding: 0.75rem 1rem;
+        border-radius: var(--border-radius-md);
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        display: none;
+    }
+
+    .upload-status.success {
+        background: rgba(76, 175, 80, 0.15);
+        border: 1px solid rgba(76, 175, 80, 0.3);
+        color: #a5d6a7;
+        display: block;
+    }
+
+    .upload-status.error {
+        background: rgba(244, 67, 54, 0.15);
+        border: 1px solid rgba(244, 67, 54, 0.3);
+        color: #ef9a9a;
+        display: block;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        color: var(--primary-light);
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        opacity: 0.8;
+        transition: var(--transition-fast);
+    }
+
+    .back-link:hover {
+        opacity: 1;
+    }
+
+    .photos-note {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        background: rgba(255, 152, 0, 0.1);
+        border: 1px solid rgba(255, 152, 0, 0.25);
+        border-radius: var(--border-radius-md);
+        font-size: 0.85rem;
+        color: #ffcc80;
+    }
+
+    @media (max-width: 600px) {
+        .mapping-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .stepper {
+            gap: 0.3rem;
+        }
+
+        .step-indicator {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+        }
+
+        .step-panel {
+            padding: 1.25rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="setup-container">
+    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> {{ _('Retour au jeu') }}</a>
+
+    <div class="setup-header">
+        <h1><i class="fas fa-cog"></i> {{ _('Configuration du jeu') }}</h1>
+        <p>{{ _('Configurez le jeu pour votre entreprise en quelques etapes.') }}</p>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper">
+        <div class="step-indicator active" data-step="1" onclick="goToStep(1)">
+            <span class="step-number">1</span>
+            <span>{{ _('Branding') }}</span>
+        </div>
+        <div class="step-indicator" data-step="2" onclick="goToStep(2)">
+            <span class="step-number">2</span>
+            <span>{{ _('Donnees') }}</span>
+        </div>
+        <div class="step-indicator" data-step="3" onclick="goToStep(3)">
+            <span class="step-number">3</span>
+            <span>{{ _('Photos') }}</span>
+        </div>
+        <div class="step-indicator" data-step="4" onclick="goToStep(4)">
+            <span class="step-number">4</span>
+            <span>{{ _('Resume') }}</span>
+        </div>
+    </div>
+
+    <!-- Step 1: Company Branding -->
+    <div class="step-panel active" id="step-1">
+        <h2><i class="fas fa-building"></i> {{ _('Branding entreprise') }}</h2>
+
+        <div class="form-group">
+            <label for="company-name">{{ _('Nom de l\'entreprise') }}</label>
+            <input type="text" id="company-name"
+                   value="{{ current_config.get('company', {}).get('name', '') }}"
+                   placeholder="{{ _('Ex: Mon Entreprise') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="logo-url">{{ _('URL du logo') }}</label>
+            <input type="url" id="logo-url"
+                   value="{{ current_config.get('company', {}).get('logo_url', '') }}"
+                   placeholder="https://example.com/logo.png">
+        </div>
+
+        <div class="form-group">
+            <label for="contact-email">{{ _('Email de contact') }}</label>
+            <input type="email" id="contact-email"
+                   value="{{ current_config.get('company', {}).get('contact_email', '') }}"
+                   placeholder="contact@example.com">
+        </div>
+
+        <div class="form-group">
+            <label for="tagline">{{ _('Tagline') }}</label>
+            <input type="text" id="tagline"
+                   value="{{ current_config.get('company', {}).get('tagline', '') }}"
+                   placeholder="{{ _('Ex: Testez votre connaissance de vos collegues !') }}">
+        </div>
+
+        <div class="btn-row">
+            <span></span>
+            <button class="btn btn-primary" onclick="goToStep(2)">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 2: Employee Data -->
+    <div class="step-panel" id="step-2">
+        <h2><i class="fas fa-users"></i> {{ _('Donnees employes') }}</h2>
+
+        <div class="file-drop-zone" id="csv-drop-zone">
+            <input type="file" id="csv-file-input" accept=".csv" style="display:none">
+            <i class="fas fa-file-csv"></i>
+            <p>{{ _('Glissez votre fichier CSV ici ou cliquez pour parcourir') }}</p>
+            <p class="hint">{{ _('Format: CSV avec colonnes pour nom, prenom, photo, equipe, etc.') }}</p>
+        </div>
+
+        <div class="upload-status" id="csv-upload-status"></div>
+
+        <div class="csv-preview" id="csv-preview" style="display:none">
+            <h3>{{ _('Apercu des donnees') }}</h3>
+            <div id="csv-table-container"></div>
+        </div>
+
+        <div class="mapping-section" id="mapping-section" style="display:none">
+            <h3>{{ _('Correspondance des colonnes') }}</h3>
+            <p style="font-size:0.85rem;opacity:0.7;margin-bottom:1rem">
+                {{ _('Associez chaque champ du jeu a une colonne de votre CSV.') }}
+            </p>
+
+            <div class="mapping-grid" id="mapping-grid"></div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(1)">
+                <i class="fas fa-arrow-left"></i> {{ _('Precedent') }}
+            </button>
+            <button class="btn btn-primary" onclick="goToStep(3)">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 3: Photos -->
+    <div class="step-panel" id="step-3">
+        <h2><i class="fas fa-images"></i> {{ _('Photos') }}</h2>
+
+        <div class="file-drop-zone" id="photos-drop-zone">
+            <input type="file" id="photos-file-input" accept=".zip" style="display:none">
+            <i class="fas fa-file-archive"></i>
+            <p>{{ _('Glissez un fichier ZIP contenant les photos ici') }}</p>
+            <p class="hint">{{ _('Formats acceptes: JPG, PNG, GIF, WebP') }}</p>
+        </div>
+
+        <div class="upload-status" id="photos-upload-status"></div>
+
+        <div class="photos-note">
+            <i class="fas fa-info-circle"></i>
+            {{ _('Les photos peuvent aussi etre placees manuellement dans le repertoire d\'images configure.') }}
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(2)">
+                <i class="fas fa-arrow-left"></i> {{ _('Precedent') }}
+            </button>
+            <button class="btn btn-primary" onclick="buildSummary(); goToStep(4)">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 4: Summary & Save -->
+    <div class="step-panel" id="step-4">
+        <h2><i class="fas fa-check-circle"></i> {{ _('Resume et sauvegarde') }}</h2>
+
+        <div class="summary-section">
+            <h3><i class="fas fa-building"></i> {{ _('Entreprise') }}</h3>
+            <table class="summary-table" id="summary-company"></table>
+        </div>
+
+        <div class="summary-section">
+            <h3><i class="fas fa-database"></i> {{ _('Donnees') }}</h3>
+            <table class="summary-table" id="summary-data"></table>
+        </div>
+
+        <div class="summary-section">
+            <h3><i class="fas fa-columns"></i> {{ _('Mapping colonnes') }}</h3>
+            <table class="summary-table" id="summary-mapping"></table>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(3)">
+                <i class="fas fa-arrow-left"></i> {{ _('Precedent') }}
+            </button>
+            <button class="btn btn-success" id="save-btn" onclick="saveConfig()">
+                <i class="fas fa-save"></i> {{ _('Sauvegarder la configuration') }}
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast notification -->
+    <div class="toast" id="toast"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    'use strict';
+
+    // -- State --
+    let currentStep = 1;
+    let csvColumns = [];
+    let csvFilename = '';
+    const currentConfig = {{ current_config | tojson }};
+
+    const REQUIRED_FIELDS = [
+        { key: 'first_name', label: "{{ _('Prenom') }}" },
+        { key: 'last_name', label: "{{ _('Nom') }}" },
+        { key: 'photo', label: "{{ _('Photo') }}" },
+        { key: 'team', label: "{{ _('Equipe') }}" },
+        { key: 'job_title', label: "{{ _('Poste') }}" },
+        { key: 'company', label: "{{ _('Societe') }}" },
+        { key: 'sex', label: "{{ _('Sexe') }}" },
+    ];
+
+    const OPTIONAL_FIELDS = [
+        { key: 'birth_date', label: "{{ _('Date de naissance') }}" },
+        { key: 'contract_start', label: "{{ _('Date d\\'embauche') }}" },
+        { key: 'manager_name', label: "{{ _('Manager') }}" },
+    ];
+
+    // -- Step navigation --
+    window.goToStep = function (step) {
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.step-indicator').forEach(s => s.classList.remove('active'));
+
+        document.getElementById('step-' + step).classList.add('active');
+        document.querySelector('.step-indicator[data-step="' + step + '"]').classList.add('active');
+
+        // Mark previous steps as completed
+        for (let i = 1; i < step; i++) {
+            document.querySelector('.step-indicator[data-step="' + i + '"]').classList.add('completed');
+        }
+
+        currentStep = step;
+    };
+
+    // -- Toast --
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(() => { toast.classList.remove('show'); }, 4000);
+    }
+
+    // -- CSV upload --
+    const csvDropZone = document.getElementById('csv-drop-zone');
+    const csvFileInput = document.getElementById('csv-file-input');
+
+    csvDropZone.addEventListener('click', () => csvFileInput.click());
+
+    csvDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        csvDropZone.classList.add('drag-over');
+    });
+
+    csvDropZone.addEventListener('dragleave', () => {
+        csvDropZone.classList.remove('drag-over');
+    });
+
+    csvDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        csvDropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) uploadCSV(e.dataTransfer.files[0]);
+    });
+
+    csvFileInput.addEventListener('change', () => {
+        if (csvFileInput.files.length) uploadCSV(csvFileInput.files[0]);
+    });
+
+    function uploadCSV(file) {
+        const status = document.getElementById('csv-upload-status');
+        status.className = 'upload-status';
+        status.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/setup/upload-csv', { method: 'POST', body: formData })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    status.textContent = data.error || "{{ _('Erreur lors de l\\'envoi') }}";
+                    status.className = 'upload-status error';
+                    return;
+                }
+
+                status.textContent = "{{ _('CSV charge avec succes') }}: " + data.columns.length + " {{ _('colonnes detectees') }}";
+                status.className = 'upload-status success';
+
+                csvColumns = data.columns;
+                csvFilename = data.filename;
+
+                renderPreview(data.columns, data.preview);
+                renderMappingSelects();
+            })
+            .catch(() => {
+                status.textContent = "{{ _('Erreur reseau') }}";
+                status.className = 'upload-status error';
+            });
+    }
+
+    function renderPreview(columns, rows) {
+        const container = document.getElementById('csv-table-container');
+        let html = '<table><thead><tr>';
+        columns.forEach(c => { html += '<th>' + escapeHtml(c) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        rows.forEach(row => {
+            html += '<tr>';
+            columns.forEach(c => { html += '<td>' + escapeHtml(String(row[c] || '')) + '</td>'; });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        document.getElementById('csv-preview').style.display = 'block';
+    }
+
+    function renderMappingSelects() {
+        const grid = document.getElementById('mapping-grid');
+        grid.innerHTML = '';
+
+        const existingMapping = currentConfig?.data?.column_mapping || {};
+
+        function makeSelect(field, required) {
+            const div = document.createElement('div');
+            div.className = 'mapping-item';
+
+            const label = document.createElement('label');
+            label.textContent = field.label;
+            const tag = document.createElement('span');
+            tag.className = 'field-tag' + (required ? '' : ' optional');
+            tag.textContent = required ? "{{ _('requis') }}" : "{{ _('optionnel') }}";
+            label.appendChild(tag);
+            div.appendChild(label);
+
+            const select = document.createElement('select');
+            select.id = 'map-' + field.key;
+
+            if (!required) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = "-- {{ _('Non utilise') }} --";
+                select.appendChild(opt);
+            }
+
+            csvColumns.forEach(col => {
+                const opt = document.createElement('option');
+                opt.value = col;
+                opt.textContent = col;
+                // Auto-select from existing mapping
+                if (existingMapping[field.key] === col) opt.selected = true;
+                select.appendChild(opt);
+            });
+
+            div.appendChild(select);
+            grid.appendChild(div);
+        }
+
+        REQUIRED_FIELDS.forEach(f => makeSelect(f, true));
+        OPTIONAL_FIELDS.forEach(f => makeSelect(f, false));
+
+        document.getElementById('mapping-section').style.display = 'block';
+    }
+
+    // -- Photos upload --
+    const photosDropZone = document.getElementById('photos-drop-zone');
+    const photosFileInput = document.getElementById('photos-file-input');
+
+    photosDropZone.addEventListener('click', () => photosFileInput.click());
+
+    photosDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        photosDropZone.classList.add('drag-over');
+    });
+
+    photosDropZone.addEventListener('dragleave', () => {
+        photosDropZone.classList.remove('drag-over');
+    });
+
+    photosDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        photosDropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) uploadPhotos(e.dataTransfer.files[0]);
+    });
+
+    photosFileInput.addEventListener('change', () => {
+        if (photosFileInput.files.length) uploadPhotos(photosFileInput.files[0]);
+    });
+
+    function uploadPhotos(file) {
+        const status = document.getElementById('photos-upload-status');
+        status.className = 'upload-status';
+        status.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('/setup/upload-photos', { method: 'POST', body: formData })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    status.textContent = data.error || "{{ _('Erreur lors de l\\'envoi') }}";
+                    status.className = 'upload-status error';
+                    return;
+                }
+
+                status.textContent = data.extracted + " {{ _('photos extraites avec succes') }}";
+                status.className = 'upload-status success';
+            })
+            .catch(() => {
+                status.textContent = "{{ _('Erreur reseau') }}";
+                status.className = 'upload-status error';
+            });
+    }
+
+    // -- Summary --
+    window.buildSummary = function () {
+        const companyTable = document.getElementById('summary-company');
+        companyTable.innerHTML = summaryRow("{{ _('Nom') }}", document.getElementById('company-name').value)
+            + summaryRow("{{ _('Logo') }}", document.getElementById('logo-url').value || '-')
+            + summaryRow("{{ _('Email') }}", document.getElementById('contact-email').value || '-')
+            + summaryRow("{{ _('Tagline') }}", document.getElementById('tagline').value || '-');
+
+        const dataTable = document.getElementById('summary-data');
+        dataTable.innerHTML = summaryRow("{{ _('Fichier CSV') }}", csvFilename || currentConfig?.data?.csv_path || '-')
+            + summaryRow("{{ _('Colonnes') }}", csvColumns.length ? csvColumns.length : '-');
+
+        const mappingTable = document.getElementById('summary-mapping');
+        let mappingHtml = '';
+        REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).forEach(f => {
+            const sel = document.getElementById('map-' + f.key);
+            const val = sel ? sel.value : (currentConfig?.data?.column_mapping?.[f.key] || '-');
+            mappingHtml += summaryRow(f.label, val || '-');
+        });
+        mappingTable.innerHTML = mappingHtml;
+    };
+
+    function summaryRow(label, value) {
+        return '<tr><td>' + escapeHtml(label) + '</td><td>' + escapeHtml(value) + '</td></tr>';
+    }
+
+    // -- Save --
+    window.saveConfig = function () {
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true;
+
+        const mapping = {};
+        REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).forEach(f => {
+            const sel = document.getElementById('map-' + f.key);
+            const val = sel ? sel.value : (currentConfig?.data?.column_mapping?.[f.key] || '');
+            if (val) mapping[f.key] = val;
+        });
+
+        const payload = {
+            company: {
+                name: document.getElementById('company-name').value,
+                logo_url: document.getElementById('logo-url').value,
+                contact_email: document.getElementById('contact-email').value,
+                tagline: document.getElementById('tagline').value,
+            },
+            column_mapping: mapping,
+            csv_filename: csvFilename || currentConfig?.data?.csv_path || '',
+            images_dir: currentConfig?.data?.images_dir || 'static/images',
+        };
+
+        fetch('/setup/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                btn.disabled = false;
+                if (!ok) {
+                    showToast(data.error || "{{ _('Erreur lors de la sauvegarde') }}", 'error');
+                    return;
+                }
+                showToast("{{ _('Configuration sauvegardee avec succes !') }}", 'success');
+            })
+            .catch(() => {
+                btn.disabled = false;
+                showToast("{{ _('Erreur reseau') }}", 'error');
+            });
+    };
+
+    // -- Util --
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // Initialize mapping selects if config already has columns info
+    if (currentConfig?.data?.column_mapping && Object.keys(currentConfig.data.column_mapping).length) {
+        // Pre-fill columns from existing mapping values
+        const existingCols = Object.values(currentConfig.data.column_mapping);
+        if (existingCols.length && !csvColumns.length) {
+            csvColumns = [...new Set(existingCols)];
+            csvFilename = currentConfig?.data?.csv_path || '';
+            renderMappingSelects();
+        }
+    }
+})();
+</script>
+{% endblock %}

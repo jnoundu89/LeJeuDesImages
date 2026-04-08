@@ -64,3 +64,8 @@ class CompanyConfig:
     def reverse_mapping(self) -> dict:
         """Return {csv_column: canonical_name} for renaming DataFrame columns."""
         return {v: k for k, v in self._column_mapping.items()}
+
+    @staticmethod
+    def save(config_dict: dict, config_path: str = 'config.yaml'):
+        with open(config_path, 'w', encoding='utf-8') as f:
+            yaml.dump(config_dict, f, default_flow_style=False, allow_unicode=True)

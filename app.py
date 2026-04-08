@@ -13,6 +13,7 @@ from models.employee import EmployeeData
 from models.game import GameManager
 from models.game_mode import GameMode, GameModeFactory, NormalMode, ReverseMode
 from models.score import ScoreManager
+from routes.admin_routes import admin_bp
 from routes.card_game_routes import register_card_game_blueprint
 from routes.game_routes import game_bp, init_routes
 
@@ -62,6 +63,7 @@ def create_app():
 
     # Register blueprints
     app.register_blueprint(game_bp)
+    app.register_blueprint(admin_bp)
 
     # Inject company branding + current locale into all templates
     @app.context_processor
