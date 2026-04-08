@@ -91,6 +91,10 @@ class ScoreManager:
         user_score['score'] += score_increment
         user_score['total_correct_answers'] += score_increment
 
+        # Track best score
+        if user_score['score'] > user_score.get('best_score', 0):
+            user_score['best_score'] = user_score['score']
+
         if stat_updates:
             stats = user_score.get('stats', {})
             for key, value in stat_updates.items():

@@ -37,7 +37,7 @@
         </div>
         {% endblock %}
         {% block game_content %}{% endblock %}
-        <div id="timer" class="timer">{{ _('Temps restant: 60s') }}</div>
+        <div id="timer" class="timer" data-label="{{ _('Temps restant') }}">{{ _('Temps restant: 60s') }}</div>
         {% block after_timer %}{% endblock %}
     </div>
 
@@ -46,7 +46,7 @@
         <div class="stats score-section">
             <h2>{{ _('Scores') }}</h2>
             {% block score_display %}
-            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p id="current-score" data-label="{{ _('Score actuel') }}">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
             {% endblock %}
         </div>
     </div>

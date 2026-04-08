@@ -196,7 +196,8 @@ var GameEngine = (function() {
                 scoreElement.classList.add('score-updated');
                 var displayCurrentScore = isNaN(_state.currentScore) ? 0 : _state.currentScore;
                 var displayMaxScore = isNaN(_state.maxScore) ? 0 : _state.maxScore;
-                scoreElement.textContent = 'Score actuel : ' + displayCurrentScore + ' / ' + displayMaxScore;
+                var _scoreLabel = scoreElement.getAttribute('data-label') || 'Score actuel';
+                scoreElement.textContent = _scoreLabel + ' : ' + displayCurrentScore + ' / ' + displayMaxScore;
             }
 
             if (scoreElement) {
@@ -303,8 +304,10 @@ var GameEngine = (function() {
 
         timerElement.classList.remove('warning', 'danger');
 
+        var _timerLabel = timerElement.getAttribute('data-label') || 'Temps restant';
+
         if (_state.timerValue > 0) {
-            timerElement.textContent = 'Temps restant: ' + _state.timerValue + 's';
+            timerElement.textContent = _timerLabel + ': ' + _state.timerValue + 's';
 
             if (_state.timerValue <= 20 && _state.timerValue > 10) {
                 timerElement.classList.add('warning');
@@ -312,7 +315,7 @@ var GameEngine = (function() {
                 timerElement.classList.add('danger');
             }
         } else {
-            timerElement.textContent = 'Temps \u00e9coul\u00e9 !';
+            timerElement.textContent = _timerLabel.replace(/restant|remaining/i, '') + '- 0s';
             timerElement.classList.add('danger');
         }
     };
