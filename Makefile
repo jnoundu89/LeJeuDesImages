@@ -1,4 +1,4 @@
-.PHONY: run test test-e2e lint format validate-data install babel-extract babel-init babel-update babel-compile
+.PHONY: run test test-e2e lint format validate-data install babel-extract babel-init babel-update babel-compile typecheck
 
 install:
 	uv sync --extra dev
@@ -11,6 +11,9 @@ test:
 
 test-e2e:
 	uv run pytest tests/test_e2e.py -v -m e2e
+
+typecheck:
+	uv run --extra dev pyright models/ routes/
 
 lint:
 	uv run --extra dev ruff check .

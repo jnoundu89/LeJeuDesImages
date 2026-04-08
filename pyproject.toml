@@ -16,6 +16,7 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "pytest-playwright>=0.6",
+    "pyright>=1.1",
     "ruff>=0.4",
 ]
 
@@ -27,6 +28,11 @@ markers = [
     "slow: slow tests",
     "e2e: end-to-end browser tests (requires Playwright)",
 ]
+
+[tool.pyright]
+typeCheckingMode = "basic"
+include = ["models/", "routes/"]
+reportMissingImports = false
 
 [tool.ruff]
 line-length = 120
