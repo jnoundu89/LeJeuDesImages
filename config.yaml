@@ -8,8 +8,8 @@ company:
   tagline: "Testez votre connaissance de vos collegues avec des modes de jeu amusants et interactifs."
 
 data:
-  csv_path: "infolegale_team.csv"  # Move to data/team.csv when ready
-  images_dir: "static/images"  # Move to data/photos when ready
+  csv_path: "data/team.csv"
+  images_dir: "data/photos"
   # Maps your CSV column names to the canonical field names used by the game.
   # Required fields: first_name, last_name, photo, team, job_title, company, sex
   # Optional fields: birth_date, contract_start, manager_name

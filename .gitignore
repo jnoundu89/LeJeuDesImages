@@ -63,3 +63,4 @@ uploads/
 # Company data (CSV + photos) -- do not commit
 data/*
 !data/.gitkeep
+static/images/

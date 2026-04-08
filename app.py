@@ -2,9 +2,10 @@ import importlib
 import logging
 import os
 import pkgutil
+from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_babel import Babel
 
 import models
@@ -75,6 +76,12 @@ def create_app():
             'company_email': config.contact_email,
             'current_lang': get_locale(),
         }
+
+    # Serve employee photos from the configured images directory
+    @app.route('/photos/<path:filename>')
+    def serve_photo(filename):
+        photos_dir = Path(config.images_dir).resolve()
+        return send_from_directory(photos_dir, filename)
 
     @app.route('/lang/<lang_code>')
     def set_language(lang_code):
