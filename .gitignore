@@ -60,6 +60,9 @@ logs/
 # Uploads (temp directory for admin setup)
 uploads/
 
+# Test artifacts (Playwright screenshots)
+tests/screenshots/
+
 # Company-specific config (use config.example.yaml as template)
 config.yaml
 
