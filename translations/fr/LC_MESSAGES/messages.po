@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-08 14:55+0200\n"
+"POT-Creation-Date: 2026-04-13 10:52+0200\n"
 "PO-Revision-Date: 2026-04-08 14:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -44,13 +44,13 @@ msgstr ""
 msgid "Mode exemple : identifiez uniquement le nom de la personne sur l'image"
 msgstr ""
 
-#: models/game_mode.py:140
+#: models/game_mode.py:138
 msgid ""
 "Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur "
 "l'image"
 msgstr ""
 
-#: models/game_mode.py:186
+#: models/game_mode.py:219
 msgid "Identifiez la personne correspondant au nom affiché"
 msgstr ""
 
@@ -124,6 +124,39 @@ msgstr ""
 
 #: models/timed_mode.py:20
 msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
+msgstr ""
+
+#: routes/admin_routes.py:33 routes/admin_routes.py:60
+#: routes/admin_routes.py:96 routes/admin_routes.py:132
+msgid "Unauthorized"
+msgstr ""
+
+#: routes/admin_routes.py:63 routes/admin_routes.py:135
+msgid "No file provided"
+msgstr ""
+
+#: routes/admin_routes.py:67 routes/admin_routes.py:139
+msgid "No file selected"
+msgstr ""
+
+#: routes/admin_routes.py:71
+msgid "File must be a CSV"
+msgstr ""
+
+#: routes/admin_routes.py:81
+msgid "Invalid CSV file"
+msgstr ""
+
+#: routes/admin_routes.py:100
+msgid "No data provided"
+msgstr ""
+
+#: routes/admin_routes.py:143
+msgid "File must be a ZIP archive"
+msgstr ""
+
+#: routes/admin_routes.py:175
+msgid "Invalid ZIP file"
 msgstr ""
 
 #: templates/about.html:3
@@ -227,40 +260,29 @@ msgstr ""
 msgid "Quel âge a cette personne ?"
 msgstr ""
 
-#: templates/age.html:99 templates/index.html:160 templates/manager.html:81
-#: templates/normal.html:172 templates/reverse.html:51
-#: templates/seniority.html:99
+#: templates/age.html:99 templates/manager.html:81 templates/normal.html:169
+#: templates/reverse.html:51 templates/seniority.html:99
 msgid "Meilleur score"
 msgstr ""
 
-#: templates/age.html:100 templates/base_game.html:49 templates/index.html:161
-#: templates/index.html:254 templates/manager.html:82
-#: templates/manager.html:143 templates/missing_person.html:164
-#: templates/normal.html:173 templates/progressive_hint.html:186
-#: templates/reverse.html:52 templates/reverse.html:100
+#: templates/age.html:100 templates/base_game.html:54 templates/manager.html:82
+#: templates/missing_person.html:164 templates/normal.html:170
+#: templates/progressive_hint.html:186 templates/reverse.html:52
 #: templates/seniority.html:100 templates/speed.html:128
 #: templates/team_guess.html:117
 msgid "Score actuel"
 msgstr ""
 
-#: templates/age.html:155 templates/quiz.html:156 templates/seniority.html:155
-msgid "Correct! +1 point"
-msgstr ""
-
-#: templates/age.html:166 templates/quiz.html:165 templates/seniority.html:166
-msgid "Incorrect! La bonne réponse est"
-msgstr ""
-
-#: templates/age.html:166 templates/seniority.html:166
-msgid "ans"
-msgstr ""
-
-#: templates/base.html:6 templates/base_page.html:40
+#: templates/base.html:6 templates/base_page.html:40 templates/setup.html:3
 msgid "Le Jeu Des Images"
 msgstr ""
 
 #: templates/base_game.html:11 templates/result.html:271
 msgid "Recommencer"
+msgstr ""
+
+#: templates/base_game.html:21
+msgid "Masquer les statistiques"
 msgstr ""
 
 #: templates/base_game.html:21
@@ -287,16 +309,17 @@ msgstr ""
 msgid "Bonnes reponses pour le poste"
 msgstr ""
 
-#: templates/base_game.html:40
-msgid "Temps restant: 60s"
+#: templates/base_game.html:40 templates/timed.html:100
+#: templates/timed.html:137
+msgid "Temps restant"
 msgstr ""
 
-#: templates/base_game.html:47 templates/base_page.html:56
+#: templates/base_game.html:52 templates/base_page.html:56
 #: templates/scores.html:9
 msgid "Scores"
 msgstr ""
 
-#: templates/base_game.html:56
+#: templates/base_game.html:65
 msgid "Personne suivante"
 msgstr ""
 
@@ -367,7 +390,7 @@ msgstr ""
 msgid "Révéler un indice"
 msgstr ""
 
-#: templates/clue.html:152 templates/clue.html:196
+#: templates/clue.html:152 templates/clue.html:194
 msgid "Points possibles"
 msgstr ""
 
@@ -379,16 +402,16 @@ msgstr ""
 msgid "Mode Défi Emoji - Qui suis-je?"
 msgstr ""
 
-#: templates/emoji_challenge.html:149
+#: templates/emoji_challenge.html:149 templates/setup.html:664
 msgid "Entreprise"
 msgstr ""
 
 #: templates/emoji_challenge.html:153 templates/missing_person.html:147
-#: templates/team.html:128
+#: templates/setup.html:713 templates/team.html:128
 msgid "Équipe"
 msgstr ""
 
-#: templates/emoji_challenge.html:157
+#: templates/emoji_challenge.html:157 templates/setup.html:714
 msgid "Poste"
 msgstr ""
 
@@ -549,39 +572,6 @@ msgid ""
 "complete."
 msgstr ""
 
-#: templates/index.html:3 templates/normal.html:3
-msgid "Qui qui c'est le monsieur / la madame ?"
-msgstr ""
-
-#: templates/index.html:153 templates/normal.html:165
-msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
-msgstr ""
-
-#: templates/index.html:179 templates/normal.html:193
-msgid "ENTREPRISE"
-msgstr ""
-
-#: templates/index.html:187 templates/normal.html:201
-msgid "ÉQUIPE"
-msgstr ""
-
-#: templates/index.html:195 templates/normal.html:209
-msgid "NOM"
-msgstr ""
-
-#: templates/index.html:203 templates/normal.html:217
-msgid "POSTE"
-msgstr ""
-
-#: templates/index.html:298 templates/speed.html:209 templates/timed.html:100
-#: templates/timed.html:169
-msgid "Temps restant"
-msgstr ""
-
-#: templates/index.html:300
-msgid "Temps écoulé !"
-msgstr ""
-
 #: templates/manager.html:3
 msgid "Mode Manager"
 msgstr ""
@@ -618,11 +608,11 @@ msgstr ""
 msgid "Retourner l'image"
 msgstr ""
 
-#: templates/mirror.html:197
+#: templates/mirror.html:160
 msgid "Voir en miroir"
 msgstr ""
 
-#: templates/mirror.html:201
+#: templates/mirror.html:163
 msgid "Voir normal"
 msgstr ""
 
@@ -720,6 +710,30 @@ msgstr ""
 msgid "Experimental"
 msgstr ""
 
+#: templates/normal.html:3
+msgid "Qui qui c'est le monsieur / la madame ?"
+msgstr ""
+
+#: templates/normal.html:162
+msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
+msgstr ""
+
+#: templates/normal.html:192
+msgid "ENTREPRISE"
+msgstr ""
+
+#: templates/normal.html:200
+msgid "ÉQUIPE"
+msgstr ""
+
+#: templates/normal.html:208
+msgid "NOM"
+msgstr ""
+
+#: templates/normal.html:216
+msgid "POSTE"
+msgstr ""
+
 #: templates/pixelation.html:3
 msgid "Mode Pixelisation"
 msgstr ""
@@ -798,10 +812,6 @@ msgstr ""
 
 #: templates/quiz.html:103
 msgid "Mode Quiz - Testez vos connaissances"
-msgstr ""
-
-#: templates/quiz.html:214
-msgid "Temps écoulé! La bonne réponse est"
 msgstr ""
 
 #: templates/result.html:3
@@ -974,8 +984,228 @@ msgstr ""
 msgid "Combien d'années d'ancienneté ?"
 msgstr ""
 
-#: templates/seniority.html:166
-msgid "an"
+#: templates/setup.html:3
+msgid "Configuration"
+msgstr ""
+
+#: templates/setup.html:520
+msgid "Retour au jeu"
+msgstr ""
+
+#: templates/setup.html:523
+msgid "Configuration du jeu"
+msgstr ""
+
+#: templates/setup.html:524
+msgid "Configurez le jeu pour votre entreprise en quelques étapes."
+msgstr ""
+
+#: templates/setup.html:528
+msgid "Étapes de configuration"
+msgstr ""
+
+#: templates/setup.html:531
+msgid "Branding"
+msgstr ""
+
+#: templates/setup.html:535 templates/setup.html:669
+msgid "Données"
+msgstr ""
+
+#: templates/setup.html:539 templates/setup.html:633
+msgid "Photos"
+msgstr ""
+
+#: templates/setup.html:543
+msgid "Résumé"
+msgstr ""
+
+#: templates/setup.html:549
+msgid "Branding entreprise"
+msgstr ""
+
+#: templates/setup.html:552
+msgid "Nom de l'entreprise"
+msgstr ""
+
+#: templates/setup.html:555
+msgid "Ex: Mon Entreprise"
+msgstr ""
+
+#: templates/setup.html:561
+msgid "URL du logo"
+msgstr ""
+
+#: templates/setup.html:568
+msgid "Email de contact"
+msgstr ""
+
+#: templates/setup.html:575 templates/setup.html:986
+msgid "Tagline"
+msgstr ""
+
+#: templates/setup.html:578
+msgid "Ex: Testez votre connaissance de vos collegues !"
+msgstr ""
+
+#: templates/setup.html:584 templates/setup.html:626 templates/setup.html:654
+msgid "Suivant"
+msgstr ""
+
+#: templates/setup.html:591
+msgid "Données employés"
+msgstr ""
+
+#: templates/setup.html:596
+msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
+msgstr ""
+
+#: templates/setup.html:597
+msgid "Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc."
+msgstr ""
+
+#: templates/setup.html:603
+msgid "Aperçu des données"
+msgstr ""
+
+#: templates/setup.html:609
+msgid ""
+"Uploadez un fichier CSV ci-dessus pour configurer la correspondance des "
+"colonnes."
+msgstr ""
+
+#: templates/setup.html:613
+msgid "Correspondance des colonnes"
+msgstr ""
+
+#: templates/setup.html:615
+msgid "Associez chaque champ du jeu à une colonne de votre CSV."
+msgstr ""
+
+#: templates/setup.html:623 templates/setup.html:651 templates/setup.html:680
+msgid "Précédent"
+msgstr ""
+
+#: templates/setup.html:638
+msgid "Glissez un fichier ZIP contenant les photos ici"
+msgstr ""
+
+#: templates/setup.html:639
+msgid "Formats acceptes: JPG, PNG, GIF, WebP"
+msgstr ""
+
+#: templates/setup.html:646
+msgid ""
+"Les photos peuvent aussi être placées manuellement dans le répertoire "
+"d'images configuré."
+msgstr ""
+
+#: templates/setup.html:661
+msgid "Résumé et sauvegarde"
+msgstr ""
+
+#: templates/setup.html:674
+msgid "Mapping colonnes"
+msgstr ""
+
+#: templates/setup.html:683
+msgid "Sauvegarder la configuration"
+msgstr ""
+
+#: templates/setup.html:691
+msgid "Fermer"
+msgstr ""
+
+#: templates/setup.html:710
+msgid "Prénom"
+msgstr ""
+
+#: templates/setup.html:711 templates/setup.html:983
+msgid "Nom"
+msgstr ""
+
+#: templates/setup.html:712
+msgid "Photo"
+msgstr ""
+
+#: templates/setup.html:715
+msgid "Société"
+msgstr ""
+
+#: templates/setup.html:716
+msgid "Sexe"
+msgstr ""
+
+#: templates/setup.html:720
+msgid "Date de naissance"
+msgstr ""
+
+#: templates/setup.html:721
+msgid "Date d'embauche"
+msgstr ""
+
+#: templates/setup.html:722
+msgid "Manager"
+msgstr ""
+
+#: templates/setup.html:753
+msgid "Le nom de l'entreprise est requis"
+msgstr ""
+
+#: templates/setup.html:848 templates/setup.html:966
+msgid "Erreur lors de l'envoi"
+msgstr ""
+
+#: templates/setup.html:852
+msgid "CSV chargé avec succès"
+msgstr ""
+
+#: templates/setup.html:852
+msgid "colonnes détectées"
+msgstr ""
+
+#: templates/setup.html:862 templates/setup.html:975 templates/setup.html:1046
+msgid "Erreur réseau"
+msgstr ""
+
+#: templates/setup.html:896
+msgid "requis"
+msgstr ""
+
+#: templates/setup.html:896
+msgid "optionnel"
+msgstr ""
+
+#: templates/setup.html:906
+msgid "Non utilisé"
+msgstr ""
+
+#: templates/setup.html:971
+msgid "photos extraites avec succès"
+msgstr ""
+
+#: templates/setup.html:984
+msgid "Logo"
+msgstr ""
+
+#: templates/setup.html:985
+msgid "Email"
+msgstr ""
+
+#: templates/setup.html:989
+msgid "Fichier CSV"
+msgstr ""
+
+#: templates/setup.html:990
+msgid "Colonnes"
+msgstr ""
+
+#: templates/setup.html:1039
+msgid "Erreur lors de la sauvegarde"
+msgstr ""
+
+#: templates/setup.html:1042
+msgid "Configuration sauvegardée avec succès !"
 msgstr ""
 
 #: templates/silhouette.html:3
@@ -1002,7 +1232,7 @@ msgstr ""
 msgid "Mode Équipe - Identifiez les membres"
 msgstr ""
 
-#: templates/team.html:163
+#: templates/team.html:164
 msgid "Valider l'équipe"
 msgstr ""
 
@@ -1021,4 +1251,25 @@ msgstr ""
 #: templates/timed.html:97
 msgid "Mode Chronométré - Identifiez le maximum de personnes en 2 minutes"
 msgstr ""
+
+#~ msgid "Correct! +1 point"
+#~ msgstr ""
+
+#~ msgid "Incorrect! La bonne réponse est"
+#~ msgstr ""
+
+#~ msgid "ans"
+#~ msgstr ""
+
+#~ msgid "Temps restant: 60s"
+#~ msgstr ""
+
+#~ msgid "Temps écoulé !"
+#~ msgstr ""
+
+#~ msgid "Temps écoulé! La bonne réponse est"
+#~ msgstr ""
+
+#~ msgid "an"
+#~ msgstr ""
 
