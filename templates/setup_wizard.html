@@ -199,6 +199,9 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite">
         <span id="toast-message"></span>
+        <button type="button" class="toast-close" id="toast-close" aria-label="{{ _('Fermer') }}">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
 </div>
 {% endblock %}
@@ -334,6 +337,11 @@
         const duration = type === 'error' ? 8000 : 4000;
         toastTimer = setTimeout(() => { toast.classList.remove('show'); }, duration);
     }
+
+    document.getElementById('toast-close').addEventListener('click', () => {
+        document.getElementById('toast').classList.remove('show');
+        if (toastTimer) clearTimeout(toastTimer);
+    });
 
     // -- CSV upload --
     const csvDropZone = document.getElementById('csv-drop-zone');

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-22 17:13+0200\n"
+"POT-Creation-Date: 2026-04-22 17:29+0200\n"
 "PO-Revision-Date: 2026-04-08 14:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -497,12 +497,12 @@ msgstr "Company"
 
 #: templates/emoji_challenge.html:153 templates/employee_edit.html:135
 #: templates/employees_list.html:132 templates/missing_person.html:147
-#: templates/setup_wizard.html:224 templates/team.html:128
+#: templates/setup_wizard.html:227 templates/team.html:128
 msgid "Équipe"
 msgstr "Team"
 
 #: templates/emoji_challenge.html:157 templates/employee_edit.html:139
-#: templates/employees_list.html:133 templates/setup_wizard.html:225
+#: templates/employees_list.html:133 templates/setup_wizard.html:228
 msgid "Poste"
 msgstr "Position"
 
@@ -532,7 +532,7 @@ msgid "Dataset"
 msgstr "New"
 
 #: templates/employee_edit.html:113 templates/employees_list.html:130
-#: templates/setup_wizard.html:223
+#: templates/setup_wizard.html:226
 msgid "Photo"
 msgstr "Photo"
 
@@ -551,20 +551,20 @@ msgstr "Reveal photo"
 msgid "Informations principales"
 msgstr "Actions taken"
 
-#: templates/employee_edit.html:127 templates/setup_wizard.html:221
+#: templates/employee_edit.html:127 templates/setup_wizard.html:224
 msgid "Prénom"
 msgstr "First name"
 
 #: templates/employee_edit.html:131 templates/employees_list.html:131
-#: templates/setup_wizard.html:222 templates/setup_wizard.html:484
+#: templates/setup_wizard.html:225 templates/setup_wizard.html:492
 msgid "Nom"
 msgstr "Last name"
 
-#: templates/employee_edit.html:143 templates/setup_wizard.html:226
+#: templates/employee_edit.html:143 templates/setup_wizard.html:229
 msgid "Société"
 msgstr "Company"
 
-#: templates/employee_edit.html:147 templates/setup_wizard.html:227
+#: templates/employee_edit.html:147 templates/setup_wizard.html:230
 msgid "Sexe"
 msgstr "Sex"
 
@@ -583,20 +583,22 @@ msgid ""
 "Nom du fichier dans le répertoire photos (photo à uploader depuis la page"
 " Modifier après création)."
 msgstr ""
+"Filename in the photos directory (upload the photo from the Edit page "
+"after creation)."
 
 #: templates/employee_edit.html:165
 msgid "Informations optionnelles"
 msgstr "Optional fields"
 
-#: templates/employee_edit.html:168 templates/setup_wizard.html:231
+#: templates/employee_edit.html:168 templates/setup_wizard.html:234
 msgid "Date de naissance"
 msgstr "Date of birth"
 
-#: templates/employee_edit.html:172 templates/setup_wizard.html:232
+#: templates/employee_edit.html:172 templates/setup_wizard.html:235
 msgid "Date d'embauche"
 msgstr "Hire date"
 
-#: templates/employee_edit.html:176 templates/setup_wizard.html:233
+#: templates/employee_edit.html:176 templates/setup_wizard.html:236
 msgid "Manager"
 msgstr "Manager"
 
@@ -616,11 +618,11 @@ msgstr "No scores recorded"
 msgid "Créer"
 msgstr "Score"
 
-#: templates/employee_edit.html:236 templates/setup_wizard.html:540
+#: templates/employee_edit.html:236 templates/setup_wizard.html:548
 msgid "Erreur lors de la sauvegarde"
 msgstr "Error during save"
 
-#: templates/employee_edit.html:240 templates/setup_wizard.html:543
+#: templates/employee_edit.html:240 templates/setup_wizard.html:551
 #, fuzzy
 msgid "Modifications enregistrées"
 msgstr "Actions taken"
@@ -632,8 +634,8 @@ msgstr "Employee data"
 
 #: templates/employee_edit.html:246 templates/employee_edit.html:295
 #: templates/employees_list.html:248 templates/setup_list.html:135
-#: templates/setup_wizard.html:374 templates/setup_wizard.html:474
-#: templates/setup_wizard.html:548
+#: templates/setup_wizard.html:382 templates/setup_wizard.html:482
+#: templates/setup_wizard.html:556
 msgid "Erreur réseau"
 msgstr "Network error"
 
@@ -1430,6 +1432,8 @@ msgid ""
 "Minuscules, chiffres, tirets et underscores. Sert de clé interne (non "
 "modifiable après création)."
 msgstr ""
+"Lowercase, digits, dashes and underscores. Used as the internal key (not "
+"editable after creation)."
 
 #: templates/setup_wizard.html:63
 msgid "Nom de l'entreprise"
@@ -1443,7 +1447,7 @@ msgstr "E.g.: My Company"
 msgid "URL du logo"
 msgstr "Logo URL"
 
-#: templates/setup_wizard.html:79 templates/setup_wizard.html:486
+#: templates/setup_wizard.html:79 templates/setup_wizard.html:494
 msgid "Tagline"
 msgstr "Tagline"
 
@@ -1464,7 +1468,7 @@ msgstr "Employee data"
 msgid ""
 "Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le "
 "remplacer."
-msgstr ""
+msgstr "You can keep the current CSV or upload a new one to replace it."
 
 #: templates/setup_wizard.html:107
 msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
@@ -1501,7 +1505,7 @@ msgstr "Previous"
 msgid ""
 "Les photos seront uploadées après la création du dataset, depuis la page "
 "de modification."
-msgstr ""
+msgstr "Photos will be uploaded after the dataset is created, from the edit page."
 
 #: templates/setup_wizard.html:154
 msgid "Glissez un fichier ZIP contenant les photos ici"
@@ -1529,63 +1533,67 @@ msgstr "Check matches"
 msgid "Créer le dataset"
 msgstr "Switch dataset"
 
-#: templates/setup_wizard.html:271
+#: templates/setup_wizard.html:202
+msgid "Fermer"
+msgstr "Close"
+
+#: templates/setup_wizard.html:274
 msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
 msgstr "Invalid identifier (lowercase/digits/_-, max 32)."
 
-#: templates/setup_wizard.html:276
+#: templates/setup_wizard.html:279
 msgid "Un dataset avec cet identifiant existe déjà."
 msgstr "A dataset with this identifier already exists."
 
-#: templates/setup_wizard.html:285
+#: templates/setup_wizard.html:288
 msgid "Le nom de l'entreprise est requis"
 msgstr "Company name is required"
 
-#: templates/setup_wizard.html:362 templates/setup_wizard.html:466
+#: templates/setup_wizard.html:370 templates/setup_wizard.html:474
 msgid "Erreur lors de l'envoi"
 msgstr "Error during upload"
 
-#: templates/setup_wizard.html:366
+#: templates/setup_wizard.html:374
 msgid "CSV chargé avec succès"
 msgstr "CSV loaded successfully"
 
-#: templates/setup_wizard.html:366
+#: templates/setup_wizard.html:374
 msgid "colonnes détectées"
 msgstr "columns detected"
 
-#: templates/setup_wizard.html:407
+#: templates/setup_wizard.html:415
 msgid "requis"
 msgstr "required"
 
-#: templates/setup_wizard.html:407
+#: templates/setup_wizard.html:415
 msgid "optionnel"
 msgstr "optional"
 
-#: templates/setup_wizard.html:417
+#: templates/setup_wizard.html:425
 msgid "Non utilisé"
 msgstr "Unused"
 
-#: templates/setup_wizard.html:470
+#: templates/setup_wizard.html:478
 msgid "photos extraites avec succès"
 msgstr "photos extracted successfully"
 
-#: templates/setup_wizard.html:483
+#: templates/setup_wizard.html:491
 msgid "Identifiant"
 msgstr "Identifier"
 
-#: templates/setup_wizard.html:485
+#: templates/setup_wizard.html:493
 msgid "Logo"
 msgstr "Logo"
 
-#: templates/setup_wizard.html:490
+#: templates/setup_wizard.html:498
 msgid "Fichier CSV"
 msgstr "CSV file"
 
-#: templates/setup_wizard.html:491
+#: templates/setup_wizard.html:499
 msgid "Colonnes"
 msgstr "Columns"
 
-#: templates/setup_wizard.html:543
+#: templates/setup_wizard.html:551
 msgid "Dataset créé"
 msgstr "Dataset created"
 

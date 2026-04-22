@@ -241,12 +241,12 @@ def test_mode_loads_with_alpine(page: Page, live_app: str, mode: str):
 
 @pytest.mark.e2e
 def test_setup_wizard_step1_fields_visible(page: Page, live_app: str):
-    """Step 1 (Branding) shows all company fields."""
+    """Step 1 shows dataset id + branding fields."""
     page.goto(f'{live_app}/setup/new')
     assert page.locator('#step-1').is_visible()
+    assert page.locator('#dataset-id').is_visible()
     assert page.locator('#company-name').is_visible()
     assert page.locator('#logo-url').is_visible()
-    assert page.locator('#contact-email').is_visible()
     assert page.locator('#tagline').is_visible()
     # Other panels hidden
     assert not page.locator('#step-2').is_visible()
