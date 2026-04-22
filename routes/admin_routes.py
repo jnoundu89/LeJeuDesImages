@@ -10,8 +10,11 @@ from flask import Blueprint, current_app, jsonify, redirect, render_template, re
 from flask_babel import gettext as _
 from werkzeug.utils import secure_filename
 
-from models.config import AppConfig, DatasetConfig
+from models.config import OPTIONAL_FIELDS, REQUIRED_FIELDS, AppConfig, DatasetConfig
 from models.dataset_registry import DatasetRegistry
+
+_CANONICAL_FIELDS = list(REQUIRED_FIELDS) + list(OPTIONAL_FIELDS)
+_VALID_IMAGE_EXTENSIONS = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'}
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -392,3 +395,210 @@ def replace_csv(dataset_id):
     _registry().add(new_config)
 
     return jsonify({'success': True})
+
+
+# -- Employee CRUD --
+
+def _employee_payload_from_request(data: dict) -> dict:
+    """Extract a canonical-named employee dict from a JSON payload, skipping unknowns."""
+    return {k: (data.get(k) or '') for k in _CANONICAL_FIELDS if k in data}
+
+
+@admin_bp.route('/setup/<dataset_id>/employees')
+def employees_list(dataset_id):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return redirect(url_for('admin.setup'))
+
+    employees = ds.employee_data.get_all_employees()
+    rows = []
+    for idx, emp in enumerate(employees):
+        rows.append({
+            'idx': idx,
+            'first_name': emp.get('first_name', ''),
+            'last_name': emp.get('last_name', ''),
+            'photo': emp.get('photo', ''),
+            'team': emp.get('team', ''),
+            'job_title': emp.get('job_title', ''),
+        })
+
+    return render_template(
+        'employees_list.html',
+        dataset_id=dataset_id,
+        dataset_name=ds.config.company_name,
+        employees=rows,
+    )
+
+
+@admin_bp.route('/setup/<dataset_id>/employees/new')
+def employee_new(dataset_id):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return redirect(url_for('admin.setup'))
+
+    blank = {field: '' for field in _CANONICAL_FIELDS}
+    return render_template(
+        'employee_edit.html',
+        mode='new',
+        dataset_id=dataset_id,
+        dataset_name=ds.config.company_name,
+        employee=blank,
+        idx=None,
+        required_fields=sorted(REQUIRED_FIELDS),
+        optional_fields=sorted(OPTIONAL_FIELDS),
+    )
+
+
+@admin_bp.route('/setup/<dataset_id>/employees/<int:idx>/edit')
+def employee_edit(dataset_id, idx):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return redirect(url_for('admin.setup'))
+
+    try:
+        employee = ds.employee_data.get_by_index(idx)
+    except IndexError:
+        return redirect(url_for('admin.employees_list', dataset_id=dataset_id))
+
+    emp_dict = {field: employee.get(field, '') for field in _CANONICAL_FIELDS}
+
+    return render_template(
+        'employee_edit.html',
+        mode='edit',
+        dataset_id=dataset_id,
+        dataset_name=ds.config.company_name,
+        employee=emp_dict,
+        idx=idx,
+        required_fields=sorted(REQUIRED_FIELDS),
+        optional_fields=sorted(OPTIONAL_FIELDS),
+    )
+
+
+@admin_bp.route('/setup/<dataset_id>/employees', methods=['POST'])
+def employee_create(dataset_id):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
+
+    data = request.get_json() or {}
+    fields = _employee_payload_from_request(data)
+
+    missing = [f for f in REQUIRED_FIELDS if not fields.get(f)]
+    if missing:
+        return jsonify({'error': _('Missing required fields: %(fields)s', fields=', '.join(sorted(missing)))}), 400
+
+    idx = ds.employee_data.append(fields)
+    try:
+        ds.employee_data.save()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'success': True, 'idx': idx})
+
+
+@admin_bp.route('/setup/<dataset_id>/employees/<int:idx>', methods=['POST'])
+def employee_update(dataset_id, idx):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
+
+    data = request.get_json() or {}
+    fields = _employee_payload_from_request(data)
+
+    missing = [f for f in REQUIRED_FIELDS if f in fields and not fields.get(f)]
+    if missing:
+        return jsonify({'error': _('Missing required fields: %(fields)s', fields=', '.join(sorted(missing)))}), 400
+
+    try:
+        ds.employee_data.update_at_index(idx, fields)
+    except IndexError:
+        return jsonify({'error': _('Employee not found')}), 404
+
+    try:
+        ds.employee_data.save()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'success': True})
+
+
+@admin_bp.route('/setup/<dataset_id>/employees/<int:idx>/delete', methods=['POST'])
+def employee_delete(dataset_id, idx):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
+
+    try:
+        ds.employee_data.delete_at_index(idx)
+    except IndexError:
+        return jsonify({'error': _('Employee not found')}), 404
+
+    try:
+        ds.employee_data.save()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'success': True})
+
+
+@admin_bp.route('/setup/<dataset_id>/employees/<int:idx>/photo', methods=['POST'])
+def employee_upload_photo(dataset_id, idx):
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
+
+    try:
+        employee = ds.employee_data.get_by_index(idx)
+    except IndexError:
+        return jsonify({'error': _('Employee not found')}), 404
+
+    if 'file' not in request.files:
+        return jsonify({'error': _('No file provided')}), 400
+
+    file = request.files['file']
+    if not file.filename:
+        return jsonify({'error': _('No file selected')}), 400
+
+    ext = Path(file.filename).suffix.lower()
+    if ext not in _VALID_IMAGE_EXTENSIONS:
+        return jsonify({'error': _('Unsupported image format')}), 400
+
+    # Name the file after the employee to keep it predictable; fall back to
+    # a safe filename if names are missing.
+    first = str(employee.get('first_name', '')).strip()
+    last = str(employee.get('last_name', '')).strip()
+    base = secure_filename(f'{last}_{first}') or f'employee_{idx}'
+    photo_filename = f'{base}{ext}'
+
+    images_dir = Path(ds.config.images_dir)
+    images_dir.mkdir(parents=True, exist_ok=True)
+    file.save(str(images_dir / photo_filename))
+
+    ds.employee_data.update_at_index(idx, {'photo': photo_filename})
+    try:
+        ds.employee_data.save()
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'success': True, 'photo': photo_filename})

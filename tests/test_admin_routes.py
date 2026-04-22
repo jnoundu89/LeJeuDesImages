@@ -276,6 +276,107 @@ class TestUploadPhotos:
         assert resp.status_code == 400
 
 
+class TestEmployeeCrudRoutes:
+    def test_list_page_shows_employees(self, isolated_client):
+        resp = isolated_client.get('/setup/acme/employees')
+        assert resp.status_code == 200
+        assert b'Alice' in resp.data
+        assert b'Dupont' in resp.data
+
+    def test_list_unknown_dataset_redirects_to_setup(self, isolated_client):
+        resp = isolated_client.get('/setup/ghost/employees', follow_redirects=False)
+        assert resp.status_code == 302
+
+    def test_new_employee_page_loads(self, isolated_client):
+        resp = isolated_client.get('/setup/acme/employees/new')
+        assert resp.status_code == 200
+        assert b'field-first_name' in resp.data
+
+    def test_edit_page_loads_with_existing_data(self, isolated_client):
+        resp = isolated_client.get('/setup/acme/employees/0/edit')
+        assert resp.status_code == 200
+        assert b'Alice' in resp.data
+
+    def test_edit_page_out_of_range_redirects(self, isolated_client):
+        resp = isolated_client.get('/setup/acme/employees/999/edit', follow_redirects=False)
+        assert resp.status_code == 302
+
+    def test_create_employee_persists_to_csv(self, isolated_app, isolated_client):
+        payload = {
+            'first_name': 'Bob', 'last_name': 'Martin', 'photo': 'bob.jpg',
+            'team': 'Sales', 'job_title': 'Rep', 'company': 'Acme', 'sex': 'M',
+        }
+        resp = isolated_client.post('/setup/acme/employees', json=payload)
+        assert resp.status_code == 200, resp.get_json()
+
+        employees = isolated_app.config['DATASET_REGISTRY'].get('acme').employee_data.get_all_employees()
+        assert len(employees) == 2
+        assert employees[1]['first_name'] == 'Bob'
+
+        # Persisted to disk
+        csv_path = isolated_app.config['DATASET_REGISTRY'].get('acme').config.csv_path
+        assert 'Bob,Martin' in Path(csv_path).read_text()
+
+    def test_create_rejects_missing_required_field(self, isolated_client):
+        payload = {'first_name': 'Bob'}  # missing everything else
+        resp = isolated_client.post('/setup/acme/employees', json=payload)
+        assert resp.status_code == 400
+
+    def test_update_employee_persists(self, isolated_app, isolated_client):
+        payload = {
+            'first_name': 'Alicia', 'last_name': 'Dupont', 'photo': 'alice.jpg',
+            'team': 'Platform', 'job_title': 'Dev', 'company': 'Acme', 'sex': 'F',
+        }
+        resp = isolated_client.post('/setup/acme/employees/0', json=payload)
+        assert resp.status_code == 200
+
+        emp = isolated_app.config['DATASET_REGISTRY'].get('acme').employee_data.get_by_index(0)
+        assert emp['first_name'] == 'Alicia'
+        assert emp['team'] == 'Platform'
+
+    def test_update_out_of_range_returns_404(self, isolated_client):
+        resp = isolated_client.post('/setup/acme/employees/999', json={'first_name': 'X'})
+        assert resp.status_code == 404
+
+    def test_delete_employee_persists(self, isolated_app, isolated_client):
+        resp = isolated_client.post('/setup/acme/employees/0/delete')
+        assert resp.status_code == 200
+
+        employees = isolated_app.config['DATASET_REGISTRY'].get('acme').employee_data.get_all_employees()
+        assert len(employees) == 0
+
+    def test_delete_out_of_range_returns_404(self, isolated_client):
+        resp = isolated_client.post('/setup/acme/employees/999/delete')
+        assert resp.status_code == 404
+
+    def test_upload_photo_saves_and_updates_record(self, isolated_app, isolated_client):
+        resp = isolated_client.post(
+            '/setup/acme/employees/0/photo',
+            data={'file': (io.BytesIO(b'fake jpg'), 'new.jpg')},
+            content_type='multipart/form-data',
+        )
+        assert resp.status_code == 200, resp.get_json()
+
+        photo_name = resp.get_json()['photo']
+        assert photo_name.endswith('.jpg')
+
+        # Employee's photo field is updated to the new filename
+        emp = isolated_app.config['DATASET_REGISTRY'].get('acme').employee_data.get_by_index(0)
+        assert emp['photo'] == photo_name
+
+        # File exists in images_dir
+        images_dir = Path(isolated_app.config['DATASET_REGISTRY'].get('acme').config.images_dir)
+        assert (images_dir / photo_name).exists()
+
+    def test_upload_photo_rejects_bad_extension(self, isolated_client):
+        resp = isolated_client.post(
+            '/setup/acme/employees/0/photo',
+            data={'file': (io.BytesIO(b'x'), 'file.txt')},
+            content_type='multipart/form-data',
+        )
+        assert resp.status_code == 400
+
+
 class TestReplaceCsv:
     def _valid_mapping(self):
         return {

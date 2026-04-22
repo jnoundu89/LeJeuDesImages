@@ -80,3 +80,81 @@ class TestEmployeeData:
     def test_get_random_employees_parametrized(self, test_employee_data, count):
         result = test_employee_data.get_random_employees(count)
         assert len(result) == count
+
+
+class TestEmployeeCrud:
+    """CRUD mutations on EmployeeData write back to CSV with CSV column names."""
+
+    def _build(self, tmp_path):
+        from models.config import DatasetConfig
+        from models.employee import EmployeeData
+
+        csv = tmp_path / 'team.csv'
+        csv.write_text(
+            'firstName,lastName,photo_path,team,jobTitle,company,sex\n'
+            'Alice,Dupont,alice.jpg,Eng,Dev,Acme,F\n'
+            'Bob,Martin,bob.jpg,Sales,Rep,Acme,M\n'
+        )
+        config = DatasetConfig(
+            'acme',
+            {
+                'data': {
+                    'csv_path': str(csv),
+                    'column_mapping': {
+                        'first_name': 'firstName', 'last_name': 'lastName',
+                        'photo': 'photo_path', 'team': 'team',
+                        'job_title': 'jobTitle', 'company': 'company', 'sex': 'sex',
+                    },
+                },
+            },
+        )
+        return csv, EmployeeData(config)
+
+    def test_get_by_index(self, tmp_path):
+        _, ed = self._build(tmp_path)
+        emp = ed.get_by_index(0)
+        assert emp['first_name'] == 'Alice'
+        assert emp['last_name'] == 'Dupont'
+
+    def test_get_by_index_out_of_range(self, tmp_path):
+        _, ed = self._build(tmp_path)
+        with pytest.raises(IndexError):
+            ed.get_by_index(99)
+
+    def test_update_persists_with_original_column_names(self, tmp_path):
+        csv, ed = self._build(tmp_path)
+        ed.update_at_index(0, {'first_name': 'Alicia', 'team': 'Platform'})
+        ed.save()
+
+        # Reload from disk and verify CSV column names are restored
+        reloaded = csv.read_text()
+        assert 'Alicia,Dupont,alice.jpg,Platform' in reloaded
+        # Header uses CSV column names, not canonical
+        assert reloaded.splitlines()[0] == 'firstName,lastName,photo_path,team,jobTitle,company,sex'
+
+    def test_append_and_save(self, tmp_path):
+        csv, ed = self._build(tmp_path)
+        idx = ed.append({
+            'first_name': 'Carole', 'last_name': 'Zoe', 'photo': 'carole.jpg',
+            'team': 'HR', 'job_title': 'Lead', 'company': 'Acme', 'sex': 'F',
+        })
+        assert idx == 2
+        ed.save()
+        assert 'Carole,Zoe,carole.jpg' in csv.read_text()
+
+    def test_delete_and_save(self, tmp_path):
+        csv, ed = self._build(tmp_path)
+        ed.delete_at_index(0)
+        ed.save()
+        content = csv.read_text()
+        assert 'Alice' not in content
+        assert 'Bob' in content
+
+    def test_save_does_not_leak_canonical_column_names(self, tmp_path):
+        csv, ed = self._build(tmp_path)
+        ed.update_at_index(0, {'first_name': 'Alicia'})
+        ed.save()
+        content = csv.read_text()
+        # Canonical names should not appear as CSV headers
+        assert 'first_name' not in content.splitlines()[0]
+        assert 'job_title' not in content.splitlines()[0]

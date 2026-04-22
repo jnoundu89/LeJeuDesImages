@@ -1,0 +1,266 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Employés') }} - {{ dataset_name }} - {{ _('Le Jeu Des Images') }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='setup.css') }}">
+<style>
+    .employee-toolbar {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+
+    .employee-search {
+        flex: 1;
+        min-width: 200px;
+        max-width: 400px;
+    }
+
+    .employee-search input {
+        width: 100%;
+        padding: 0.65rem 0.85rem;
+        border-radius: var(--border-radius-md);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--light);
+        font-size: 0.9rem;
+    }
+
+    .employee-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--dark-surface);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+
+    .employee-table th,
+    .employee-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .employee-table th {
+        background: rgba(63, 81, 181, 0.15);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .employee-table tr:last-child td { border-bottom: none; }
+
+    .employee-thumb {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .employee-thumb.placeholder {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-light);
+        font-size: 1rem;
+    }
+
+    .row-actions {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .row-actions .btn {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.8rem;
+    }
+
+    .empty-search {
+        text-align: center;
+        padding: 2rem;
+        opacity: 0.6;
+        display: none;
+    }
+
+    .count-badge {
+        font-size: 0.85rem;
+        opacity: 0.7;
+    }
+
+    @media (max-width: 600px) {
+        .employee-table th:nth-child(4),
+        .employee-table td:nth-child(4),
+        .employee-table th:nth-child(5),
+        .employee-table td:nth-child(5) { display: none; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="setup-container">
+    <a href="{{ url_for('admin.setup') }}" class="back-link"><i class="fas fa-arrow-left"></i> {{ _('Retour à la liste des datasets') }}</a>
+
+    <div class="setup-header">
+        <h1><i class="fas fa-users"></i> {{ _('Employés de') }} <code>{{ dataset_name }}</code></h1>
+        <p class="count-badge">{{ employees|length }} {{ _('employés') }}</p>
+    </div>
+
+    <div class="employee-toolbar">
+        <div class="employee-search">
+            <input type="search" id="employee-search" placeholder="{{ _('Rechercher un employé...') }}" aria-label="{{ _('Rechercher un employé') }}">
+        </div>
+        <a href="{{ url_for('admin.employee_new', dataset_id=dataset_id) }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {{ _('Ajouter un employé') }}
+        </a>
+    </div>
+
+    {% if employees %}
+    <table class="employee-table" id="employee-table">
+        <thead>
+            <tr>
+                <th>{{ _('Photo') }}</th>
+                <th>{{ _('Nom') }}</th>
+                <th>{{ _('Équipe') }}</th>
+                <th>{{ _('Poste') }}</th>
+                <th style="text-align:right">{{ _('Actions') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in employees %}
+            <tr data-search-text="{{ (emp.first_name + ' ' + emp.last_name + ' ' + emp.team + ' ' + emp.job_title)|lower }}">
+                <td>
+                    {% if emp.photo %}
+                    <img src="/photos/{{ emp.photo }}" alt="" class="employee-thumb" onerror="this.replaceWith(Object.assign(document.createElement('span'), {className: 'employee-thumb placeholder', innerHTML: '<i class=\'fas fa-user\'></i>'}))">
+                    {% else %}
+                    <span class="employee-thumb placeholder"><i class="fas fa-user"></i></span>
+                    {% endif %}
+                </td>
+                <td><strong>{{ emp.first_name }} {{ emp.last_name }}</strong></td>
+                <td>{{ emp.team }}</td>
+                <td>{{ emp.job_title }}</td>
+                <td>
+                    <div class="row-actions">
+                        <a href="{{ url_for('admin.employee_edit', dataset_id=dataset_id, idx=emp.idx) }}" class="btn btn-secondary">
+                            <i class="fas fa-pen"></i> {{ _('Modifier') }}
+                        </a>
+                        <button type="button" class="btn btn-danger" onclick="confirmDeleteEmployee({{ emp.idx }}, '{{ (emp.first_name + ' ' + emp.last_name)|e }}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="empty-search" id="empty-search">{{ _('Aucun employé ne correspond à votre recherche.') }}</p>
+    {% else %}
+    <div class="empty-state">
+        <i class="fas fa-user-plus empty-icon"></i>
+        <h2>{{ _('Aucun employé') }}</h2>
+        <p>{{ _('Ajoutez un premier employé pour ce dataset.') }}</p>
+        <a href="{{ url_for('admin.employee_new', dataset_id=dataset_id) }}" class="btn btn-primary btn-large">
+            <i class="fas fa-plus"></i> {{ _('Ajouter un employé') }}
+        </a>
+    </div>
+    {% endif %}
+
+    <div class="modal-overlay" id="delete-modal" role="dialog" aria-modal="true" style="display:none">
+        <div class="modal-content">
+            <h3><i class="fas fa-exclamation-triangle"></i> {{ _("Supprimer l'employé ?") }}</h3>
+            <p>{{ _("L'employé") }} <strong id="delete-modal-name"></strong> {{ _('sera définitivement retiré du CSV. Cette action est irréversible.') }}</p>
+            <div class="btn-row">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">{{ _('Annuler') }}</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-employee-btn">
+                    <i class="fas fa-trash"></i> {{ _('Supprimer') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-message"></span></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    'use strict';
+
+    const DATASET_ID = {{ dataset_id | tojson }};
+
+    // Search filter
+    const searchInput = document.getElementById('employee-search');
+    const emptyMsg = document.getElementById('empty-search');
+    const table = document.getElementById('employee-table');
+    if (searchInput && table) {
+        searchInput.addEventListener('input', () => {
+            const q = searchInput.value.toLowerCase().trim();
+            let visible = 0;
+            table.querySelectorAll('tbody tr').forEach(tr => {
+                const text = tr.getAttribute('data-search-text') || '';
+                const match = !q || text.includes(q);
+                tr.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            if (emptyMsg) emptyMsg.style.display = visible === 0 ? 'block' : 'none';
+        });
+    }
+
+    // Delete confirmation
+    let pendingDeleteIdx = null;
+    const modal = document.getElementById('delete-modal');
+    const confirmBtn = document.getElementById('confirm-delete-employee-btn');
+
+    window.confirmDeleteEmployee = function (idx, name) {
+        pendingDeleteIdx = idx;
+        document.getElementById('delete-modal-name').textContent = name;
+        modal.style.display = 'flex';
+    };
+
+    window.closeDeleteModal = function () {
+        pendingDeleteIdx = null;
+        modal.style.display = 'none';
+    };
+
+    confirmBtn.addEventListener('click', () => {
+        if (pendingDeleteIdx === null) return;
+        confirmBtn.disabled = true;
+        fetch(`/setup/${encodeURIComponent(DATASET_ID)}/employees/${pendingDeleteIdx}/delete`, { method: 'POST' })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    showToast(data.error || "{{ _('Erreur lors de la suppression') }}", 'error');
+                    confirmBtn.disabled = false;
+                    return;
+                }
+                window.location.reload();
+            })
+            .catch(() => {
+                showToast("{{ _('Erreur réseau') }}", 'error');
+                confirmBtn.disabled = false;
+            });
+    });
+
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeDeleteModal(); });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display !== 'none') closeDeleteModal();
+    });
+
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(() => { toast.classList.remove('show'); }, 5000);
+    }
+})();
+</script>
+{% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-22 16:58+0200\n"
+"POT-Creation-Date: 2026-04-22 17:13+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -125,63 +125,81 @@ msgstr ""
 msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
 msgstr ""
 
-#: routes/admin_routes.py:50
+#: routes/admin_routes.py:53
 msgid "Unauthorized"
 msgstr ""
 
-#: routes/admin_routes.py:163 routes/admin_routes.py:321
+#: routes/admin_routes.py:166 routes/admin_routes.py:324
+#: routes/admin_routes.py:577
 msgid "No file provided"
 msgstr ""
 
-#: routes/admin_routes.py:167 routes/admin_routes.py:325
+#: routes/admin_routes.py:170 routes/admin_routes.py:328
+#: routes/admin_routes.py:581
 msgid "No file selected"
 msgstr ""
 
-#: routes/admin_routes.py:171
+#: routes/admin_routes.py:174
 msgid "File must be a CSV"
 msgstr ""
 
-#: routes/admin_routes.py:182
+#: routes/admin_routes.py:185
 msgid "Invalid CSV file"
 msgstr ""
 
-#: routes/admin_routes.py:199
+#: routes/admin_routes.py:202
 msgid "No data provided"
 msgstr ""
 
-#: routes/admin_routes.py:204
+#: routes/admin_routes.py:207
 msgid ""
 "Dataset id must be lowercase alphanumeric (underscores and dashes "
 "allowed, max 32 chars)."
 msgstr ""
 
-#: routes/admin_routes.py:209
+#: routes/admin_routes.py:212
 msgid "A dataset with this id already exists."
 msgstr ""
 
-#: routes/admin_routes.py:228 routes/admin_routes.py:383
+#: routes/admin_routes.py:231 routes/admin_routes.py:386
 msgid "Uploaded CSV was not found. Re-upload and retry."
 msgstr ""
 
-#: routes/admin_routes.py:233
+#: routes/admin_routes.py:236
 msgid "A CSV file is required to create a dataset."
 msgstr ""
 
-#: routes/admin_routes.py:289 routes/admin_routes.py:318
-#: routes/admin_routes.py:374
+#: routes/admin_routes.py:292 routes/admin_routes.py:321
+#: routes/admin_routes.py:377 routes/admin_routes.py:493
+#: routes/admin_routes.py:518 routes/admin_routes.py:547
+#: routes/admin_routes.py:569
 msgid "Dataset not found"
 msgstr ""
 
-#: routes/admin_routes.py:329
+#: routes/admin_routes.py:332
 msgid "File must be a ZIP archive"
 msgstr ""
 
-#: routes/admin_routes.py:356
+#: routes/admin_routes.py:359
 msgid "Invalid ZIP file"
 msgstr ""
 
-#: routes/admin_routes.py:379
+#: routes/admin_routes.py:382
 msgid "csv_filename is required"
+msgstr ""
+
+#: routes/admin_routes.py:500 routes/admin_routes.py:525
+#, python-format
+msgid "Missing required fields: %(fields)s"
+msgstr ""
+
+#: routes/admin_routes.py:530 routes/admin_routes.py:552
+#: routes/admin_routes.py:574
+msgid "Employee not found"
+msgstr ""
+
+#: routes/admin_routes.py:585
+msgid "Unsupported image format"
 msgstr ""
 
 #: templates/_switchers.html:8
@@ -307,6 +325,7 @@ msgid "Score actuel"
 msgstr ""
 
 #: templates/base.html:6 templates/base_page.html:36
+#: templates/employee_edit.html:4 templates/employees_list.html:3
 #: templates/setup_list.html:3 templates/setup_wizard.html:4
 msgid "Le Jeu Des Images"
 msgstr ""
@@ -440,17 +459,208 @@ msgstr ""
 msgid "Entreprise"
 msgstr ""
 
-#: templates/emoji_challenge.html:153 templates/missing_person.html:147
+#: templates/emoji_challenge.html:153 templates/employee_edit.html:135
+#: templates/employees_list.html:132 templates/missing_person.html:147
 #: templates/setup_wizard.html:224 templates/team.html:128
 msgid "Équipe"
 msgstr ""
 
-#: templates/emoji_challenge.html:157 templates/setup_wizard.html:225
+#: templates/emoji_challenge.html:157 templates/employee_edit.html:139
+#: templates/employees_list.html:133 templates/setup_wizard.html:225
 msgid "Poste"
 msgstr ""
 
 #: templates/emoji_challenge.html:169 templates/silhouette.html:132
 msgid "Révéler la photo"
+msgstr ""
+
+#: templates/employee_edit.html:4 templates/employee_edit.html:95
+#: templates/employees_list.html:153 templates/setup_list.html:64
+msgid "Modifier"
+msgstr ""
+
+#: templates/employee_edit.html:4 templates/employee_edit.html:97
+msgid "Nouvel employé"
+msgstr ""
+
+#: templates/employee_edit.html:89
+msgid "Retour aux employés"
+msgstr ""
+
+#: templates/employee_edit.html:100
+msgid "Dataset"
+msgstr ""
+
+#: templates/employee_edit.html:113 templates/employees_list.html:130
+#: templates/setup_wizard.html:223
+msgid "Photo"
+msgstr ""
+
+#: templates/employee_edit.html:114
+msgid "Fichier actuel"
+msgstr ""
+
+#: templates/employee_edit.html:117
+msgid "Remplacer la photo"
+msgstr ""
+
+#: templates/employee_edit.html:124
+msgid "Informations principales"
+msgstr ""
+
+#: templates/employee_edit.html:127 templates/setup_wizard.html:221
+msgid "Prénom"
+msgstr ""
+
+#: templates/employee_edit.html:131 templates/employees_list.html:131
+#: templates/setup_wizard.html:222 templates/setup_wizard.html:484
+msgid "Nom"
+msgstr ""
+
+#: templates/employee_edit.html:143 templates/setup_wizard.html:226
+msgid "Société"
+msgstr ""
+
+#: templates/employee_edit.html:147 templates/setup_wizard.html:227
+msgid "Sexe"
+msgstr ""
+
+#: templates/employee_edit.html:149
+msgid "Sélectionner"
+msgstr ""
+
+#: templates/employee_edit.html:156
+msgid "Fichier photo"
+msgstr ""
+
+#: templates/employee_edit.html:158
+msgid ""
+"Nom du fichier dans le répertoire photos (photo à uploader depuis la page"
+" Modifier après création)."
+msgstr ""
+
+#: templates/employee_edit.html:165
+msgid "Informations optionnelles"
+msgstr ""
+
+#: templates/employee_edit.html:168 templates/setup_wizard.html:231
+msgid "Date de naissance"
+msgstr ""
+
+#: templates/employee_edit.html:172 templates/setup_wizard.html:232
+msgid "Date d'embauche"
+msgstr ""
+
+#: templates/employee_edit.html:176 templates/setup_wizard.html:233
+msgid "Manager"
+msgstr ""
+
+#: templates/employee_edit.html:183 templates/employees_list.html:181
+#: templates/setup_list.html:87
+msgid "Annuler"
+msgstr ""
+
+#: templates/employee_edit.html:187
+msgid "Enregistrer"
+msgstr ""
+
+#: templates/employee_edit.html:187
+msgid "Créer"
+msgstr ""
+
+#: templates/employee_edit.html:236 templates/setup_wizard.html:540
+msgid "Erreur lors de la sauvegarde"
+msgstr ""
+
+#: templates/employee_edit.html:240 templates/setup_wizard.html:543
+msgid "Modifications enregistrées"
+msgstr ""
+
+#: templates/employee_edit.html:240
+msgid "Employé créé"
+msgstr ""
+
+#: templates/employee_edit.html:246 templates/employee_edit.html:295
+#: templates/employees_list.html:248 templates/setup_list.html:135
+#: templates/setup_wizard.html:374 templates/setup_wizard.html:474
+#: templates/setup_wizard.html:548
+msgid "Erreur réseau"
+msgstr ""
+
+#: templates/employee_edit.html:262
+msgid "Envoi..."
+msgstr ""
+
+#: templates/employee_edit.html:272
+msgid "Erreur"
+msgstr ""
+
+#: templates/employee_edit.html:276
+msgid "Photo mise à jour"
+msgstr ""
+
+#: templates/employees_list.html:3 templates/setup_list.html:61
+msgid "Employés"
+msgstr ""
+
+#: templates/employees_list.html:110
+msgid "Retour à la liste des datasets"
+msgstr ""
+
+#: templates/employees_list.html:113
+msgid "Employés de"
+msgstr ""
+
+#: templates/employees_list.html:114 templates/setup_list.html:51
+msgid "employés"
+msgstr ""
+
+#: templates/employees_list.html:119
+msgid "Rechercher un employé..."
+msgstr ""
+
+#: templates/employees_list.html:119
+msgid "Rechercher un employé"
+msgstr ""
+
+#: templates/employees_list.html:122 templates/employees_list.html:171
+msgid "Ajouter un employé"
+msgstr ""
+
+#: templates/employees_list.html:134
+msgid "Actions"
+msgstr ""
+
+#: templates/employees_list.html:164
+msgid "Aucun employé ne correspond à votre recherche."
+msgstr ""
+
+#: templates/employees_list.html:168
+msgid "Aucun employé"
+msgstr ""
+
+#: templates/employees_list.html:169
+msgid "Ajoutez un premier employé pour ce dataset."
+msgstr ""
+
+#: templates/employees_list.html:178
+msgid "Supprimer l'employé ?"
+msgstr ""
+
+#: templates/employees_list.html:179
+msgid "L'employé"
+msgstr ""
+
+#: templates/employees_list.html:179
+msgid "sera définitivement retiré du CSV. Cette action est irréversible."
+msgstr ""
+
+#: templates/employees_list.html:183 templates/setup_list.html:67
+msgid "Supprimer"
+msgstr ""
+
+#: templates/employees_list.html:241 templates/setup_list.html:128
+msgid "Erreur lors de la suppression"
 msgstr ""
 
 #: templates/example.html:3
@@ -1050,49 +1260,24 @@ msgstr ""
 msgid "Par défaut"
 msgstr ""
 
-#: templates/setup_list.html:51
-msgid "employés"
-msgstr ""
-
-#: templates/setup_list.html:61
-msgid "Modifier"
-msgstr ""
-
-#: templates/setup_list.html:64
-msgid "Supprimer"
-msgstr ""
-
-#: templates/setup_list.html:73
+#: templates/setup_list.html:76
 msgid "Ajouter un dataset"
 msgstr ""
 
-#: templates/setup_list.html:81
+#: templates/setup_list.html:84
 msgid "Supprimer le dataset ?"
 msgstr ""
 
-#: templates/setup_list.html:82
+#: templates/setup_list.html:85
 msgid "Cette action est irréversible. Le dataset"
 msgstr ""
 
-#: templates/setup_list.html:82
+#: templates/setup_list.html:85
 msgid "et toutes ses données (CSV, photos, scores) seront supprimés."
 msgstr ""
 
-#: templates/setup_list.html:84
-msgid "Annuler"
-msgstr ""
-
-#: templates/setup_list.html:86
+#: templates/setup_list.html:89
 msgid "Supprimer définitivement"
-msgstr ""
-
-#: templates/setup_list.html:125
-msgid "Erreur lors de la suppression"
-msgstr ""
-
-#: templates/setup_list.html:132 templates/setup_wizard.html:374
-#: templates/setup_wizard.html:474 templates/setup_wizard.html:548
-msgid "Erreur réseau"
 msgstr ""
 
 #: templates/setup_wizard.html:4 templates/setup_wizard.html:19
@@ -1241,38 +1426,6 @@ msgstr ""
 msgid "Créer le dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:221
-msgid "Prénom"
-msgstr ""
-
-#: templates/setup_wizard.html:222 templates/setup_wizard.html:484
-msgid "Nom"
-msgstr ""
-
-#: templates/setup_wizard.html:223
-msgid "Photo"
-msgstr ""
-
-#: templates/setup_wizard.html:226
-msgid "Société"
-msgstr ""
-
-#: templates/setup_wizard.html:227
-msgid "Sexe"
-msgstr ""
-
-#: templates/setup_wizard.html:231
-msgid "Date de naissance"
-msgstr ""
-
-#: templates/setup_wizard.html:232
-msgid "Date d'embauche"
-msgstr ""
-
-#: templates/setup_wizard.html:233
-msgid "Manager"
-msgstr ""
-
 #: templates/setup_wizard.html:271
 msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
 msgstr ""
@@ -1327,14 +1480,6 @@ msgstr ""
 
 #: templates/setup_wizard.html:491
 msgid "Colonnes"
-msgstr ""
-
-#: templates/setup_wizard.html:540
-msgid "Erreur lors de la sauvegarde"
-msgstr ""
-
-#: templates/setup_wizard.html:543
-msgid "Modifications enregistrées"
 msgstr ""
 
 #: templates/setup_wizard.html:543

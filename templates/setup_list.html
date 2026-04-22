@@ -57,6 +57,9 @@
             </div>
 
             <div class="dataset-card-actions">
+                <a href="{{ url_for('admin.employees_list', dataset_id=ds.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-users"></i> {{ _('Employés') }}
+                </a>
                 <a href="{{ url_for('admin.setup_edit', dataset_id=ds.id) }}" class="btn btn-secondary">
                     <i class="fas fa-pen"></i> {{ _('Modifier') }}
                 </a>

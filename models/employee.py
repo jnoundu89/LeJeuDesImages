@@ -90,3 +90,41 @@ class EmployeeData:
         selected.append(correct_value)
         random.shuffle(selected)
         return selected
+
+    # -- CRUD operations --
+
+    def get_by_index(self, idx: int) -> 'Employee':
+        if idx < 0 or idx >= len(self.data):
+            raise IndexError(f'Employee index {idx} out of range')
+        return Employee(self.data.iloc[idx].to_dict())
+
+    def update_at_index(self, idx: int, fields: Dict[str, Any]) -> None:
+        if idx < 0 or idx >= len(self.data):
+            raise IndexError(f'Employee index {idx} out of range')
+        for canonical_name, value in fields.items():
+            if canonical_name in self.data.columns:
+                self.data.at[self.data.index[idx], canonical_name] = value
+
+    def append(self, fields: Dict[str, Any]) -> int:
+        """Insert a new employee row; missing columns are filled with empty strings."""
+        row = {col: fields.get(col, '') for col in self.data.columns}
+        # Ensure all mapped canonical fields land on the row even if they're not
+        # yet present as DataFrame columns (e.g. adding manager_name to a CSV
+        # that didn't originally have it).
+        for k, v in fields.items():
+            row.setdefault(k, v)
+        new_df = pd.concat([self.data, pd.DataFrame([row])], ignore_index=True)
+        self.data = new_df
+        return len(self.data) - 1
+
+    def delete_at_index(self, idx: int) -> None:
+        if idx < 0 or idx >= len(self.data):
+            raise IndexError(f'Employee index {idx} out of range')
+        self.data = self.data.drop(self.data.index[idx]).reset_index(drop=True)
+
+    def save(self) -> None:
+        """Write the DataFrame back to csv_path using the CSV column names."""
+        mapping = self.config.column_mapping  # {canonical: csv_col}
+        # Only rename columns that appear in both the mapping and the DataFrame
+        rename_map = {k: v for k, v in mapping.items() if k in self.data.columns}
+        self.data.rename(columns=rename_map).to_csv(self.config.csv_path, index=False)
