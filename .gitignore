@@ -64,8 +64,7 @@ uploads/*
 # Test artifacts (Playwright screenshots)
 tests/screenshots/
 .playwright-mcp/
-screenshot-*.png
-test-*.png
+/*.png
 
 # Company-specific config (use config.example.yaml as template)
 config.yaml
