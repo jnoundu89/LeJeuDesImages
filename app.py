@@ -1,25 +1,22 @@
-import importlib
 import logging
 import os
-import pkgutil
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask, request, send_from_directory
+from flask import Flask, abort, make_response, redirect, request, send_from_directory, session
 from flask_babel import Babel
 
-import models
-from models.config import CompanyConfig
-from models.employee import EmployeeData
-from models.game import GameManager
-from models.game_mode import GameMode, GameModeFactory, NormalMode, ReverseMode
-from models.score import ScoreManager
+from models.config import AppConfig
+from models.dataset_registry import DATASET_COOKIE, DatasetRegistry
 from routes.admin_routes import admin_bp
 from routes.card_game_routes import register_card_game_blueprint
-from routes.game_routes import game_bp, init_routes
+from routes.game_routes import init_routes
 
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
+
+# Paths the user can still reach when no dataset is configured yet (first-run).
+_FIRST_RUN_ALLOWED_PREFIXES = ('/setup', '/static/', '/lang/')
 
 
 def create_app(config_path: str | None = None):
@@ -33,83 +30,103 @@ def create_app(config_path: str | None = None):
 
     Babel(app, locale_selector=get_locale)
 
-    # Initialize models
     config_file = config_path or os.environ.get('APP_CONFIG', 'config.yaml')
-    config = CompanyConfig(config_file)
-    employee_data = EmployeeData(config)
-    score_manager = ScoreManager('scores_db.json')
-    game_manager = GameManager(employee_data, score_manager)
-    game_mode_factory = GameModeFactory(game_manager)
+    app.config['CONFIG_PATH'] = config_file
 
-    # Auto-discover GameMode subclasses
-    card_game_mode = None
-    for importer, modname, ispkg in pkgutil.iter_modules(models.__path__):
-        if modname.endswith('_mode') and modname != 'game_mode':
-            module = importlib.import_module(f'models.{modname}')
-            for attr_name in dir(module):
-                attr = getattr(module, attr_name)
-                if (isinstance(attr, type) and issubclass(attr, GameMode)
-                        and attr is not GameMode and attr not in (NormalMode, ReverseMode)):
-                    instance = attr(game_manager)
-                    game_mode_factory.register_mode(instance)
-                    # Keep a reference to CardGameMode for its special routes
-                    if modname == 'card_game_mode':
-                        card_game_mode = instance
+    try:
+        app_config = AppConfig(config_file)
+    except FileNotFoundError:
+        app_config = None
 
-    # Initialize routes
-    init_routes(game_mode_factory)
+    registry = (
+        DatasetRegistry.from_app_config(app_config)
+        if app_config is not None
+        else DatasetRegistry()
+    )
+    app.config['DATASET_REGISTRY'] = registry
+    app.config['APP_CONFIG_OBJECT'] = app_config
 
-    # Register card game routes (needs the specific instance)
-    if card_game_mode is not None:
-        register_card_game_blueprint(app, card_game_mode)
+    game_bp = init_routes(registry)
+    register_card_game_blueprint(app, registry)
 
-    # Register blueprints
     app.register_blueprint(game_bp)
     app.register_blueprint(admin_bp)
 
-    # Inject company branding + current locale into all templates
+    @app.before_request
+    def _redirect_to_setup_when_empty():
+        if not registry.is_empty():
+            return None
+        path = request.path
+        if any(path == p.rstrip('/') or path.startswith(p) for p in _FIRST_RUN_ALLOWED_PREFIXES):
+            return None
+        return redirect('/setup')
+
     @app.context_processor
     def inject_globals():
+        ds = registry.current(request)
+        contact_email = app.config['APP_CONFIG_OBJECT'].contact_email if app.config.get('APP_CONFIG_OBJECT') else ''
+        datasets_list = [
+            {'id': d.id, 'name': d.config.company_name}
+            for d in registry.values()
+        ]
+        if ds is None:
+            return {
+                'company_name': 'My Company',
+                'company_logo_url': '',
+                'company_tagline': '',
+                'company_email': contact_email,
+                'current_lang': get_locale(),
+                'datasets': datasets_list,
+                'current_dataset_id': '',
+            }
         return {
-            'company_name': config.company_name,
-            'company_logo_url': config.logo_url,
-            'company_tagline': config.tagline,
-            'company_email': config.contact_email,
+            'company_name': ds.config.company_name,
+            'company_logo_url': ds.config.logo_url,
+            'company_tagline': ds.config.tagline,
+            'company_email': contact_email,
             'current_lang': get_locale(),
+            'datasets': datasets_list,
+            'current_dataset_id': ds.id,
         }
 
-    # Serve employee photos from the configured images directory
     @app.route('/photos/<path:filename>')
     def serve_photo(filename):
-        photos_dir = Path(config.images_dir).resolve()
+        ds = registry.current(request)
+        if ds is None:
+            abort(404)
+        photos_dir = Path(ds.config.images_dir).resolve()
         return send_from_directory(photos_dir, filename)
 
     @app.route('/lang/<lang_code>')
     def set_language(lang_code):
-        from flask import make_response, redirect
-        from flask import request as req
-        resp = make_response(redirect(req.referrer or '/'))
+        resp = make_response(redirect(request.referrer or '/'))
         if lang_code in app.config['BABEL_SUPPORTED_LOCALES']:
             resp.set_cookie('lang', lang_code, max_age=365 * 24 * 3600)
+        return resp
+
+    @app.route('/dataset/<dataset_id>')
+    def set_dataset(dataset_id):
+        # Unknown id → ignore, don't set cookie
+        if registry.get(dataset_id) is None:
+            return redirect(request.referrer or '/')
+        resp = make_response(redirect(request.referrer or '/'))
+        resp.set_cookie(DATASET_COOKIE, dataset_id, max_age=365 * 24 * 3600)
+        # Switching datasets invalidates any in-progress game
+        session.clear()
         return resp
 
     return app
 
 
 def _get_app():
-    try:
-        return create_app()
-    except FileNotFoundError:
-        # config.yaml may not exist during testing; callers should
-        # use create_app(config_path=...) explicitly.
-        return None
+    return create_app()
 
 
 app = _get_app()
 
 if __name__ == '__main__':
     if app is None:
-        raise SystemExit('Cannot start: config.yaml not found. Copy config.example.yaml to config.yaml.')
+        raise SystemExit('Cannot start: failed to create Flask app.')
     app.run(
         host=os.environ.get('FLASK_HOST', '127.0.0.1'),
         port=int(os.environ.get('FLASK_PORT', 5000)),

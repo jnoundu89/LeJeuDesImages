@@ -1,26 +1,52 @@
-# -- Company configuration --
-# Copy this file to config.yaml and edit it for your company.
+# -- Application configuration --
+# Copy this file to config.yaml and edit it for your setup.
+# You can also generate / edit this file entirely through the /setup admin wizard.
 
-company:
-  name: "Your Company Name"
-  logo_url: "/static/images/logo.png"
+app:
+  # Contact email shown in the app footer; belongs to the app owner, not any dataset.
   contact_email: "contact@yourcompany.com"
-  tagline: "Testez votre connaissance de vos collegues avec des modes de jeu amusants et interactifs."
+  # Id of the dataset loaded by default when a user first visits the app.
+  default_dataset: "acme"
 
-data:
-  csv_path: "data/team.csv"
-  images_dir: "data/photos"
-  # Maps your CSV column names to the canonical field names used by the game.
-  # Required fields: first_name, last_name, photo, team, job_title, company, sex
-  # Optional fields: birth_date, contract_start, manager_name
-  column_mapping:
-    first_name: "first_name"
-    last_name: "last_name"
-    photo: "photo_path"
-    team: "team"
-    job_title: "job_title"
-    company: "company"
-    sex: "sex"
-    birth_date: "birth_date"
-    contract_start: "contract_start"
-    manager_name: "manager_name"
+# Datasets are independent collections of employees (CSV + photos + branding).
+# Users can switch between them at runtime via the header dropdown.
+# The admin wizard (/setup) can add / edit / delete datasets without touching this file.
+datasets:
+
+  acme:
+    company:
+      name: "Acme Corp"
+      logo_url: "/static/images/acme_logo.png"
+      tagline: "Test your knowledge of your Acme colleagues."
+    data:
+      csv_path: "data/acme/team.csv"
+      images_dir: "data/acme/photos"
+      scores_db_path: "data/acme/scores.json"
+      # Maps your CSV column names to the canonical field names used by the game.
+      # Required: first_name, last_name, photo, team, job_title, company, sex
+      # Optional: birth_date, contract_start, manager_name
+      column_mapping:
+        first_name: "first_name"
+        last_name: "last_name"
+        photo: "photo_path"
+        team: "team"
+        job_title: "job_title"
+        company: "company"
+        sex: "sex"
+        birth_date: "birth_date"
+        contract_start: "contract_start"
+        manager_name: "manager_name"
+
+  # Add as many datasets as you want; the wizard will generate entries like this.
+  # client_x:
+  #   company:
+  #     name: "Client X"
+  #     logo_url: "/static/images/client_x_logo.png"
+  #     tagline: "Get to know the Client X team."
+  #   data:
+  #     csv_path: "data/client_x/team.csv"
+  #     images_dir: "data/client_x/photos"
+  #     scores_db_path: "data/client_x/scores.json"
+  #     column_mapping:
+  #       first_name: "firstName"
+  #       ...

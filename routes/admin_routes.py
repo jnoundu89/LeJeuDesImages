@@ -1,20 +1,37 @@
 import os
+import re
+import shutil
 import tempfile
 import zipfile
 from pathlib import Path
 
 import pandas as pd
-from flask import Blueprint, current_app, jsonify, render_template, request, session
+from flask import Blueprint, current_app, jsonify, redirect, render_template, request, session, url_for
 from flask_babel import gettext as _
 from werkzeug.utils import secure_filename
 
-from models.config import CompanyConfig
+from models.config import AppConfig, DatasetConfig
+from models.dataset_registry import DatasetRegistry
 
 admin_bp = Blueprint('admin', __name__)
+
+_DATASET_ID_RE = re.compile(r'^[a-z0-9][a-z0-9_-]{0,31}$')
 
 
 def _upload_dir() -> Path:
     return Path(current_app.config.get('UPLOAD_DIR', 'uploads'))
+
+
+def _registry() -> DatasetRegistry:
+    return current_app.config['DATASET_REGISTRY']
+
+
+def _app_config() -> AppConfig | None:
+    return current_app.config.get('APP_CONFIG_OBJECT')
+
+
+def _config_path() -> str:
+    return current_app.config.get('CONFIG_PATH', 'config.yaml')
 
 
 def _is_authenticated() -> bool:
@@ -29,37 +46,118 @@ def _is_authenticated() -> bool:
     return False
 
 
+def _unauthorized():
+    return jsonify({'error': _('Unauthorized')}), 401
+
+
+def _write_config_yaml(datasets_dict: dict, contact_email: str, default_id: str):
+    payload = {
+        'app': {
+            'contact_email': contact_email,
+            'default_dataset': default_id,
+        },
+        'datasets': datasets_dict,
+    }
+    AppConfig.save(payload, _config_path())
+
+
+def _serialize_registry(exclude: str | None = None) -> dict:
+    """Serialize registry datasets to a dict suitable for config.yaml."""
+    out = {}
+    for ds in _registry().values():
+        if ds.id == exclude:
+            continue
+        out[ds.id] = ds.config.to_dict()
+    return out
+
+
+def _current_contact_email() -> str:
+    cfg = _app_config()
+    return cfg.contact_email if cfg is not None else ''
+
+
 @admin_bp.route('/setup')
 def setup():
+    """Landing: list datasets, provide actions."""
     if not _is_authenticated():
-        return jsonify({'error': _('Unauthorized')}), 401
+        return _unauthorized()
 
-    current_config = {}
-    try:
-        config = CompanyConfig('config.yaml')
-        current_config = {
-            'company': {
-                'name': config.company_name,
-                'logo_url': config.logo_url,
-                'contact_email': config.contact_email,
-                'tagline': config.tagline,
-            },
-            'data': {
-                'csv_path': config.csv_path,
-                'images_dir': config.images_dir,
-                'column_mapping': config.column_mapping,
-            },
-        }
-    except (FileNotFoundError, ValueError):
-        pass
+    registry = _registry()
+    datasets_info = []
+    for ds in registry.values():
+        try:
+            employee_count = len(ds.employee_data.get_all_employees())
+        except Exception:
+            employee_count = 0
+        datasets_info.append({
+            'id': ds.id,
+            'name': ds.config.company_name,
+            'logo_url': ds.config.logo_url,
+            'employee_count': employee_count,
+            'csv_path': ds.config.csv_path,
+            'images_dir': ds.config.images_dir,
+        })
 
-    return render_template('setup.html', current_config=current_config)
+    return render_template(
+        'setup_list.html',
+        datasets=datasets_info,
+        contact_email=_current_contact_email(),
+        default_dataset_id=registry.default_id,
+    )
+
+
+@admin_bp.route('/setup/new')
+def setup_new():
+    """Wizard: add a new dataset."""
+    if not _is_authenticated():
+        return _unauthorized()
+
+    return render_template(
+        'setup_wizard.html',
+        mode='new',
+        dataset_id='',
+        existing_ids=list(_registry().ids()),
+        current_config={},
+    )
+
+
+@admin_bp.route('/setup/<dataset_id>/edit')
+def setup_edit(dataset_id):
+    """Wizard: edit an existing dataset's config (branding + mapping)."""
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return redirect(url_for('admin.setup'))
+
+    current_config = {
+        'company': {
+            'name': ds.config.company_name,
+            'logo_url': ds.config.logo_url,
+            'tagline': ds.config.tagline,
+        },
+        'data': {
+            'csv_path': ds.config.csv_path,
+            'images_dir': ds.config.images_dir,
+            'column_mapping': ds.config.column_mapping,
+        },
+    }
+
+    return render_template(
+        'setup_wizard.html',
+        mode='edit',
+        dataset_id=dataset_id,
+        existing_ids=[i for i in _registry().ids() if i != dataset_id],
+        current_config=current_config,
+    )
 
 
 @admin_bp.route('/setup/upload-csv', methods=['POST'])
 def upload_csv():
+    """Validate uploaded CSV, return columns + preview. CSV stays in uploads/ until save."""
     if not _is_authenticated():
-        return jsonify({'error': _('Unauthorized')}), 401
+        return _unauthorized()
 
     if 'file' not in request.files:
         return jsonify({'error': _('No file provided')}), 400
@@ -83,56 +181,141 @@ def upload_csv():
         filepath.unlink(missing_ok=True)
         return jsonify({'error': f'{_("Invalid CSV file")}: {e}'}), 400
 
-    columns = list(df.columns)
-    preview = df.head(5).fillna('').to_dict(orient='records')
-
     return jsonify({
-        'columns': columns,
-        'preview': preview,
+        'columns': list(df.columns),
+        'preview': df.head(5).fillna('').to_dict(orient='records'),
         'filename': filename,
     })
 
 
 @admin_bp.route('/setup/save', methods=['POST'])
-def save_config():
+def save():
+    """Create or update a dataset. Writes config.yaml + moves CSV to data/<id>/ + hot-reloads registry."""
     if not _is_authenticated():
-        return jsonify({'error': _('Unauthorized')}), 401
+        return _unauthorized()
 
     data = request.get_json()
     if not data:
         return jsonify({'error': _('No data provided')}), 400
 
+    mode = data.get('mode', 'new')
+    ds_id = (data.get('id') or '').strip()
+    if not _DATASET_ID_RE.match(ds_id):
+        return jsonify({'error': _('Dataset id must be lowercase alphanumeric (underscores and dashes allowed, max 32 chars).')}), 400
+
+    registry = _registry()
+    existing = registry.get(ds_id)
+    if mode == 'new' and existing is not None:
+        return jsonify({'error': _('A dataset with this id already exists.')}), 409
+
     company = data.get('company', {})
     column_mapping = data.get('column_mapping', {})
-    csv_filename = data.get('csv_filename', '')
-    images_dir = data.get('images_dir', 'static/images')
+    csv_filename = (data.get('csv_filename') or '').strip()
 
-    config_dict = {
+    dataset_dir = Path('data') / ds_id
+    dataset_dir.mkdir(parents=True, exist_ok=True)
+    photos_dir = dataset_dir / 'photos'
+    photos_dir.mkdir(parents=True, exist_ok=True)
+
+    final_csv_path = dataset_dir / 'team.csv'
+
+    # If a fresh CSV was uploaded, move it from uploads/ to the dataset dir
+    if csv_filename:
+        uploaded = _upload_dir() / secure_filename(csv_filename)
+        if uploaded.exists():
+            shutil.move(str(uploaded), str(final_csv_path))
+        elif not final_csv_path.exists():
+            return jsonify({'error': _('Uploaded CSV was not found. Re-upload and retry.')}), 400
+    elif existing is not None:
+        # Edit mode: reuse existing CSV path
+        final_csv_path = Path(existing.config.csv_path)
+    else:
+        return jsonify({'error': _('A CSV file is required to create a dataset.')}), 400
+
+    new_ds_dict = {
         'company': {
             'name': company.get('name', ''),
             'logo_url': company.get('logo_url', ''),
-            'contact_email': company.get('contact_email', ''),
             'tagline': company.get('tagline', ''),
         },
         'data': {
-            'csv_path': csv_filename,
-            'images_dir': images_dir,
+            'csv_path': str(final_csv_path),
+            'images_dir': str(photos_dir) if mode == 'new' else (existing.config.images_dir if existing else str(photos_dir)),
+            'scores_db_path': existing.config.scores_db_path if existing else str(dataset_dir / 'scores.json'),
             'column_mapping': column_mapping,
         },
     }
 
+    # Validate by instantiating a DatasetConfig before writing
     try:
-        CompanyConfig.save(config_dict)
+        new_ds_config = DatasetConfig(ds_id, new_ds_dict)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+
+    datasets_dict = _serialize_registry(exclude=ds_id)
+    datasets_dict[ds_id] = new_ds_config.to_dict()
+
+    contact_email = data.get('contact_email') or _current_contact_email()
+    default_id = registry.default_id or ds_id
+
+    try:
+        _write_config_yaml(datasets_dict, contact_email, default_id)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-    return jsonify({'success': True})
+    # Hot-reload: remove the old Dataset (if any) and rebuild
+    if existing is not None:
+        registry.remove(ds_id)
+    registry.add(new_ds_config)
+
+    # Refresh AppConfig object on app for contact_email changes
+    try:
+        current_app.config['APP_CONFIG_OBJECT'] = AppConfig(_config_path())
+    except Exception:
+        pass
+
+    return jsonify({'success': True, 'id': ds_id, 'redirect': url_for('admin.setup')})
 
 
-@admin_bp.route('/setup/upload-photos', methods=['POST'])
-def upload_photos():
+@admin_bp.route('/setup/<dataset_id>/delete', methods=['POST'])
+def delete(dataset_id):
+    """Remove a dataset entirely: disk + registry + config.yaml."""
     if not _is_authenticated():
-        return jsonify({'error': _('Unauthorized')}), 401
+        return _unauthorized()
+
+    registry = _registry()
+    ds = registry.get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
+
+    dataset_dir = Path('data') / dataset_id
+    if dataset_dir.exists():
+        shutil.rmtree(dataset_dir, ignore_errors=True)
+
+    registry.remove(dataset_id)
+
+    datasets_dict = _serialize_registry()
+    try:
+        _write_config_yaml(
+            datasets_dict,
+            _current_contact_email(),
+            registry.default_id,
+        )
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+    return jsonify({'success': True, 'redirect': url_for('admin.setup')})
+
+
+@admin_bp.route('/setup/<dataset_id>/upload-photos', methods=['POST'])
+def upload_photos(dataset_id):
+    """Extract a photos ZIP into an existing dataset's images directory."""
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
 
     if 'file' not in request.files:
         return jsonify({'error': _('No file provided')}), 400
@@ -145,22 +328,17 @@ def upload_photos():
     if not filename.lower().endswith('.zip'):
         return jsonify({'error': _('File must be a ZIP archive')}), 400
 
-    try:
-        config = CompanyConfig('config.yaml')
-        images_dir = Path(config.images_dir)
-    except (FileNotFoundError, ValueError):
-        images_dir = Path('static/images')
-
+    images_dir = Path(ds.config.images_dir)
     images_dir.mkdir(parents=True, exist_ok=True)
 
     with tempfile.NamedTemporaryFile(suffix='.zip', delete=False) as tmp:
         tmp_path = tmp.name
         file.save(tmp_path)
 
+    extracted = 0
     try:
         with zipfile.ZipFile(tmp_path, 'r') as zf:
             valid_extensions = {'.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'}
-            extracted = 0
             for member in zf.infolist():
                 if member.is_dir():
                     continue
@@ -180,3 +358,37 @@ def upload_photos():
         Path(tmp_path).unlink(missing_ok=True)
 
     return jsonify({'extracted': extracted})
+
+
+@admin_bp.route('/setup/<dataset_id>/replace-csv', methods=['POST'])
+def replace_csv(dataset_id):
+    """Replace an existing dataset's CSV with a new upload (kept in uploads/ → moved here).
+
+    Expects JSON {'csv_filename': str} referencing a CSV previously validated via /setup/upload-csv.
+    """
+    if not _is_authenticated():
+        return _unauthorized()
+
+    ds = _registry().get(dataset_id)
+    if ds is None:
+        return jsonify({'error': _('Dataset not found')}), 404
+
+    data = request.get_json() or {}
+    csv_filename = (data.get('csv_filename') or '').strip()
+    if not csv_filename:
+        return jsonify({'error': _('csv_filename is required')}), 400
+
+    uploaded = _upload_dir() / secure_filename(csv_filename)
+    if not uploaded.exists():
+        return jsonify({'error': _('Uploaded CSV was not found. Re-upload and retry.')}), 400
+
+    target = Path(ds.config.csv_path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(uploaded), str(target))
+
+    # Hot-reload the dataset so EmployeeData re-reads the new CSV
+    new_config = DatasetConfig(ds.id, ds.config.to_dict())
+    _registry().remove(ds.id)
+    _registry().add(new_config)
+
+    return jsonify({'success': True})

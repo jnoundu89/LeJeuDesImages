@@ -1,6 +1,6 @@
 import pytest
 
-from models.config import CompanyConfig
+from models.config import AppConfig, CompanyConfig, DatasetConfig
 
 
 class TestCompanyConfig:
@@ -75,3 +75,146 @@ class TestCompanyConfig:
         assert cfg.logo_url == ''
         assert cfg.contact_email == ''
         assert cfg.tagline == ''
+
+
+def _minimal_mapping() -> dict:
+    return {
+        'first_name': 'fn',
+        'last_name': 'ln',
+        'photo': 'p',
+        'team': 't',
+        'job_title': 'jt',
+        'company': 'c',
+        'sex': 's',
+    }
+
+
+def _write_new_format(tmp_path, datasets: dict, app_settings: dict | None = None) -> str:
+    import yaml
+    payload = {
+        'app': app_settings or {'contact_email': 'me@app.com', 'default_dataset': next(iter(datasets))},
+        'datasets': datasets,
+    }
+    path = tmp_path / 'config.yaml'
+    path.write_text(yaml.dump(payload))
+    return str(path)
+
+
+class TestAppConfig:
+    def test_loads_new_format_with_multiple_datasets(self, tmp_path):
+        datasets = {
+            'acme': {
+                'company': {'name': 'Acme'},
+                'data': {'csv_path': 'data/acme/team.csv', 'column_mapping': _minimal_mapping()},
+            },
+            'client_x': {
+                'company': {'name': 'Client X'},
+                'data': {'csv_path': 'data/client_x/team.csv', 'column_mapping': _minimal_mapping()},
+            },
+        }
+        path = _write_new_format(tmp_path, datasets)
+        cfg = AppConfig(path)
+
+        assert set(cfg.datasets.keys()) == {'acme', 'client_x'}
+        assert cfg.datasets['acme'].company_name == 'Acme'
+        assert cfg.datasets['client_x'].company_name == 'Client X'
+        assert cfg.default_dataset_id == 'acme'
+        assert cfg.contact_email == 'me@app.com'
+
+    def test_default_dataset_falls_back_to_first_when_missing(self, tmp_path):
+        datasets = {
+            'one': {'data': {'csv_path': 'x.csv', 'column_mapping': _minimal_mapping()}},
+        }
+        path = _write_new_format(
+            tmp_path, datasets, app_settings={'contact_email': '', 'default_dataset': 'nonexistent'}
+        )
+        cfg = AppConfig(path)
+        assert cfg.default_dataset_id == 'one'
+
+    def test_missing_config_file_raises(self):
+        with pytest.raises(FileNotFoundError):
+            AppConfig('nonexistent.yaml')
+
+    def test_legacy_format_auto_migrated_to_default_dataset(self, test_config):
+        # test_config fixture (from conftest) loads tests/fixtures/test_config.yaml in legacy format
+        cfg = AppConfig('tests/fixtures/test_config.yaml')
+
+        assert list(cfg.datasets.keys()) == ['default']
+        assert cfg.default_dataset_id == 'default'
+        assert cfg.contact_email == 'test@example.com'
+
+        ds = cfg.datasets['default']
+        assert ds.company_name == 'Test Corp'
+        assert ds.logo_url == 'https://example.com/logo.png'
+        assert ds.csv_path == 'tests/fixtures/test_team.csv'
+        assert ds.column_mapping['first_name'] == 'firstName'
+
+    def test_legacy_format_without_datasets_key_is_detected(self, tmp_path):
+        path = tmp_path / 'legacy.yaml'
+        path.write_text(
+            'company:\n'
+            '  name: "Old"\n'
+            'data:\n'
+            '  csv_path: "old.csv"\n'
+            '  column_mapping:\n'
+            + ''.join(f'    {k}: "{v}"\n' for k, v in _minimal_mapping().items())
+        )
+        cfg = AppConfig(str(path))
+        assert 'default' in cfg.datasets
+        assert cfg.datasets['default'].company_name == 'Old'
+
+    def test_new_format_takes_precedence_over_legacy_keys(self, tmp_path):
+        path = tmp_path / 'mixed.yaml'
+        path.write_text(
+            'datasets:\n'
+            '  real:\n'
+            '    data:\n'
+            '      csv_path: "real.csv"\n'
+            '      column_mapping:\n'
+            + ''.join(f'        {k}: "{v}"\n' for k, v in _minimal_mapping().items())
+            + 'company:\n'
+            '  name: "Ignored"\n'
+        )
+        cfg = AppConfig(str(path))
+        assert list(cfg.datasets.keys()) == ['real']
+
+
+class TestDatasetConfig:
+    def test_scores_db_path_defaults_under_data_dir(self):
+        ds = DatasetConfig('acme', {'data': {'csv_path': 'x.csv', 'column_mapping': _minimal_mapping()}})
+        assert ds.scores_db_path == 'data/acme/scores.json'
+
+    def test_scores_db_path_from_config(self):
+        ds = DatasetConfig(
+            'acme',
+            {
+                'data': {
+                    'csv_path': 'x.csv',
+                    'scores_db_path': 'custom/path.json',
+                    'column_mapping': _minimal_mapping(),
+                }
+            },
+        )
+        assert ds.scores_db_path == 'custom/path.json'
+
+    def test_validation_error_includes_dataset_id(self):
+        with pytest.raises(ValueError, match="Dataset 'broken'"):
+            DatasetConfig('broken', {'data': {'csv_path': 'x.csv', 'column_mapping': {}}})
+
+    def test_to_dict_round_trip(self):
+        ds = DatasetConfig(
+            'acme',
+            {
+                'company': {'name': 'Acme', 'logo_url': '/logo.png'},
+                'data': {
+                    'csv_path': 'x.csv',
+                    'images_dir': 'custom/photos',
+                    'column_mapping': _minimal_mapping(),
+                },
+            },
+        )
+        d = ds.to_dict()
+        assert d['company']['name'] == 'Acme'
+        assert d['data']['csv_path'] == 'x.csv'
+        assert d['data']['images_dir'] == 'custom/photos'
+        assert d['data']['column_mapping'] == _minimal_mapping()

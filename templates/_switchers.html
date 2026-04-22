@@ -1,0 +1,23 @@
+{# Header switchers: dataset (optional, hidden if <2 datasets) + language.
+   Usage: {% include '_switchers.html' with context %} (relies on inject_globals).
+   Optional flag `disable_dataset_switcher=true` to gray out the dropdown (e.g. in-game). #}
+
+<div class="header-switchers">
+    {% if datasets and datasets|length > 1 %}
+        <div class="dataset-switcher"
+             title="{% if disable_dataset_switcher|default(false) %}{{ _('Termine ou recommence la partie pour changer de dataset.') }}{% else %}{{ _('Changer de dataset') }}{% endif %}">
+            <select onchange="if(this.value) window.location.href='/dataset/'+this.value"
+                    {% if disable_dataset_switcher|default(false) %}disabled{% endif %}>
+                {% for ds in datasets %}
+                    <option value="{{ ds.id }}" {% if ds.id == current_dataset_id %}selected{% endif %}>
+                        {{ ds.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    {% endif %}
+    <div class="lang-switcher">
+        <a href="/lang/fr" class="{% if current_lang == 'fr' %}active{% endif %}">FR</a>
+        <a href="/lang/en" class="{% if current_lang == 'en' %}active{% endif %}">EN</a>
+    </div>
+</div>

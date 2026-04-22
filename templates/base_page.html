@@ -23,11 +23,7 @@
         </button>
     </div>
 
-    <!-- Language switcher -->
-    <div class="lang-switcher">
-        <a href="/lang/fr" class="{% if current_lang == 'fr' %}active{% endif %}">FR</a>
-        <a href="/lang/en" class="{% if current_lang == 'en' %}active{% endif %}">EN</a>
-    </div>
+    {% include '_switchers.html' %}
 
     <!-- Particle background -->
     <div class="particles-container">

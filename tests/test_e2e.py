@@ -42,6 +42,14 @@ def live_app(tmp_path_factory):
     yield f'http://127.0.0.1:{port}'
 
 
+def _fill_step1_minimum(page: Page):
+    """Fill the required step-1 fields so Suivant validation passes."""
+    if not page.locator('#dataset-id').input_value():
+        page.locator('#dataset-id').fill('e2e_test')
+    if not page.locator('#company-name').input_value():
+        page.locator('#company-name').fill('E2E Co')
+
+
 # ─── Existing E2E tests ───
 
 
@@ -64,7 +72,7 @@ def test_game_flow(page: Page, live_app: str):
 
 @pytest.mark.e2e
 def test_setup_wizard_loads(page: Page, live_app: str):
-    response = page.goto(f'{live_app}/setup')
+    response = page.goto(f'{live_app}/setup/new')
     assert response is not None
     assert response.status == 200
     company_name_input = page.locator('#company-name')
@@ -234,7 +242,7 @@ def test_mode_loads_with_alpine(page: Page, live_app: str, mode: str):
 @pytest.mark.e2e
 def test_setup_wizard_step1_fields_visible(page: Page, live_app: str):
     """Step 1 (Branding) shows all company fields."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
     assert page.locator('#step-1').is_visible()
     assert page.locator('#company-name').is_visible()
     assert page.locator('#logo-url').is_visible()
@@ -249,11 +257,12 @@ def test_setup_wizard_step1_fields_visible(page: Page, live_app: str):
 @pytest.mark.e2e
 def test_setup_wizard_stepper_indicators(page: Page, live_app: str):
     """Stepper indicators update active/completed classes as user progresses."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
     # Initially step 1 is active
     assert 'active' in (page.locator('[data-step="1"]').get_attribute('class') or '')
 
+    _fill_step1_minimum(page)
     # Go to step 2 via Suivant
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
@@ -276,8 +285,9 @@ def test_setup_wizard_stepper_indicators(page: Page, live_app: str):
 @pytest.mark.e2e
 def test_setup_wizard_forward_navigation(page: Page, live_app: str):
     """Clicking Suivant navigates through all 4 steps."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
+    _fill_step1_minimum(page)
     # Wait for fadeIn animation (0.3s) between step transitions
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
@@ -295,8 +305,9 @@ def test_setup_wizard_forward_navigation(page: Page, live_app: str):
 @pytest.mark.e2e
 def test_setup_wizard_back_button(page: Page, live_app: str):
     """Precedent button returns to previous step."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
+    _fill_step1_minimum(page)
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
     assert page.locator('#step-2').is_visible()
@@ -309,10 +320,10 @@ def test_setup_wizard_back_button(page: Page, live_app: str):
 @pytest.mark.e2e
 def test_setup_wizard_form_state_persists(page: Page, live_app: str):
     """Form values entered in Step 1 persist when navigating away and back."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
+    page.locator('#dataset-id').fill('new_ds')
     page.locator('#company-name').fill('Acme Corp')
-    page.locator('#contact-email').fill('admin@acme.com')
     page.locator('#tagline').fill('Know your colleagues')
 
     # Go to step 2
@@ -323,15 +334,15 @@ def test_setup_wizard_form_state_persists(page: Page, live_app: str):
     page.locator('[data-step="1"]').click(force=True)
     page.wait_for_timeout(400)
 
+    assert page.locator('#dataset-id').input_value() == 'new_ds'
     assert page.locator('#company-name').input_value() == 'Acme Corp'
-    assert page.locator('#contact-email').input_value() == 'admin@acme.com'
     assert page.locator('#tagline').input_value() == 'Know your colleagues'
 
 
 @pytest.mark.e2e
 def test_setup_wizard_stepper_click_jumps_to_step(page: Page, live_app: str):
     """Clicking a stepper indicator jumps directly to that step."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
     page.locator('[data-step="3"]').click()
     page.wait_for_timeout(200)
@@ -345,11 +356,11 @@ def test_setup_wizard_stepper_click_jumps_to_step(page: Page, live_app: str):
 @pytest.mark.e2e
 def test_setup_wizard_summary_reflects_form_inputs(page: Page, live_app: str):
     """Step 4 summary table contains values entered in Step 1."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
+    page.locator('#dataset-id').fill('mgc')
     page.locator('#company-name').fill('My Great Company')
     page.locator('#logo-url').fill('https://example.com/logo.png')
-    page.locator('#contact-email').fill('contact@mgc.com')
     page.locator('#tagline').fill('The best team game')
 
     # Navigate to step 4 (buildSummary is called by step 3's Suivant button)
@@ -361,16 +372,17 @@ def test_setup_wizard_summary_reflects_form_inputs(page: Page, live_app: str):
     page.wait_for_timeout(500)
 
     summary_text = page.locator('#summary-company').text_content() or ''
+    assert 'mgc' in summary_text
     assert 'My Great Company' in summary_text
     assert 'https://example.com/logo.png' in summary_text
-    assert 'contact@mgc.com' in summary_text
     assert 'The best team game' in summary_text
 
 
 @pytest.mark.e2e
 def test_setup_wizard_csv_upload_reveals_preview_and_mapping(page: Page, live_app: str):
     """Uploading a CSV shows preview table and mapping selects."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
+    _fill_step1_minimum(page)
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
 
@@ -404,7 +416,8 @@ def test_setup_wizard_csv_invalid_file_shows_error(page: Page, live_app: str, tm
     bad_file = tmp_path / 'not_a_csv.txt'
     bad_file.write_text('hello')
 
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
+    _fill_step1_minimum(page)
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
 
@@ -425,7 +438,7 @@ def test_setup_wizard_responsive_viewports(page: Page, live_app: str, viewport):
     """Setup wizard renders correctly at mobile/tablet/desktop viewports."""
     width, height = viewport
     page.set_viewport_size({'width': width, 'height': height})
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
     # Core elements still visible
     assert page.locator('.setup-header h1').is_visible()
@@ -436,21 +449,22 @@ def test_setup_wizard_responsive_viewports(page: Page, live_app: str, viewport):
 
 
 @pytest.mark.e2e
-def test_setup_wizard_back_link_to_game(page: Page, live_app: str):
-    """Back link at top returns to game home."""
-    page.goto(f'{live_app}/setup')
+def test_setup_wizard_back_link_to_list(page: Page, live_app: str):
+    """Back link at top returns to the dataset list page."""
+    page.goto(f'{live_app}/setup/new')
     back_link = page.locator('.back-link')
     assert back_link.is_visible()
     href = back_link.get_attribute('href')
-    assert href == '/'
+    assert href == '/setup'
 
 
 @pytest.mark.e2e
 def test_setup_wizard_step1_validation_blocks_empty_name(page: Page, live_app: str):
     """Clicking Suivant with empty company name shows error and stays on Step 1."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
-    # Clear the company name (pre-filled from config)
+    # Provide a valid dataset id so only the company-name error triggers
+    page.locator('#dataset-id').fill('e2e_v')
     page.locator('#company-name').fill('')
 
     page.locator('#step1-next').click(force=True)
@@ -469,7 +483,8 @@ def test_setup_wizard_step1_validation_blocks_empty_name(page: Page, live_app: s
 @pytest.mark.e2e
 def test_setup_wizard_step1_validation_clears_on_input(page: Page, live_app: str):
     """Error clears when user starts typing in the company name."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
+    page.locator('#dataset-id').fill('e2e_v2')
     page.locator('#company-name').fill('')
     page.locator('#step1-next').click(force=True)
     page.wait_for_timeout(200)
@@ -484,7 +499,7 @@ def test_setup_wizard_step1_validation_clears_on_input(page: Page, live_app: str
 @pytest.mark.e2e
 def test_setup_wizard_stepper_keyboard_navigation(page: Page, live_app: str):
     """Stepper indicators are focusable and activate on Enter key."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
     # Step indicator has tabindex=0 (focusable)
     indicator = page.locator('[data-step="3"]')
@@ -502,7 +517,7 @@ def test_setup_wizard_stepper_keyboard_navigation(page: Page, live_app: str):
 @pytest.mark.e2e
 def test_setup_wizard_toast_is_dismissible(page: Page, live_app: str):
     """Toast notification can be closed via the close button."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
 
     # Trigger toast via direct JS call (simpler than full save flow)
     page.evaluate("document.getElementById('toast-message').textContent = 'Test'; "
@@ -522,7 +537,8 @@ def test_setup_wizard_mapping_hint_shown_without_csv(page: Page, live_app: str):
     Note: the test config has an existing column_mapping so renderMappingSelects runs
     on load and hides the hint. This test verifies the hint element exists and has the
     expected informational content."""
-    page.goto(f'{live_app}/setup')
+    page.goto(f'{live_app}/setup/new')
+    _fill_step1_minimum(page)
     page.locator('#step1-next').click(force=True)
     page.wait_for_timeout(400)
 

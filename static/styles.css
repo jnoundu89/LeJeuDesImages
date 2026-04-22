@@ -1728,3 +1728,45 @@ h1 .score-highlight {
 .mode-button:hover:before {
     width: 100%;
 }
+
+/* Header switchers (dataset + language) */
+.header-switchers {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.dataset-switcher select {
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--light, #fff);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+
+.dataset-switcher select:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+.dataset-switcher select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.dataset-switcher select option {
+    background: #222;
+    color: #fff;
+}
+
+/* Inside in-game header, align with the restart button height */
+.top-container .header-switchers {
+    position: static;
+}
+

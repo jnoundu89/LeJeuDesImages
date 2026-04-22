@@ -9,10 +9,9 @@
 {% block body %}
 <div class="top-container">
     <button class="top-right" onclick="window.location.href='/restart'">{{ _('Recommencer') }}</button>
-    <div class="lang-switcher">
-        <a href="/lang/fr" class="{% if current_lang == 'fr' %}active{% endif %}">FR</a>
-        <a href="/lang/en" class="{% if current_lang == 'en' %}active{% endif %}">EN</a>
-    </div>
+    {% with disable_dataset_switcher=true %}
+        {% include '_switchers.html' %}
+    {% endwith %}
 </div>
 
 <div class="main-layout" x-data x-init="$store.game.init()">

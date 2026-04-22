@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-13 10:52+0200\n"
+"POT-Creation-Date: 2026-04-22 16:58+0200\n"
 "PO-Revision-Date: 2026-04-08 14:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -126,37 +126,71 @@ msgstr ""
 msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
 msgstr ""
 
-#: routes/admin_routes.py:33 routes/admin_routes.py:60
-#: routes/admin_routes.py:96 routes/admin_routes.py:132
+#: routes/admin_routes.py:50
 msgid "Unauthorized"
 msgstr ""
 
-#: routes/admin_routes.py:63 routes/admin_routes.py:135
+#: routes/admin_routes.py:163 routes/admin_routes.py:321
 msgid "No file provided"
 msgstr ""
 
-#: routes/admin_routes.py:67 routes/admin_routes.py:139
+#: routes/admin_routes.py:167 routes/admin_routes.py:325
 msgid "No file selected"
 msgstr ""
 
-#: routes/admin_routes.py:71
+#: routes/admin_routes.py:171
 msgid "File must be a CSV"
 msgstr ""
 
-#: routes/admin_routes.py:81
+#: routes/admin_routes.py:182
 msgid "Invalid CSV file"
 msgstr ""
 
-#: routes/admin_routes.py:100
+#: routes/admin_routes.py:199
 msgid "No data provided"
 msgstr ""
 
-#: routes/admin_routes.py:143
+#: routes/admin_routes.py:204
+msgid ""
+"Dataset id must be lowercase alphanumeric (underscores and dashes "
+"allowed, max 32 chars)."
+msgstr ""
+
+#: routes/admin_routes.py:209
+msgid "A dataset with this id already exists."
+msgstr ""
+
+#: routes/admin_routes.py:228 routes/admin_routes.py:383
+msgid "Uploaded CSV was not found. Re-upload and retry."
+msgstr ""
+
+#: routes/admin_routes.py:233
+msgid "A CSV file is required to create a dataset."
+msgstr ""
+
+#: routes/admin_routes.py:289 routes/admin_routes.py:318
+#: routes/admin_routes.py:374
+msgid "Dataset not found"
+msgstr ""
+
+#: routes/admin_routes.py:329
 msgid "File must be a ZIP archive"
 msgstr ""
 
-#: routes/admin_routes.py:175
+#: routes/admin_routes.py:356
 msgid "Invalid ZIP file"
+msgstr ""
+
+#: routes/admin_routes.py:379
+msgid "csv_filename is required"
+msgstr ""
+
+#: templates/_switchers.html:8
+msgid "Termine ou recommence la partie pour changer de dataset."
+msgstr ""
+
+#: templates/_switchers.html:8
+msgid "Changer de dataset"
 msgstr ""
 
 #: templates/about.html:3
@@ -170,7 +204,7 @@ msgid ""
 "interactif pour identifier les membres de l'equipe %(company_name)s."
 msgstr ""
 
-#: templates/about.html:9 templates/base_page.html:54
+#: templates/about.html:9 templates/base_page.html:50
 msgid "A propos"
 msgstr ""
 
@@ -265,7 +299,7 @@ msgstr ""
 msgid "Meilleur score"
 msgstr ""
 
-#: templates/age.html:100 templates/base_game.html:54 templates/manager.html:82
+#: templates/age.html:100 templates/base_game.html:53 templates/manager.html:82
 #: templates/missing_person.html:164 templates/normal.html:170
 #: templates/progressive_hint.html:186 templates/reverse.html:52
 #: templates/seniority.html:100 templates/speed.html:128
@@ -273,7 +307,8 @@ msgstr ""
 msgid "Score actuel"
 msgstr ""
 
-#: templates/base.html:6 templates/base_page.html:40 templates/setup.html:3
+#: templates/base.html:6 templates/base_page.html:36
+#: templates/setup_list.html:3 templates/setup_wizard.html:4
 msgid "Le Jeu Des Images"
 msgstr ""
 
@@ -281,45 +316,45 @@ msgstr ""
 msgid "Recommencer"
 msgstr ""
 
-#: templates/base_game.html:21
+#: templates/base_game.html:20
 msgid "Masquer les statistiques"
 msgstr ""
 
-#: templates/base_game.html:21
+#: templates/base_game.html:20
 msgid "Afficher les statistiques"
 msgstr ""
 
-#: templates/base_game.html:23 templates/result.html:247
+#: templates/base_game.html:22 templates/result.html:247
 msgid "Statistiques de jeu"
 msgstr ""
 
-#: templates/base_game.html:24
+#: templates/base_game.html:23
 msgid "Bonnes reponses pour l'entreprise"
 msgstr ""
 
-#: templates/base_game.html:25
+#: templates/base_game.html:24
 msgid "Bonnes reponses pour l'equipe"
 msgstr ""
 
-#: templates/base_game.html:26
+#: templates/base_game.html:25
 msgid "Bonnes reponses pour le nom"
 msgstr ""
 
-#: templates/base_game.html:27
+#: templates/base_game.html:26
 msgid "Bonnes reponses pour le poste"
 msgstr ""
 
-#: templates/base_game.html:40 templates/timed.html:100
+#: templates/base_game.html:39 templates/timed.html:100
 #: templates/timed.html:137
 msgid "Temps restant"
 msgstr ""
 
-#: templates/base_game.html:52 templates/base_page.html:56
+#: templates/base_game.html:51 templates/base_page.html:52
 #: templates/scores.html:9
 msgid "Scores"
 msgstr ""
 
-#: templates/base_game.html:65
+#: templates/base_game.html:64
 msgid "Personne suivante"
 msgstr ""
 
@@ -331,50 +366,50 @@ msgstr ""
 msgid "Afficher le lecteur de musique"
 msgstr ""
 
-#: templates/base_page.html:52
+#: templates/base_page.html:48
 #, python-format
 msgid ""
 "Le Jeu Des Images - Un jeu interactif pour identifier les membres de "
 "l'equipe %(company_name)s."
 msgstr ""
 
-#: templates/base_page.html:55 templates/how_to_play.html:9
+#: templates/base_page.html:51 templates/how_to_play.html:9
 msgid "Comment jouer"
 msgstr ""
 
-#: templates/base_page.html:67
+#: templates/base_page.html:63
 msgid "Lecteur de musique"
 msgstr ""
 
-#: templates/base_page.html:69
+#: templates/base_page.html:65
 msgid "Afficher le visualiseur"
 msgstr ""
 
-#: templates/base_page.html:70
+#: templates/base_page.html:66
 msgid "Reduire le lecteur"
 msgstr ""
 
-#: templates/base_page.html:74
+#: templates/base_page.html:70
 msgid "Chargement..."
 msgstr ""
 
-#: templates/base_page.html:75
+#: templates/base_page.html:71
 msgid "Artiste"
 msgstr ""
 
-#: templates/base_page.html:78
+#: templates/base_page.html:74
 msgid "Piste precedente"
 msgstr ""
 
-#: templates/base_page.html:79
+#: templates/base_page.html:75
 msgid "Jouer la musique"
 msgstr ""
 
-#: templates/base_page.html:80
+#: templates/base_page.html:76
 msgid "Piste suivante"
 msgstr ""
 
-#: templates/base_page.html:83
+#: templates/base_page.html:79
 msgid "Couper le son"
 msgstr ""
 
@@ -402,16 +437,16 @@ msgstr ""
 msgid "Mode Défi Emoji - Qui suis-je?"
 msgstr ""
 
-#: templates/emoji_challenge.html:149 templates/setup.html:664
+#: templates/emoji_challenge.html:149 templates/setup_wizard.html:175
 msgid "Entreprise"
 msgstr ""
 
 #: templates/emoji_challenge.html:153 templates/missing_person.html:147
-#: templates/setup.html:713 templates/team.html:128
+#: templates/setup_wizard.html:224 templates/team.html:128
 msgid "Équipe"
 msgstr ""
 
-#: templates/emoji_challenge.html:157 templates/setup.html:714
+#: templates/emoji_challenge.html:157 templates/setup_wizard.html:225
 msgid "Poste"
 msgstr ""
 
@@ -984,228 +1019,327 @@ msgstr ""
 msgid "Combien d'années d'ancienneté ?"
 msgstr ""
 
-#: templates/setup.html:3
+#: templates/setup_list.html:3
 msgid "Configuration"
 msgstr ""
 
-#: templates/setup.html:520
+#: templates/setup_list.html:13
 msgid "Retour au jeu"
 msgstr ""
 
-#: templates/setup.html:523
-msgid "Configuration du jeu"
+#: templates/setup_list.html:17
+msgid "Gestion des datasets"
 msgstr ""
 
-#: templates/setup.html:524
-msgid "Configurez le jeu pour votre entreprise en quelques étapes."
+#: templates/setup_list.html:18
+msgid "Ajoutez, modifiez ou supprimez les datasets disponibles dans le jeu."
 msgstr ""
 
-#: templates/setup.html:528
+#: templates/setup_list.html:24
+msgid "Aucun dataset configuré"
+msgstr ""
+
+#: templates/setup_list.html:25
+msgid "Commencez par ajouter un dataset pour démarrer le jeu."
+msgstr ""
+
+#: templates/setup_list.html:27
+msgid "Créer le premier dataset"
+msgstr ""
+
+#: templates/setup_list.html:42
+msgid "Par défaut"
+msgstr ""
+
+#: templates/setup_list.html:51
+msgid "employés"
+msgstr ""
+
+#: templates/setup_list.html:61
+msgid "Modifier"
+msgstr ""
+
+#: templates/setup_list.html:64
+msgid "Supprimer"
+msgstr ""
+
+#: templates/setup_list.html:73
+msgid "Ajouter un dataset"
+msgstr ""
+
+#: templates/setup_list.html:81
+msgid "Supprimer le dataset ?"
+msgstr ""
+
+#: templates/setup_list.html:82
+msgid "Cette action est irréversible. Le dataset"
+msgstr ""
+
+#: templates/setup_list.html:82
+msgid "et toutes ses données (CSV, photos, scores) seront supprimés."
+msgstr ""
+
+#: templates/setup_list.html:84
+msgid "Annuler"
+msgstr ""
+
+#: templates/setup_list.html:86
+msgid "Supprimer définitivement"
+msgstr ""
+
+#: templates/setup_list.html:125
+msgid "Erreur lors de la suppression"
+msgstr ""
+
+#: templates/setup_list.html:132 templates/setup_wizard.html:374
+#: templates/setup_wizard.html:474 templates/setup_wizard.html:548
+msgid "Erreur réseau"
+msgstr ""
+
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:19
+msgid "Modifier le dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:21
+msgid "Nouveau dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:14
+msgid "Retour à la liste"
+msgstr ""
+
+#: templates/setup_wizard.html:24
+msgid "Configurez le dataset en quelques étapes."
+msgstr ""
+
+#: templates/setup_wizard.html:27
 msgid "Étapes de configuration"
 msgstr ""
 
-#: templates/setup.html:531
+#: templates/setup_wizard.html:30
 msgid "Branding"
 msgstr ""
 
-#: templates/setup.html:535 templates/setup.html:669
+#: templates/setup_wizard.html:34 templates/setup_wizard.html:180
 msgid "Données"
 msgstr ""
 
-#: templates/setup.html:539 templates/setup.html:633
+#: templates/setup_wizard.html:38 templates/setup_wizard.html:143
 msgid "Photos"
 msgstr ""
 
-#: templates/setup.html:543
+#: templates/setup_wizard.html:42
 msgid "Résumé"
 msgstr ""
 
-#: templates/setup.html:549
-msgid "Branding entreprise"
+#: templates/setup_wizard.html:48
+msgid "Identité du dataset"
 msgstr ""
 
-#: templates/setup.html:552
+#: templates/setup_wizard.html:51
+msgid "Identifiant technique"
+msgstr ""
+
+#: templates/setup_wizard.html:58
+msgid ""
+"Minuscules, chiffres, tirets et underscores. Sert de clé interne (non "
+"modifiable après création)."
+msgstr ""
+
+#: templates/setup_wizard.html:63
 msgid "Nom de l'entreprise"
 msgstr ""
 
-#: templates/setup.html:555
+#: templates/setup_wizard.html:66
 msgid "Ex: Mon Entreprise"
 msgstr ""
 
-#: templates/setup.html:561
+#: templates/setup_wizard.html:72
 msgid "URL du logo"
 msgstr ""
 
-#: templates/setup.html:568
-msgid "Email de contact"
-msgstr ""
-
-#: templates/setup.html:575 templates/setup.html:986
+#: templates/setup_wizard.html:79 templates/setup_wizard.html:486
 msgid "Tagline"
 msgstr ""
 
-#: templates/setup.html:578
+#: templates/setup_wizard.html:82
 msgid "Ex: Testez votre connaissance de vos collegues !"
 msgstr ""
 
-#: templates/setup.html:584 templates/setup.html:626 templates/setup.html:654
+#: templates/setup_wizard.html:88 templates/setup_wizard.html:136
+#: templates/setup_wizard.html:165
 msgid "Suivant"
 msgstr ""
 
-#: templates/setup.html:591
+#: templates/setup_wizard.html:95
 msgid "Données employés"
 msgstr ""
 
-#: templates/setup.html:596
+#: templates/setup_wizard.html:100
+msgid ""
+"Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le "
+"remplacer."
+msgstr ""
+
+#: templates/setup_wizard.html:107
 msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
 msgstr ""
 
-#: templates/setup.html:597
+#: templates/setup_wizard.html:108
 msgid "Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc."
 msgstr ""
 
-#: templates/setup.html:603
+#: templates/setup_wizard.html:114
 msgid "Aperçu des données"
 msgstr ""
 
-#: templates/setup.html:609
+#: templates/setup_wizard.html:120
 msgid ""
 "Uploadez un fichier CSV ci-dessus pour configurer la correspondance des "
 "colonnes."
 msgstr ""
 
-#: templates/setup.html:613
+#: templates/setup_wizard.html:124
 msgid "Correspondance des colonnes"
 msgstr ""
 
-#: templates/setup.html:615
+#: templates/setup_wizard.html:126
 msgid "Associez chaque champ du jeu à une colonne de votre CSV."
 msgstr ""
 
-#: templates/setup.html:623 templates/setup.html:651 templates/setup.html:680
+#: templates/setup_wizard.html:133 templates/setup_wizard.html:162
+#: templates/setup_wizard.html:191
 msgid "Précédent"
 msgstr ""
 
-#: templates/setup.html:638
+#: templates/setup_wizard.html:148
+msgid ""
+"Les photos seront uploadées après la création du dataset, depuis la page "
+"de modification."
+msgstr ""
+
+#: templates/setup_wizard.html:154
 msgid "Glissez un fichier ZIP contenant les photos ici"
 msgstr ""
 
-#: templates/setup.html:639
+#: templates/setup_wizard.html:155
 msgid "Formats acceptes: JPG, PNG, GIF, WebP"
 msgstr ""
 
-#: templates/setup.html:646
-msgid ""
-"Les photos peuvent aussi être placées manuellement dans le répertoire "
-"d'images configuré."
-msgstr ""
-
-#: templates/setup.html:661
+#: templates/setup_wizard.html:172
 msgid "Résumé et sauvegarde"
 msgstr ""
 
-#: templates/setup.html:674
+#: templates/setup_wizard.html:185
 msgid "Mapping colonnes"
 msgstr ""
 
-#: templates/setup.html:683
-msgid "Sauvegarder la configuration"
+#: templates/setup_wizard.html:195
+msgid "Enregistrer les modifications"
 msgstr ""
 
-#: templates/setup.html:691
-msgid "Fermer"
+#: templates/setup_wizard.html:195
+msgid "Créer le dataset"
 msgstr ""
 
-#: templates/setup.html:710
+#: templates/setup_wizard.html:221
 msgid "Prénom"
 msgstr ""
 
-#: templates/setup.html:711 templates/setup.html:983
+#: templates/setup_wizard.html:222 templates/setup_wizard.html:484
 msgid "Nom"
 msgstr ""
 
-#: templates/setup.html:712
+#: templates/setup_wizard.html:223
 msgid "Photo"
 msgstr ""
 
-#: templates/setup.html:715
+#: templates/setup_wizard.html:226
 msgid "Société"
 msgstr ""
 
-#: templates/setup.html:716
+#: templates/setup_wizard.html:227
 msgid "Sexe"
 msgstr ""
 
-#: templates/setup.html:720
+#: templates/setup_wizard.html:231
 msgid "Date de naissance"
 msgstr ""
 
-#: templates/setup.html:721
+#: templates/setup_wizard.html:232
 msgid "Date d'embauche"
 msgstr ""
 
-#: templates/setup.html:722
+#: templates/setup_wizard.html:233
 msgid "Manager"
 msgstr ""
 
-#: templates/setup.html:753
+#: templates/setup_wizard.html:271
+msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
+msgstr ""
+
+#: templates/setup_wizard.html:276
+msgid "Un dataset avec cet identifiant existe déjà."
+msgstr ""
+
+#: templates/setup_wizard.html:285
 msgid "Le nom de l'entreprise est requis"
 msgstr ""
 
-#: templates/setup.html:848 templates/setup.html:966
+#: templates/setup_wizard.html:362 templates/setup_wizard.html:466
 msgid "Erreur lors de l'envoi"
 msgstr ""
 
-#: templates/setup.html:852
+#: templates/setup_wizard.html:366
 msgid "CSV chargé avec succès"
 msgstr ""
 
-#: templates/setup.html:852
+#: templates/setup_wizard.html:366
 msgid "colonnes détectées"
 msgstr ""
 
-#: templates/setup.html:862 templates/setup.html:975 templates/setup.html:1046
-msgid "Erreur réseau"
-msgstr ""
-
-#: templates/setup.html:896
+#: templates/setup_wizard.html:407
 msgid "requis"
 msgstr ""
 
-#: templates/setup.html:896
+#: templates/setup_wizard.html:407
 msgid "optionnel"
 msgstr ""
 
-#: templates/setup.html:906
+#: templates/setup_wizard.html:417
 msgid "Non utilisé"
 msgstr ""
 
-#: templates/setup.html:971
+#: templates/setup_wizard.html:470
 msgid "photos extraites avec succès"
 msgstr ""
 
-#: templates/setup.html:984
+#: templates/setup_wizard.html:483
+msgid "Identifiant"
+msgstr ""
+
+#: templates/setup_wizard.html:485
 msgid "Logo"
 msgstr ""
 
-#: templates/setup.html:985
-msgid "Email"
-msgstr ""
-
-#: templates/setup.html:989
+#: templates/setup_wizard.html:490
 msgid "Fichier CSV"
 msgstr ""
 
-#: templates/setup.html:990
+#: templates/setup_wizard.html:491
 msgid "Colonnes"
 msgstr ""
 
-#: templates/setup.html:1039
+#: templates/setup_wizard.html:540
 msgid "Erreur lors de la sauvegarde"
 msgstr ""
 
-#: templates/setup.html:1042
-msgid "Configuration sauvegardée avec succès !"
+#: templates/setup_wizard.html:543
+msgid "Modifications enregistrées"
+msgstr ""
+
+#: templates/setup_wizard.html:543
+msgid "Dataset créé"
 msgstr ""
 
 #: templates/silhouette.html:3
@@ -1271,5 +1405,35 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "an"
+#~ msgstr ""
+
+#~ msgid "Configuration du jeu"
+#~ msgstr ""
+
+#~ msgid "Configurez le jeu pour votre entreprise en quelques étapes."
+#~ msgstr ""
+
+#~ msgid "Branding entreprise"
+#~ msgstr ""
+
+#~ msgid "Email de contact"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Les photos peuvent aussi être placées"
+#~ " manuellement dans le répertoire d'images"
+#~ " configuré."
+#~ msgstr ""
+
+#~ msgid "Sauvegarder la configuration"
+#~ msgstr ""
+
+#~ msgid "Fermer"
+#~ msgstr ""
+
+#~ msgid "Email"
+#~ msgstr ""
+
+#~ msgid "Configuration sauvegardée avec succès !"
 #~ msgstr ""
 

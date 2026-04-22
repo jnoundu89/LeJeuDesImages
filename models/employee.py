@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 
-from .config import CompanyConfig
+from .config import CompanyConfig, DatasetConfig
 
 
 class Employee(dict):
@@ -43,7 +43,7 @@ class Employee(dict):
 class EmployeeData:
     """Loads employee data from CSV and normalizes column names via config mapping."""
 
-    def __init__(self, config: CompanyConfig):
+    def __init__(self, config: CompanyConfig | DatasetConfig):
         self.config = config
         self.data = pd.read_csv(config.csv_path)
 
