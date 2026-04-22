@@ -4,7 +4,7 @@ import zipfile
 from pathlib import Path
 
 import pandas as pd
-from flask import Blueprint, jsonify, render_template, request, session
+from flask import Blueprint, current_app, jsonify, render_template, request, session
 from flask_babel import gettext as _
 from werkzeug.utils import secure_filename
 
@@ -12,7 +12,9 @@ from models.config import CompanyConfig
 
 admin_bp = Blueprint('admin', __name__)
 
-UPLOAD_DIR = Path('uploads')
+
+def _upload_dir() -> Path:
+    return Path(current_app.config.get('UPLOAD_DIR', 'uploads'))
 
 
 def _is_authenticated() -> bool:
@@ -70,8 +72,9 @@ def upload_csv():
     if not filename.lower().endswith('.csv'):
         return jsonify({'error': _('File must be a CSV')}), 400
 
-    UPLOAD_DIR.mkdir(exist_ok=True)
-    filepath = UPLOAD_DIR / filename
+    upload_dir = _upload_dir()
+    upload_dir.mkdir(parents=True, exist_ok=True)
+    filepath = upload_dir / filename
 
     try:
         file.save(str(filepath))

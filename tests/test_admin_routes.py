@@ -8,6 +8,18 @@ from unittest.mock import patch
 import pytest
 
 
+@pytest.fixture(autouse=True)
+def _isolate_uploads(app, tmp_path):
+    """Redirect UPLOAD_DIR to a tmp path so tests don't pollute the real uploads/."""
+    original = app.config.get('UPLOAD_DIR')
+    app.config['UPLOAD_DIR'] = str(tmp_path / 'uploads')
+    yield
+    if original is None:
+        app.config.pop('UPLOAD_DIR', None)
+    else:
+        app.config['UPLOAD_DIR'] = original
+
+
 @pytest.fixture
 def admin_client(client):
     """Client with ADMIN_PASSWORD unset (auth bypassed)."""

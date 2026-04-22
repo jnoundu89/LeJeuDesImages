@@ -16,13 +16,14 @@ def _free_port() -> int:
 
 
 @pytest.fixture(scope='module')
-def live_app():
+def live_app(tmp_path_factory):
     from app import app
     if app is None:
         pytest.skip('Flask app could not be created')
 
     port = _free_port()
     app.config['TESTING'] = True
+    app.config['UPLOAD_DIR'] = str(tmp_path_factory.mktemp('uploads'))
 
     server = threading.Thread(
         target=app.run,

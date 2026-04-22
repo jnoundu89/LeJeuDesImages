@@ -57,8 +57,9 @@ Thumbs.db
 logs/
 *.log
 
-# Uploads (temp directory for admin setup)
-uploads/
+# Uploads (temp directory for admin setup) -- keep the dir, ignore its contents
+uploads/*
+!uploads/.gitkeep
 
 # Test artifacts (Playwright screenshots)
 tests/screenshots/
