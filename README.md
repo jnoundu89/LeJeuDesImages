@@ -1,6 +1,6 @@
 # Le Jeu Des Images
 
-A company-agnostic team recognition game -- identify your colleagues from photos across 19+ game modes. Works for any company via a simple YAML config or the built-in setup wizard.
+A company-agnostic team recognition game -- identify your colleagues from photos across 22 game modes. Register **multiple datasets** (one per company) from the browser and switch between them at runtime; no YAML editing required.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen)
 ![Flask](https://img.shields.io/badge/Flask-2.3%2B-orange)
@@ -20,36 +20,29 @@ docker compose up
 ### Option B: Local
 
 ```bash
-# Install dependencies
 uv sync
 
-# Configure
 cp .env.example .env        # Edit SECRET_KEY, ADMIN_PASSWORD
-cp config.example.yaml config.yaml  # Edit company branding + column mapping
-
-# Place your data
-# - CSV file in data/team.csv
-# - Photos in data/photos/
-
-# Run
 uv run python app.py
-# -> http://127.0.0.1:5000
+# -> http://127.0.0.1:5000  (redirects to /setup on first run)
 ```
 
-### Option C: Setup Wizard
-
-1. Start the app with default config
-2. Go to `/setup`
-3. Upload your CSV, map columns, upload photos, save
+The app boots without any `config.yaml`. On first launch every route redirects to `/setup` where the wizard walks you through creating your first dataset. See `DEPLOY.md` for the full flow.
 
 ## Setup for a New Company
 
-The game needs:
-1. **A CSV file** with employee data (name, team, job title, company, photo path, gender)
-2. **Employee photos** (JPG/PNG, any naming convention)
-3. **A `config.yaml`** mapping your CSV columns to the game's canonical fields
+Each company lives as an independent **dataset**: CSV + photos + branding, all configurable through `/setup`.
 
-See [docs/data-format.md](docs/data-format.md) for the full CSV specification.
+1. Go to `/setup` → *Ajouter un dataset*
+2. Wizard:
+   - Step 1: pick a dataset id + company branding (name, logo, tagline)
+   - Step 2: upload your CSV, map columns to the game's canonical fields (`first_name`, `last_name`, `photo`, `team`, `job_title`, `company`, `sex`, + optional `birth_date`, `contract_start`, `manager_name`)
+   - Step 3: upload photos (ZIP) — optional at create time; can be done later
+   - Step 4: review + save
+3. Dataset is hot-registered — no restart. Switch via the header dropdown.
+4. Per-employee edits (rename, replace photo, delete) available from *Employés* on the dataset card.
+
+See [docs/data-format.md](docs/data-format.md) for the CSV specification.
 
 Validate your setup:
 ```bash
@@ -114,42 +107,44 @@ make babel-compile
 ## Architecture
 
 ```
-app.py                     # Entry point, auto-discovery, Flask-Babel, context processor
-config.yaml                # Company branding + CSV column mapping
+app.py                     # Entry point — builds DatasetRegistry, registers blueprints
+config.yaml                # app-level settings + datasets registry (gitignored)
 models/
-  config.py                # CompanyConfig (load/save YAML)
-  employee.py              # EmployeeData (CSV with column normalization)
-  score.py                 # ScoreManager (TinyDB, per-mode, flexible stats)
+  config.py                # AppConfig + DatasetConfig (+ CompanyConfig back-compat)
+  dataset.py               # Dataset — bundles EmployeeData/ScoreManager/GameManager per id
+  dataset_registry.py      # Runtime registry, cookie-based resolution
+  employee.py              # Employee(dict) + EmployeeData (CSV load + CRUD + save)
+  score.py                 # ScoreManager (per-dataset TinyDB)
   game.py                  # GameManager (core orchestration)
   game_mode.py             # GameMode ABC + helpers + Factory
-  *_mode.py                # 18+ game modes (auto-discovered)
+  *_mode.py                # 22 game modes (auto-discovered per dataset)
 routes/
-  game_routes.py           # Game routes (generic /check via mode.handle_answer)
+  game_routes.py           # Per-request dataset resolution
   card_game_routes.py      # Card game API
-  admin_routes.py          # /setup wizard
+  admin_routes.py          # /setup datasets + employees CRUD
 templates/
-  base.html                # Root template
-  base_page.html           # Pages (header, footer, music player)
-  base_game.html           # Game modes (3-column layout, stats, timer)
-  setup.html               # Admin setup wizard
-  *.html                   # 30 templates using {% extends %}
-static/
-  game-engine.js           # GameEngine IIFE (answer checking, timer, confetti)
-  scripts.js               # Thin wrappers
-translations/              # Flask-Babel FR/EN (227 strings)
-tests/                     # 65 pytest tests
+  base.html → base_page.html / base_game.html
+  _switchers.html          # Header partial (language + dataset dropdown)
+  setup_list.html          # Datasets landing
+  setup_wizard.html        # Add / edit dataset wizard
+  employees_list.html      # Per-dataset employees
+  employee_edit.html       # Per-employee form
+data/<dataset_id>/         # Per-dataset CSV + photos + scores (all gitignored)
+translations/              # Flask-Babel FR/EN
+tests/                     # pytest — unit, integration, E2E (Playwright)
 tools/validate_data.py     # CSV + photo validation CLI
 docs/data-format.md        # CSV format documentation
 ```
 
 ### Key Design Decisions
 
+- **Multi-dataset runtime**: N datasets loaded simultaneously, switched per request via the `dataset` cookie. Scores, branding, data all isolated. No restart to add/remove datasets.
+- **Legacy config auto-migration**: old single-dataset `config.yaml` is silently promoted to a single dataset named `default`.
 - **Company-agnostic**: All company data lives in `config.yaml` + `data/` (gitignored). Zero hardcoded references in code.
-- **Auto-discovery**: New game modes are picked up automatically from `models/*_mode.py` -- no registration needed.
-- **Template inheritance**: 3 base templates, 30 child templates using `{% extends %}`.
-- **Generic routes**: `/check` delegates to `mode.handle_answer()` -- no if-elif per mode.
+- **Auto-discovery**: New game modes are picked up automatically from `models/*_mode.py` — no registration needed, and applied to every dataset.
+- **Generic routes**: `/check` delegates to `mode.handle_answer()` — no if-elif per mode.
 - **i18n**: Flask-Babel with FR/EN catalogs, cookie-based locale switching.
-- **Flexible scores**: Per-mode tracking with a generic `stat_updates` dict.
+- **Flexible scores**: Per-mode tracking with a generic `stat_updates` dict; stored per dataset.
 
 ### Adding a New Game Mode
 

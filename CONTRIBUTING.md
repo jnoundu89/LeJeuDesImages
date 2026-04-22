@@ -110,8 +110,11 @@ Then run `make babel-extract && make babel-compile`.
 - **Python**: PEP 8, enforced by ruff. Single quotes preferred.
 - **Employee data**: Always use canonical field names (`first_name`, `last_name`, `photo`, `team`, `job_title`, `company`, `sex`). Never reference CSV column names directly.
 - **Templates**: Must extend a base template. All text uses `_()`.
-- **No company data in code**: Company names, emails, logos come from `config.yaml` only.
+- **No company data in code**: Company names, emails, logos come from `config.yaml` only (or the `/setup` wizard).
 - **Config files**: `config.yaml` is gitignored. Only `config.example.yaml` is committed.
+- **Dataset filesystem layout**: each dataset lives under `data/<id>/` with three files: `team.csv`, `photos/`, `scores.json`. The admin wizard enforces this layout; don't hand-create datasets in other locations.
+- **Dataset IDs**: lowercase, alphanumeric + `_-`, 1-32 chars. Validated server-side at save time.
+- **Per-request dataset resolution**: in routes, call `registry.current(request)` to get the active `Dataset`. Never cache a `Dataset` reference across requests — the user may switch datasets at any moment via the `dataset` cookie.
 
 ## Project Structure
 

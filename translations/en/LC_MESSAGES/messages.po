@@ -140,80 +140,82 @@ msgstr "Timed Mode: identify as many people as possible in 2 minutes"
 
 #: routes/admin_routes.py:53
 msgid "Unauthorized"
-msgstr ""
+msgstr "Unauthorized"
 
 #: routes/admin_routes.py:166 routes/admin_routes.py:324
 #: routes/admin_routes.py:577
 msgid "No file provided"
-msgstr ""
+msgstr "No file provided"
 
 #: routes/admin_routes.py:170 routes/admin_routes.py:328
 #: routes/admin_routes.py:581
 msgid "No file selected"
-msgstr ""
+msgstr "No file selected"
 
 #: routes/admin_routes.py:174
 msgid "File must be a CSV"
-msgstr ""
+msgstr "File must be a CSV"
 
 #: routes/admin_routes.py:185
 msgid "Invalid CSV file"
-msgstr ""
+msgstr "Invalid CSV file"
 
 #: routes/admin_routes.py:202
 msgid "No data provided"
-msgstr ""
+msgstr "No data provided"
 
 #: routes/admin_routes.py:207
 msgid ""
 "Dataset id must be lowercase alphanumeric (underscores and dashes "
 "allowed, max 32 chars)."
 msgstr ""
+"Dataset id must be lowercase alphanumeric (underscores and dashes "
+"allowed, max 32 chars)."
 
 #: routes/admin_routes.py:212
 msgid "A dataset with this id already exists."
-msgstr ""
+msgstr "A dataset with this id already exists."
 
 #: routes/admin_routes.py:231 routes/admin_routes.py:386
 msgid "Uploaded CSV was not found. Re-upload and retry."
-msgstr ""
+msgstr "Uploaded CSV was not found. Re-upload and retry."
 
 #: routes/admin_routes.py:236
 msgid "A CSV file is required to create a dataset."
-msgstr ""
+msgstr "A CSV file is required to create a dataset."
 
 #: routes/admin_routes.py:292 routes/admin_routes.py:321
 #: routes/admin_routes.py:377 routes/admin_routes.py:493
 #: routes/admin_routes.py:518 routes/admin_routes.py:547
 #: routes/admin_routes.py:569
 msgid "Dataset not found"
-msgstr ""
+msgstr "Dataset not found"
 
 #: routes/admin_routes.py:332
 msgid "File must be a ZIP archive"
-msgstr ""
+msgstr "File must be a ZIP archive"
 
 #: routes/admin_routes.py:359
 msgid "Invalid ZIP file"
-msgstr ""
+msgstr "Invalid ZIP file"
 
 #: routes/admin_routes.py:382
 msgid "csv_filename is required"
-msgstr ""
+msgstr "csv_filename is required"
 
 #: routes/admin_routes.py:500 routes/admin_routes.py:525
 #, python-format
 msgid "Missing required fields: %(fields)s"
-msgstr ""
+msgstr "Missing required fields: %(fields)s"
 
 #: routes/admin_routes.py:530 routes/admin_routes.py:552
 #: routes/admin_routes.py:574
 msgid "Employee not found"
-msgstr ""
+msgstr "Employee not found"
 
 #: routes/admin_routes.py:585
 msgid "Unsupported image format"
-msgstr ""
+msgstr "Unsupported image format"
 
 #: templates/_switchers.html:8
 msgid "Termine ou recommence la partie pour changer de dataset."
@@ -584,7 +586,7 @@ msgstr ""
 
 #: templates/employee_edit.html:165
 msgid "Informations optionnelles"
-msgstr ""
+msgstr "Optional fields"
 
 #: templates/employee_edit.html:168 templates/setup_wizard.html:231
 msgid "Date de naissance"
@@ -637,7 +639,7 @@ msgstr "Network error"
 
 #: templates/employee_edit.html:262
 msgid "Envoi..."
-msgstr ""
+msgstr "Uploading..."
 
 #: templates/employee_edit.html:272
 #, fuzzy
@@ -646,7 +648,7 @@ msgstr "Network error"
 
 #: templates/employee_edit.html:276
 msgid "Photo mise à jour"
-msgstr ""
+msgstr "Photo updated"
 
 #: templates/employees_list.html:3 templates/setup_list.html:61
 #, fuzzy
@@ -670,11 +672,11 @@ msgstr "Employee data"
 
 #: templates/employees_list.html:119
 msgid "Rechercher un employé..."
-msgstr ""
+msgstr "Search employee..."
 
 #: templates/employees_list.html:119
 msgid "Rechercher un employé"
-msgstr ""
+msgstr "Search employee"
 
 #: templates/employees_list.html:122 templates/employees_list.html:171
 #, fuzzy
@@ -688,7 +690,7 @@ msgstr "Actions taken"
 
 #: templates/employees_list.html:164
 msgid "Aucun employé ne correspond à votre recherche."
-msgstr ""
+msgstr "No employee matches your search."
 
 #: templates/employees_list.html:168
 #, fuzzy
@@ -697,7 +699,7 @@ msgstr "Employee data"
 
 #: templates/employees_list.html:169
 msgid "Ajoutez un premier employé pour ce dataset."
-msgstr ""
+msgstr "Add a first employee for this dataset."
 
 #: templates/employees_list.html:178
 #, fuzzy
@@ -711,11 +713,11 @@ msgstr "Employee data"
 
 #: templates/employees_list.html:179
 msgid "sera définitivement retiré du CSV. Cette action est irréversible."
-msgstr ""
+msgstr "will be permanently removed from the CSV. This action cannot be undone."
 
 #: templates/employees_list.html:183 templates/setup_list.html:67
 msgid "Supprimer"
-msgstr ""
+msgstr "Delete"
 
 #: templates/employees_list.html:241 templates/setup_list.html:128
 #, fuzzy
@@ -1334,15 +1336,15 @@ msgstr "Switch dataset"
 
 #: templates/setup_list.html:18
 msgid "Ajoutez, modifiez ou supprimez les datasets disponibles dans le jeu."
-msgstr ""
+msgstr "Add, edit or delete the datasets available in the game."
 
 #: templates/setup_list.html:24
 msgid "Aucun dataset configuré"
-msgstr ""
+msgstr "No dataset configured"
 
 #: templates/setup_list.html:25
 msgid "Commencez par ajouter un dataset pour démarrer le jeu."
-msgstr ""
+msgstr "Start by adding a dataset to launch the game."
 
 #: templates/setup_list.html:27
 #, fuzzy
@@ -1351,7 +1353,7 @@ msgstr "Switch dataset"
 
 #: templates/setup_list.html:42
 msgid "Par défaut"
-msgstr ""
+msgstr "Default"
 
 #: templates/setup_list.html:76
 #, fuzzy
@@ -1365,15 +1367,15 @@ msgstr "Switch dataset"
 
 #: templates/setup_list.html:85
 msgid "Cette action est irréversible. Le dataset"
-msgstr ""
+msgstr "This action cannot be undone. The dataset"
 
 #: templates/setup_list.html:85
 msgid "et toutes ses données (CSV, photos, scores) seront supprimés."
-msgstr ""
+msgstr "and all its data (CSV, photos, scores) will be deleted."
 
 #: templates/setup_list.html:89
 msgid "Supprimer définitivement"
-msgstr ""
+msgstr "Delete permanently"
 
 #: templates/setup_wizard.html:4 templates/setup_wizard.html:19
 #, fuzzy
@@ -1417,11 +1419,11 @@ msgstr "Summary"
 
 #: templates/setup_wizard.html:48
 msgid "Identité du dataset"
-msgstr ""
+msgstr "Dataset identity"
 
 #: templates/setup_wizard.html:51
 msgid "Identifiant technique"
-msgstr ""
+msgstr "Technical identifier"
 
 #: templates/setup_wizard.html:58
 msgid ""
@@ -1529,11 +1531,11 @@ msgstr "Switch dataset"
 
 #: templates/setup_wizard.html:271
 msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
-msgstr ""
+msgstr "Invalid identifier (lowercase/digits/_-, max 32)."
 
 #: templates/setup_wizard.html:276
 msgid "Un dataset avec cet identifiant existe déjà."
-msgstr ""
+msgstr "A dataset with this identifier already exists."
 
 #: templates/setup_wizard.html:285
 msgid "Le nom de l'entreprise est requis"
@@ -1569,7 +1571,7 @@ msgstr "photos extracted successfully"
 
 #: templates/setup_wizard.html:483
 msgid "Identifiant"
-msgstr ""
+msgstr "Identifier"
 
 #: templates/setup_wizard.html:485
 msgid "Logo"
@@ -1585,7 +1587,7 @@ msgstr "Columns"
 
 #: templates/setup_wizard.html:543
 msgid "Dataset créé"
-msgstr ""
+msgstr "Dataset created"
 
 #: templates/silhouette.html:3
 msgid "Mode Silhouette"
