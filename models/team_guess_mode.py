@@ -16,11 +16,11 @@ class TeamGuessMode(GameMode):
         return "team_guess"
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Devine l'équipe")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode équipe : devinez à quelle équipe appartient chaque employé")
 
     @property

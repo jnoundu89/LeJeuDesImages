@@ -73,6 +73,9 @@ class ScoreManager:
             self.initialize_user(user_id)
             user_score = self.scores_table.get(self.User.user_id == user_id)
 
+        # `TinyDB.get` may return Document | List[Document] | None; by query
+        # shape we always get a single Document here (or None after init).
+        assert isinstance(user_score, dict)
         return user_score
 
     def update_score(self, user_id: int, score_increment: int,

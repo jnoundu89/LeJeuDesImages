@@ -20,7 +20,12 @@ datasets:
     company:
       name: "Acme Corp"
       logo_url: "/static/images/acme_logo.png"
-      tagline: "Test your knowledge of your Acme colleagues."
+      # `tagline` accepts either a plain string (legacy) or a {fr, en} mapping.
+      # The wizard always writes the dict form; users get the string matching
+      # their current language cookie, with graceful fallback.
+      tagline:
+        fr: "Testez votre connaissance de vos collègues Acme."
+        en: "Test your knowledge of your Acme colleagues."
     data:
       csv_path: "data/acme/team.csv"
       images_dir: "data/acme/photos"
@@ -45,7 +50,9 @@ datasets:
   #   company:
   #     name: "DemoTech"
   #     logo_url: ""
-  #     tagline: "Testez votre connaissance de vos collègues avec des modes de jeu amusants et interactifs."
+  #     tagline:
+  #       fr: "Testez votre connaissance de vos collègues avec des modes de jeu amusants et interactifs."
+  #       en: "Test your knowledge of your colleagues across fun and interactive game modes."
   #   data:
   #     csv_path: "data/demo/team.csv"
   #     images_dir: "data/demo/photos"

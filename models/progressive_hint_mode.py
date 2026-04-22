@@ -17,11 +17,11 @@ class ProgressiveHintMode(GameMode):
         return 'progressive_hint'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Indices progressifs")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode indices progressifs : identifiez l'employé avec le moins d'indices possible pour gagner plus de points")
 
     @property
@@ -67,7 +67,9 @@ class ProgressiveHintMode(GameMode):
         else:
             choices = other_employees
 
-        choices.append(selected)
+        # `_pick_next_employee` returns a dict; Employee is a dict subclass so
+        # appending a bare dict here is safe at runtime.
+        choices.append(selected)  # type: ignore[arg-type]
         random.shuffle(choices)
 
         game_data = self.game_manager.get_game_data(data_id)

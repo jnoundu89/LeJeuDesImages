@@ -144,11 +144,11 @@ class NormalMode(GameMode):
         return 'normal'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l('Normal')
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur l'image")
 
     @property
@@ -229,11 +229,11 @@ class ReverseMode(GameMode):
         return 'reverse'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l('Inverse')
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Identifiez la personne correspondant au nom affiché")
 
     @property

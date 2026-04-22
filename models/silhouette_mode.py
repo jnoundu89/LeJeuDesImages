@@ -16,11 +16,11 @@ class SilhouetteMode(GameMode):
         return 'silhouette'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Silhouette")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode Silhouette : identifiez la personne à partir de sa silhouette")
 
     @property

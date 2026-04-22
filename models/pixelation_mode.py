@@ -16,11 +16,11 @@ class PixelationMode(GameMode):
         return 'pixelation'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Pixélisation")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode pixelisation : identifiez la personne sur l'image qui devient progressivement plus nette")
 
     @property

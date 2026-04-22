@@ -16,11 +16,11 @@ class ClueMode(GameMode):
         return 'clue'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Indices")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode indices : devinez qui est la personne avec le minimum d'indices")
 
     @property

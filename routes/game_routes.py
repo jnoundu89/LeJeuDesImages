@@ -1,5 +1,6 @@
 # routes/game_routes.py
 import logging
+from typing import cast
 
 from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
 
@@ -9,6 +10,12 @@ EXPERIMENTAL_MODES = {
     'speed', 'team_guess', 'missing_person', 'position_match', 'progressive_hint',
     'scrambled_face', 'emoji_challenge', 'silhouette', 'mirror', 'arr',
 }
+
+
+def _current_user_id() -> int | None:
+    """Return the int user_id stored on the Flask session, or None if missing."""
+    raw = session.get('user_id')
+    return int(raw) if raw is not None else None
 
 
 def init_routes(registry: DatasetRegistry) -> Blueprint:
@@ -106,7 +113,10 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
         session['current_question'] = question_data.get('current_question', session['current_question'])
         session.modified = True
 
-        user_id = session.get('user_id')
+        user_id = _current_user_id()
+        if user_id is None:
+            logging.error('Game session missing user_id; restarting')
+            return redirect(url_for('game.index'))
         user_score = ds.score_manager.get_user_score(user_id)
         stats = ds.score_manager.get_stats(user_id)
 
@@ -141,8 +151,13 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
             logging.error(f'Game mode {mode_name} not found')
             return redirect(url_for('game.index'))
 
-        user_id = session.get('user_id')
-        session_updates = mode.handle_answer(user_id, request.form, session)
+        user_id = _current_user_id()
+        if user_id is None:
+            logging.error('Game session missing user_id; restarting')
+            return redirect(url_for('game.index'))
+        # Flask's SessionMixin is dict-compatible at runtime; cast to satisfy
+        # the handler's strict `dict` annotation.
+        session_updates = mode.handle_answer(user_id, request.form, cast(dict, session))
         if session_updates:
             session.update(session_updates)
             session.modified = True
@@ -165,7 +180,10 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
             logging.error(f'Game mode {mode_name} not found')
             return redirect(url_for('game.index'))
 
-        user_id = session.get('user_id')
+        user_id = _current_user_id()
+        if user_id is None:
+            logging.error('Game session missing user_id; restarting')
+            return redirect(url_for('game.index'))
         max_score = session.get('max_score', 0)
         total_questions = len(session.get('used_indices', []))
 

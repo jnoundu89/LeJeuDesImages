@@ -6,6 +6,15 @@ REQUIRED_FIELDS = {'first_name', 'last_name', 'photo', 'team', 'job_title', 'com
 OPTIONAL_FIELDS = {'birth_date', 'contract_start', 'manager_name'}
 
 
+def _current_locale() -> str:
+    """Return the active request locale, defaulting to 'fr' outside a request."""
+    try:
+        from flask import request  # imported lazily so tests without Flask still work
+        return request.cookies.get('lang', 'fr')
+    except Exception:
+        return 'fr'
+
+
 class DatasetConfig:
     """Config for a single dataset (employees CSV + photos + branding)."""
 
@@ -35,7 +44,34 @@ class DatasetConfig:
 
     @property
     def tagline(self) -> str:
-        return self._company.get('tagline', '')
+        """Tagline in the current Flask-Babel locale (FR fallback).
+
+        Back-compat: accepts either a plain string or a ``{fr: ..., en: ...}``
+        dict in ``config.yaml``.
+        """
+        return self.tagline_for(_current_locale())
+
+    def tagline_for(self, locale: str) -> str:
+        """Resolve the tagline string for a specific locale code."""
+        raw = self._company.get('tagline', '')
+        if isinstance(raw, dict):
+            return raw.get(locale) or raw.get('fr') or raw.get('en') or next(iter(raw.values()), '')
+        return raw or ''
+
+    @property
+    def taglines(self) -> dict:
+        """Return the raw tagline mapping, normalised to {fr, en}.
+
+        Stored value may be a plain string (legacy) or a partial dict. Missing
+        locales fall back to whatever is available so the wizard can always
+        prefill both inputs.
+        """
+        raw = self._company.get('tagline', '')
+        if isinstance(raw, dict):
+            fr = raw.get('fr') or raw.get('en') or ''
+            en = raw.get('en') or raw.get('fr') or ''
+            return {'fr': fr, 'en': en}
+        return {'fr': raw or '', 'en': raw or ''}
 
     @property
     def csv_path(self) -> str:

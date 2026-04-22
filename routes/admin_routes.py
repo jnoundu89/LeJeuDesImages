@@ -209,6 +209,7 @@ def setup_edit(dataset_id):
             'name': ds.config.company_name,
             'logo_url': ds.config.logo_url,
             'tagline': ds.config.tagline,
+            'taglines': ds.config.taglines,
         },
         'data': {
             'csv_path': ds.config.csv_path,
@@ -307,11 +308,21 @@ def save():
     else:
         return jsonify({'error': _('A CSV file is required to create a dataset.')}), 400
 
+    raw_tagline = company.get('tagline', '')
+    # Wizard posts {fr, en}; legacy callers may still post a bare string.
+    if isinstance(raw_tagline, dict):
+        normalised_tagline: str | dict = {
+            'fr': raw_tagline.get('fr', '').strip(),
+            'en': raw_tagline.get('en', '').strip(),
+        }
+    else:
+        normalised_tagline = str(raw_tagline).strip()
+
     new_ds_dict = {
         'company': {
             'name': company.get('name', ''),
             'logo_url': company.get('logo_url', ''),
-            'tagline': company.get('tagline', ''),
+            'tagline': normalised_tagline,
         },
         'data': {
             'csv_path': str(final_csv_path),

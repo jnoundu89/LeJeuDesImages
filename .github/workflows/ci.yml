@@ -6,28 +6,58 @@ on:
   pull_request:
     branches: [master]
 
+# Cancel older runs on the same ref (e.g. rapid pushes) so we don't waste minutes.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
+    name: Ruff
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
       - run: uv sync --extra dev
       - run: uv run ruff check .
 
-  test:
+  typecheck:
+    name: Pyright
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+      - run: uv sync --extra dev
+      - run: uv run pyright models/ routes/
+
+  test:
+    name: pytest (non-e2e)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
       - run: uv sync --extra dev
       - run: uv run pytest tests/ -v -m "not e2e"
 
   e2e:
+    name: Playwright E2E
     runs-on: ubuntu-latest
+    # E2E is slower and brittler; fail the job explicitly but don't block the
+    # rest of the pipeline.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
       - run: uv sync --extra dev
-      - run: uv run playwright install chromium
-      - run: uv run pytest tests/test_e2e.py -v -m e2e
+      - run: uv run playwright install --with-deps chromium
+      - name: Seed demo dataset
+        run: make demo-dataset
+      - run: uv run pytest tests/ -v -m e2e

@@ -76,10 +76,17 @@
         </div>
 
         <div class="form-group">
-            <label for="tagline">{{ _('Tagline') }}</label>
-            <input type="text" id="tagline"
-                   value="{{ current_config.get('company', {}).get('tagline', '') }}"
+            <label for="tagline-fr">{{ _('Tagline (français)') }}</label>
+            <input type="text" id="tagline-fr"
+                   value="{{ current_config.get('company', {}).get('taglines', {}).get('fr', '') }}"
                    placeholder="{{ _('Ex: Testez votre connaissance de vos collègues !') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="tagline-en">{{ _('Tagline (English)') }}</label>
+            <input type="text" id="tagline-en"
+                   value="{{ current_config.get('company', {}).get('taglines', {}).get('en', '') }}"
+                   placeholder="{{ _('E.g.: Test your knowledge of your colleagues!') }}">
         </div>
 
         <div class="btn-row">
@@ -491,7 +498,8 @@
             summaryRow("{{ _('Identifiant') }}", document.getElementById('dataset-id').value)
             + summaryRow("{{ _('Nom') }}", document.getElementById('company-name').value)
             + summaryRow("{{ _('Logo') }}", document.getElementById('logo-url').value || '-')
-            + summaryRow("{{ _('Tagline') }}", document.getElementById('tagline').value || '-');
+            + summaryRow("{{ _('Tagline (français)') }}", document.getElementById('tagline-fr').value || '-')
+            + summaryRow("{{ _('Tagline (English)') }}", document.getElementById('tagline-en').value || '-');
 
         const dataTable = document.getElementById('summary-data');
         dataTable.innerHTML =
@@ -530,7 +538,10 @@
             company: {
                 name: document.getElementById('company-name').value,
                 logo_url: document.getElementById('logo-url').value,
-                tagline: document.getElementById('tagline').value,
+                tagline: {
+                    fr: document.getElementById('tagline-fr').value,
+                    en: document.getElementById('tagline-en').value,
+                },
             },
             column_mapping: mapping,
             csv_filename: csvFilename,

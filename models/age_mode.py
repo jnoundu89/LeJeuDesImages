@@ -19,11 +19,11 @@ class AgeMode(GameMode):
         return "age"
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Âge")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Quel âge a la personne ? Devinez l'âge de la personne affichée")
 
     @property

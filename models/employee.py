@@ -65,7 +65,9 @@ class EmployeeData:
         filtered_data = self.data.copy()
         for column, value in filter_dict.items():
             filtered_data = filtered_data[filtered_data[column] == value]
-        return self._to_employees(filtered_data.to_dict('records'))
+        # pandas' boolean-indexing narrows to DataFrame | Series; in practice
+        # it's always DataFrame here so the to_dict overload is valid.
+        return self._to_employees(filtered_data.to_dict('records'))  # type: ignore[call-overload,union-attr]
 
     def get_unique_values(self, column: str) -> List[Any]:
         return self.data[column].unique().tolist()
@@ -77,7 +79,7 @@ class EmployeeData:
             for filter_col, filter_val in filter_dict.items():
                 filtered_data = filtered_data[filtered_data[filter_col] == filter_val]
 
-        unique_values = filtered_data[column].unique().tolist()
+        unique_values = filtered_data[column].unique().tolist()  # type: ignore[union-attr]
 
         if correct_value not in unique_values:
             unique_values.append(correct_value)

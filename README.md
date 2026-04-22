@@ -2,6 +2,7 @@
 
 A company-agnostic team recognition game — identify your colleagues from photos across 21 game modes. Register **multiple datasets** (one per company) from the browser and switch between them at runtime; no YAML editing required.
 
+[![CI](https://github.com/jnoundu89/LeJeuDesImages/actions/workflows/ci.yml/badge.svg)](https://github.com/jnoundu89/LeJeuDesImages/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen)
 ![Flask](https://img.shields.io/badge/Flask-2.3%2B-orange)
 ![i18n](https://img.shields.io/badge/i18n-FR%20%7C%20EN-blue)

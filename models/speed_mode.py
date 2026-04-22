@@ -16,11 +16,11 @@ class SpeedMode(GameMode):
         return 'speed'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Vitesse")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode vitesse : identifiez un maximum d'employés en un temps limité, plus vous êtes rapide, plus vous gagnez de points")
 
     @property

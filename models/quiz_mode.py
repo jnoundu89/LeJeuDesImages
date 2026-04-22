@@ -1,6 +1,6 @@
 # models/quiz_mode.py
 import random
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Sequence
 
 from flask_babel import lazy_gettext as _l
 
@@ -17,11 +17,11 @@ class QuizMode(GameMode):
         return "quiz"
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Quiz")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode quiz : répondez à des questions variées sur vos collègues")
 
     @property
@@ -103,7 +103,7 @@ class QuizMode(GameMode):
             'current_question': current_question + 1
         }
 
-    def _generate_questions(self, employees: List[Dict[str, str]]) -> List[Dict[str, Any]]:
+    def _generate_questions(self, employees: Sequence[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """
         Generate quiz questions based on employee data.
 

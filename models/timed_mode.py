@@ -16,11 +16,11 @@ class TimedMode(GameMode):
         return 'timed'
 
     @property
-    def display_name(self) -> str:
+    def display_name(self):
         return _l("Chronométré")
 
     @property
-    def description(self) -> str:
+    def description(self):
         return _l("Mode chronométré : identifiez le maximum de personnes en 2 minutes")
 
     @property

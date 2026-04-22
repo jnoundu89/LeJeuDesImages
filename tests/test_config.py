@@ -206,6 +206,44 @@ class TestDatasetConfig:
         ds = DatasetConfig('acme', {'data': {'csv_path': 'x.csv', 'column_mapping': _minimal_mapping()}})
         assert ds.scores_db_path == 'data/acme/scores.json'
 
+    def test_tagline_legacy_string_returned_as_is(self):
+        ds = DatasetConfig(
+            'acme',
+            {
+                'company': {'tagline': 'Plain old string'},
+                'data': {'csv_path': 'x.csv', 'column_mapping': _minimal_mapping()},
+            },
+        )
+        # Bare string tagline works for every locale.
+        assert ds.tagline_for('fr') == 'Plain old string'
+        assert ds.tagline_for('en') == 'Plain old string'
+        assert ds.taglines == {'fr': 'Plain old string', 'en': 'Plain old string'}
+
+    def test_tagline_dict_resolves_per_locale(self):
+        ds = DatasetConfig(
+            'acme',
+            {
+                'company': {'tagline': {'fr': 'Salut', 'en': 'Hello'}},
+                'data': {'csv_path': 'x.csv', 'column_mapping': _minimal_mapping()},
+            },
+        )
+        assert ds.tagline_for('fr') == 'Salut'
+        assert ds.tagline_for('en') == 'Hello'
+        assert ds.taglines == {'fr': 'Salut', 'en': 'Hello'}
+
+    def test_tagline_partial_dict_falls_back_to_sibling_locale(self):
+        ds = DatasetConfig(
+            'acme',
+            {
+                'company': {'tagline': {'fr': 'Only FR'}},
+                'data': {'csv_path': 'x.csv', 'column_mapping': _minimal_mapping()},
+            },
+        )
+        # Missing EN borrows the FR string so the banner is never blank.
+        assert ds.tagline_for('en') == 'Only FR'
+        assert ds.tagline_for('fr') == 'Only FR'
+        assert ds.taglines == {'fr': 'Only FR', 'en': 'Only FR'}
+
     def test_scores_db_path_from_config(self):
         ds = DatasetConfig(
             'acme',
