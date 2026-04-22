@@ -12,9 +12,10 @@ A company-agnostic team recognition game -- identify your colleagues from photos
 ### Option A: Docker
 
 ```bash
+cp .env.example .env        # Set SECRET_KEY + ADMIN_PASSWORD (see below)
 docker compose up
-# -> http://localhost:5000
-# -> http://localhost:5000/setup  (admin wizard)
+# -> Game:  http://localhost:5000
+# -> Admin: http://localhost:5000/setup?password=<ADMIN_PASSWORD>
 ```
 
 ### Option B: Local
@@ -22,12 +23,40 @@ docker compose up
 ```bash
 uv sync
 
-cp .env.example .env        # Edit SECRET_KEY, ADMIN_PASSWORD
+cp .env.example .env        # Set SECRET_KEY + ADMIN_PASSWORD (see below)
 uv run python app.py
-# -> http://127.0.0.1:5000  (redirects to /setup on first run)
+# -> Game:  http://127.0.0.1:5000  (redirects to /setup on first run)
+# -> Admin: http://127.0.0.1:5000/setup?password=<ADMIN_PASSWORD>
 ```
 
 The app boots without any `config.yaml`. On first launch every route redirects to `/setup` where the wizard walks you through creating your first dataset. See `DEPLOY.md` for the full flow.
+
+## Admin Access (`/setup`)
+
+The `/setup` wizard is **protected by `ADMIN_PASSWORD`** — an env var you set in `.env` (or exported). Without it, any visit to `/setup*` returns `{"error":"Unauthorized"}` (HTTP 401).
+
+**How authentication works**:
+
+1. **Set the password** in `.env`:
+   ```bash
+   ADMIN_PASSWORD=your-secret-password
+   ```
+   Then restart the app (`docker compose restart` or relaunch `uv run python app.py`).
+
+2. **First visit — pass the password as a query parameter**:
+   ```
+   http://localhost:5000/setup?password=your-secret-password
+   ```
+   On success the browser stores a signed session cookie (`admin_authenticated=true`).
+
+3. **Subsequent visits** — the cookie does the job, so `http://localhost:5000/setup` works directly. No need to append `?password=...` again until the cookie expires or you clear it.
+
+**Logout / reset**: clear your browser cookies for the site, or change `SECRET_KEY` (invalidates all sessions).
+
+**Security notes**:
+- `ADMIN_PASSWORD` unset → `/setup` is open to everyone (dev mode only — never ship to production without a password).
+- `SECRET_KEY` must be a long random string; regenerate with `python -c "import secrets; print(secrets.token_hex(32))"`.
+- Do NOT commit your real `.env` (it's already gitignored).
 
 ## Setup for a New Company
 
