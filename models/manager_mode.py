@@ -17,6 +17,10 @@ class ManagerMode(GameMode):
         return "manager"
 
     @property
+    def display_name(self) -> str:
+        return _l("Manager")
+
+    @property
     def description(self) -> str:
         return _l("Qui est le manager de qui ? Identifiez le manager de la personne affichée")
 

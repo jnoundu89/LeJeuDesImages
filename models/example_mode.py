@@ -16,6 +16,10 @@ class ExampleMode(GameMode):
         return "example"
 
     @property
+    def display_name(self) -> str:
+        return _l("Exemple")
+
+    @property
     def description(self) -> str:
         return _l("Mode exemple : identifiez uniquement le nom de la personne sur l'image")
 

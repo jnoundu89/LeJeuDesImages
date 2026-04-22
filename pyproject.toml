@@ -18,6 +18,8 @@ dev = [
     "pytest-playwright>=0.6",
     "pyright>=1.1",
     "ruff>=0.4",
+    # Used by tools/generate_demo_avatars.py to regenerate the bundled avatars.
+    "pillow>=10.0",
 ]
 
 [tool.pytest.ini_options]
@@ -32,7 +34,7 @@ markers = [
 [tool.pyright]
 typeCheckingMode = "basic"
 include = ["models/", "routes/"]
-exclude = ["models/arr_mode.py", "models/card_game_mode.py"]
+exclude = ["models/arr_mode.py"]
 reportMissingImports = false
 reportReturnType = "warning"
 reportArgumentType = "warning"

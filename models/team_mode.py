@@ -17,6 +17,10 @@ class TeamMode(GameMode):
         return "team"
 
     @property
+    def display_name(self) -> str:
+        return _l("Équipe")
+
+    @property
     def description(self) -> str:
         return _l("Mode équipe : identifiez tous les membres d'une équipe spécifique")
 

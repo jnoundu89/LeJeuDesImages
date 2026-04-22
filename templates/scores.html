@@ -7,21 +7,21 @@
 {% endblock %}
 
 {% block page_title %}{{ _('Scores') }}{% endblock %}
-{% block page_tagline %}{{ _('Decouvrez les meilleurs scores et voyez comment vous vous classez') }}{% endblock %}
+{% block page_tagline %}{{ _('Découvrez les meilleurs scores et voyez comment vous vous classez') }}{% endblock %}
 
 {% block content %}
         <div class="about-section">
             <h2 class="section-title">{{ _('Meilleurs scores par mode de jeu') }}</h2>
             <div class="about-content">
-                <p>{{ _('Voici les meilleurs scores enregistres pour chaque mode de jeu. Pouvez-vous battre ces records ?') }}</p>
+                <p>{{ _('Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-vous battre ces records ?') }}</p>
 
                 <div class="scores-container">
-                    <!-- Mode Normal -->
+                    {% for mode in modes %}
                     <div class="score-card">
-                        <h3 class="subsection-title"><i class="fas fa-user-tie"></i> {{ _('Mode Normal') }}</h3>
+                        <h3 class="subsection-title"><i class="fas fa-gamepad"></i> {{ _('Mode') }} {{ mode.display_name }}</h3>
                         <div class="score-list">
-                            {% if top_scores and 'normal' in top_scores %}
-                                {% for score in top_scores['normal'] %}
+                            {% if top_scores and top_scores[mode.name] %}
+                                {% for score in top_scores[mode.name] %}
                                 <div class="score-item">
                                     <span class="score-rank">{{ loop.index }}</span>
                                     <span class="score-user">{{ score.user_id }}</span>
@@ -30,71 +30,12 @@
                                 {% endfor %}
                             {% else %}
                                 <div class="score-item no-scores">
-                                    <span>{{ _('Aucun score enregistre') }}</span>
+                                    <span>{{ _('Aucun score enregistré') }}</span>
                                 </div>
                             {% endif %}
                         </div>
                     </div>
-
-                    <!-- Mode Inversé -->
-                    <div class="score-card">
-                        <h3 class="subsection-title"><i class="fas fa-sync-alt"></i> {{ _('Mode Inverse') }}</h3>
-                        <div class="score-list">
-                            {% if top_scores and 'reverse' in top_scores %}
-                                {% for score in top_scores['reverse'] %}
-                                <div class="score-item">
-                                    <span class="score-rank">{{ loop.index }}</span>
-                                    <span class="score-user">{{ score.user_id }}</span>
-                                    <span class="score-value">{{ score.score }} pts</span>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="score-item no-scores">
-                                    <span>{{ _('Aucun score enregistre') }}</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Mode Pixelation -->
-                    <div class="score-card">
-                        <h3 class="subsection-title"><i class="fas fa-puzzle-piece"></i> {{ _('Mode Pixelation') }}</h3>
-                        <div class="score-list">
-                            {% if top_scores and 'pixelation' in top_scores %}
-                                {% for score in top_scores['pixelation'] %}
-                                <div class="score-item">
-                                    <span class="score-rank">{{ loop.index }}</span>
-                                    <span class="score-user">{{ score.user_id }}</span>
-                                    <span class="score-value">{{ score.score }} pts</span>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="score-item no-scores">
-                                    <span>{{ _('Aucun score enregistre') }}</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Mode Chronométré -->
-                    <div class="score-card">
-                        <h3 class="subsection-title"><i class="fas fa-stopwatch"></i> {{ _('Mode Chronometre') }}</h3>
-                        <div class="score-list">
-                            {% if top_scores and 'timed' in top_scores %}
-                                {% for score in top_scores['timed'] %}
-                                <div class="score-item">
-                                    <span class="score-rank">{{ loop.index }}</span>
-                                    <span class="score-user">{{ score.user_id }}</span>
-                                    <span class="score-value">{{ score.score }} pts</span>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <div class="score-item no-scores">
-                                    <span>{{ _('Aucun score enregistre') }}</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -114,7 +55,7 @@
                     <div class="stat-card">
                         <i class="fas fa-gamepad stat-icon"></i>
                         <div class="stat-info">
-                            <h3 class="stat-title">{{ _('Parties jouees') }}</h3>
+                            <h3 class="stat-title">{{ _('Parties jouées') }}</h3>
                             <p class="stat-value">{{ total_games if total_games else 'N/A' }}</p>
                         </div>
                     </div>
@@ -139,6 +80,6 @@
         </div>
 
         <div class="back-to-home">
-            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">{{ _("Retour a l'accueil") }}</a>
+            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">{{ _("Retour à l'accueil") }}</a>
         </div>
 {% endblock %}

@@ -7,7 +7,7 @@ from models.dataset_registry import DatasetRegistry
 
 EXPERIMENTAL_MODES = {
     'speed', 'team_guess', 'missing_person', 'position_match', 'progressive_hint',
-    'scrambled_face', 'emoji_challenge', 'silhouette', 'mirror', 'card_game',
+    'scrambled_face', 'emoji_challenge', 'silhouette', 'mirror', 'arr',
 }
 
 
@@ -27,9 +27,11 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
         regular_modes = []
         experimental_mode_info = []
         for mode in modes.values():
-            if mode.name == 'arr':
-                continue
-            mode_data = {'name': mode.name, 'description': mode.description}
+            mode_data = {
+                'name': mode.name,
+                'display_name': mode.display_name,
+                'description': mode.description,
+            }
             if mode.name in EXPERIMENTAL_MODES:
                 experimental_mode_info.append(mode_data)
             else:
@@ -203,15 +205,16 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
             return redirect('/setup')
         score_manager = ds.score_manager
 
-        top_scores = {
-            'normal': score_manager.get_top_scores('normal', 5),
-            'reverse': score_manager.get_top_scores('reverse', 5),
-            'pixelation': score_manager.get_top_scores('pixelation', 5),
-            'timed': score_manager.get_top_scores('timed', 5),
-        }
+        mode_list = []
+        top_scores = {}
+        for mode in ds.mode_factory.get_all_modes().values():
+            top_scores[mode.name] = score_manager.get_top_scores(mode.name, 5)
+            mode_list.append({'name': mode.name, 'display_name': mode.display_name})
+        mode_list.sort(key=lambda m: str(m['display_name']))
 
         return render_template(
             'scores.html',
+            modes=mode_list,
             top_scores=top_scores,
             total_players=score_manager.get_total_players(),
             total_games=score_manager.get_total_games(),

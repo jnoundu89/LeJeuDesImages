@@ -85,8 +85,13 @@ class TestSetupListRoute:
     def test_requires_password_when_set(self, isolated_client):
         os.environ['ADMIN_PASSWORD'] = 'secret123'
         try:
+            # HTML GET → 302 redirect to the login form (no JSON 401 body).
             resp = isolated_client.get('/setup')
-            assert resp.status_code == 401
+            assert resp.status_code == 302
+            assert '/setup/login' in resp.headers.get('Location', '')
+            # JSON/non-GET callers still get the terser 401 response.
+            json_resp = isolated_client.get('/setup', headers={'Accept': 'application/json'})
+            assert json_resp.status_code == 401
         finally:
             os.environ.pop('ADMIN_PASSWORD', None)
 

@@ -17,6 +17,10 @@ class MissingPersonMode(GameMode):
         return "missing_person"
 
     @property
+    def display_name(self) -> str:
+        return _l("Personne manquante")
+
+    @property
     def description(self) -> str:
         return _l("Mode personne manquante : identifiez qui manque dans l'équipe affichée")
 

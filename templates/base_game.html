@@ -20,10 +20,10 @@
         <button class="toggle-stats-btn" @click="toggle" x-text="open ? '{{ _('Masquer les statistiques') }}' : '{{ _('Afficher les statistiques') }}'">{{ _('Afficher les statistiques') }}</button>
         <div id="stats-banner" class="stats-banner" x-show="open" x-transition>
             <h2>{{ _('Statistiques de jeu') }}</h2>
-            <p>{{ _("Bonnes reponses pour l'entreprise") }} : <span class="score">{{ stats.company }}</span></p>
-            <p>{{ _("Bonnes reponses pour l'equipe") }} : <span class="score">{{ stats.team }}</span></p>
-            <p>{{ _('Bonnes reponses pour le nom') }} : <span class="score">{{ stats.name }}</span></p>
-            <p>{{ _('Bonnes reponses pour le poste') }} : <span class="score">{{ stats.position }}</span></p>
+            <p>{{ _("Bonnes réponses pour l'entreprise") }} : <span class="score">{{ stats.company }}</span></p>
+            <p>{{ _("Bonnes réponses pour l'équipe") }} : <span class="score">{{ stats.team }}</span></p>
+            <p>{{ _('Bonnes réponses pour le nom') }} : <span class="score">{{ stats.name }}</span></p>
+            <p>{{ _('Bonnes réponses pour le poste') }} : <span class="score">{{ stats.position }}</span></p>
         </div>
     </div>
 
@@ -36,12 +36,14 @@
         </div>
         {% endblock %}
         {% block game_content %}{% endblock %}
+        {% block base_timer %}
         <div x-data="gameTimer(60)" data-label="{{ _('Temps restant') }}"
              class="timer"
              :class="{ warning: isWarning, danger: isDanger }"
              x-text="display"
              id="timer">
         </div>
+        {% endblock %}
         {% block after_timer %}{% endblock %}
     </div>
 

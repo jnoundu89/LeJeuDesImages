@@ -1,9 +1,6 @@
 # models/game.py
-import random
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict
 from uuid import uuid4
-
-import pandas as pd
 
 from .employee import EmployeeData
 from .score import ScoreManager

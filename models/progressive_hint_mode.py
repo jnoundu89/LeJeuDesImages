@@ -17,6 +17,10 @@ class ProgressiveHintMode(GameMode):
         return 'progressive_hint'
 
     @property
+    def display_name(self) -> str:
+        return _l("Indices progressifs")
+
+    @property
     def description(self) -> str:
         return _l("Mode indices progressifs : identifiez l'employé avec le moins d'indices possible pour gagner plus de points")
 

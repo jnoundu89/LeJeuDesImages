@@ -53,7 +53,6 @@ models/
 
 routes/
   game_routes.py           # init_routes(registry) → Blueprint; per-request dataset resolution
-  card_game_routes.py      # Card game API; same registry pattern
   admin_routes.py          # /setup CRUD: datasets + employees (ADMIN_PASSWORD env)
 
 templates/
@@ -122,7 +121,7 @@ Via YAML (advanced): append a dataset entry under `datasets:` in `config.yaml`, 
 ## Architecture (brief)
 
 - **Auto-discovery**: `pkgutil.iter_modules` scans `models/*_mode.py` -- no imports in app.py. Each `Dataset` auto-registers every mode against its own `GameManager`.
-- **Blueprint factories**: `init_routes(registry)` and `register_card_game_blueprint(app, registry)` build fresh blueprints inside the function so `create_app()` is re-entrant (for multi-app test scenarios).
+- **Blueprint factory**: `init_routes(registry)` builds a fresh blueprint inside the function so `create_app()` is re-entrant (for multi-app test scenarios).
 - **Generic routes**: `/check` calls `mode.handle_answer(user_id, form, session)` -- no if-elif, no mode special-casing
 - **Employee class**: `Employee(dict)` with computed properties (`full_name`, `image_url`, `name`, `position`, `id`). All modes return Employee objects, no manual enrichment.
 - **Column mapping**: applied once in `EmployeeData.__init__()` via `config.reverse_mapping()`. Writing back via `EmployeeData.save()` restores the original CSV column names.

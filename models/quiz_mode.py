@@ -17,6 +17,10 @@ class QuizMode(GameMode):
         return "quiz"
 
     @property
+    def display_name(self) -> str:
+        return _l("Quiz")
+
+    @property
     def description(self) -> str:
         return _l("Mode quiz : répondez à des questions variées sur vos collègues")
 

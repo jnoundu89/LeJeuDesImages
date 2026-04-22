@@ -16,6 +16,10 @@ class MemoryMode(GameMode):
         return "memory"
 
     @property
+    def display_name(self) -> str:
+        return _l("Mémoire")
+
+    @property
     def description(self) -> str:
         return _l("Mode mémoire : associez les photos avec les noms en retournant des cartes")
 

@@ -135,9 +135,31 @@ class TestAppConfig:
         with pytest.raises(FileNotFoundError):
             AppConfig('nonexistent.yaml')
 
-    def test_legacy_format_auto_migrated_to_default_dataset(self, test_config):
-        # test_config fixture (from conftest) loads tests/fixtures/test_config.yaml in legacy format
-        cfg = AppConfig('tests/fixtures/test_config.yaml')
+    def test_legacy_format_auto_migrated_to_default_dataset(self, tmp_path):
+        """Legacy single-dataset YAML is migrated to a 'default' dataset in-memory."""
+        legacy = tmp_path / 'legacy.yaml'
+        legacy.write_text(
+            'company:\n'
+            '  name: "Test Corp"\n'
+            '  logo_url: "https://example.com/logo.png"\n'
+            '  contact_email: "test@example.com"\n'
+            '  tagline: "A test company tagline"\n'
+            '\n'
+            'data:\n'
+            '  csv_path: "tests/fixtures/test_team.csv"\n'
+            '  images_dir: "static/images"\n'
+            '  column_mapping:\n'
+            '    first_name: "firstName"\n'
+            '    last_name: "lastName"\n'
+            '    photo: "image_path"\n'
+            '    team: "department_name"\n'
+            '    job_title: "jobTitle"\n'
+            '    company: "legalEntity_name"\n'
+            '    sex: "sex"\n',
+            encoding='utf-8',
+        )
+
+        cfg = AppConfig(str(legacy))
 
         assert list(cfg.datasets.keys()) == ['default']
         assert cfg.default_dataset_id == 'default'

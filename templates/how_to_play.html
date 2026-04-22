@@ -3,18 +3,18 @@
 {% block title %}{{ _('Le Jeu Des Images - Comment jouer') }}{% endblock %}
 
 {% block meta %}
-    <meta name="description" content="{{ _("Apprenez a jouer au Jeu Des Images et decouvrez les regles des differents modes de jeu pour identifier les membres de l'equipe %(company_name)s.", company_name=company_name) }}">
+    <meta name="description" content="{{ _("Apprenez a jouer au Jeu Des Images et decouvrez les regles des differents modes de jeu pour identifier les membres de l'équipe %(company_name)s.", company_name=company_name) }}">
 {% endblock %}
 
 {% block page_title %}{{ _('Comment jouer') }}{% endblock %}
-{% block page_tagline %}{{ _("Decouvrez les regles et astuces pour maitriser tous les modes de jeu") }}{% endblock %}
+{% block page_tagline %}{{ _("Découvrez les règles et astuces pour maîtriser tous les modes de jeu") }}{% endblock %}
 
 {% block content %}
         <div class="about-section">
             <h2 class="section-title">{{ _('Principes de base') }}</h2>
             <div class="about-content">
-                <p>{{ _("Le Jeu Des Images est concu pour vous aider a memoriser les visages et les noms de vos collegues de maniere ludique et interactive.") }}</p>
-                <p>{{ _("Chaque mode de jeu propose un defi different, mais l'objectif reste le meme : associer correctement les visages aux noms, equipes et postes.") }}</p>
+                <p>{{ _("Le Jeu Des Images est conçu pour vous aider à mémoriser les visages et les noms de vos collègues de manière ludique et interactive.") }}</p>
+                <p>{{ _("Chaque mode de jeu propose un défi différent, mais l'objectif reste le même : associer correctement les visages aux noms, équipes et postes.") }}</p>
             </div>
         </div>
 
@@ -22,23 +22,23 @@
             <h2 class="section-title">{{ _('Modes de jeu classiques') }}</h2>
             <div class="about-content">
                 <h3 class="subsection-title"><i class="fas fa-user-tie"></i> {{ _('Mode Normal') }}</h3>
-                <p>{{ _("Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier son entreprise, son equipe, son nom et son poste. Vous gagnez des points pour chaque bonne reponse.") }}</p>
+                <p>{{ _("Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier son entreprise, son équipe, son nom et son poste. Vous gagnez des points pour chaque bonne réponse.") }}</p>
 
                 <h3 class="subsection-title"><i class="fas fa-sync-alt"></i> {{ _('Mode Inverse') }}</h3>
-                <p>{{ _("A l'inverse du mode normal, vous voyez un nom et devez identifier la personne parmi plusieurs photos. Ce mode teste votre memoire visuelle.") }}</p>
+                <p>{{ _("À l'inverse du mode normal, vous voyez un nom et devez identifier la personne parmi plusieurs photos. Ce mode teste votre mémoire visuelle.") }}</p>
 
                 <h3 class="subsection-title"><i class="fas fa-puzzle-piece"></i> {{ _('Mode Pixelation') }}</h3>
                 <p>{{ _("L'image d'un collaborateur apparait progressivement, devenant de plus en plus nette. Plus vite vous identifiez la personne, plus vous gagnez de points.") }}</p>
 
-                <h3 class="subsection-title"><i class="fas fa-stopwatch"></i> {{ _('Mode Chronometre') }}</h3>
+                <h3 class="subsection-title"><i class="fas fa-stopwatch"></i> {{ _('Mode Chronométré') }}</h3>
                 <p>{{ _("Similaire au mode normal, mais avec une limite de temps pour repondre. La pression est a son comble !") }}</p>
             </div>
         </div>
 
         <div class="about-section">
-            <h2 class="section-title">{{ _('Modes de jeu experimentaux') }}</h2>
+            <h2 class="section-title">{{ _('Modes de jeu expérimentaux') }}</h2>
             <div class="about-content">
-                <p>{{ _("Decouvrez nos modes de jeu experimentaux pour des defis encore plus varies :") }}</p>
+                <p>{{ _("Découvrez nos modes de jeu expérimentaux pour des défis encore plus variés :") }}</p>
                 <ul class="features-list">
                     <li><strong>{{ _('Mode Memoire') }}</strong> : {{ _('Retrouvez les paires correspondantes, comme dans un jeu de memory.') }}</li>
                     <li><strong>{{ _('Mode Equipe') }}</strong> : {{ _("Identifiez les membres d'une equipe specifique.") }}</li>
@@ -53,14 +53,14 @@
             <div class="about-content">
                 <ul class="features-list">
                     <li>{{ _('Commencez par le mode normal pour vous familiariser avec les visages et les noms.') }}</li>
-                    <li>{{ _("Utilisez le mode pixelation pour tester votre capacite a reconnaitre rapidement vos collegues.") }}</li>
-                    <li>{{ _("Jouez regulierement pour ameliorer votre memoire des visages et des noms.") }}</li>
-                    <li>{{ _("N'hesitez pas a explorer tous les modes de jeu pour une experience complete.") }}</li>
+                    <li>{{ _("Utilisez le mode pixélisation pour tester votre capacité à reconnaître rapidement vos collègues.") }}</li>
+                    <li>{{ _("Jouez régulièrement pour améliorer votre mémoire des visages et des noms.") }}</li>
+                    <li>{{ _("N'hésitez pas a explorer tous les modes de jeu pour une experience complete.") }}</li>
                 </ul>
             </div>
         </div>
 
         <div class="back-to-home">
-            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">{{ _("Retour a l'accueil") }}</a>
+            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">{{ _("Retour à l'accueil") }}</a>
         </div>
 {% endblock %}

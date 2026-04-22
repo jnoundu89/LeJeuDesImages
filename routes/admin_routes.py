@@ -43,14 +43,81 @@ def _is_authenticated() -> bool:
         return True
     if session.get('admin_authenticated'):
         return True
+    # Back-compat: allow ?password=... for bookmarks / automation. The login
+    # form is the preferred interactive path.
     if request.args.get('password') == admin_password:
         session['admin_authenticated'] = True
         return True
     return False
 
 
+def _first_run_bypass() -> bool:
+    """Allow unauthenticated /setup access when no dataset is configured yet.
+
+    Without this, a fresh install that set ADMIN_PASSWORD would be locked out
+    of the wizard with no way in (the login form itself is under /setup).
+    """
+    return _registry().is_empty()
+
+
+def _require_admin():
+    """Deny-or-redirect helper used by every protected view.
+
+    Returns a response if the caller should NOT proceed, or None if auth is OK.
+    HTML GETs are redirected to the login page; state-changing requests and
+    JSON clients get a 401 JSON body.
+    """
+    if _is_authenticated() or _first_run_bypass():
+        return None
+    wants_json = (
+        request.method != 'GET'
+        or request.is_json
+        or 'application/json' in (request.accept_mimetypes.best or '')
+    )
+    if wants_json:
+        return jsonify({'error': _('Unauthorized')}), 401
+    return redirect(url_for('admin.setup_login', next=request.full_path.rstrip('?')))
+
+
 def _unauthorized():
+    # Retained for callers that prefer the terse deny.
     return jsonify({'error': _('Unauthorized')}), 401
+
+
+def _safe_next(raw: str | None) -> str:
+    """Only allow redirects back to internal /setup* paths."""
+    if not raw:
+        return url_for('admin.setup')
+    if raw.startswith('/setup'):
+        return raw
+    return url_for('admin.setup')
+
+
+@admin_bp.route('/setup/login', methods=['GET', 'POST'])
+def setup_login():
+    admin_password = os.environ.get('ADMIN_PASSWORD')
+    if not admin_password or _is_authenticated():
+        return redirect(_safe_next(request.args.get('next') or request.form.get('next')))
+
+    error = None
+    if request.method == 'POST':
+        submitted = request.form.get('password', '')
+        if submitted == admin_password:
+            session['admin_authenticated'] = True
+            return redirect(_safe_next(request.form.get('next')))
+        error = _('Mot de passe incorrect.')
+
+    return render_template(
+        'setup_login.html',
+        error=error,
+        next_url=request.args.get('next') or request.form.get('next') or url_for('admin.setup'),
+    )
+
+
+@admin_bp.route('/setup/logout', methods=['POST'])
+def setup_logout():
+    session.pop('admin_authenticated', None)
+    return redirect(url_for('admin.setup_login'))
 
 
 def _write_config_yaml(datasets_dict: dict, contact_email: str, default_id: str):
@@ -82,8 +149,9 @@ def _current_contact_email() -> str:
 @admin_bp.route('/setup')
 def setup():
     """Landing: list datasets, provide actions."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     registry = _registry()
     datasets_info = []
@@ -112,8 +180,9 @@ def setup():
 @admin_bp.route('/setup/new')
 def setup_new():
     """Wizard: add a new dataset."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     return render_template(
         'setup_wizard.html',
@@ -127,8 +196,9 @@ def setup_new():
 @admin_bp.route('/setup/<dataset_id>/edit')
 def setup_edit(dataset_id):
     """Wizard: edit an existing dataset's config (branding + mapping)."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -159,8 +229,9 @@ def setup_edit(dataset_id):
 @admin_bp.route('/setup/upload-csv', methods=['POST'])
 def upload_csv():
     """Validate uploaded CSV, return columns + preview. CSV stays in uploads/ until save."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     if 'file' not in request.files:
         return jsonify({'error': _('No file provided')}), 400
@@ -194,8 +265,9 @@ def upload_csv():
 @admin_bp.route('/setup/save', methods=['POST'])
 def save():
     """Create or update a dataset. Writes config.yaml + moves CSV to data/<id>/ + hot-reloads registry."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     data = request.get_json()
     if not data:
@@ -283,8 +355,9 @@ def save():
 @admin_bp.route('/setup/<dataset_id>/delete', methods=['POST'])
 def delete(dataset_id):
     """Remove a dataset entirely: disk + registry + config.yaml."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     registry = _registry()
     ds = registry.get(dataset_id)
@@ -313,8 +386,9 @@ def delete(dataset_id):
 @admin_bp.route('/setup/<dataset_id>/upload-photos', methods=['POST'])
 def upload_photos(dataset_id):
     """Extract a photos ZIP into an existing dataset's images directory."""
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -369,8 +443,9 @@ def replace_csv(dataset_id):
 
     Expects JSON {'csv_filename': str} referencing a CSV previously validated via /setup/upload-csv.
     """
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -406,8 +481,9 @@ def _employee_payload_from_request(data: dict) -> dict:
 
 @admin_bp.route('/setup/<dataset_id>/employees')
 def employees_list(dataset_id):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -435,8 +511,9 @@ def employees_list(dataset_id):
 
 @admin_bp.route('/setup/<dataset_id>/employees/new')
 def employee_new(dataset_id):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -457,8 +534,9 @@ def employee_new(dataset_id):
 
 @admin_bp.route('/setup/<dataset_id>/employees/<int:idx>/edit')
 def employee_edit(dataset_id, idx):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -485,8 +563,9 @@ def employee_edit(dataset_id, idx):
 
 @admin_bp.route('/setup/<dataset_id>/employees', methods=['POST'])
 def employee_create(dataset_id):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -510,8 +589,9 @@ def employee_create(dataset_id):
 
 @admin_bp.route('/setup/<dataset_id>/employees/<int:idx>', methods=['POST'])
 def employee_update(dataset_id, idx):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -539,8 +619,9 @@ def employee_update(dataset_id, idx):
 
 @admin_bp.route('/setup/<dataset_id>/employees/<int:idx>/delete', methods=['POST'])
 def employee_delete(dataset_id, idx):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:
@@ -561,8 +642,9 @@ def employee_delete(dataset_id, idx):
 
 @admin_bp.route('/setup/<dataset_id>/employees/<int:idx>/photo', methods=['POST'])
 def employee_upload_photo(dataset_id, idx):
-    if not _is_authenticated():
-        return _unauthorized()
+    auth = _require_admin()
+    if auth is not None:
+        return auth
 
     ds = _registry().get(dataset_id)
     if ds is None:

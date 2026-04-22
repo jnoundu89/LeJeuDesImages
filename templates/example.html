@@ -25,7 +25,7 @@
         }
 
         .example-choice-btn {
-            background-color: #4CAF50;
+            background: linear-gradient(90deg, #6a11cb, #2575fc);
             color: white;
             border: none;
             padding: 15px;
@@ -33,21 +33,21 @@
             font-size: 16px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s, transform 0.2s, filter 0.2s;
         }
 
         .example-choice-btn:hover {
-            background-color: #45a049;
+            filter: brightness(1.1);
             transform: translateY(-3px);
         }
 
         .example-choice-btn.correct {
-            background-color: #4CAF50;
+            background: #4CAF50;
             animation: pulse 1.5s infinite;
         }
 
         .example-choice-btn.incorrect {
-            background-color: #f44336;
+            background: #f44336;
         }
 {% endblock %}
 

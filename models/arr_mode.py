@@ -17,6 +17,10 @@ class ARRMode(GameMode):
         return "arr"
 
     @property
+    def display_name(self) -> str:
+        return _l("ARR")
+
+    @property
     def description(self) -> str:
         return _l("Mode ARR : Arcade Retro Racing - Évitez les obstacles et atteignez la ligne d'arrivée !")
 

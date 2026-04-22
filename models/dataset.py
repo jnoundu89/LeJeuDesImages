@@ -25,7 +25,6 @@ class Dataset:
         self.score_manager = ScoreManager(config.scores_db_path)
         self.game_manager = GameManager(self.employee_data, self.score_manager)
         self.mode_factory = GameModeFactory(self.game_manager)
-        self.card_game_mode: GameMode | None = None
 
         self._register_discovered_modes()
 
@@ -42,8 +41,6 @@ class Dataset:
                     continue
                 instance = attr(self.game_manager)
                 self.mode_factory.register_mode(instance)
-                if modname == 'card_game_mode':
-                    self.card_game_mode = instance
 
     @property
     def id(self) -> str:

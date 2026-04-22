@@ -18,6 +18,10 @@ class SeniorityMode(GameMode):
         return "seniority"
 
     @property
+    def display_name(self) -> str:
+        return _l("Ancienneté")
+
+    @property
     def description(self) -> str:
         return _l("Combien d'années d'ancienneté ? Devinez depuis combien d'années la personne travaille dans l'entreprise")
 

@@ -4,7 +4,6 @@ import pkgutil
 import pytest
 
 import models
-from app import create_app
 from models.config import CompanyConfig
 from models.employee import EmployeeData
 from models.game import GameManager

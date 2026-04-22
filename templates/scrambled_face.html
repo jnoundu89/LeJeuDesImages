@@ -11,7 +11,12 @@
 
         .scrambled-image-container {
             position: relative;
+            width: 100%;
             max-width: 400px;
+            /* Reserve square space so the absolutely-positioned .scrambled-parts
+               grid always has a height to fill, even while #original-image is
+               hidden behind it. */
+            aspect-ratio: 1 / 1;
             margin: 20px auto;
             border-radius: 10px;
             overflow: hidden;

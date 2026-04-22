@@ -26,6 +26,16 @@ class GameMode(ABC):
         pass
 
     @property
+    def display_name(self) -> Union[str, Any]:
+        """Human-readable mode name shown in the UI (cards, menus, scoreboard).
+
+        Override in subclasses to return a translated ``_l(...)`` string.
+        The default turns ``'emoji_challenge'`` into ``'Emoji Challenge'`` so
+        older modes that don't override it still render sensibly.
+        """
+        return self.name.replace('_', ' ').title()
+
+    @property
     @abstractmethod
     def template(self) -> str:
         pass
@@ -134,6 +144,10 @@ class NormalMode(GameMode):
         return 'normal'
 
     @property
+    def display_name(self) -> str:
+        return _l('Normal')
+
+    @property
     def description(self) -> str:
         return _l("Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur l'image")
 
@@ -213,6 +227,10 @@ class ReverseMode(GameMode):
     @property
     def name(self) -> str:
         return 'reverse'
+
+    @property
+    def display_name(self) -> str:
+        return _l('Inverse')
 
     @property
     def description(self) -> str:

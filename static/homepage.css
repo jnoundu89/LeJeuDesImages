@@ -541,7 +541,10 @@
 
 /* About page styles */
 .about-section {
-    background-color: var(--card-bg);
+    background-color: rgba(15, 20, 45, 0.82);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: var(--border-radius-lg);
     padding: var(--space-lg);
     margin-bottom: var(--space-xl);
@@ -555,7 +558,7 @@
 }
 
 .about-content {
-    color: var(--text);
+    color: #f1f5f9;
     font-size: 1.1rem;
     line-height: 1.6;
 }

@@ -96,6 +96,10 @@
 
 {% block game_title %}{{ _('Mode Chronométré - Identifiez le maximum de personnes en 2 minutes') }}{% endblock %}
 
+{# Mode Chronométré has its own #global-timer driving the 120s countdown across
+   questions, so suppress the default 60s per-question timer from base_game.html. #}
+{% block base_timer %}{% endblock %}
+
 {% block game_content %}
         <div id="global-timer" class="global-timer">{{ _('Temps restant') }}: 120s</div>
         <div class="timed-image-container">

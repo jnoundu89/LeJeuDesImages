@@ -16,6 +16,10 @@ class PositionMatchMode(GameMode):
         return "position_match"
 
     @property
+    def display_name(self) -> str:
+        return _l("Association de postes")
+
+    @property
     def description(self) -> str:
         return _l("Mode poste : associez chaque employé avec son poste correct")
 

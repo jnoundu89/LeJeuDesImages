@@ -56,10 +56,6 @@ class TestDataset:
         assert 'reverse' in mode_names
         assert len(mode_names) > 10
 
-    def test_card_game_mode_reference_set(self, tmp_path):
-        ds = Dataset(_ds_config('acme', tmp_path))
-        assert ds.card_game_mode is not None
-
 
 class TestDatasetRegistry:
     def test_add_sets_default_when_first(self, tmp_path):

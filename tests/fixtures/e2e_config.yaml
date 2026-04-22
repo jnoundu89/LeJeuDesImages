@@ -1,20 +1,25 @@
-company:
-  name: "Test Company"
-  logo_url: "/static/images/logo.png"
+app:
   contact_email: "test@example.com"
-  tagline: "Test tagline"
+  default_dataset: "e2e"
 
-data:
-  csv_path: "tests/fixtures/test_team.csv"
-  images_dir: "tests/fixtures"
-  column_mapping:
-    first_name: "firstName"
-    last_name: "lastName"
-    photo: "image_path"
-    team: "department_name"
-    job_title: "jobTitle"
-    company: "legalEntity_name"
-    sex: "sex"
-    birth_date: "birthDate"
-    contract_start: "dtContractStart"
-    manager_name: "manager_name"
+datasets:
+  e2e:
+    company:
+      name: "Test Company"
+      logo_url: "/static/images/logo.png"
+      tagline: "Test tagline"
+    data:
+      csv_path: "tests/fixtures/test_team.csv"
+      images_dir: "tests/fixtures"
+      scores_db_path: "data/e2e/scores.json"
+      column_mapping:
+        first_name: "firstName"
+        last_name: "lastName"
+        photo: "image_path"
+        team: "department_name"
+        job_title: "jobTitle"
+        company: "legalEntity_name"
+        sex: "sex"
+        birth_date: "birthDate"
+        contract_start: "dtContractStart"
+        manager_name: "manager_name"

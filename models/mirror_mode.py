@@ -25,6 +25,10 @@ class MirrorMode(GameMode):
         return 'mirror'
 
     @property
+    def display_name(self) -> str:
+        return _l("Miroir")
+
+    @property
     def description(self) -> str:
         return _l("Mode Miroir : identifiez la personne dont l'image est inversée horizontalement")
 

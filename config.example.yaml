@@ -1,6 +1,9 @@
 # -- Application configuration --
 # Copy this file to config.yaml and edit it for your setup.
 # You can also generate / edit this file entirely through the /setup admin wizard.
+#
+# Quick start: run `make demo-dataset` to install the bundled demo dataset under
+# data/demo/, then uncomment the `demo:` block below to play immediately.
 
 app:
   # Contact email shown in the app footer; belongs to the app owner, not any dataset.
@@ -36,6 +39,28 @@ datasets:
         birth_date: "birth_date"
         contract_start: "contract_start"
         manager_name: "manager_name"
+
+  # Bundled demo dataset (populate with `make demo-dataset` first).
+  # demo:
+  #   company:
+  #     name: "DemoTech"
+  #     logo_url: ""
+  #     tagline: "Testez votre connaissance de vos collègues avec des modes de jeu amusants et interactifs."
+  #   data:
+  #     csv_path: "data/demo/team.csv"
+  #     images_dir: "data/demo/photos"
+  #     scores_db_path: "data/demo/scores.json"
+  #     column_mapping:
+  #       first_name: "first_name"
+  #       last_name: "last_name"
+  #       photo: "photo"
+  #       team: "team"
+  #       job_title: "job_title"
+  #       company: "company"
+  #       sex: "sex"
+  #       birth_date: "birth_date"
+  #       contract_start: "contract_start"
+  #       manager_name: "manager_name"
 
   # Add as many datasets as you want; the wizard will generate entries like this.
   # client_x:

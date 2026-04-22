@@ -9,7 +9,6 @@ from flask_babel import Babel
 from models.config import AppConfig
 from models.dataset_registry import DATASET_COOKIE, DatasetRegistry
 from routes.admin_routes import admin_bp
-from routes.card_game_routes import register_card_game_blueprint
 from routes.game_routes import init_routes
 
 load_dotenv()
@@ -47,7 +46,6 @@ def create_app(config_path: str | None = None):
     app.config['APP_CONFIG_OBJECT'] = app_config
 
     game_bp = init_routes(registry)
-    register_card_game_blueprint(app, registry)
 
     app.register_blueprint(game_bp)
     app.register_blueprint(admin_bp)
@@ -88,6 +86,12 @@ def create_app(config_path: str | None = None):
             'datasets': datasets_list,
             'current_dataset_id': ds.id,
         }
+
+    @app.route('/favicon.ico')
+    def favicon():
+        # Browsers still request /favicon.ico even with <link rel="icon">.
+        # Return an empty 204 to keep the access log clean.
+        return ('', 204)
 
     @app.route('/photos/<path:filename>')
     def serve_photo(filename):

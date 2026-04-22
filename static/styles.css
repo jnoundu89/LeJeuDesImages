@@ -87,7 +87,12 @@ body.result-page {
 .top-container {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 10px; /* Réduction de la marge en bas */
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+    padding: 10px 20px 0;
+    position: relative;
+    z-index: 20; /* sit above bouncing-images background */
 }
 
 /* Typography */
@@ -1059,10 +1064,16 @@ form[action="/check"] button[type="submit"].disabled-btn {
 }
 
 .top-right {
+    /* Outside .top-container (e.g. on result.html), position absolutely in the corner. */
     position: absolute;
     top: var(--space-sm);
     right: var(--space-sm);
     z-index: 10;
+}
+
+/* Inside .top-container (in-game layout), flow with the flex row instead. */
+.top-container .top-right {
+    position: static;
 }
 
 .disabled-btn, button:disabled, .btn:disabled {

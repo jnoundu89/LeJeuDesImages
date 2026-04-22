@@ -1,10 +1,19 @@
-.PHONY: run test test-e2e lint format validate-data install babel-extract babel-init babel-update babel-compile typecheck
+.PHONY: run test test-e2e lint format validate-data install babel-extract babel-init babel-update babel-compile typecheck demo-dataset
 
 install:
 	uv sync --extra dev
 
 run:
 	uv run python app.py
+
+# Populate data/demo/ with the bundled sample CSV and avatars so the app
+# is playable out of the box without going through the /setup wizard.
+demo-dataset:
+	mkdir -p data/demo/photos
+	cp demo/team.csv data/demo/team.csv
+	cp demo/photos/*.png data/demo/photos/
+	@echo "Demo dataset installed under data/demo/."
+	@echo "Point config.yaml (or the /setup wizard) at csv_path: data/demo/team.csv and images_dir: data/demo/photos."
 
 test:
 	APP_CONFIG=tests/fixtures/test_config.yaml uv run --extra dev pytest tests/ -v -m "not e2e"

@@ -15,7 +15,7 @@ A company-agnostic team recognition game -- identify your colleagues from photos
 cp .env.example .env        # Set SECRET_KEY + ADMIN_PASSWORD (see below)
 docker compose up
 # -> Game:  http://localhost:5000
-# -> Admin: http://localhost:5000/setup?password=<ADMIN_PASSWORD>
+# -> Admin: http://localhost:5000/setup
 ```
 
 ### Option B: Local
@@ -24,16 +24,17 @@ docker compose up
 uv sync
 
 cp .env.example .env        # Set SECRET_KEY + ADMIN_PASSWORD (see below)
+make demo-dataset           # Optional: install the bundled sample dataset
 uv run python app.py
 # -> Game:  http://127.0.0.1:5000  (redirects to /setup on first run)
-# -> Admin: http://127.0.0.1:5000/setup?password=<ADMIN_PASSWORD>
+# -> Admin: http://127.0.0.1:5000/setup
 ```
 
-The app boots without any `config.yaml`. On first launch every route redirects to `/setup` where the wizard walks you through creating your first dataset. See `DEPLOY.md` for the full flow.
+The app boots without any `config.yaml`. On first launch every route redirects to `/setup` where the wizard walks you through creating your first dataset. `make demo-dataset` populates `data/demo/` with 10 placeholder employees so you can try the game immediately — copy `config.example.yaml` to `config.yaml` and uncomment the `demo:` block. See `DEPLOY.md` for the full flow.
 
 ## Admin Access (`/setup`)
 
-The `/setup` wizard is **protected by `ADMIN_PASSWORD`** — an env var you set in `.env` (or exported). Without it, any visit to `/setup*` returns `{"error":"Unauthorized"}` (HTTP 401).
+The `/setup` wizard is **protected by `ADMIN_PASSWORD`** — an env var you set in `.env` (or exported).
 
 **How authentication works**:
 
@@ -43,18 +44,17 @@ The `/setup` wizard is **protected by `ADMIN_PASSWORD`** — an env var you set 
    ```
    Then restart the app (`docker compose restart` or relaunch `uv run python app.py`).
 
-2. **First visit — pass the password as a query parameter**:
-   ```
-   http://localhost:5000/setup?password=your-secret-password
-   ```
-   On success the browser stores a signed session cookie (`admin_authenticated=true`).
+2. **Visit `/setup`** — if you're not logged in you're redirected to `/setup/login`, a standard HTML form. Enter the password and you're signed in for the session (signed cookie).
 
-3. **Subsequent visits** — the cookie does the job, so `http://localhost:5000/setup` works directly. No need to append `?password=...` again until the cookie expires or you clear it.
+   Scripted callers (JSON clients, automation) can still pass `?password=...` in the query string on any `/setup*` URL to skip the form.
 
-**Logout / reset**: clear your browser cookies for the site, or change `SECRET_KEY` (invalidates all sessions).
+3. **Subsequent visits** — the cookie does the job, so `http://localhost:5000/setup` works directly until you log out or the session expires.
+
+**Logout**: POST to `/setup/logout` (link from the admin UI), clear browser cookies, or change `SECRET_KEY` (invalidates all sessions).
 
 **Security notes**:
 - `ADMIN_PASSWORD` unset → `/setup` is open to everyone (dev mode only — never ship to production without a password).
+- First-run bypass: when no dataset is configured yet, `/setup` is reachable even with `ADMIN_PASSWORD` set, so the admin can bootstrap the very first dataset. Once a dataset exists, the password is required again.
 - `SECRET_KEY` must be a long random string; regenerate with `python -c "import secrets; print(secrets.token_hex(32))"`.
 - Do NOT commit your real `.env` (it's already gitignored).
 
@@ -107,7 +107,6 @@ uv run python tools/validate_data.py
 - **Mirror** -- Horizontally flipped images
 
 ### Special
-- **Card Game** -- Strategic card battle
 - **ARR** -- Hidden arcade racing game (Konami code: up up down down left right left right B A)
 
 ## Development
@@ -146,11 +145,10 @@ models/
   score.py                 # ScoreManager (per-dataset TinyDB)
   game.py                  # GameManager (core orchestration)
   game_mode.py             # GameMode ABC + helpers + Factory
-  *_mode.py                # 22 game modes (auto-discovered per dataset)
+  *_mode.py                # 21 game modes (auto-discovered per dataset)
 routes/
   game_routes.py           # Per-request dataset resolution
-  card_game_routes.py      # Card game API
-  admin_routes.py          # /setup datasets + employees CRUD
+  admin_routes.py          # /setup datasets + employees CRUD (+ login form)
 templates/
   base.html → base_page.html / base_game.html
   _switchers.html          # Header partial (language + dataset dropdown)

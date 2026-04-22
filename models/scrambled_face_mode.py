@@ -17,6 +17,10 @@ class ScrambledFaceMode(GameMode):
         return 'scrambled_face'
 
     @property
+    def display_name(self) -> str:
+        return _l("Visage mélangé")
+
+    @property
     def description(self) -> str:
         return _l("Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé avec d'autres")
 

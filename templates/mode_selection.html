@@ -1,6 +1,6 @@
 {% extends 'base_page.html' %}
 
-{% block title %}{{ _('Le Jeu Des Images - Decouvrez tous les modes de jeu') }}{% endblock %}
+{% block title %}{{ _('Le Jeu Des Images - Découvrez tous les modes de jeu') }}{% endblock %}
 
 {% block meta %}
     <meta name="description" content="{{ company_tagline }}">
@@ -33,7 +33,7 @@
                                     <i class="fas fa-sync-alt mode-icon"></i>
                                 {% elif mode.name == "timed" %}
                                     <i class="fas fa-stopwatch mode-icon"></i>
-                                    <span class="mode-badge">{{ _('Chronometre') }}</span>
+                                    <span class="mode-badge">{{ _('Chronomètre') }}</span>
                                 {% elif mode.name == "team" %}
                                     <i class="fas fa-users mode-icon"></i>
                                 {% elif mode.name == "clue" %}
@@ -50,7 +50,7 @@
                                     <i class="fas fa-gamepad mode-icon"></i>
                                 {% endif %}
 
-                                <h2>{{ mode.name|capitalize }}</h2>
+                                <h2>{{ mode.display_name or mode.name|capitalize }}</h2>
 
                                 <!-- Difficulty indicator -->
                                 <div class="difficulty-indicator">
@@ -74,13 +74,13 @@
                                 <!-- Mode features -->
                                 {% if mode.name == "normal" %}
                                 <ul class="mode-features">
-                                    <li>{{ _("Identifiez l'entreprise, l'equipe, le nom et le poste") }}</li>
-                                    <li>{{ _('Gagnez des points pour chaque bonne reponse') }}</li>
+                                    <li>{{ _("Identifiez l'entreprise, l'équipe, le nom et le poste") }}</li>
+                                    <li>{{ _('Gagnez des points pour chaque bonne réponse') }}</li>
                                 </ul>
                                 {% elif mode.name == "reverse" %}
                                 <ul class="mode-features">
-                                    <li>{{ _("Identifiez la personne a partir d'un nom") }}</li>
-                                    <li>{{ _('Testez votre memoire visuelle') }}</li>
+                                    <li>{{ _("Identifiez la personne à partir d'un nom") }}</li>
+                                    <li>{{ _('Testez votre mémoire visuelle') }}</li>
                                 </ul>
                                 {% elif mode.name == "pixelation" %}
                                 <ul class="mode-features">
@@ -90,17 +90,17 @@
                                 {% elif mode.name == "timed" %}
                                 <ul class="mode-features">
                                     <li>{{ _('Course contre la montre') }}</li>
-                                    <li>{{ _('Repondez avant la fin du temps') }}</li>
+                                    <li>{{ _('Répondez avant la fin du temps') }}</li>
                                 </ul>
                                 {% elif mode.name == "memory" %}
                                 <ul class="mode-features">
-                                    <li>{{ _('Testez votre memoire') }}</li>
+                                    <li>{{ _('Testez votre mémoire') }}</li>
                                     <li>{{ _('Retrouvez les paires correspondantes') }}</li>
                                 </ul>
                                 {% else %}
                                 <ul class="mode-features">
                                     <li>{{ _('Mode de jeu unique') }}</li>
-                                    <li>{{ _('Defi personnalise') }}</li>
+                                    <li>{{ _('Défi personnalisé') }}</li>
                                 </ul>
                                 {% endif %}
 
@@ -116,8 +116,8 @@
         </div>
 
         <!-- Experimental game modes section -->
-        <h2 class="section-title">{{ _('Modes de jeu experimentaux') }}</h2>
-        <p class="section-description">{{ _('Decouvrez nos modes de jeu uniques et defis personnalises') }}</p>
+        <h2 class="section-title">{{ _('Modes de jeu expérimentaux') }}</h2>
+        <p class="section-description">{{ _('Découvrez nos modes de jeu uniques et défis personnalisés') }}</p>
         <div class="carousel-container">
             <div class="carousel-navigation">
                 <button class="carousel-nav-button prev-button"><i class="fas fa-chevron-left"></i></button>
@@ -127,9 +127,9 @@
                         <div class="carousel-item">
                             <div class="mode-card">
                                 <i class="fas fa-flask mode-icon"></i>
-                                <span class="mode-badge experimental">{{ _('Experimental') }}</span>
+                                <span class="mode-badge experimental">{{ _('Expérimental') }}</span>
 
-                                <h2>{{ mode.name|capitalize }}</h2>
+                                <h2>{{ mode.display_name or mode.name|capitalize }}</h2>
 
                                 <!-- Difficulty indicator -->
                                 <div class="difficulty-indicator">
@@ -143,7 +143,7 @@
                                 <!-- Mode features -->
                                 <ul class="mode-features">
                                     <li>{{ _('Mode de jeu unique') }}</li>
-                                    <li>{{ _('Defi personnalise') }}</li>
+                                    <li>{{ _('Défi personnalisé') }}</li>
                                 </ul>
 
                                 <a href="{{ url_for('game.start_mode', mode_name=mode.name) }}" class="mode-button btn-hover">{{ _('Jouer maintenant') }}</a>

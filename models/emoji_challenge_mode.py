@@ -17,6 +17,10 @@ class EmojiChallengeMode(GameMode):
         return 'emoji_challenge'
 
     @property
+    def display_name(self) -> str:
+        return _l("Défi Emoji")
+
+    @property
     def description(self) -> str:
         return _l("Mode Défi Emoji : devinez qui est la personne représentée par ces emojis")
 
