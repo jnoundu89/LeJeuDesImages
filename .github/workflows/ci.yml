@@ -37,6 +37,8 @@ jobs:
   test:
     name: pytest (non-e2e)
     runs-on: ubuntu-latest
+    env:
+      APP_CONFIG: tests/fixtures/test_config.yaml
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
@@ -51,6 +53,8 @@ jobs:
     # E2E is slower and brittler; fail the job explicitly but don't block the
     # rest of the pipeline.
     continue-on-error: true
+    env:
+      APP_CONFIG: tests/fixtures/e2e_config.yaml
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
