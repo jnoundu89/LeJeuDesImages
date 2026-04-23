@@ -5,23 +5,12 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{{ url_for('static', filename='animations.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='homepage.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='music-player.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}
 
 {% block body %}
     <!-- Dark overlay for better readability -->
     <div class="dark-overlay"></div>
-
-    <!-- Toggle animation button -->
-    <div class="toggle-animation-container">
-        <button id="toggle-animation-btn" class="toggle-animation-btn" onclick="toggleBouncingAnimation()" title="{{ _("Afficher l'animation") }}">
-            <i class="fas fa-eye"></i>
-        </button>
-        <button id="toggle-music-btn" class="toggle-animation-btn" style="margin-top: 10px;" title="{{ _('Afficher le lecteur de musique') }}">
-            <i class="fas fa-music"></i>
-        </button>
-    </div>
 
     {% include '_switchers.html' %}
 
@@ -54,43 +43,10 @@
         </div>
     </footer>
 
-    {% block before_music_player %}{% endblock %}
-
-    <!-- Music Player -->
-    <div class="music-player-container">
-        <div id="music-player">
-            <div class="music-player-header">
-                <h3 class="music-player-title">{{ _('Lecteur de musique') }}</h3>
-                <div class="music-player-controls">
-                    <button id="visualizer-toggle" title="{{ _('Afficher le visualiseur') }}"><i class="fas fa-eye"></i></button>
-                    <button id="minimize-player-btn" title="{{ _('Reduire le lecteur') }}"><i class="fas fa-minus"></i></button>
-                </div>
-            </div>
-            <div class="track-info">
-                <p id="track-title">{{ _('Chargement...') }}</p>
-                <p id="track-artist">{{ _('Artiste') }}</p>
-            </div>
-            <div class="music-controls">
-                <button id="music-prev" class="music-control-btn" title="{{ _('Piste precedente') }}"><i class="fas fa-step-backward"></i></button>
-                <button id="music-play-pause" class="music-control-btn" title="{{ _('Jouer la musique') }}"><i class="fas fa-play"></i></button>
-                <button id="music-next" class="music-control-btn" title="{{ _('Piste suivante') }}"><i class="fas fa-step-forward"></i></button>
-            </div>
-            <div class="volume-control">
-                <button id="music-mute" class="music-control-btn" title="{{ _('Couper le son') }}"><i class="fas fa-volume-up"></i></button>
-                <input type="range" id="music-volume" class="volume-slider" min="0" max="100" value="70">
-            </div>
-            <div class="visualizer-container">
-                <canvas id="music-visualizer"></canvas>
-                <div class="visualizer-controls">
-                </div>
-            </div>
-        </div>
-    </div>
+    {% block page_extras %}{% endblock %}
 {% endblock %}
 
 {% block scripts %}
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='homepage.js') }}"></script>
-    <script src="{{ url_for('static', filename='bouncing-images.js') }}"></script>
-    <script src="{{ url_for('static', filename='music-player.js') }}"></script>
 {% endblock %}

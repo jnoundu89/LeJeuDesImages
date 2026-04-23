@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-23 00:12+0200\n"
+"POT-Creation-Date: 2026-04-23 22:47+0200\n"
 "PO-Revision-Date: 2026-04-08 14:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: fr\n"
@@ -24,16 +24,6 @@ msgstr ""
 
 #: models/age_mode.py:27
 msgid "Quel âge a la personne ? Devinez l'âge de la personne affichée"
-msgstr ""
-
-#: models/arr_mode.py:21
-msgid "ARR"
-msgstr ""
-
-#: models/arr_mode.py:25
-msgid ""
-"Mode ARR : Arcade Retro Racing - Évitez les obstacles et atteignez la "
-"ligne d'arrivée !"
 msgstr ""
 
 #: models/clue_mode.py:20
@@ -79,7 +69,7 @@ msgid "Identifiez la personne correspondant au nom affiché"
 msgstr ""
 
 #: models/manager_mode.py:21 templates/employee_edit.html:176
-#: templates/setup_wizard.html:236
+#: templates/setup_wizard.html:243
 msgid "Manager"
 msgstr ""
 
@@ -197,7 +187,7 @@ msgstr ""
 
 #: models/team_mode.py:21 templates/emoji_challenge.html:153
 #: templates/employee_edit.html:135 templates/employees_list.html:132
-#: templates/missing_person.html:147 templates/setup_wizard.html:227
+#: templates/missing_person.html:147 templates/setup_wizard.html:234
 #: templates/team.html:128
 msgid "Équipe"
 msgstr ""
@@ -222,76 +212,76 @@ msgstr ""
 msgid "Mot de passe incorrect."
 msgstr ""
 
-#: routes/admin_routes.py:237 routes/admin_routes.py:398
-#: routes/admin_routes.py:659
+#: routes/admin_routes.py:238 routes/admin_routes.py:409
+#: routes/admin_routes.py:670
 msgid "No file provided"
 msgstr ""
 
-#: routes/admin_routes.py:241 routes/admin_routes.py:402
-#: routes/admin_routes.py:663
+#: routes/admin_routes.py:242 routes/admin_routes.py:413
+#: routes/admin_routes.py:674
 msgid "No file selected"
 msgstr ""
 
-#: routes/admin_routes.py:245
+#: routes/admin_routes.py:246
 msgid "File must be a CSV"
 msgstr ""
 
-#: routes/admin_routes.py:256
+#: routes/admin_routes.py:257
 msgid "Invalid CSV file"
 msgstr ""
 
-#: routes/admin_routes.py:274
+#: routes/admin_routes.py:275
 msgid "No data provided"
 msgstr ""
 
-#: routes/admin_routes.py:279
+#: routes/admin_routes.py:280
 msgid ""
 "Dataset id must be lowercase alphanumeric (underscores and dashes "
 "allowed, max 32 chars)."
 msgstr ""
 
-#: routes/admin_routes.py:284
+#: routes/admin_routes.py:285
 msgid "A dataset with this id already exists."
 msgstr ""
 
-#: routes/admin_routes.py:303 routes/admin_routes.py:461
+#: routes/admin_routes.py:304 routes/admin_routes.py:472
 msgid "Uploaded CSV was not found. Re-upload and retry."
 msgstr ""
 
-#: routes/admin_routes.py:308
+#: routes/admin_routes.py:309
 msgid "A CSV file is required to create a dataset."
 msgstr ""
 
-#: routes/admin_routes.py:365 routes/admin_routes.py:395
-#: routes/admin_routes.py:452 routes/admin_routes.py:572
-#: routes/admin_routes.py:598 routes/admin_routes.py:628
-#: routes/admin_routes.py:651
+#: routes/admin_routes.py:376 routes/admin_routes.py:406
+#: routes/admin_routes.py:463 routes/admin_routes.py:583
+#: routes/admin_routes.py:609 routes/admin_routes.py:639
+#: routes/admin_routes.py:662
 msgid "Dataset not found"
 msgstr ""
 
-#: routes/admin_routes.py:406
+#: routes/admin_routes.py:417
 msgid "File must be a ZIP archive"
 msgstr ""
 
-#: routes/admin_routes.py:433
+#: routes/admin_routes.py:444
 msgid "Invalid ZIP file"
 msgstr ""
 
-#: routes/admin_routes.py:457
+#: routes/admin_routes.py:468
 msgid "csv_filename is required"
 msgstr ""
 
-#: routes/admin_routes.py:579 routes/admin_routes.py:605
+#: routes/admin_routes.py:590 routes/admin_routes.py:616
 #, python-format
 msgid "Missing required fields: %(fields)s"
 msgstr ""
 
-#: routes/admin_routes.py:610 routes/admin_routes.py:633
-#: routes/admin_routes.py:656
+#: routes/admin_routes.py:621 routes/admin_routes.py:644
+#: routes/admin_routes.py:667
 msgid "Employee not found"
 msgstr ""
 
-#: routes/admin_routes.py:667
+#: routes/admin_routes.py:678
 msgid "Unsupported image format"
 msgstr ""
 
@@ -314,7 +304,7 @@ msgid ""
 "interactif pour identifier les membres de l'équipe %(company_name)s."
 msgstr ""
 
-#: templates/about.html:9 templates/base_page.html:50
+#: templates/about.html:9 templates/base_page.html:39
 msgid "À propos"
 msgstr ""
 
@@ -417,14 +407,14 @@ msgstr ""
 msgid "Score actuel"
 msgstr ""
 
-#: templates/base.html:6 templates/base_page.html:36
+#: templates/base.html:6 templates/base_page.html:25
 #: templates/employee_edit.html:4 templates/employees_list.html:3
 #: templates/setup_list.html:3 templates/setup_login.html:3
 #: templates/setup_wizard.html:4
 msgid "Le Jeu Des Images"
 msgstr ""
 
-#: templates/base_game.html:11 templates/result.html:271
+#: templates/base_game.html:11 templates/result.html:225
 msgid "Recommencer"
 msgstr ""
 
@@ -436,23 +426,23 @@ msgstr ""
 msgid "Afficher les statistiques"
 msgstr ""
 
-#: templates/base_game.html:22 templates/result.html:247
+#: templates/base_game.html:22 templates/result.html:218
 msgid "Statistiques de jeu"
 msgstr ""
 
-#: templates/base_game.html:23 templates/result.html:264
+#: templates/base_game.html:23 templates/result.html:219
 msgid "Bonnes réponses pour l'entreprise"
 msgstr ""
 
-#: templates/base_game.html:24 templates/result.html:265
+#: templates/base_game.html:24 templates/result.html:220
 msgid "Bonnes réponses pour l'équipe"
 msgstr ""
 
-#: templates/base_game.html:25 templates/result.html:266
+#: templates/base_game.html:25 templates/result.html:221
 msgid "Bonnes réponses pour le nom"
 msgstr ""
 
-#: templates/base_game.html:26 templates/result.html:267
+#: templates/base_game.html:26 templates/result.html:222
 msgid "Bonnes réponses pour le poste"
 msgstr ""
 
@@ -461,7 +451,7 @@ msgstr ""
 msgid "Temps restant"
 msgstr ""
 
-#: templates/base_game.html:53 templates/base_page.html:52
+#: templates/base_game.html:53 templates/base_page.html:41
 #: templates/scores.html:9
 msgid "Scores"
 msgstr ""
@@ -470,59 +460,15 @@ msgstr ""
 msgid "Personne suivante"
 msgstr ""
 
-#: templates/base_page.html:18
-msgid "Afficher l'animation"
-msgstr ""
-
-#: templates/base_page.html:21
-msgid "Afficher le lecteur de musique"
-msgstr ""
-
-#: templates/base_page.html:48
+#: templates/base_page.html:37
 #, python-format
 msgid ""
 "Le Jeu Des Images - Un jeu interactif pour identifier les membres de "
 "l'équipe %(company_name)s."
 msgstr ""
 
-#: templates/base_page.html:51 templates/how_to_play.html:9
+#: templates/base_page.html:40 templates/how_to_play.html:9
 msgid "Comment jouer"
-msgstr ""
-
-#: templates/base_page.html:63
-msgid "Lecteur de musique"
-msgstr ""
-
-#: templates/base_page.html:65
-msgid "Afficher le visualiseur"
-msgstr ""
-
-#: templates/base_page.html:66
-msgid "Reduire le lecteur"
-msgstr ""
-
-#: templates/base_page.html:70
-msgid "Chargement..."
-msgstr ""
-
-#: templates/base_page.html:71
-msgid "Artiste"
-msgstr ""
-
-#: templates/base_page.html:74
-msgid "Piste precedente"
-msgstr ""
-
-#: templates/base_page.html:75
-msgid "Jouer la musique"
-msgstr ""
-
-#: templates/base_page.html:76
-msgid "Piste suivante"
-msgstr ""
-
-#: templates/base_page.html:79
-msgid "Couper le son"
 msgstr ""
 
 #: templates/clue.html:3
@@ -549,12 +495,12 @@ msgstr ""
 msgid "Mode Défi Emoji - Qui suis-je?"
 msgstr ""
 
-#: templates/emoji_challenge.html:149 templates/setup_wizard.html:175
+#: templates/emoji_challenge.html:149 templates/setup_wizard.html:182
 msgid "Entreprise"
 msgstr ""
 
 #: templates/emoji_challenge.html:157 templates/employee_edit.html:139
-#: templates/employees_list.html:133 templates/setup_wizard.html:228
+#: templates/employees_list.html:133 templates/setup_wizard.html:235
 msgid "Poste"
 msgstr ""
 
@@ -580,7 +526,7 @@ msgid "Dataset"
 msgstr ""
 
 #: templates/employee_edit.html:113 templates/employees_list.html:130
-#: templates/setup_wizard.html:226
+#: templates/setup_wizard.html:233
 msgid "Photo"
 msgstr ""
 
@@ -596,20 +542,20 @@ msgstr ""
 msgid "Informations principales"
 msgstr ""
 
-#: templates/employee_edit.html:127 templates/setup_wizard.html:224
+#: templates/employee_edit.html:127 templates/setup_wizard.html:231
 msgid "Prénom"
 msgstr ""
 
 #: templates/employee_edit.html:131 templates/employees_list.html:131
-#: templates/setup_wizard.html:225 templates/setup_wizard.html:492
+#: templates/setup_wizard.html:232 templates/setup_wizard.html:499
 msgid "Nom"
 msgstr ""
 
-#: templates/employee_edit.html:143 templates/setup_wizard.html:229
+#: templates/employee_edit.html:143 templates/setup_wizard.html:236
 msgid "Société"
 msgstr ""
 
-#: templates/employee_edit.html:147 templates/setup_wizard.html:230
+#: templates/employee_edit.html:147 templates/setup_wizard.html:237
 msgid "Sexe"
 msgstr ""
 
@@ -631,11 +577,11 @@ msgstr ""
 msgid "Informations optionnelles"
 msgstr ""
 
-#: templates/employee_edit.html:168 templates/setup_wizard.html:234
+#: templates/employee_edit.html:168 templates/setup_wizard.html:241
 msgid "Date de naissance"
 msgstr ""
 
-#: templates/employee_edit.html:172 templates/setup_wizard.html:235
+#: templates/employee_edit.html:172 templates/setup_wizard.html:242
 msgid "Date d'embauche"
 msgstr ""
 
@@ -652,11 +598,11 @@ msgstr ""
 msgid "Créer"
 msgstr ""
 
-#: templates/employee_edit.html:236 templates/setup_wizard.html:548
+#: templates/employee_edit.html:236 templates/setup_wizard.html:559
 msgid "Erreur lors de la sauvegarde"
 msgstr ""
 
-#: templates/employee_edit.html:240 templates/setup_wizard.html:551
+#: templates/employee_edit.html:240 templates/setup_wizard.html:562
 msgid "Modifications enregistrées"
 msgstr ""
 
@@ -666,8 +612,8 @@ msgstr ""
 
 #: templates/employee_edit.html:246 templates/employee_edit.html:295
 #: templates/employees_list.html:248 templates/setup_list.html:135
-#: templates/setup_wizard.html:382 templates/setup_wizard.html:482
-#: templates/setup_wizard.html:556
+#: templates/setup_wizard.html:389 templates/setup_wizard.html:489
+#: templates/setup_wizard.html:567
 msgid "Erreur réseau"
 msgstr ""
 
@@ -832,7 +778,7 @@ msgid ""
 " pression est a son comble !"
 msgstr ""
 
-#: templates/how_to_play.html:39 templates/mode_selection.html:119
+#: templates/how_to_play.html:39 templates/mode_selection.html:116
 msgid "Modes de jeu expérimentaux"
 msgstr ""
 
@@ -974,67 +920,63 @@ msgstr ""
 msgid "Nouveau"
 msgstr ""
 
-#: templates/mode_selection.html:48
-msgid "Special"
-msgstr ""
-
-#: templates/mode_selection.html:77
+#: templates/mode_selection.html:74
 msgid "Identifiez l'entreprise, l'équipe, le nom et le poste"
 msgstr ""
 
-#: templates/mode_selection.html:78
+#: templates/mode_selection.html:75
 msgid "Gagnez des points pour chaque bonne réponse"
 msgstr ""
 
-#: templates/mode_selection.html:82
+#: templates/mode_selection.html:79
 msgid "Identifiez la personne à partir d'un nom"
 msgstr ""
 
-#: templates/mode_selection.html:83
+#: templates/mode_selection.html:80
 msgid "Testez votre mémoire visuelle"
 msgstr ""
 
-#: templates/mode_selection.html:87
+#: templates/mode_selection.html:84
 msgid "Image progressivement plus nette"
 msgstr ""
 
-#: templates/mode_selection.html:88
+#: templates/mode_selection.html:85
 msgid "Identifiez la personne le plus vite possible"
 msgstr ""
 
-#: templates/mode_selection.html:92
+#: templates/mode_selection.html:89
 msgid "Course contre la montre"
 msgstr ""
 
-#: templates/mode_selection.html:93
+#: templates/mode_selection.html:90
 msgid "Répondez avant la fin du temps"
 msgstr ""
 
-#: templates/mode_selection.html:97
+#: templates/mode_selection.html:94
 msgid "Testez votre mémoire"
 msgstr ""
 
-#: templates/mode_selection.html:98
+#: templates/mode_selection.html:95
 msgid "Retrouvez les paires correspondantes"
 msgstr ""
 
-#: templates/mode_selection.html:102 templates/mode_selection.html:145
+#: templates/mode_selection.html:99 templates/mode_selection.html:142
 msgid "Mode de jeu unique"
 msgstr ""
 
-#: templates/mode_selection.html:103 templates/mode_selection.html:146
+#: templates/mode_selection.html:100 templates/mode_selection.html:143
 msgid "Défi personnalisé"
 msgstr ""
 
-#: templates/mode_selection.html:107 templates/mode_selection.html:149
+#: templates/mode_selection.html:104 templates/mode_selection.html:146
 msgid "Jouer maintenant"
 msgstr ""
 
-#: templates/mode_selection.html:120
+#: templates/mode_selection.html:117
 msgid "Découvrez nos modes de jeu uniques et défis personnalisés"
 msgstr ""
 
-#: templates/mode_selection.html:130
+#: templates/mode_selection.html:127
 msgid "Expérimental"
 msgstr ""
 
@@ -1146,77 +1088,39 @@ msgstr ""
 msgid "Game Over"
 msgstr ""
 
-#: templates/result.html:199
+#: templates/result.html:188
 msgid "Résultat final"
 msgstr ""
 
-#: templates/result.html:212
+#: templates/result.html:201
 msgid "Votre score est de"
 msgstr ""
 
-#: templates/result.html:219
-#, python-format
-msgid ""
-"Félicitations ! Vous avez atteint l'objectif de +15% d'ARR ! Les employés"
-" recevront leur prime de participation."
-msgstr ""
-
-#: templates/result.html:221 templates/result.html:228
-msgid "ARR Initial"
-msgstr ""
-
-#: templates/result.html:222 templates/result.html:229
-msgid "ARR Final"
-msgstr ""
-
-#: templates/result.html:223 templates/result.html:230
-msgid "Augmentation"
-msgstr ""
-
-#: templates/result.html:226
-#, python-format
-msgid ""
-"Malheureusement, vous n'avez pas atteint l'objectif de +15% d'ARR. Les "
-"employés ne recevront pas de prime cette année."
-msgstr ""
-
-#: templates/result.html:235
+#: templates/result.html:207
 msgid "Tu es un imbattable concernant tes collègues de"
 msgstr ""
 
-#: templates/result.html:235
+#: templates/result.html:207
 msgid "! Félicitations pour ton score parfait !"
 msgstr ""
 
-#: templates/result.html:237
+#: templates/result.html:209
 msgid ""
 "Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde et tu as "
 "fait un excellent travail !"
 msgstr ""
 
-#: templates/result.html:239
+#: templates/result.html:211
 msgid ""
 "Bravo pour ton effort ! Continue à apprendre à connaître tes collègues et"
 " essaie de faire encore mieux la prochaine fois."
 msgstr ""
 
-#: templates/result.html:241
+#: templates/result.html:213
 msgid ""
 "Il semble que tu aies encore beaucoup à apprendre sur tes collègues. Ne "
 "t'inquiète pas, c'est l'occasion parfaite pour faire de nouvelles "
 "rencontres !"
-msgstr ""
-
-#: templates/result.html:250
-msgid "Actions prises"
-msgstr ""
-
-#: templates/result.html:254
-msgid "Mois"
-msgstr ""
-
-#: templates/result.html:257
-msgid "Impact"
 msgstr ""
 
 #: templates/reverse.html:3
@@ -1397,11 +1301,11 @@ msgstr ""
 msgid "Branding"
 msgstr ""
 
-#: templates/setup_wizard.html:34 templates/setup_wizard.html:180
+#: templates/setup_wizard.html:34 templates/setup_wizard.html:187
 msgid "Données"
 msgstr ""
 
-#: templates/setup_wizard.html:38 templates/setup_wizard.html:143
+#: templates/setup_wizard.html:38 templates/setup_wizard.html:150
 msgid "Photos"
 msgstr ""
 
@@ -1435,151 +1339,159 @@ msgstr ""
 msgid "URL du logo"
 msgstr ""
 
-#: templates/setup_wizard.html:79 templates/setup_wizard.html:494
-msgid "Tagline"
+#: templates/setup_wizard.html:79 templates/setup_wizard.html:501
+msgid "Tagline (français)"
 msgstr ""
 
 #: templates/setup_wizard.html:82
 msgid "Ex: Testez votre connaissance de vos collègues !"
 msgstr ""
 
-#: templates/setup_wizard.html:88 templates/setup_wizard.html:136
-#: templates/setup_wizard.html:165
+#: templates/setup_wizard.html:86 templates/setup_wizard.html:502
+msgid "Tagline (English)"
+msgstr ""
+
+#: templates/setup_wizard.html:89
+msgid "E.g.: Test your knowledge of your colleagues!"
+msgstr ""
+
+#: templates/setup_wizard.html:95 templates/setup_wizard.html:143
+#: templates/setup_wizard.html:172
 msgid "Suivant"
 msgstr ""
 
-#: templates/setup_wizard.html:95
+#: templates/setup_wizard.html:102
 msgid "Données employés"
 msgstr ""
 
-#: templates/setup_wizard.html:100
+#: templates/setup_wizard.html:107
 msgid ""
 "Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le "
 "remplacer."
 msgstr ""
 
-#: templates/setup_wizard.html:107
+#: templates/setup_wizard.html:114
 msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
 msgstr ""
 
-#: templates/setup_wizard.html:108
+#: templates/setup_wizard.html:115
 msgid "Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc."
 msgstr ""
 
-#: templates/setup_wizard.html:114
+#: templates/setup_wizard.html:121
 msgid "Aperçu des données"
 msgstr ""
 
-#: templates/setup_wizard.html:120
+#: templates/setup_wizard.html:127
 msgid ""
 "Uploadez un fichier CSV ci-dessus pour configurer la correspondance des "
 "colonnes."
 msgstr ""
 
-#: templates/setup_wizard.html:124
+#: templates/setup_wizard.html:131
 msgid "Correspondance des colonnes"
 msgstr ""
 
-#: templates/setup_wizard.html:126
+#: templates/setup_wizard.html:133
 msgid "Associez chaque champ du jeu à une colonne de votre CSV."
 msgstr ""
 
-#: templates/setup_wizard.html:133 templates/setup_wizard.html:162
-#: templates/setup_wizard.html:191
+#: templates/setup_wizard.html:140 templates/setup_wizard.html:169
+#: templates/setup_wizard.html:198
 msgid "Précédent"
 msgstr ""
 
-#: templates/setup_wizard.html:148
+#: templates/setup_wizard.html:155
 msgid ""
 "Les photos seront uploadées après la création du dataset, depuis la page "
 "de modification."
 msgstr ""
 
-#: templates/setup_wizard.html:154
+#: templates/setup_wizard.html:161
 msgid "Glissez un fichier ZIP contenant les photos ici"
 msgstr ""
 
-#: templates/setup_wizard.html:155
+#: templates/setup_wizard.html:162
 msgid "Formats acceptes: JPG, PNG, GIF, WebP"
 msgstr ""
 
-#: templates/setup_wizard.html:172
+#: templates/setup_wizard.html:179
 msgid "Résumé et sauvegarde"
 msgstr ""
 
-#: templates/setup_wizard.html:185
+#: templates/setup_wizard.html:192
 msgid "Mapping colonnes"
 msgstr ""
 
-#: templates/setup_wizard.html:195
+#: templates/setup_wizard.html:202
 msgid "Enregistrer les modifications"
 msgstr ""
 
-#: templates/setup_wizard.html:195
+#: templates/setup_wizard.html:202
 msgid "Créer le dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:202
+#: templates/setup_wizard.html:209
 msgid "Fermer"
 msgstr ""
 
-#: templates/setup_wizard.html:274
+#: templates/setup_wizard.html:281
 msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
 msgstr ""
 
-#: templates/setup_wizard.html:279
+#: templates/setup_wizard.html:286
 msgid "Un dataset avec cet identifiant existe déjà."
 msgstr ""
 
-#: templates/setup_wizard.html:288
+#: templates/setup_wizard.html:295
 msgid "Le nom de l'entreprise est requis"
 msgstr ""
 
-#: templates/setup_wizard.html:370 templates/setup_wizard.html:474
+#: templates/setup_wizard.html:377 templates/setup_wizard.html:481
 msgid "Erreur lors de l'envoi"
 msgstr ""
 
-#: templates/setup_wizard.html:374
+#: templates/setup_wizard.html:381
 msgid "CSV chargé avec succès"
 msgstr ""
 
-#: templates/setup_wizard.html:374
+#: templates/setup_wizard.html:381
 msgid "colonnes détectées"
 msgstr ""
 
-#: templates/setup_wizard.html:415
+#: templates/setup_wizard.html:422
 msgid "requis"
 msgstr ""
 
-#: templates/setup_wizard.html:415
+#: templates/setup_wizard.html:422
 msgid "optionnel"
 msgstr ""
 
-#: templates/setup_wizard.html:425
+#: templates/setup_wizard.html:432
 msgid "Non utilisé"
 msgstr ""
 
-#: templates/setup_wizard.html:478
+#: templates/setup_wizard.html:485
 msgid "photos extraites avec succès"
 msgstr ""
 
-#: templates/setup_wizard.html:491
+#: templates/setup_wizard.html:498
 msgid "Identifiant"
 msgstr ""
 
-#: templates/setup_wizard.html:493
+#: templates/setup_wizard.html:500
 msgid "Logo"
 msgstr ""
 
-#: templates/setup_wizard.html:498
+#: templates/setup_wizard.html:506
 msgid "Fichier CSV"
 msgstr ""
 
-#: templates/setup_wizard.html:499
+#: templates/setup_wizard.html:507
 msgid "Colonnes"
 msgstr ""
 
-#: templates/setup_wizard.html:551
+#: templates/setup_wizard.html:562
 msgid "Dataset créé"
 msgstr ""
 
@@ -1909,5 +1821,85 @@ msgstr ""
 #~ msgstr ""
 
 #~ msgid "Découvrez les règles et astuces pour maitriser tous les modes de jeu"
+#~ msgstr ""
+
+#~ msgid "Afficher l'animation"
+#~ msgstr ""
+
+#~ msgid "Afficher le lecteur de musique"
+#~ msgstr ""
+
+#~ msgid "Lecteur de musique"
+#~ msgstr ""
+
+#~ msgid "Afficher le visualiseur"
+#~ msgstr ""
+
+#~ msgid "Reduire le lecteur"
+#~ msgstr ""
+
+#~ msgid "Chargement..."
+#~ msgstr ""
+
+#~ msgid "Artiste"
+#~ msgstr ""
+
+#~ msgid "Piste precedente"
+#~ msgstr ""
+
+#~ msgid "Jouer la musique"
+#~ msgstr ""
+
+#~ msgid "Piste suivante"
+#~ msgstr ""
+
+#~ msgid "Couper le son"
+#~ msgstr ""
+
+#~ msgid "Tagline"
+#~ msgstr ""
+
+#~ msgid "ARR"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Mode ARR : Arcade Retro Racing -"
+#~ " Évitez les obstacles et atteignez la"
+#~ " ligne d'arrivée !"
+#~ msgstr ""
+
+#~ msgid "Special"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Félicitations ! Vous avez atteint "
+#~ "l'objectif de +15% d'ARR ! Les "
+#~ "employés recevront leur prime de "
+#~ "participation."
+#~ msgstr ""
+
+#~ msgid "ARR Initial"
+#~ msgstr ""
+
+#~ msgid "ARR Final"
+#~ msgstr ""
+
+#~ msgid "Augmentation"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "Malheureusement, vous n'avez pas atteint "
+#~ "l'objectif de +15% d'ARR. Les employés"
+#~ " ne recevront pas de prime cette "
+#~ "année."
+#~ msgstr ""
+
+#~ msgid "Actions prises"
+#~ msgstr ""
+
+#~ msgid "Mois"
+#~ msgstr ""
+
+#~ msgid "Impact"
 #~ msgstr ""
 

@@ -2,13 +2,13 @@
 import logging
 from typing import cast
 
-from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
+from flask import Blueprint, redirect, render_template, request, session, url_for
 
 from models.dataset_registry import DatasetRegistry
 
 EXPERIMENTAL_MODES = {
     'speed', 'team_guess', 'missing_person', 'position_match', 'progressive_hint',
-    'scrambled_face', 'emoji_challenge', 'silhouette', 'mirror', 'arr',
+    'scrambled_face', 'emoji_challenge', 'silhouette', 'mirror',
 }
 
 
@@ -195,18 +195,6 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
     def restart():
         session.clear()
         return redirect(url_for('game.index'))
-
-    @game_bp.route('/arr')
-    def arr_easter_egg():
-        return render_template('arr.html')
-
-    @game_bp.route('/api/employee_images')
-    def get_employee_images():
-        ds = _current()
-        if ds is None:
-            return jsonify([])
-        employees = ds.employee_data.get_all_employees()
-        return jsonify([emp['photo'] for emp in employees])
 
     @game_bp.route('/about')
     def about():

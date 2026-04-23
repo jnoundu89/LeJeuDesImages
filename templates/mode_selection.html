@@ -6,7 +6,7 @@
     <meta name="description" content="{{ company_tagline }}">
 {% endblock %}
 
-{% block before_music_player %}
+{% block page_extras %}
     <!-- Subtle hint for the Konami code easter egg -->
     <div style="position: fixed; bottom: 10px; right: 10px; font-size: 12px; color: rgba(255, 215, 0, 0.5); cursor: default;">
         ↑↑↓↓←→←→BA
@@ -43,9 +43,6 @@
                                     <span class="mode-badge new">{{ _('Nouveau') }}</span>
                                 {% elif mode.name == "quiz" %}
                                     <i class="fas fa-question-circle mode-icon"></i>
-                                {% elif mode.name == "arr" %}
-                                    <i class="fas fa-star mode-icon"></i>
-                                    <span class="mode-badge">{{ _('Special') }}</span>
                                 {% else %}
                                     <i class="fas fa-gamepad mode-icon"></i>
                                 {% endif %}

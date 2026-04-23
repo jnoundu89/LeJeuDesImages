@@ -316,13 +316,7 @@ function createScreenShake() {
 
 // Activate Easter egg
 function activateEasterEgg() {
-    // Create fireworks effect
     createFireworks();
-
-    // Redirect to Easter egg page after fireworks display
-    setTimeout(() => {
-        window.location.href = '/arr';
-    }, 3000); // 3 seconds delay to enjoy the fireworks
 }
 
 // Initialize carousels

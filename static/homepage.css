@@ -1343,39 +1343,6 @@
     color: var(--dark);
 }
 
-/* Toggle animation button */
-.toggle-animation-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.toggle-animation-btn {
-    background: rgba(30, 30, 30, 0.7);
-    backdrop-filter: blur(10px);
-    color: var(--accent-dark);
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.toggle-animation-btn:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-}
-
-.toggle-animation-btn i {
-    font-size: 1.2rem;
-}
-
 /* Responsive adjustments */
 @media (min-width: 1921px) {
     .typing-container {
@@ -1442,14 +1409,6 @@
         max-width: 1200px;
     }
 
-    .toggle-animation-btn {
-        width: 50px;
-        height: 50px;
-    }
-
-    .toggle-animation-btn i {
-        font-size: 1.5rem;
-    }
 }
 
 @media (max-width: 768px) {
@@ -1520,16 +1479,6 @@
 
     .mode-button {
         width: 100%; /* Full width buttons on small screens */
-    }
-
-    .toggle-animation-container {
-        top: 10px;
-        right: 10px;
-    }
-
-    .toggle-animation-btn {
-        width: 35px;
-        height: 35px;
     }
 
     .carousel-nav-button {

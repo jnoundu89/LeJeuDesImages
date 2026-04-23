@@ -242,15 +242,3 @@ document.addEventListener('alpine:init', () => {
         }
     }));
 });
-
-// ---- Konami code (easter egg) ----
-(function() {
-    var code = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','KeyB','KeyA'];
-    var idx = 0;
-    document.addEventListener('keydown', function(e) {
-        if (e.code === code[idx]) {
-            idx++;
-            if (idx === code.length) { idx = 0; window.location.href = '/arr'; }
-        } else { idx = 0; }
-    });
-})();
