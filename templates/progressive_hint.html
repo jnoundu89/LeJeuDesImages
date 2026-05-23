@@ -28,6 +28,9 @@
             align-items: center;
             gap: var(--space-3);
         }
+        .hint:not(.active) {
+            display: none !important;
+        }
         .hint.active {
             border-color: var(--primary);
             background: var(--primary-subtle);
