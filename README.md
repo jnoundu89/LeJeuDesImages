@@ -10,6 +10,25 @@ A company-agnostic team recognition game — identify your colleagues from photo
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 
+## Screenshots & Demo
+
+<table>
+  <tr>
+    <td><b>Home Page (Mode Selection)</b></td>
+    <td><b>Gameplay Interface (Normal Mode)</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/demo-home.png" alt="Demo Home Page" width="400"></td>
+    <td><img src="docs/images/demo-gameplay.png" alt="Demo Gameplay" width="400"></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><b>Scores & Leaderboard</b></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="docs/images/demo-scores.png" alt="Demo Scores Page" width="500"></td>
+  </tr>
+</table>
+
 ## TL;DR
 
 ```bash
