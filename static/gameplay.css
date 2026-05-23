@@ -102,12 +102,23 @@
     .stats,
     .right-content,
     .center-content {
-        background: var(--card-bg, var(--surface));
+        background: color-mix(in srgb, var(--card-bg, var(--surface)) 82%, transparent);
         color: var(--card-text, var(--text));
-        border: 1px solid var(--border);
+        border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
         border-radius: var(--radius-md);
         padding: var(--space-5);
-        box-shadow: var(--shadow-xs);
+        box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: all 0.35s var(--ease);
+    }
+    .center-content.correct-glow {
+        box-shadow: 0 0 35px color-mix(in srgb, var(--success) 35%, transparent), 0 8px 32px 0 rgba(15, 23, 42, 0.08) !important;
+        border-color: color-mix(in srgb, var(--success) 60%, transparent) !important;
+    }
+    .center-content.incorrect-glow {
+        box-shadow: 0 0 35px color-mix(in srgb, var(--danger) 35%, transparent), 0 8px 32px 0 rgba(15, 23, 42, 0.08) !important;
+        border-color: color-mix(in srgb, var(--danger) 60%, transparent) !important;
     }
     .center-content {
         text-align: center;
@@ -321,11 +332,21 @@
         color: var(--danger);
         border-color: var(--danger);
         box-shadow: var(--glow-danger);
-        animation: timerPulse 600ms ease-in-out infinite alternate;
+        font-family: var(--font-display);
+        font-size: var(--text-2xl);
+        animation: timerPulse 600ms ease-in-out infinite alternate, timerShake 250ms ease-in-out infinite;
+        text-shadow: var(--glow-danger);
     }
     @keyframes timerPulse {
         from { transform: scale(1); }
         to { transform: scale(1.03); }
+    }
+    @keyframes timerShake {
+        0%, 100% { transform: translate(0, 0); }
+        20% { transform: translate(-2px, 1px); }
+        40% { transform: translate(2px, -1px); }
+        60% { transform: translate(-1px, -2px); }
+        80% { transform: translate(2px, 2px); }
     }
 
     /* Choice buttons — arcade cabinet feel: mono UPPER labels, hard
@@ -369,6 +390,54 @@
                     box-shadow var(--dur-fast) var(--ease);
         text-align: center;
         box-shadow: 0 3px 0 0 var(--border-strong);
+        position: relative;
+        overflow: hidden;
+    }
+    .choice-btn::after,
+    .normal-choice-btn::after,
+    .clue-choice-btn::after,
+    .pixelation-choice-btn::after,
+    .emoji-choice-btn::after,
+    .quiz-choice-btn::after,
+    .team-choice-btn::after,
+    .memory-choice-btn::after,
+    .silhouette-choice-btn::after,
+    .scrambled-choice-btn::after,
+    .missing-choice-btn::after,
+    .progressive-choice-btn::after,
+    .team-guess-choice-btn::after {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 30%;
+        height: 200%;
+        background: linear-gradient(
+            to right,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.25) 30%,
+            rgba(255, 255, 255, 0.6) 50%,
+            rgba(255, 255, 255, 0.25) 70%,
+            rgba(255, 255, 255, 0) 100%
+        );
+        transform: rotate(30deg);
+        transition: none;
+        pointer-events: none;
+    }
+    .choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .normal-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .clue-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .pixelation-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .emoji-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .quiz-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .team-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .memory-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .silhouette-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .scrambled-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .missing-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .progressive-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after,
+    .team-guess-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled)::after {
+        animation: shimmer 1.5s var(--ease) infinite;
     }
     .choice-btn:hover:not(.correct):not(.incorrect):not(:disabled),
     .normal-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled),
@@ -393,30 +462,68 @@
     .normal-choice-btn.correct,
     .clue-choice-btn.correct,
     .pixelation-choice-btn.correct,
-    .emoji-choice-btn.correct {
+    .emoji-choice-btn.correct,
+    .quiz-choice-btn.correct,
+    .team-choice-btn.correct,
+    .memory-choice-btn.correct,
+    .silhouette-choice-btn.correct,
+    .scrambled-choice-btn.correct,
+    .missing-choice-btn.correct,
+    .progressive-choice-btn.correct,
+    .team-guess-choice-btn.correct {
         background: var(--success-subtle);
         border-color: var(--success);
         color: var(--success);
-        animation: choicePulse 800ms ease-in-out;
+        animation: correctRipplePulse 800ms ease-in-out forwards;
     }
     .choice-btn.incorrect,
     .normal-choice-btn.incorrect,
     .clue-choice-btn.incorrect,
     .pixelation-choice-btn.incorrect,
-    .emoji-choice-btn.incorrect {
+    .emoji-choice-btn.incorrect,
+    .quiz-choice-btn.incorrect,
+    .team-choice-btn.incorrect,
+    .memory-choice-btn.incorrect,
+    .silhouette-choice-btn.incorrect,
+    .scrambled-choice-btn.incorrect,
+    .missing-choice-btn.incorrect,
+    .progressive-choice-btn.incorrect,
+    .team-guess-choice-btn.incorrect {
         background: var(--danger-subtle);
         border-color: var(--danger);
         color: var(--danger);
-        animation: choiceShake 420ms ease;
+        animation: incorrectRippleShake 500ms ease-in-out forwards;
     }
-    @keyframes choicePulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.03); }
+    @keyframes correctRipplePulse {
+        0% {
+            transform: scale(1);
+            box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 80%, transparent), 0 3px 0 0 var(--success);
+        }
+        50% {
+            transform: scale(1.03);
+            box-shadow: 0 0 0 12px color-mix(in srgb, var(--success) 0%, transparent), 0 3px 0 0 var(--success);
+        }
+        100% {
+            transform: scale(1);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--success) 60%, transparent), 0 3px 0 0 var(--success);
+        }
     }
-    @keyframes choiceShake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-4px); }
-        75% { transform: translateX(4px); }
+    @keyframes incorrectRippleShake {
+        0% {
+            transform: translateX(0);
+            box-shadow: 0 0 0 0 color-mix(in srgb, var(--danger) 80%, transparent), 0 3px 0 0 var(--danger);
+        }
+        20% { transform: translateX(-4px); }
+        40% { transform: translateX(4px); }
+        50% {
+            box-shadow: 0 0 0 12px color-mix(in srgb, var(--danger) 0%, transparent), 0 3px 0 0 var(--danger);
+        }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+        100% {
+            transform: translateX(0);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--danger) 60%, transparent), 0 3px 0 0 var(--danger);
+        }
     }
 
     /* "Next" submit button ---------------------------------------- */
@@ -447,26 +554,28 @@
         border-radius: 2px;
         cursor: pointer;
         transition: background var(--dur-fast) var(--ease),
-                    transform var(--dur-fast) var(--ease),
-                    box-shadow var(--dur-fast) var(--ease);
+                    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                    box-shadow var(--dur-fast) var(--ease),
+                    opacity 0.3s var(--ease);
         box-shadow: 0 4px 0 0 var(--primary-pressed), var(--glow);
     }
     form[action="/check"] button[type="submit"]:hover:not(:disabled),
     #next:hover:not(:disabled) {
         background: var(--primary-hover);
         border-color: var(--primary-hover);
-        transform: translateY(-1px);
+        transform: translateY(-1px) scale(1.02);
         box-shadow: 0 5px 0 0 var(--primary-pressed),
                     0 0 24px color-mix(in srgb, var(--primary) 65%, transparent);
     }
     form[action="/check"] button[type="submit"]:active:not(:disabled),
     #next:active:not(:disabled) {
-        transform: translateY(3px);
+        transform: translateY(3px) scale(0.98);
         box-shadow: 0 1px 0 0 var(--primary-pressed), var(--glow-sm);
     }
     #next.disabled-btn,
     form[action="/check"] button[type="submit"]:disabled {
-        opacity: 0.5;
+        opacity: 0.45;
+        transform: scale(0.96);
         cursor: not-allowed;
         box-shadow: 0 2px 0 0 var(--border-strong);
     }
@@ -522,4 +631,56 @@
         75% { transform: translate(4px, 0); }
     }
     .shake { animation: shake 420ms ease; }
+
+    /* Premium "Card Slide" Page Transitions */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes cardSlideIn {
+            from {
+                transform: translateX(60px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        @keyframes cardSlideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-60px);
+                opacity: 0;
+            }
+        }
+        .center-content {
+            animation: cardSlideIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .center-content.slide-out {
+            animation: cardSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+        }
+    }
+
+    /* High-contrast disabled highlights */
+    .correct, .incorrect {
+        opacity: 1 !important;
+        pointer-events: none;
+    }
+    /* Fade other choices into background once answered */
+    .choice-btn:disabled:not(.correct):not(.incorrect),
+    .normal-choice-btn:disabled:not(.correct):not(.incorrect),
+    .clue-choice-btn:disabled:not(.correct):not(.incorrect),
+    .pixelation-choice-btn:disabled:not(.correct):not(.incorrect),
+    .emoji-choice-btn:disabled:not(.correct):not(.incorrect),
+    .quiz-choice-btn:disabled:not(.correct):not(.incorrect),
+    .team-choice-btn:disabled:not(.correct):not(.incorrect),
+    .memory-choice-btn:disabled:not(.correct):not(.incorrect),
+    .silhouette-choice-btn:disabled:not(.correct):not(.incorrect),
+    .scrambled-choice-btn:disabled:not(.correct):not(.incorrect),
+    .missing-choice-btn:disabled:not(.correct):not(.incorrect),
+    .progressive-choice-btn:disabled:not(.correct):not(.incorrect),
+    .team-guess-choice-btn:disabled:not(.correct):not(.incorrect) {
+        opacity: 0.35 !important;
+    }
 }

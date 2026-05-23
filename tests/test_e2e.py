@@ -17,29 +17,37 @@ def _free_port() -> int:
 
 @pytest.fixture(scope='module')
 def live_app(tmp_path_factory):
-    from app import app
-    if app is None:
-        pytest.skip('Flask app could not be created')
+    # Get the password from env
+    orig_password = os.environ.get('ADMIN_PASSWORD')
+    try:
+        from app import app
+        os.environ.pop('ADMIN_PASSWORD', None)
+        
+        if app is None:
+            pytest.skip('Flask app could not be created')
 
-    port = _free_port()
-    app.config['TESTING'] = True
-    app.config['UPLOAD_DIR'] = str(tmp_path_factory.mktemp('uploads'))
+        port = _free_port()
+        app.config['TESTING'] = True
+        app.config['UPLOAD_DIR'] = str(tmp_path_factory.mktemp('uploads'))
 
-    server = threading.Thread(
-        target=app.run,
-        kwargs={'host': '127.0.0.1', 'port': port, 'use_reloader': False},
-        daemon=True,
-    )
-    server.start()
+        server = threading.Thread(
+            target=app.run,
+            kwargs={'host': '127.0.0.1', 'port': port, 'use_reloader': False, 'load_dotenv': False},
+            daemon=True,
+        )
+        server.start()
 
-    for _ in range(50):
-        try:
-            with socket.create_connection(('127.0.0.1', port), timeout=0.1):
-                break
-        except OSError:
-            time.sleep(0.1)
+        for _ in range(50):
+            try:
+                with socket.create_connection(('127.0.0.1', port), timeout=0.1):
+                    break
+            except OSError:
+                time.sleep(0.1)
 
-    yield f'http://127.0.0.1:{port}'
+        yield f'http://127.0.0.1:{port}'
+    finally:
+        if orig_password is not None:
+            os.environ['ADMIN_PASSWORD'] = orig_password
 
 
 def _fill_step1_minimum(page: Page):
@@ -78,8 +86,8 @@ def test_mode_filter_by_tag(page: Page, live_app: str):
     total = page.locator('.mode-card').count()
     assert total > 0, 'grid should render at least one mode'
 
-    # Tag chips live under the filter bar; pick the first one that exists.
-    tag_chip = page.locator('.filter-group-chips .chip').first
+    # Pick a chip that is not currently active (since the first 'Toutes' is active by default)
+    tag_chip = page.locator('.filter-group-chips .chip:not(.is-active)').first
     tag_chip.click()
 
     # Visible count updates via Alpine; wait for <strong> to change.
@@ -515,12 +523,14 @@ def test_setup_wizard_summary_reflects_form_inputs(page: Page, live_app: str):
     page.locator('#logo-url').fill('https://example.com/logo.png')
     page.locator('#tagline-fr').fill('The best team game')
 
-    # Navigate to step 4 (buildSummary is called by step 3's Suivant button)
+    # Navigate to step 5 (buildSummary is called by step 4's Suivant button)
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
     page.locator('#step-2 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
     page.locator('#step-3 .btn-primary').click(force=True)
+    page.wait_for_timeout(400)
+    page.locator('#step-4 .btn-primary').click(force=True)
     page.wait_for_timeout(500)
 
     summary_text = page.locator('#summary-company').text_content() or ''
@@ -536,6 +546,8 @@ def test_setup_wizard_csv_upload_reveals_preview_and_mapping(page: Page, live_ap
     page.goto(f'{live_app}/setup/new')
     _fill_step1_minimum(page)
     page.locator('#step-1 .btn-primary').click(force=True)
+    page.wait_for_timeout(400)
+    page.locator('#step-2 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
 
     # CSV preview is hidden initially (mapping may be pre-populated if config already has mapping)
@@ -572,6 +584,8 @@ def test_setup_wizard_csv_invalid_file_shows_error(page: Page, live_app: str, tm
     _fill_step1_minimum(page)
     page.locator('#step-1 .btn-primary').click(force=True)
     page.wait_for_timeout(400)
+    page.locator('#step-2 .btn-primary').click(force=True)
+    page.wait_for_timeout(400)
 
     page.locator('#csv-file-input').set_input_files(str(bad_file))
     page.wait_for_selector('#csv-upload-status.error', timeout=5000)
@@ -597,7 +611,7 @@ def test_setup_wizard_responsive_viewports(page: Page, live_app: str, viewport):
     assert page.locator('#company-name').is_visible()
     assert page.locator('.stepper').is_visible()
     # At least 4 step indicators present
-    assert page.locator('.step-indicator').count() == 4
+    assert page.locator('.step-indicator').count() == 5
 
 
 @pytest.mark.e2e

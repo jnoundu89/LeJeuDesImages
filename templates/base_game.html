@@ -3,6 +3,9 @@
 {% block extra_css %}
     <link rel="stylesheet" href="{{ static_v('gameplay.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {% if next_image_url %}
+    <link rel="preload" as="image" href="{{ next_image_url }}">
+    {% endif %}
     <script src="{{ static_v('game-alpine.js') }}" defer></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>{% block mode_styles %}{% endblock %}</style>
@@ -64,7 +67,8 @@
     </div>
 </div>
 
-<form action="/check" method="post" {% block form_attrs %}{% endblock %} x-data>
+<form action="/check" method="post" {% block form_attrs %}{% endblock %} x-data
+      @submit.prevent="let el = document.querySelector('.center-content'); if (el && !navigator.webdriver) { el.classList.add('slide-out'); setTimeout(() => $el.submit(), 250); } else { $el.submit(); }">
     <button type="submit" id="next"
             :disabled="!$store.game.nextEnabled"
             :class="{ 'disabled-btn': !$store.game.nextEnabled }"

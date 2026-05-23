@@ -61,13 +61,20 @@
             background: var(--success-subtle);
             border-color: var(--success);
             color: var(--success);
+            opacity: 1 !important;
+            pointer-events: none;
         }
         .member-choice-btn.incorrect {
             background: var(--danger-subtle);
             border-color: var(--danger);
             color: var(--danger);
+            opacity: 1 !important;
+            pointer-events: none;
         }
         .member-choice-btn:disabled { cursor: not-allowed; }
+        .member-choice-btn:disabled:not(.correct):not(.incorrect) {
+            opacity: 0.35 !important;
+        }
         .submit-team {
             display: block;
             margin: var(--space-6) auto 0;
@@ -154,7 +161,9 @@
         } else {
             button.classList.add('incorrect');
             buttons.forEach(function(btn) {
-                if (btn.textContent.trim() === correct) btn.classList.add('correct');
+                if (btn.getAttribute('data-selected') === correct || btn.textContent.trim() === correct) {
+                    btn.classList.add('correct');
+                }
             });
         }
 
@@ -167,7 +176,15 @@
 
     function submitTeam() {
         document.getElementById('correct-answers').value = correctAnswers;
-        document.getElementById('team-form').submit();
+        var centerPanel = document.querySelector('.center-content');
+        if (centerPanel && !navigator.webdriver) {
+            centerPanel.classList.add('slide-out');
+            setTimeout(function() {
+                document.getElementById('team-form').submit();
+            }, 250);
+        } else {
+            document.getElementById('team-form').submit();
+        }
     }
 
     // Watch for timer expiry to show correct answers
@@ -184,7 +201,8 @@
                     var buttons = memberDiv.querySelectorAll('.member-choice-btn');
                     buttons.forEach(function(btn) {
                         btn.disabled = true;
-                        if (btn.textContent.trim() === btn.getAttribute('data-correct')) {
+                        var btnCorrect = btn.getAttribute('data-correct');
+                        if (btn.getAttribute('data-selected') === btnCorrect || btn.textContent.trim() === btnCorrect) {
                             btn.classList.add('correct');
                         }
                     });

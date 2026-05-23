@@ -218,7 +218,15 @@
 
     document.getElementById('continue-btn').addEventListener('click', function() {
         document.getElementById('result-overlay').classList.remove('show');
-        document.getElementById('position-match-form').submit();
+        var centerPanel = document.querySelector('.center-content');
+        if (centerPanel && !navigator.webdriver) {
+            centerPanel.classList.add('slide-out');
+            setTimeout(function() {
+                document.getElementById('position-match-form').submit();
+            }, 250);
+        } else {
+            document.getElementById('position-match-form').submit();
+        }
     });
 
     document.addEventListener('DOMContentLoaded', function() {

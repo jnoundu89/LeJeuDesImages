@@ -93,11 +93,11 @@ document.addEventListener('alpine:init', () => {
         },
 
         get isWarning() {
-            return this.remaining <= 20 && this.remaining > 10;
+            return this.remaining <= 20 && this.remaining > 15;
         },
 
         get isDanger() {
-            return this.remaining <= 10;
+            return this.remaining <= 15;
         },
 
         destroy() {
@@ -115,7 +115,9 @@ document.addEventListener('alpine:init', () => {
             this.answered = true;
 
             const store = Alpine.store('game');
-            const buttons = this.$el.querySelectorAll('button.choice-btn, button.normal-choice-btn');
+            const root = this.$root || this.$el.closest('[x-data]') || document;
+            const buttons = root.querySelectorAll('button.choice-btn, button.normal-choice-btn, button.example-choice-btn');
+            const centerPanel = document.querySelector('.center-content');
 
             // Disable all buttons
             buttons.forEach(btn => {
@@ -127,11 +129,26 @@ document.addEventListener('alpine:init', () => {
                 el.classList.add('correct');
                 store.addScore(1);
                 document.getElementById('correct-answer').value = 1;
+                burstParticles(el);
+                centerPanel?.classList.add('correct-glow');
             } else {
                 el.classList.add('incorrect');
+                centerPanel?.classList.add('incorrect-glow');
                 // Highlight correct answer
                 buttons.forEach(btn => {
-                    if (btn.textContent.trim() === this.correct || btn.querySelector('img')?.alt === this.correct) {
+                    const text = btn.textContent.trim();
+                    const val = btn.getAttribute('data-value') || btn.dataset.value;
+                    const cleanText = text.replace(/\s+/g, ' ').trim().toLowerCase();
+                    const correctLower = this.correct.replace(/\s+/g, ' ').trim().toLowerCase();
+                    const valLower = val ? val.replace(/\s+/g, ' ').trim().toLowerCase() : '';
+                    const altLower = btn.querySelector('img')?.alt?.replace(/\s+/g, ' ')?.trim()?.toLowerCase() || '';
+
+                    if (cleanText === correctLower || 
+                        valLower === correctLower || 
+                        altLower === correctLower ||
+                        cleanText === correctLower + ' ans' || 
+                        cleanText === correctLower + ' an' ||
+                        cleanText === correctLower + ' s') {
                         btn.classList.add('correct');
                     }
                 });
@@ -151,7 +168,9 @@ document.addEventListener('alpine:init', () => {
             this.answered = true;
 
             const store = Alpine.store('game');
-            const buttons = this.$el.querySelectorAll('.choice-btn');
+            const root = this.$root || this.$el.closest('[x-data]') || document;
+            const buttons = root.querySelectorAll('.choice-btn');
+            const centerPanel = document.querySelector('.center-content');
 
             buttons.forEach(btn => {
                 btn.disabled = true;
@@ -162,10 +181,15 @@ document.addEventListener('alpine:init', () => {
                 el.classList.add('correct');
                 store.addScore(1);
                 document.getElementById('correct-answer').value = 1;
+                burstParticles(el);
+                centerPanel?.classList.add('correct-glow');
             } else {
                 el.classList.add('incorrect');
+                centerPanel?.classList.add('incorrect-glow');
                 buttons.forEach(btn => {
-                    if (btn.querySelector('img')?.alt === this.correct) {
+                    const altText = btn.querySelector('img')?.alt?.replace(/\s+/g, ' ')?.trim()?.toLowerCase();
+                    const correctLower = this.correct.replace(/\s+/g, ' ').trim().toLowerCase();
+                    if (altText === correctLower) {
                         btn.classList.add('correct');
                     }
                 });
@@ -209,6 +233,7 @@ document.addEventListener('alpine:init', () => {
             const titleEl = document.getElementById(category + '-title');
             const labelStrong = titleEl ? titleEl.querySelector('strong') : null;
             const labelText = labelStrong ? labelStrong.outerHTML : category + ' :';
+            const centerPanel = document.querySelector('.center-content');
 
             buttons.forEach(btn => {
                 btn.disabled = true;
@@ -222,10 +247,16 @@ document.addEventListener('alpine:init', () => {
                 document.getElementById(category + '-correct').value = 1;
                 if (titleEl) titleEl.innerHTML = labelText + ' <span class="success-icon">\u2713</span> 1/1';
                 burstParticles(el);
+                centerPanel?.classList.add('correct-glow');
+                setTimeout(() => centerPanel?.classList.remove('correct-glow'), 600);
             } else {
                 el.classList.add('incorrect');
+                centerPanel?.classList.add('incorrect-glow');
+                setTimeout(() => centerPanel?.classList.remove('incorrect-glow'), 600);
                 buttons.forEach(btn => {
-                    if (btn.textContent.trim() === correct) {
+                    const btnText = btn.textContent.replace(/\s+/g, ' ').trim().toLowerCase();
+                    const correctLower = correct.replace(/\s+/g, ' ').trim().toLowerCase();
+                    if (btnText === correctLower) {
                         btn.classList.add('correct');
                         btn.classList.remove('disabled-btn');
                     }

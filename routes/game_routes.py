@@ -175,16 +175,45 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
         user_score = ds.score_manager.get_user_score(user_id)
         stats = ds.score_manager.get_stats(user_id)
 
+        # Determine the next image URL for background preloading
+        next_image_url = None
+        game_data = ds.game_manager.get_game_data(session['data_id'])
+        used_indices = session.get('used_indices', [])
+        if game_data and used_indices:
+            # Cleanly handle both list-of-dict, list-of-tuple, and dict game_data structures
+            if isinstance(game_data, list):
+                available = [i for i in range(len(game_data)) if i not in used_indices]
+                if available:
+                    next_index = available[0]
+                    next_item = game_data[next_index]
+                    if isinstance(next_item, dict):
+                        next_image_url = next_item.get('photo')
+                    elif isinstance(next_item, (list, tuple)) and len(next_item) > 1:
+                        # TeamMode: next_item is (team_name, team_members)
+                        members = next_item[1]
+                        if members and isinstance(members, list) and isinstance(members[0], dict):
+                            next_image_url = members[0].get('photo')
+            elif isinstance(game_data, dict):
+                # QuizMode, MemoryMode, PositionMatchMode
+                if 'questions' in game_data and isinstance(game_data['questions'], list):
+                    available = [i for i in range(len(game_data['questions'])) if i not in used_indices]
+                    if available:
+                        next_index = available[0]
+                        next_q = game_data['questions'][next_index]
+                        if isinstance(next_q, dict):
+                            next_image_url = next_q.get('image_url') or next_q.get('photo')
+
         template_data = {
             'maxScore': session.get('max_score', 0),
             'stats': stats,
             'currentScore': user_score['score'],
             'best_score': user_score.get('best_score', 0),
-            'total_questions': len(ds.game_manager.get_game_data(session['data_id'])),
+            'total_questions': len(game_data) if game_data else 0,
             'current_question': session.get('current_question', 0),
-            'total_employees': len(ds.game_manager.get_game_data(session['data_id'])),
+            'total_employees': len(game_data) if game_data else 0,
             'use_normal_mode_styles': mode_name == 'normal',
             'use_score_section_styles': True,
+            'next_image_url': next_image_url,
         }
         template_data.update(question_data)
 

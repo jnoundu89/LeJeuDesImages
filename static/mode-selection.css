@@ -200,9 +200,7 @@
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
         box-shadow: var(--shadow-xs);
-        transition: transform var(--dur) var(--ease),
-                    box-shadow var(--dur) var(--ease),
-                    border-color var(--dur) var(--ease);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
         text-decoration: none;
@@ -239,8 +237,8 @@
             var(--primary) 100%);
     }
     .mode-card:hover {
-        transform: translateY(-6px) scale(1.01);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-4px) scale(1.025);
+        box-shadow: 0 12px 24px var(--primary-ring);
         border-color: var(--primary);
         color: inherit;
     }
