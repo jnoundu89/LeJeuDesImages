@@ -56,6 +56,12 @@ class ProgressiveHintMode(GameMode):
         other_employees = self.game_manager.employee_data.get_filtered_employees(sex_filter)
         other_employees = [e for e in other_employees if e != selected]
 
+        # Robustness fallback: if there are fewer than 3 distractors of the same sex,
+        # fallback to the entire employee dataset to grab additional distractors.
+        if len(other_employees) < 3:
+            all_other = self.game_manager.employee_data.get_all_employees()
+            other_employees = [e for e in all_other if e != selected]
+
         if len(other_employees) > 3:
             choices = random.sample(other_employees, 3)
         else:

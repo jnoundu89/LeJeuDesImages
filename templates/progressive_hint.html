@@ -28,8 +28,11 @@
             align-items: center;
             gap: var(--space-3);
         }
-        .hint:not(.active) {
+        .hint:not(.active):not(.revealed) {
             display: none !important;
+        }
+        .hint.revealed {
+            /* Progressive hint is visible */
         }
         .hint.active {
             border-color: var(--primary);
@@ -100,16 +103,10 @@
 
 {% block game_title %}{{ _('Mode Indices Progressifs') }}{% endblock %}
 
-{% block progress_bar %}
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
-        </div>
-{% endblock %}
-
 {% block game_content %}
         <div class="hint-container">
             {% for hint in hints %}
-            <div class="hint {% if loop.index == 1 %}active{% endif %}" id="hint-{{ hint.level }}">
+            <div class="hint {% if loop.index == 1 %}active revealed{% endif %}" id="hint-{{ hint.level }}">
                 <div class="hint-level">{{ _('Indice') }} {{ hint.level }}</div>
                 <div class="hint-text">{{ hint.text }}</div>
                 <div class="hint-points">{{ _('Valeur') }}: {{ hint.points }} {{ _('points') }}</div>
@@ -163,7 +160,11 @@
             document.querySelectorAll('.hint').forEach(function(hint) {
                 hint.classList.remove('active');
             });
-            document.getElementById('hint-' + currentHintLevel).classList.add('active');
+            const nextEl = document.getElementById('hint-' + currentHintLevel);
+            if (nextEl) {
+                nextEl.classList.add('active');
+                nextEl.classList.add('revealed');
+            }
 
             if (currentHintLevel >= maxHintLevel) {
                 this.disabled = true;
@@ -174,6 +175,11 @@
     // Called after Alpine singleAnswer.check() runs
     function onHintAnswered(el) {
         document.getElementById('next-hint-btn').disabled = true;
+
+        // Reveal all remaining hints when the user answers
+        document.querySelectorAll('.hint').forEach(function(hint) {
+            hint.classList.add('revealed');
+        });
 
         // Show bonus points for correct answers
         if (document.getElementById('correct-answer').value === '1') {
