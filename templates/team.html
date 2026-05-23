@@ -171,6 +171,9 @@
 
         if (selectedMembers === getTotalMembers()) {
             document.getElementById('submit-team').disabled = false;
+            if (window.Alpine) {
+                Alpine.store('game').answersCount = 1;
+            }
         }
     }
 

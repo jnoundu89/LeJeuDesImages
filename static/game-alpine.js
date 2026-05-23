@@ -69,10 +69,21 @@ document.addEventListener('alpine:init', () => {
         init() {
             this.label = this.$el.dataset.label || 'Temps restant';
             this.start();
+
+            // Stop the timer immediately when all correct answers for the round are found
+            this.$watch('$store.game.answersCount', (value) => {
+                if (value > 0) {
+                    this.stop();
+                }
+            });
         },
 
         start() {
             this.interval = setInterval(() => {
+                if (Alpine.store('game').answersCount > 0) {
+                    clearInterval(this.interval);
+                    return;
+                }
                 this.remaining--;
                 if (this.remaining <= 0) {
                     this.remaining = 0;
