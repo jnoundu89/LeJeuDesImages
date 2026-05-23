@@ -15,7 +15,10 @@
             width: 100%;
             display: block;
             image-rendering: pixelated;
-            transition: filter 500ms ease;
+            transition: filter 500ms ease, image-rendering 500ms ease;
+        }
+        .pixelation-image.revealed {
+            image-rendering: auto;
         }
         .pixelation-choices {
             display: grid;
@@ -39,7 +42,7 @@
         <div class="pixelation-choices" id="name-choices">
             {% for name in name_choices %}
             <button type="button" class="pixelation-choice-btn choice-btn"
-                    @click="check('{{ name }}', $el); document.getElementById('pixelated-image').style.filter = 'blur(0)'">{{ name }}
+                    @click="check('{{ name }}', $el); const img = document.getElementById('pixelated-image'); img.style.filter = 'blur(0)'; img.classList.add('revealed')">{{ name }}
             </button>
             {% endfor %}
         </div>
@@ -71,7 +74,9 @@
                 if (Alpine.store('game').answersCount > 0) {
                     clearInterval(pixelationInterval);
                     clearInterval(checkExpiry);
-                    document.getElementById('pixelated-image').style.filter = 'blur(0)';
+                    const img = document.getElementById('pixelated-image');
+                    img.style.filter = 'blur(0)';
+                    img.classList.add('revealed');
                 }
             }, 200);
         });

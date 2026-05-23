@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-24 17:11+0200\n"
+"POT-Creation-Date: 2026-05-23 14:36+0200\n"
 "PO-Revision-Date: 2026-04-08 14:56+0200\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -50,26 +50,26 @@ msgstr "Example"
 msgid "Mode exemple : identifiez uniquement le nom de la personne sur l'image"
 msgstr "Example Mode: identify only the name of the person in the image"
 
-#: models/game_mode.py:274
+#: models/game_mode.py:286
 msgid "Normal"
 msgstr "Normal"
 
-#: models/game_mode.py:278
+#: models/game_mode.py:290
 msgid ""
 "Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur "
 "l'image"
 msgstr "Identify the company, team, name and position of the person in the photo"
 
-#: models/game_mode.py:353
+#: models/game_mode.py:365
 msgid "Inverse"
 msgstr "Reverse"
 
-#: models/game_mode.py:357
+#: models/game_mode.py:369
 msgid "Identifiez la personne correspondant au nom affiché"
 msgstr "Identify the person matching the displayed name"
 
-#: models/manager_mode.py:26 templates/_mode_preview.html:46
-#: templates/employee_edit.html:176 templates/setup_wizard.html:400
+#: models/manager_mode.py:26 templates/employee_edit.html:140
+#: templates/setup_wizard.html:522
 msgid "Manager"
 msgstr "Manager"
 
@@ -90,7 +90,9 @@ msgid "Miroir"
 msgstr "Mirror"
 
 #: models/mirror_mode.py:42
-msgid "Mode Miroir : identifiez la personne dont l'image est inversée horizontalement"
+msgid ""
+"Mode Miroir : identifiez la personne dont l'image est inversée "
+"horizontalement"
 msgstr "Mirror Mode: identify the person whose image is flipped horizontally"
 
 #: models/missing_person_mode.py:30
@@ -110,8 +112,8 @@ msgid ""
 "Mode pixelisation : identifiez la personne sur l'image qui devient "
 "progressivement plus nette"
 msgstr ""
-"Pixelation Mode: identify the person in the image that progressively becomes "
-"clearer"
+"Pixelation Mode: identify the person in the image that progressively "
+"becomes clearer"
 
 #: models/position_match_mode.py:41
 msgid "Association de postes"
@@ -130,8 +132,8 @@ msgid ""
 "Mode indices progressifs : identifiez l'employé avec le moins d'indices "
 "possible pour gagner plus de points"
 msgstr ""
-"Progressive Hint Mode: identify the employee with as few hints as possible to"
-" earn more points"
+"Progressive Hint Mode: identify the employee with as few hints as "
+"possible to earn more points"
 
 #: models/quiz_mode.py:29
 msgid "Quiz"
@@ -147,9 +149,11 @@ msgstr "Scrambled Face"
 
 #: models/scrambled_face_mode.py:34
 msgid ""
-"Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé "
-"avec d'autres"
-msgstr "Scrambled Face Mode: identify the person whose face has been mixed with others"
+"Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé"
+" avec d'autres"
+msgstr ""
+"Scrambled Face Mode: identify the person whose face has been mixed with "
+"others"
 
 #: models/seniority_mode.py:27
 msgid "Ancienneté"
@@ -157,11 +161,11 @@ msgstr "Seniority"
 
 #: models/seniority_mode.py:31
 msgid ""
-"Combien d'années d'ancienneté ? Devinez depuis combien d'années la personne "
-"travaille dans l'entreprise"
+"Combien d'années d'ancienneté ? Devinez depuis combien d'années la "
+"personne travaille dans l'entreprise"
 msgstr ""
-"How many years of seniority? Guess how many years the person has been working"
-" at the company"
+"How many years of seniority? Guess how many years the person has been "
+"working at the company"
 
 #: models/silhouette_mode.py:29
 msgid "Silhouette"
@@ -177,8 +181,8 @@ msgstr "Speed"
 
 #: models/speed_mode.py:34
 msgid ""
-"Mode vitesse : identifiez un maximum d'employés en un temps limité, plus vous"
-" êtes rapide, plus vous gagnez de points"
+"Mode vitesse : identifiez un maximum d'employés en un temps limité, plus "
+"vous êtes rapide, plus vous gagnez de points"
 msgstr ""
 "Speed Mode: identify as many employees as possible in limited time, the "
 "faster you are, the more points you earn"
@@ -191,10 +195,11 @@ msgstr "Guess the Team"
 msgid "Mode équipe : devinez à quelle équipe appartient chaque employé"
 msgstr "Team Guess Mode: guess which team each employee belongs to"
 
-#: models/team_mode.py:29 templates/_mode_preview.html:45
-#: templates/emoji_challenge.html:81 templates/employee_edit.html:135
-#: templates/employees_list.html:132 templates/missing_person.html:62
-#: templates/result.html:141 templates/setup_wizard.html:391 templates/team.html:93
+#: models/team_mode.py:29 templates/_mode_preview.html:55
+#: templates/base_game.html:47 templates/emoji_challenge.html:80
+#: templates/employee_edit.html:99 templates/employees_list.html:133
+#: templates/missing_person.html:62 templates/result.html:248
+#: templates/setup_wizard.html:513 templates/team.html:100
 msgid "Équipe"
 msgstr "Team"
 
@@ -210,108 +215,117 @@ msgstr "Timed"
 msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
 msgstr "Timed Mode: identify as many people as possible in 2 minutes"
 
-#: routes/admin_routes.py:144 routes/admin_routes.py:150
+#: routes/admin_routes.py:184 routes/admin_routes.py:190
 msgid "Unauthorized"
 msgstr "Unauthorized"
 
-#: routes/admin_routes.py:174
+#: routes/admin_routes.py:214
 msgid "Mot de passe incorrect."
 msgstr "Incorrect password."
 
-#: routes/admin_routes.py:321 routes/admin_routes.py:524 routes/admin_routes.py:829
-#: routes/admin_routes.py:994
+#: routes/admin_routes.py:386 routes/admin_routes.py:698
+#: routes/admin_routes.py:1040 routes/admin_routes.py:1212
 msgid "No file provided"
 msgstr "No file provided"
 
-#: routes/admin_routes.py:325 routes/admin_routes.py:528 routes/admin_routes.py:833
-#: routes/admin_routes.py:998
+#: routes/admin_routes.py:390 routes/admin_routes.py:701
+#: routes/admin_routes.py:1044 routes/admin_routes.py:1216
 msgid "No file selected"
 msgstr "No file selected"
 
-#: routes/admin_routes.py:329
+#: routes/admin_routes.py:394
 msgid "File must be a CSV"
 msgstr "File must be a CSV"
 
-#: routes/admin_routes.py:340
+#: routes/admin_routes.py:405
 msgid "Invalid CSV file"
 msgstr "Invalid CSV file"
 
-#: routes/admin_routes.py:358
+#: routes/admin_routes.py:423
 msgid "No data provided"
 msgstr "No data provided"
 
-#: routes/admin_routes.py:363
+#: routes/admin_routes.py:428
 msgid ""
-"Dataset id must be lowercase alphanumeric (underscores and dashes allowed, "
-"max 32 chars)."
+"Dataset id must be lowercase alphanumeric (underscores and dashes "
+"allowed, max 32 chars)."
 msgstr ""
-"Dataset id must be lowercase alphanumeric (underscores and dashes allowed, "
-"max 32 chars)."
+"Dataset id must be lowercase alphanumeric (underscores and dashes "
+"allowed, max 32 chars)."
 
-#: routes/admin_routes.py:368 routes/admin_routes.py:839
+#: routes/admin_routes.py:433 routes/admin_routes.py:1050
 msgid "A dataset with this id already exists."
 msgstr "A dataset with this id already exists."
 
-#: routes/admin_routes.py:387 routes/admin_routes.py:587
+#: routes/admin_routes.py:452 routes/admin_routes.py:768
 msgid "Uploaded CSV was not found. Re-upload and retry."
 msgstr "Uploaded CSV was not found. Re-upload and retry."
 
-#: routes/admin_routes.py:392
+#: routes/admin_routes.py:457
 msgid "A CSV file is required to create a dataset."
 msgstr "A CSV file is required to create a dataset."
 
-#: routes/admin_routes.py:491 routes/admin_routes.py:521 routes/admin_routes.py:578
-#: routes/admin_routes.py:698 routes/admin_routes.py:724 routes/admin_routes.py:754
-#: routes/admin_routes.py:784 routes/admin_routes.py:937 routes/admin_routes.py:986
+#: routes/admin_routes.py:600 routes/admin_routes.py:634
+#: routes/admin_routes.py:668 routes/admin_routes.py:727
+#: routes/admin_routes.py:759 routes/admin_routes.py:909
+#: routes/admin_routes.py:935 routes/admin_routes.py:965
+#: routes/admin_routes.py:995 routes/admin_routes.py:1155
+#: routes/admin_routes.py:1204
 msgid "Dataset not found"
 msgstr "Dataset not found"
 
-#: routes/admin_routes.py:532
+#: routes/admin_routes.py:604 routes/admin_routes.py:638
+#, fuzzy
+msgid "Preset not found"
+msgstr "Dataset not found"
+
+#: routes/admin_routes.py:704
 msgid "File must be a ZIP archive"
 msgstr "File must be a ZIP archive"
 
-#: routes/admin_routes.py:559 routes/admin_routes.py:900
+#: routes/admin_routes.py:712 routes/admin_routes.py:1118
 msgid "Invalid ZIP file"
 msgstr "Invalid ZIP file"
 
-#: routes/admin_routes.py:583
+#: routes/admin_routes.py:764
 msgid "csv_filename is required"
 msgstr "csv_filename is required"
 
-#: routes/admin_routes.py:705 routes/admin_routes.py:731
+#: routes/admin_routes.py:916 routes/admin_routes.py:942
 #, python-format
 msgid "Missing required fields: %(fields)s"
 msgstr "Missing required fields: %(fields)s"
 
-#: routes/admin_routes.py:736 routes/admin_routes.py:759 routes/admin_routes.py:991
+#: routes/admin_routes.py:947 routes/admin_routes.py:970
+#: routes/admin_routes.py:1209
 msgid "Employee not found"
 msgstr "Employee not found"
 
-#: routes/admin_routes.py:837
+#: routes/admin_routes.py:1048
 msgid "Invalid dataset id"
 msgstr "Invalid dataset id"
 
-#: routes/admin_routes.py:850
+#: routes/admin_routes.py:1061
 msgid "Archive must contain manifest.json and team.csv"
 msgstr "Archive must contain manifest.json and team.csv"
 
-#: routes/admin_routes.py:857
+#: routes/admin_routes.py:1068
 msgid "Target dataset dir already exists"
 msgstr "Target dataset directory already exists"
 
-#: routes/admin_routes.py:902
+#: routes/admin_routes.py:1120
 msgid "Invalid archive"
 msgstr "Invalid archive"
 
-#: routes/admin_routes.py:1002
+#: routes/admin_routes.py:1220
 msgid "Unsupported image format"
 msgstr "Unsupported image format"
 
-#: routes/admin_routes.py:1007
+#: routes/admin_routes.py:1225
 msgid "Invalid or oversize image (max 8 MiB)"
 msgstr ""
 
-#: routes/admin_routes.py:1021
+#: routes/admin_routes.py:1239
 #, fuzzy
 msgid "Invalid path"
 msgstr "Invalid ZIP file"
@@ -324,8 +338,8 @@ msgstr "Quick"
 msgid "Culture"
 msgstr "Culture"
 
-#: routes/game_routes.py:24 templates/employee_edit.html:113
-#: templates/employees_list.html:130 templates/setup_wizard.html:390
+#: routes/game_routes.py:24 templates/employee_edit.html:77
+#: templates/employees_list.html:131 templates/setup_wizard.html:512
 msgid "Photo"
 msgstr "Photo"
 
@@ -350,11 +364,18 @@ msgstr "Timed"
 msgid "Expérimental"
 msgstr "Experimental"
 
-#: templates/_mode_preview.html:47 templates/emoji_challenge.html:85
-#: templates/employee_edit.html:139 templates/employees_list.html:133
-#: templates/result.html:149 templates/setup_wizard.html:392
+#: templates/_mode_preview.html:54 templates/base_game.html:65
+#: templates/emoji_challenge.html:84 templates/employee_edit.html:103
+#: templates/employees_list.html:134 templates/result.html:256
+#: templates/setup_wizard.html:514
 msgid "Poste"
 msgstr "Position"
+
+#: templates/_mode_preview.html:56 templates/base_game.html:38
+#: templates/emoji_challenge.html:76 templates/result.html:244
+#: templates/setup_wizard.html:459
+msgid "Entreprise"
+msgstr "Company"
 
 #: templates/_switchers.html:8
 msgid "Termine ou recommence la partie pour changer de dataset."
@@ -378,10 +399,10 @@ msgid ""
 "Découvrez l'histoire et l'équipe derrière Le Jeu Des Images, un jeu "
 "interactif pour identifier les membres de l'équipe %(company_name)s."
 msgstr ""
-"Discover the story and team behind The Image Game, an interactive game to "
-"identify %(company_name)s team members."
+"Discover the story and team behind The Image Game, an interactive game to"
+" identify %(company_name)s team members."
 
-#: templates/about.html:9 templates/base_page.html:61
+#: templates/about.html:9 templates/base_page.html:68
 msgid "À propos"
 msgstr "About"
 
@@ -397,19 +418,19 @@ msgstr "Our story"
 #, python-format
 msgid ""
 "Le Jeu Des Images est né d'une volonté de créer un outil ludique et "
-"interactif pour aider les nouveaux collaborateurs à se familiariser avec les "
-"membres de l'équipe %(company_name)s."
+"interactif pour aider les nouveaux collaborateurs à se familiariser avec "
+"les membres de l'équipe %(company_name)s."
 msgstr ""
-"The Image Game was born from a desire to create a fun and interactive tool to"
-" help new hires get to know the %(company_name)s team."
+"The Image Game was born from a desire to create a fun and interactive "
+"tool to help new hires get to know the %(company_name)s team."
 
 #: templates/about.html:17
 msgid ""
 "Ce projet a été développé avec passion pour favoriser l'intégration et "
 "renforcer la cohésion d'équipe au sein de notre entreprise."
 msgstr ""
-"This project was built with passion to foster onboarding and strengthen team "
-"cohesion within the company."
+"This project was built with passion to foster onboarding and strengthen "
+"team cohesion within the company."
 
 #: templates/about.html:22
 msgid "Notre mission"
@@ -417,8 +438,8 @@ msgstr "Our mission"
 
 #: templates/about.html:24
 msgid ""
-"Notre mission est de faciliter l'apprentissage des visages et des noms de vos"
-" collègues de manière amusante et engageante."
+"Notre mission est de faciliter l'apprentissage des visages et des noms de"
+" vos collègues de manière amusante et engageante."
 msgstr ""
 "Our mission is to make learning your colleagues' faces and names fun and "
 "engaging."
@@ -428,8 +449,8 @@ msgid ""
 "Grâce à différents modes de jeu, vous pouvez tester et améliorer votre "
 "connaissance de l'équipe tout en vous amusant."
 msgstr ""
-"Through different game modes, you can test and improve your knowledge of the "
-"team while having fun."
+"Through different game modes, you can test and improve your knowledge of "
+"the team while having fun."
 
 #: templates/about.html:30
 msgid "L'équipe de développement"
@@ -441,8 +462,8 @@ msgid ""
 "Le Jeu Des Images a été conçu et développé par une équipe passionnée de "
 "développeurs et de designers de %(company_name)s."
 msgstr ""
-"The Image Game was designed and developed by a passionate team of developers "
-"and designers from %(company_name)s."
+"The Image Game was designed and developed by a passionate team of "
+"developers and designers from %(company_name)s."
 
 #: templates/about.html:33
 msgid ""
@@ -450,8 +471,8 @@ msgid ""
 "ajouter de nouveaux modes de jeu pour rendre l'apprentissage encore plus "
 "amusant."
 msgstr ""
-"We are constantly working to improve the user experience and add new game "
-"modes to make learning even more fun."
+"We are constantly working to improve the user experience and add new game"
+" modes to make learning even more fun."
 
 #: templates/about.html:38
 msgid "Contactez-nous"
@@ -462,8 +483,8 @@ msgid ""
 "Vous avez des suggestions ou des commentaires pour améliorer Le Jeu Des "
 "Images ? N'hésitez pas à nous contacter !"
 msgstr ""
-"Have suggestions or feedback to improve The Image Game? Feel free to get in "
-"touch!"
+"Have suggestions or feedback to improve The Image Game? Feel free to get "
+"in touch!"
 
 #: templates/about.html:41
 msgid "Envoyez-nous un email à"
@@ -473,10 +494,11 @@ msgstr ""
 #, fuzzy
 msgid "ou parlez-en directement à un membre de l'équipe de développement."
 msgstr ""
-"Send us an email at %(email_link)s or talk to a member of the development "
-"team directly."
+"Send us an email at %(email_link)s or talk to a member of the development"
+" team directly."
 
-#: templates/about.html:46 templates/how_to_play.html:64 templates/scores.html:83
+#: templates/about.html:46 templates/how_to_play.html:64
+#: templates/scores.html:83
 msgid "Retour à l'accueil"
 msgstr "Back to home"
 
@@ -493,88 +515,94 @@ msgstr "How old is this person?"
 msgid "Meilleur score"
 msgstr "Best score"
 
-#: templates/age.html:41 templates/base_game.html:60 templates/manager.html:72
+#: templates/age.html:41 templates/manager.html:72
 #: templates/missing_person.html:79 templates/normal.html:32
-#: templates/progressive_hint.html:115 templates/reverse.html:33
-#: templates/seniority.html:41 templates/speed.html:53 templates/team_guess.html:54
+#: templates/progressive_hint.html:122 templates/reverse.html:33
+#: templates/seniority.html:41 templates/speed.html:53
+#: templates/team_guess.html:54
 msgid "Score actuel"
 msgstr "Current score"
 
-#: templates/base.html:17 templates/employee_edit.html:4
+#: templates/base.html:19 templates/employee_edit.html:4
 #: templates/employees_list.html:3 templates/setup_list.html:3
 #: templates/setup_login.html:3 templates/setup_wizard.html:4
 msgid "Le Jeu Des Images"
 msgstr "The Image Game"
 
-#: templates/base_game.html:15
+#: templates/base_game.html:19
 msgid "Recommencer"
 msgstr "Restart"
 
-#: templates/base_game.html:25
+#: templates/base_game.html:29
 msgid "Masquer les statistiques"
 msgstr "Hide statistics"
 
-#: templates/base_game.html:25
+#: templates/base_game.html:29
 msgid "Afficher les statistiques"
 msgstr "Show statistics"
 
-#: templates/base_game.html:27
+#: templates/base_game.html:31
 msgid "Statistiques de jeu"
 msgstr "Game statistics"
 
-#: templates/base_game.html:28
-msgid "Bonnes réponses pour l'entreprise"
-msgstr "Correct answers for company"
+#: templates/base_game.html:56 templates/employee_edit.html:95
+#: templates/employees_list.html:132 templates/result.html:252
+#: templates/setup_wizard.html:511 templates/setup_wizard.html:1164
+msgid "Nom"
+msgstr "Name"
 
-#: templates/base_game.html:29
-msgid "Bonnes réponses pour l'équipe"
-msgstr "Correct answers for team"
-
-#: templates/base_game.html:30
-msgid "Bonnes réponses pour le nom"
-msgstr "Correct answers for name"
-
-#: templates/base_game.html:31
-msgid "Bonnes réponses pour le poste"
-msgstr "Correct answers for position"
-
-#: templates/base_game.html:45 templates/timed.html:39 templates/timed.html:76
+#: templates/base_game.html:83 templates/timed.html:61 templates/timed.html:98
 msgid "Temps restant"
 msgstr "Time remaining"
 
-#: templates/base_game.html:58 templates/base_page.html:31 templates/scores.html:9
-msgid "Scores"
-msgstr "Scores"
+#: templates/base_game.html:95
+msgid "Leaderboard"
+msgstr ""
 
-#: templates/base_game.html:71
+#: templates/base_game.html:102
+#, fuzzy
+msgid "Score Actuel"
+msgstr "Current score"
+
+#: templates/base_game.html:111
+#, fuzzy
+msgid "Meilleur Score"
+msgstr "Best score"
+
+#: templates/base_game.html:125
 msgid "Personne suivante"
 msgstr "Next person"
 
-#: templates/base_page.html:11
+#: templates/base_page.html:17
 msgid "Aller au contenu"
 msgstr "Skip to content"
 
-#: templates/base_page.html:30
+#: templates/base_page.html:37
 msgid "Modes de jeu"
 msgstr "Game modes"
 
-#: templates/base_page.html:32 templates/base_page.html:62
+#: templates/base_page.html:38 templates/scores.html:9
+msgid "Scores"
+msgstr "Scores"
+
+#: templates/base_page.html:39 templates/base_page.html:69
 #: templates/how_to_play.html:9
 msgid "Comment jouer"
 msgstr "How to play"
 
-#: templates/base_page.html:59
+#: templates/base_page.html:66
 #, python-format
 msgid "Le Jeu Des Images · identifiez les membres de l'équipe %(company_name)s"
 msgstr ""
 "Le Jeu Des Images · identify the members of the %(company_name)s teamThe "
-"Image Game - An interactive game to identify %(company_name)s team members."
+"Image Game - An interactive game to identify %(company_name)s team "
+"members."
 
-#: templates/base_page.html:63
+#: templates/base_page.html:70
 msgid "Contact"
 msgstr "Contact"
 
-#: templates/base_page.html:64
+#: templates/base_page.html:71
 msgid "Admin"
 msgstr "Admin"
 
@@ -582,15 +610,15 @@ msgstr "Admin"
 msgid "Mode Indices"
 msgstr "Clue Mode"
 
-#: templates/clue.html:57
+#: templates/clue.html:67
 msgid "Mode Indices - Devinez avec le minimum d'indices"
 msgstr "Clue Mode - Guess with the fewest clues"
 
-#: templates/clue.html:66
+#: templates/clue.html:76
 msgid "Révéler un indice"
 msgstr "Reveal a clue"
 
-#: templates/clue.html:67 templates/clue.html:109
+#: templates/clue.html:77 templates/clue.html:119
 msgid "Points possibles"
 msgstr "Possible points"
 
@@ -598,223 +626,224 @@ msgstr "Possible points"
 msgid "Mode Défi Emoji"
 msgstr "Emoji Challenge Mode"
 
-#: templates/emoji_challenge.html:72
+#: templates/emoji_challenge.html:71
 msgid "Mode Défi Emoji - Qui suis-je?"
 msgstr "Emoji Challenge Mode - Who am I?"
 
-#: templates/emoji_challenge.html:77 templates/result.html:137
-#: templates/setup_wizard.html:338
-msgid "Entreprise"
-msgstr "Company"
-
-#: templates/emoji_challenge.html:97 templates/silhouette.html:78
+#: templates/emoji_challenge.html:96 templates/silhouette.html:84
 msgid "Révéler la photo"
 msgstr "Reveal photo"
 
-#: templates/employee_edit.html:4 templates/employee_edit.html:95
-#: templates/employees_list.html:153 templates/setup_list.html:64
+#: templates/employee_edit.html:4 templates/employee_edit.html:59
+#: templates/employees_list.html:160 templates/setup_list.html:65
 #, fuzzy
 msgid "Modifier"
 msgstr "Reverse Mode"
 
-#: templates/employee_edit.html:4 templates/employee_edit.html:97
+#: templates/employee_edit.html:4 templates/employee_edit.html:61
 #, fuzzy
 msgid "Nouvel employé"
 msgstr "Employee data"
 
-#: templates/employee_edit.html:89
+#: templates/employee_edit.html:53
 #, fuzzy
 msgid "Retour aux employés"
 msgstr "Back to home"
 
-#: templates/employee_edit.html:100
+#: templates/employee_edit.html:64
 #, fuzzy
 msgid "Dataset"
 msgstr "New"
 
-#: templates/employee_edit.html:114
+#: templates/employee_edit.html:78
 #, fuzzy
 msgid "Fichier actuel"
 msgstr "CSV file"
 
-#: templates/employee_edit.html:117
+#: templates/employee_edit.html:81
 #, fuzzy
 msgid "Remplacer la photo"
 msgstr "Reveal photo"
 
-#: templates/employee_edit.html:124
+#: templates/employee_edit.html:88
 #, fuzzy
 msgid "Informations principales"
 msgstr "Actions taken"
 
-#: templates/employee_edit.html:127 templates/setup_wizard.html:388
+#: templates/employee_edit.html:91 templates/setup_wizard.html:510
 msgid "Prénom"
 msgstr "First name"
 
-#: templates/employee_edit.html:131 templates/employees_list.html:131
-#: templates/result.html:145 templates/setup_wizard.html:389
-#: templates/setup_wizard.html:971
-msgid "Nom"
-msgstr "Name"
-
-#: templates/employee_edit.html:143 templates/setup_wizard.html:393
+#: templates/employee_edit.html:107 templates/setup_wizard.html:515
 msgid "Société"
 msgstr "Company"
 
-#: templates/employee_edit.html:147 templates/setup_wizard.html:394
+#: templates/employee_edit.html:111 templates/setup_wizard.html:516
 msgid "Sexe"
 msgstr "Sex"
 
-#: templates/employee_edit.html:149
+#: templates/employee_edit.html:113
 #, fuzzy
 msgid "Sélectionner"
 msgstr "Select a position"
 
-#: templates/employee_edit.html:156
+#: templates/employee_edit.html:120
 #, fuzzy
 msgid "Fichier photo"
 msgstr "CSV file"
 
-#: templates/employee_edit.html:158
+#: templates/employee_edit.html:122
 msgid ""
-"Nom du fichier dans le répertoire photos (photo à uploader depuis la page "
-"Modifier après création)."
+"Nom du fichier dans le répertoire photos (photo à uploader depuis la page"
+" Modifier après création)."
 msgstr ""
-"Filename in the photos directory (upload the photo from the Edit page after "
-"creation)."
+"Filename in the photos directory (upload the photo from the Edit page "
+"after creation)."
 
-#: templates/employee_edit.html:165
+#: templates/employee_edit.html:129
 msgid "Informations optionnelles"
 msgstr "Optional fields"
 
-#: templates/employee_edit.html:168 templates/setup_wizard.html:398
+#: templates/employee_edit.html:132 templates/setup_wizard.html:520
 msgid "Date de naissance"
 msgstr "Date of birth"
 
-#: templates/employee_edit.html:172 templates/setup_wizard.html:399
+#: templates/employee_edit.html:136 templates/setup_wizard.html:521
 msgid "Date d'embauche"
 msgstr "Hire date"
 
-#: templates/employee_edit.html:183 templates/employees_list.html:181
-#: templates/mode_selection.html:195 templates/setup_list.html:97
+#: templates/employee_edit.html:147 templates/employees_list.html:188
+#: templates/mode_selection.html:195 templates/setup_list.html:98
 msgid "Annuler"
 msgstr "Cancel"
 
-#: templates/employee_edit.html:187
+#: templates/employee_edit.html:151
 #, fuzzy
 msgid "Enregistrer"
 msgstr "No scores recorded"
 
-#: templates/employee_edit.html:187
+#: templates/employee_edit.html:151
 #, fuzzy
 msgid "Créer"
 msgstr "Score"
 
-#: templates/employee_edit.html:236 templates/setup_wizard.html:1042
+#: templates/employee_edit.html:201 templates/setup_wizard.html:1253
 msgid "Erreur lors de la sauvegarde"
 msgstr "Error during save"
 
-#: templates/employee_edit.html:240 templates/setup_wizard.html:1045
+#: templates/employee_edit.html:205 templates/setup_wizard.html:1256
 #, fuzzy
 msgid "Modifications enregistrées"
 msgstr "Actions taken"
 
-#: templates/employee_edit.html:240
+#: templates/employee_edit.html:205
 #, fuzzy
 msgid "Employé créé"
 msgstr "Employee data"
 
-#: templates/employee_edit.html:246 templates/employee_edit.html:295
-#: templates/employees_list.html:248 templates/setup_list.html:145
-#: templates/setup_list.html:186 templates/setup_list.html:221
-#: templates/setup_list.html:223 templates/setup_wizard.html:773
-#: templates/setup_wizard.html:952 templates/setup_wizard.html:1050
+#: templates/employee_edit.html:211 templates/employee_edit.html:264
+#: templates/employees_list.html:256 templates/setup_list.html:147
+#: templates/setup_list.html:188 templates/setup_list.html:223
+#: templates/setup_list.html:225 templates/setup_wizard.html:960
+#: templates/setup_wizard.html:1145 templates/setup_wizard.html:1276
+#: templates/setup_wizard.html:1314 templates/setup_wizard.html:1402
 msgid "Erreur réseau"
 msgstr "Network error"
 
-#: templates/employee_edit.html:262
+#: templates/employee_edit.html:227
 msgid "Envoi..."
 msgstr "Uploading..."
 
-#: templates/employee_edit.html:272 templates/setup_list.html:199
+#: templates/employee_edit.html:237 templates/setup_list.html:201
+#: templates/setup_wizard.html:1303 templates/setup_wizard.html:1327
+#: templates/setup_wizard.html:1394
 #, fuzzy
 msgid "Erreur"
 msgstr "Network error"
 
-#: templates/employee_edit.html:276
+#: templates/employee_edit.html:241
 msgid "Photo mise à jour"
 msgstr "Photo updated"
 
-#: templates/employees_list.html:3 templates/setup_list.html:61
+#: templates/employees_list.html:3 templates/setup_list.html:62
 #, fuzzy
 msgid "Employés"
 msgstr "Employee data"
 
-#: templates/employees_list.html:110
+#: templates/employees_list.html:111
 #, fuzzy
 msgid "Retour à la liste des datasets"
 msgstr "Back to home"
 
-#: templates/employees_list.html:113
+#: templates/employees_list.html:114
 #, fuzzy
 msgid "Employés de"
 msgstr "Employee data"
 
-#: templates/employees_list.html:114 templates/setup_list.html:51
+#: templates/employees_list.html:115 templates/setup_list.html:52
 #, fuzzy
 msgid "employés"
 msgstr "Employee data"
 
-#: templates/employees_list.html:119
+#: templates/employees_list.html:120
 msgid "Rechercher un employé..."
 msgstr "Search employee..."
 
-#: templates/employees_list.html:119
+#: templates/employees_list.html:120
 msgid "Rechercher un employé"
 msgstr "Search employee"
 
-#: templates/employees_list.html:122 templates/employees_list.html:171
+#: templates/employees_list.html:123 templates/employees_list.html:178
 #, fuzzy
 msgid "Ajouter un employé"
 msgstr "Switch dataset"
 
-#: templates/employees_list.html:134
+#: templates/employees_list.html:135
 #, fuzzy
 msgid "Actions"
 msgstr "Actions taken"
 
-#: templates/employees_list.html:164
+#: templates/employees_list.html:146
+msgid "Photo référencée mais introuvable"
+msgstr ""
+
+#: templates/employees_list.html:147
+#, fuzzy
+msgid "Photo manquante"
+msgstr "Missing Person"
+
+#: templates/employees_list.html:171
 msgid "Aucun employé ne correspond à votre recherche."
 msgstr "No employee matches your search."
 
-#: templates/employees_list.html:168
+#: templates/employees_list.html:175
 #, fuzzy
 msgid "Aucun employé"
 msgstr "Employee data"
 
-#: templates/employees_list.html:169
+#: templates/employees_list.html:176
 msgid "Ajoutez un premier employé pour ce dataset."
 msgstr "Add a first employee for this dataset."
 
-#: templates/employees_list.html:178
+#: templates/employees_list.html:185
 #, fuzzy
 msgid "Supprimer l'employé ?"
 msgstr "Switch dataset"
 
-#: templates/employees_list.html:179
+#: templates/employees_list.html:186
 #, fuzzy
 msgid "L'employé"
 msgstr "Employee data"
 
-#: templates/employees_list.html:179
+#: templates/employees_list.html:186
 msgid "sera définitivement retiré du CSV. Cette action est irréversible."
 msgstr "will be permanently removed from the CSV. This action cannot be undone."
 
-#: templates/employees_list.html:183 templates/setup_list.html:73
+#: templates/employees_list.html:190 templates/setup_list.html:74
 msgid "Supprimer"
 msgstr "Delete"
 
-#: templates/employees_list.html:241 templates/setup_list.html:138
+#: templates/employees_list.html:249 templates/setup_list.html:140
 #, fuzzy
 msgid "Erreur lors de la suppression"
 msgstr "Error during save"
@@ -834,11 +863,11 @@ msgstr "The Image Game - How to play"
 #: templates/how_to_play.html:6
 #, python-format
 msgid ""
-"Apprenez a jouer au Jeu Des Images et decouvrez les regles des differents "
-"modes de jeu pour identifier les membres de l'équipe %(company_name)s."
+"Apprenez a jouer au Jeu Des Images et decouvrez les regles des differents"
+" modes de jeu pour identifier les membres de l'équipe %(company_name)s."
 msgstr ""
-"Learn how to play The Image Game and discover the rules of the different game"
-" modes to identify %(company_name)s team members."
+"Learn how to play The Image Game and discover the rules of the different "
+"game modes to identify %(company_name)s team members."
 
 #: templates/how_to_play.html:10
 msgid "Découvrez les règles et astuces pour maîtriser tous les modes de jeu"
@@ -850,19 +879,19 @@ msgstr "Basic principles"
 
 #: templates/how_to_play.html:16
 msgid ""
-"Le Jeu Des Images est conçu pour vous aider à mémoriser les visages et les "
-"noms de vos collègues de manière ludique et interactive."
+"Le Jeu Des Images est conçu pour vous aider à mémoriser les visages et "
+"les noms de vos collègues de manière ludique et interactive."
 msgstr ""
-"The Image Game is designed to help you memorise your colleagues' faces and "
-"names in a fun and interactive way."
+"The Image Game is designed to help you memorise your colleagues' faces "
+"and names in a fun and interactive way."
 
 #: templates/how_to_play.html:17
 msgid ""
-"Chaque mode de jeu propose un défi différent, mais l'objectif reste le même :"
-" associer correctement les visages aux noms, équipes et postes."
+"Chaque mode de jeu propose un défi différent, mais l'objectif reste le "
+"même : associer correctement les visages aux noms, équipes et postes."
 msgstr ""
-"Each game mode offers a different challenge, but the goal stays the same: "
-"correctly match faces to names, teams and positions."
+"Each game mode offers a different challenge, but the goal stays the same:"
+" correctly match faces to names, teams and positions."
 
 #: templates/how_to_play.html:22
 msgid "Modes de jeu classiques"
@@ -874,12 +903,12 @@ msgstr "Normal Mode"
 
 #: templates/how_to_play.html:25
 msgid ""
-"Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier son "
-"entreprise, son équipe, son nom et son poste. Vous gagnez des points pour "
-"chaque bonne réponse."
+"Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier "
+"son entreprise, son équipe, son nom et son poste. Vous gagnez des points "
+"pour chaque bonne réponse."
 msgstr ""
-"In this mode you see a colleague's photo and must identify their company, "
-"team, name and position. You earn points for every correct answer."
+"In this mode you see a colleague's photo and must identify their company,"
+" team, name and position. You earn points for every correct answer."
 
 #: templates/how_to_play.html:27
 msgid "Mode Inverse"
@@ -887,11 +916,11 @@ msgstr "Reverse Mode"
 
 #: templates/how_to_play.html:28
 msgid ""
-"À l'inverse du mode normal, vous voyez un nom et devez identifier la personne"
-" parmi plusieurs photos. Ce mode teste votre mémoire visuelle."
+"À l'inverse du mode normal, vous voyez un nom et devez identifier la "
+"personne parmi plusieurs photos. Ce mode teste votre mémoire visuelle."
 msgstr ""
-"Opposite of Normal mode: you see a name and must identify the person among "
-"several photos. This mode tests your visual memory."
+"Opposite of Normal mode: you see a name and must identify the person "
+"among several photos. This mode tests your visual memory."
 
 #: templates/how_to_play.html:30
 msgid "Mode Pixelation"
@@ -899,11 +928,12 @@ msgstr "Pixelation Mode"
 
 #: templates/how_to_play.html:31
 msgid ""
-"L'image d'un collaborateur apparait progressivement, devenant de plus en plus"
-" nette. Plus vite vous identifiez la personne, plus vous gagnez de points."
+"L'image d'un collaborateur apparait progressivement, devenant de plus en "
+"plus nette. Plus vite vous identifiez la personne, plus vous gagnez de "
+"points."
 msgstr ""
-"A colleague's image appears progressively, becoming clearer and clearer. The "
-"faster you identify the person, the more points you earn."
+"A colleague's image appears progressively, becoming clearer and clearer. "
+"The faster you identify the person, the more points you earn."
 
 #: templates/how_to_play.html:33 templates/timed.html:3
 msgid "Mode Chronométré"
@@ -911,16 +941,20 @@ msgstr "Timed Mode"
 
 #: templates/how_to_play.html:34
 msgid ""
-"Similaire au mode normal, mais avec une limite de temps pour repondre. La "
-"pression est a son comble !"
-msgstr "Similar to normal mode, but with a time limit to answer. The pressure is on!"
+"Similaire au mode normal, mais avec une limite de temps pour repondre. La"
+" pression est a son comble !"
+msgstr ""
+"Similar to normal mode, but with a time limit to answer. The pressure is "
+"on!"
 
 #: templates/how_to_play.html:39
 msgid "Modes de jeu expérimentaux"
 msgstr "Experimental game modes"
 
 #: templates/how_to_play.html:41
-msgid "Découvrez nos modes de jeu expérimentaux pour des défis encore plus variés :"
+msgid ""
+"Découvrez nos modes de jeu expérimentaux pour des défis encore plus "
+"variés :"
 msgstr "Explore our experimental game modes for even more varied challenges:"
 
 #: templates/how_to_play.html:43
@@ -961,8 +995,8 @@ msgstr "Tips to improve"
 
 #: templates/how_to_play.html:55
 msgid ""
-"Commencez par le mode normal pour vous familiariser avec les visages et les "
-"noms."
+"Commencez par le mode normal pour vous familiariser avec les visages et "
+"les noms."
 msgstr "Start with normal mode to get familiar with the faces and names."
 
 #: templates/how_to_play.html:56
@@ -976,7 +1010,9 @@ msgid "Jouez régulièrement pour améliorer votre mémoire des visages et des n
 msgstr "Play regularly to improve your memory of faces and names."
 
 #: templates/how_to_play.html:58
-msgid "N'hésitez pas a explorer tous les modes de jeu pour une experience complete."
+msgid ""
+"N'hésitez pas a explorer tous les modes de jeu pour une experience "
+"complete."
 msgstr "Feel free to explore every mode for a complete experience."
 
 #: templates/manager.html:3
@@ -987,19 +1023,19 @@ msgstr "Manager Mode"
 msgid "Qui est le manager de cette personne ?"
 msgstr "Who is this person's manager?"
 
-#: templates/memory.html:63
+#: templates/memory.html:77
 msgid "Mode Mémoire - Associez les photos avec les noms"
 msgstr "Memory Mode - Match photos with names"
 
-#: templates/memory.html:68
+#: templates/memory.html:82
 msgid "Paires trouvées"
 msgstr "Pairs found"
 
-#: templates/memory.html:69
+#: templates/memory.html:83
 msgid "Essais"
 msgstr "Attempts"
 
-#: templates/memory.html:73
+#: templates/memory.html:87
 msgid "Félicitations! Vous avez trouvé toutes les paires!"
 msgstr "Congratulations! You found all the pairs!"
 
@@ -1007,19 +1043,19 @@ msgstr "Congratulations! You found all the pairs!"
 msgid "Mode Miroir"
 msgstr "Mirror Mode"
 
-#: templates/mirror.html:61
+#: templates/mirror.html:70
 msgid "Mode Miroir - Identifiez la personne"
 msgstr "Mirror Mode - Identify the person"
 
-#: templates/mirror.html:71
+#: templates/mirror.html:80
 msgid "Retourner l'image"
 msgstr "Flip the image"
 
-#: templates/mirror.html:94
+#: templates/mirror.html:103
 msgid "Voir en miroir"
 msgstr "View mirrored"
 
-#: templates/mirror.html:97
+#: templates/mirror.html:106
 msgid "Voir normal"
 msgstr "View normal"
 
@@ -1027,7 +1063,7 @@ msgstr "View normal"
 msgid "Mode Personne Manquante"
 msgstr "Missing Person Mode"
 
-#: templates/missing_person.html:80 templates/progressive_hint.html:116
+#: templates/missing_person.html:80 templates/progressive_hint.html:123
 #: templates/quiz.html:36 templates/speed.html:54 templates/team_guess.html:55
 msgid "Question"
 msgstr "Question"
@@ -1045,7 +1081,9 @@ msgid "Choisissez votre mode de jeu"
 msgstr "Choose your game mode"
 
 #: templates/mode_selection.html:22
-msgid "Testez votre connaissance des membres de l'équipe à travers différents défis."
+msgid ""
+"Testez votre connaissance des membres de l'équipe à travers différents "
+"défis."
 msgstr "Test your knowledge of your team through different challenges."
 
 #: templates/mode_selection.html:27
@@ -1096,7 +1134,7 @@ msgstr "mode available"
 msgid "modes disponibles"
 msgstr "modes available"
 
-#: templates/mode_selection.html:96 templates/setup_wizard.html:221
+#: templates/mode_selection.html:96 templates/setup_wizard.html:304
 msgid "Réinitialiser"
 msgstr "Reset"
 
@@ -1129,7 +1167,7 @@ msgstr "Reset filters"
 msgid "Mode indisponible"
 msgstr "Mode unavailable"
 
-#: templates/mode_selection.html:175 templates/setup_wizard.html:365
+#: templates/mode_selection.html:175 templates/setup_wizard.html:486
 msgid "Fermer"
 msgstr "Close"
 
@@ -1147,16 +1185,18 @@ msgstr "This mode requires data that is not populated in this dataset."
 
 #: templates/mode_selection.html:218
 #, python-brace-format
-msgid "Ce mode nécessite au moins {min} employés éligibles (actuellement {count})."
+msgid ""
+"Ce mode nécessite au moins {min} employés éligibles (actuellement "
+"{count})."
 msgstr "This mode requires at least {min} eligible employees (currently {count})."
 
 #: templates/normal.html:3
-msgid "Qui qui c'est le monsieur / la madame ?"
-msgstr "Who is this person?"
+msgid "Qui est-ce ?"
+msgstr "Who is this?"
 
 #: templates/normal.html:24
-msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
-msgstr "Who is the person in the photo?"
+msgid "Sauriez-vous identifier la personne sur la photo ?"
+msgstr "Can you identify the person in the photo?"
 
 #: templates/normal.html:54
 msgid "ENTREPRISE"
@@ -1178,71 +1218,71 @@ msgstr "POSITION"
 msgid "Mode Pixelisation"
 msgstr "Pixelation Mode"
 
-#: templates/pixelation.html:28
+#: templates/pixelation.html:31
 msgid "Mode Pixelisation - Identifiez la personne"
 msgstr "Pixelation Mode - Identify the person"
 
-#: templates/position_match.html:5 templates/position_match.html:104
+#: templates/position_match.html:5 templates/position_match.html:112
 msgid "Mode Association de Postes"
 msgstr "Position Match Mode"
 
-#: templates/position_match.html:114
+#: templates/position_match.html:122
 msgid "Manche"
 msgstr "Round"
 
-#: templates/position_match.html:132
+#: templates/position_match.html:140
 msgid "Associez chaque employé avec son poste correct"
 msgstr "Match each employee with their correct position"
 
-#: templates/position_match.html:141
+#: templates/position_match.html:149
 msgid "Sélectionnez un poste"
 msgstr "Select a position"
 
-#: templates/position_match.html:152
+#: templates/position_match.html:160
 msgid "Vérifier les associations"
 msgstr "Check matches"
 
-#: templates/position_match.html:158
+#: templates/position_match.html:166
 msgid "Résultats"
 msgstr "Results"
 
-#: templates/position_match.html:159
+#: templates/position_match.html:167
 msgid "Vous avez correctement associé"
 msgstr "You correctly matched"
 
-#: templates/position_match.html:159
+#: templates/position_match.html:167
 msgid "employés avec leurs postes."
 msgstr "employees with their positions."
 
-#: templates/position_match.html:160
+#: templates/position_match.html:168
 msgid "Score"
 msgstr "Score"
 
-#: templates/position_match.html:160 templates/progressive_hint.html:105
+#: templates/position_match.html:168 templates/progressive_hint.html:112
 msgid "points"
 msgstr "points"
 
-#: templates/position_match.html:161
+#: templates/position_match.html:169
 msgid "Continuer"
 msgstr "Continue"
 
-#: templates/progressive_hint.html:5 templates/progressive_hint.html:91
+#: templates/progressive_hint.html:5 templates/progressive_hint.html:98
 msgid "Mode Indices Progressifs"
 msgstr "Progressive Hint Mode"
 
-#: templates/progressive_hint.html:103 templates/silhouette.html:75
+#: templates/progressive_hint.html:110 templates/silhouette.html:81
 msgid "Indice"
 msgstr "Hint"
 
-#: templates/progressive_hint.html:105
+#: templates/progressive_hint.html:112
 msgid "Valeur"
 msgstr "Value"
 
-#: templates/progressive_hint.html:109
+#: templates/progressive_hint.html:116
 msgid "Indice suivant"
 msgstr "Next hint"
 
-#: templates/progressive_hint.html:130
+#: templates/progressive_hint.html:137
 msgid "Qui est cette personne ?"
 msgstr "Who is this person?"
 
@@ -1254,46 +1294,48 @@ msgstr "Quiz Mode"
 msgid "Mode Quiz - Testez vos connaissances"
 msgstr "Quiz Mode - Test your knowledge"
 
-#: templates/result.html:3 templates/result.html:125
+#: templates/result.html:3 templates/result.html:230
 msgid "Résultat final"
 msgstr "Final score"
 
-#: templates/result.html:111
+#: templates/result.html:216
 #, python-format
 msgid "Tu es imbattable concernant tes collègues de %(company)s — score parfait !"
 msgstr ""
-"You are unbeatable when it comes to your %(company)s colleagues — perfect "
-"score!"
+"You are unbeatable when it comes to your %(company)s colleagues — perfect"
+" score!"
 
-#: templates/result.html:114
+#: templates/result.html:219
 msgid "Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde."
 msgstr ""
-"Well done, you really know your stuff! You know almost everyone.Well done, "
-"you're a real star! You know almost everyone and did an excellent job!"
+"Well done, you really know your stuff! You know almost everyone.Well "
+"done, you're a real star! You know almost everyone and did an excellent "
+"job!"
 
-#: templates/result.html:117
+#: templates/result.html:222
 msgid "Bravo pour ton effort ! Continue à apprendre à connaître tes collègues."
 msgstr ""
-"Well done for your effort! Keep learning about your colleagues.Great effort! "
-"Keep getting to know your colleagues and try to do even better next time."
+"Well done for your effort! Keep learning about your colleagues.Great "
+"effort! Keep getting to know your colleagues and try to do even better "
+"next time."
 
-#: templates/result.html:120
+#: templates/result.html:225
 msgid ""
-"Il te reste beaucoup à apprendre sur tes collègues. C'est l'occasion de faire"
-" de nouvelles rencontres !"
+"Il te reste beaucoup à apprendre sur tes collègues. C'est l'occasion de "
+"faire de nouvelles rencontres !"
 msgstr ""
-"You still have a lot to learn about your colleagues. It's a great chance to "
-"meet new people!"
+"You still have a lot to learn about your colleagues. It's a great chance "
+"to meet new people!"
 
-#: templates/result.html:126
+#: templates/result.html:231
 msgid "Score final"
 msgstr "Final score"
 
-#: templates/result.html:157
+#: templates/result.html:264
 msgid "Rejouer"
 msgstr "Play again"
 
-#: templates/result.html:161
+#: templates/result.html:268
 msgid "Autre mode"
 msgstr "Another mode"
 
@@ -1311,8 +1353,8 @@ msgstr "The Image Game - Scores"
 
 #: templates/scores.html:6
 msgid ""
-"Consultez les meilleurs scores du Jeu Des Images et voyez comment vous vous "
-"classez parmi les autres joueurs."
+"Consultez les meilleurs scores du Jeu Des Images et voyez comment vous "
+"vous classez parmi les autres joueurs."
 msgstr ""
 "View the best scores of The Image Game and see how you rank among other "
 "players."
@@ -1327,8 +1369,8 @@ msgstr "Best scores by game mode"
 
 #: templates/scores.html:16
 msgid ""
-"Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-vous "
-"battre ces records ?"
+"Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-"
+"vous battre ces records ?"
 msgstr "Here are the best recorded scores for each game mode. Can you beat them?"
 
 #: templates/scores.html:21
@@ -1363,11 +1405,11 @@ msgstr "Maximum score"
 msgid "Mode Visage Mélangé"
 msgstr "Scrambled Face Mode"
 
-#: templates/scrambled_face.html:53
+#: templates/scrambled_face.html:63
 msgid "Mode Visage Mélangé - Identifiez la personne"
 msgstr "Scrambled Face Mode - Identify the person"
 
-#: templates/scrambled_face.html:73
+#: templates/scrambled_face.html:83
 msgid "Révéler le visage original"
 msgstr "Reveal original face"
 
@@ -1383,109 +1425,109 @@ msgstr "How many years of seniority?"
 msgid "Configuration"
 msgstr "Configuration"
 
-#: templates/setup_list.html:13
+#: templates/setup_list.html:14
 #, fuzzy
 msgid "Retour au jeu"
 msgstr "Back to home"
 
-#: templates/setup_list.html:17
+#: templates/setup_list.html:18
 #, fuzzy
 msgid "Gestion des datasets"
 msgstr "Switch dataset"
 
-#: templates/setup_list.html:18
+#: templates/setup_list.html:19
 msgid "Ajoutez, modifiez ou supprimez les datasets disponibles dans le jeu."
 msgstr "Add, edit or delete the datasets available in the game."
 
-#: templates/setup_list.html:24
+#: templates/setup_list.html:25
 msgid "Aucun dataset configuré"
 msgstr "No dataset configured"
 
-#: templates/setup_list.html:25
+#: templates/setup_list.html:26
 msgid "Commencez par ajouter un dataset pour démarrer le jeu."
 msgstr "Start by adding a dataset to launch the game."
 
-#: templates/setup_list.html:27
+#: templates/setup_list.html:28
 #, fuzzy
 msgid "Créer le premier dataset"
 msgstr "Switch dataset"
 
-#: templates/setup_list.html:42
+#: templates/setup_list.html:43
 msgid "Par défaut"
 msgstr "Default"
 
-#: templates/setup_list.html:67
+#: templates/setup_list.html:68
 msgid "Exporter"
 msgstr "Export"
 
-#: templates/setup_list.html:70
+#: templates/setup_list.html:71
 msgid "Nettoyer photos"
 msgstr "Clean up photos"
 
-#: templates/setup_list.html:82
+#: templates/setup_list.html:83
 #, fuzzy
 msgid "Ajouter un dataset"
 msgstr "Switch dataset"
 
-#: templates/setup_list.html:85
+#: templates/setup_list.html:86
 msgid "Importer un dataset"
 msgstr "Import a dataset"
 
-#: templates/setup_list.html:94
+#: templates/setup_list.html:95
 #, fuzzy
 msgid "Supprimer le dataset ?"
 msgstr "Switch dataset"
 
-#: templates/setup_list.html:95
+#: templates/setup_list.html:96
 msgid "Cette action est irréversible. Le dataset"
 msgstr "This action cannot be undone. The dataset"
 
-#: templates/setup_list.html:95
+#: templates/setup_list.html:96
 msgid "et toutes ses données (CSV, photos, scores) seront supprimés."
 msgstr "and all its data (CSV, photos, scores) will be deleted."
 
-#: templates/setup_list.html:99
+#: templates/setup_list.html:100
 msgid "Supprimer définitivement"
 msgstr "Delete permanently"
 
-#: templates/setup_list.html:171
+#: templates/setup_list.html:173
 msgid "Identifiant du nouveau dataset"
 msgstr "New dataset identifier"
 
-#: templates/setup_list.html:180
+#: templates/setup_list.html:182
 msgid "Erreur lors de l import"
 msgstr "Error during import"
 
-#: templates/setup_list.html:183
+#: templates/setup_list.html:185
 msgid "Dataset importé"
 msgstr "Dataset imported"
 
-#: templates/setup_list.html:183
+#: templates/setup_list.html:185
 #, fuzzy
 msgid "photos"
 msgstr "Photos"
 
-#: templates/setup_list.html:204
+#: templates/setup_list.html:206
 msgid "Aucune photo orpheline — le dossier est propre."
 msgstr "No orphan photos — the folder is clean."
 
-#: templates/setup_list.html:207
+#: templates/setup_list.html:209
 msgid "Trouvé"
 msgstr "Found"
 
-#: templates/setup_list.html:207
+#: templates/setup_list.html:209
 msgid "photo(s) orpheline(s) dans"
 msgstr "orphan photo(s) in"
 
-#: templates/setup_list.html:207
+#: templates/setup_list.html:209
 msgid "Supprimer ?"
 msgstr "Delete?"
 
-#: templates/setup_list.html:217
+#: templates/setup_list.html:219
 msgid "Supprimé"
 msgstr "Deleted"
 
-#: templates/setup_list.html:217
+#: templates/setup_list.html:219
 msgid "photo(s)"
 msgstr "photo(s)"
 
@@ -1493,79 +1535,79 @@ msgstr "photo(s)"
 msgid "Connexion administrateur"
 msgstr "Admin login"
 
-#: templates/setup_login.html:71
+#: templates/setup_login.html:72
 msgid "Accès administrateur"
 msgstr "Admin access"
 
-#: templates/setup_login.html:72
+#: templates/setup_login.html:73
 msgid ""
-"Entrez le mot de passe défini dans la variable ADMIN_PASSWORD pour accéder à "
-"la configuration."
+"Entrez le mot de passe défini dans la variable ADMIN_PASSWORD pour "
+"accéder à la configuration."
 msgstr ""
 "Enter the password defined in the ADMIN_PASSWORD environment variable to "
 "access the configuration."
 
-#: templates/setup_login.html:78
+#: templates/setup_login.html:79
 msgid "Mot de passe"
 msgstr "Password"
 
-#: templates/setup_login.html:80
+#: templates/setup_login.html:81
 msgid "Se connecter"
 msgstr "Sign in"
 
-#: templates/setup_wizard.html:4 templates/setup_wizard.html:19
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:20
 #, fuzzy
 msgid "Modifier le dataset"
 msgstr "Switch dataset"
 
-#: templates/setup_wizard.html:4 templates/setup_wizard.html:21
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:22
 #, fuzzy
 msgid "Nouveau dataset"
 msgstr "New"
 
-#: templates/setup_wizard.html:14
+#: templates/setup_wizard.html:15
 #, fuzzy
 msgid "Retour à la liste"
 msgstr "Back to home"
 
-#: templates/setup_wizard.html:24
+#: templates/setup_wizard.html:25
 #, fuzzy
 msgid "Configurez le dataset en quelques étapes."
 msgstr "Configure the game for your company in a few steps."
 
-#: templates/setup_wizard.html:27
+#: templates/setup_wizard.html:28
 msgid "Étapes de configuration"
 msgstr "Setup steps"
 
-#: templates/setup_wizard.html:30
+#: templates/setup_wizard.html:31
 msgid "Branding"
 msgstr "Branding"
 
-#: templates/setup_wizard.html:34
+#: templates/setup_wizard.html:35
 msgid "Thème"
 msgstr "Theme"
 
-#: templates/setup_wizard.html:38 templates/setup_wizard.html:343
+#: templates/setup_wizard.html:39 templates/setup_wizard.html:464
 msgid "Données"
 msgstr "Data"
 
-#: templates/setup_wizard.html:42 templates/setup_wizard.html:306
+#: templates/setup_wizard.html:43 templates/setup_wizard.html:431
 msgid "Photos"
 msgstr "Photos"
 
-#: templates/setup_wizard.html:46
+#: templates/setup_wizard.html:47
 msgid "Résumé"
 msgstr "Summary"
 
-#: templates/setup_wizard.html:52
+#: templates/setup_wizard.html:53
 msgid "Identité du dataset"
 msgstr "Dataset identity"
 
-#: templates/setup_wizard.html:55
+#: templates/setup_wizard.html:56
 msgid "Identifiant technique"
 msgstr "Technical identifier"
 
-#: templates/setup_wizard.html:62
+#: templates/setup_wizard.html:63
 msgid ""
 "Minuscules, chiffres, tirets et underscores. Sert de clé interne (non "
 "modifiable après création)."
@@ -1573,493 +1615,762 @@ msgstr ""
 "Lowercase, digits, dashes and underscores. Used as the internal key (not "
 "editable after creation)."
 
-#: templates/setup_wizard.html:67
+#: templates/setup_wizard.html:68
 msgid "Nom de l'entreprise"
 msgstr "Company name"
 
-#: templates/setup_wizard.html:70
+#: templates/setup_wizard.html:71
 msgid "Ex: Mon Entreprise"
 msgstr "E.g.: My Company"
 
-#: templates/setup_wizard.html:76
+#: templates/setup_wizard.html:77
 msgid "URL du logo"
 msgstr "Logo URL"
 
-#: templates/setup_wizard.html:83 templates/setup_wizard.html:973
+#: templates/setup_wizard.html:84 templates/setup_wizard.html:1166
 msgid "Tagline (français)"
 msgstr ""
 
-#: templates/setup_wizard.html:86
+#: templates/setup_wizard.html:87
 msgid "Ex: Testez votre connaissance de vos collègues !"
 msgstr "Ex: Test your knowledge of your colleagues!"
 
-#: templates/setup_wizard.html:90 templates/setup_wizard.html:974
+#: templates/setup_wizard.html:91 templates/setup_wizard.html:1167
 msgid "Tagline (English)"
 msgstr ""
 
-#: templates/setup_wizard.html:93
+#: templates/setup_wizard.html:94
 msgid "E.g.: Test your knowledge of your colleagues!"
 msgstr ""
 
-#: templates/setup_wizard.html:100
+#: templates/setup_wizard.html:101
 msgid "Masquer les modes indisponibles pour ce dataset"
 msgstr "Hide unavailable modes for this dataset"
 
-#: templates/setup_wizard.html:102
+#: templates/setup_wizard.html:103
 msgid ""
-"Décoché : les modes non jouables restent visibles mais grisés. Coché : ils "
-"sont totalement masqués de la grille."
+"Décoché : les modes non jouables restent visibles mais grisés. Coché : "
+"ils sont totalement masqués de la grille."
 msgstr ""
-"Unchecked: unavailable modes stay visible but greyed out. Checked: they're "
-"fully hidden from the grid."
+"Unchecked: unavailable modes stay visible but greyed out. Checked: "
+"they're fully hidden from the grid."
 
-#: templates/setup_wizard.html:108 templates/setup_wizard.html:251
-#: templates/setup_wizard.html:299 templates/setup_wizard.html:328
+#: templates/setup_wizard.html:109 templates/setup_wizard.html:376
+#: templates/setup_wizard.html:424 templates/setup_wizard.html:449
 msgid "Suivant"
 msgstr "Next"
 
-#: templates/setup_wizard.html:119
+#: templates/setup_wizard.html:120
 msgid "Thème visuel"
 msgstr "Visual theme"
 
-#: templates/setup_wizard.html:120
+#: templates/setup_wizard.html:121
 msgid ""
-"Choisissez une palette comme point de départ, puis ajustez individuellement "
-"les couleurs qui ne vous conviennent pas."
+"Choisissez une palette comme point de départ, puis ajustez "
+"individuellement les couleurs qui ne vous conviennent pas."
 msgstr ""
-"Choose a palette as a starting point, then adjust any individual color to "
-"taste."
+"Choose a palette as a starting point, then adjust any individual color to"
+" taste."
 
-#: templates/setup_wizard.html:123
+#: templates/setup_wizard.html:124
 msgid "Corporate"
 msgstr "Corporate"
 
-#: templates/setup_wizard.html:123
+#: templates/setup_wizard.html:124
 msgid "Neutre Zinc, professionnel"
 msgstr "Neutral Zinc, professional"
 
-#: templates/setup_wizard.html:124
+#: templates/setup_wizard.html:125
 msgid "Ardoise"
 msgstr "Slate"
 
-#: templates/setup_wizard.html:124
+#: templates/setup_wizard.html:125
 msgid "Bleu-gris froid, businessy"
 msgstr "Cool blue-gray, businessy"
 
-#: templates/setup_wizard.html:125
+#: templates/setup_wizard.html:126
 msgid "Nordique"
 msgstr "Nordic"
 
-#: templates/setup_wizard.html:125
+#: templates/setup_wizard.html:126
 msgid "Pâle et froid, scandinave"
 msgstr "Pale and cold, Scandinavian"
 
-#: templates/setup_wizard.html:126
+#: templates/setup_wizard.html:127
 msgid "Chaleureux"
 msgstr "Warm"
 
-#: templates/setup_wizard.html:126
+#: templates/setup_wizard.html:127
 msgid "Ivoire crème, éditorial"
 msgstr "Cream ivory, editorial"
 
-#: templates/setup_wizard.html:127
+#: templates/setup_wizard.html:128
 msgid "Sépia"
 msgstr "Sepia"
 
-#: templates/setup_wizard.html:127
+#: templates/setup_wizard.html:128
 msgid "Ambre vintage, parchemin"
 msgstr "Vintage amber, parchment"
 
-#: templates/setup_wizard.html:128
+#: templates/setup_wizard.html:129
 msgid "Sable"
 msgstr "Sand"
 
-#: templates/setup_wizard.html:128
+#: templates/setup_wizard.html:129
 msgid "Beige désertique, doux"
 msgstr "Desert beige, gentle"
 
-#: templates/setup_wizard.html:129
+#: templates/setup_wizard.html:130
 msgid "Pastel"
 msgstr "Pastel"
 
-#: templates/setup_wizard.html:129
+#: templates/setup_wizard.html:130
 msgid "Lavande douce, onboarding"
 msgstr "Soft lavender, onboarding"
 
-#: templates/setup_wizard.html:130
+#: templates/setup_wizard.html:131
 msgid "Rose"
 msgstr "Rose"
 
-#: templates/setup_wizard.html:130
+#: templates/setup_wizard.html:131
 msgid "Rose poudré, tendre"
 msgstr "Blush pink, tender"
 
-#: templates/setup_wizard.html:131
+#: templates/setup_wizard.html:132
 msgid "Menthe"
 msgstr "Mint"
 
-#: templates/setup_wizard.html:131
+#: templates/setup_wizard.html:132
 msgid "Vert frais, léger"
 msgstr "Fresh green, light"
 
-#: templates/setup_wizard.html:134
+#: templates/setup_wizard.html:135
 msgid "Nuit"
 msgstr "Midnight"
 
-#: templates/setup_wizard.html:134
+#: templates/setup_wizard.html:135
 msgid "Bleu navy doux — sombre sans être noir"
 msgstr "Soft navy blue — dark without being black"
 
-#: templates/setup_wizard.html:135
+#: templates/setup_wizard.html:136
 msgid "Charbon"
 msgstr "Charcoal"
 
-#: templates/setup_wizard.html:135
+#: templates/setup_wizard.html:136
 msgid "Gris foncé chaud"
 msgstr "Warm dark gray"
 
-#: templates/setup_wizard.html:136
+#: templates/setup_wizard.html:137
 msgid "Océan"
 msgstr "Ocean"
 
-#: templates/setup_wizard.html:136
+#: templates/setup_wizard.html:137
 msgid "Bleu profond teal"
 msgstr "Deep teal blue"
 
-#: templates/setup_wizard.html:137
+#: templates/setup_wizard.html:138
 msgid "Forêt"
 msgstr "Forest"
 
-#: templates/setup_wizard.html:137
+#: templates/setup_wizard.html:138
 msgid "Vert profond boisé"
 msgstr "Deep wooded green"
 
-#: templates/setup_wizard.html:138
+#: templates/setup_wizard.html:139
 msgid "Prune"
 msgstr "Plum"
 
-#: templates/setup_wizard.html:138
+#: templates/setup_wizard.html:139
 msgid "Violet foncé mure"
 msgstr "Dark mulberry purple"
 
-#: templates/setup_wizard.html:139 templates/setup_wizard.html:176
+#: templates/setup_wizard.html:140 templates/setup_wizard.html:189
 msgid "Sombre"
 msgstr "Dark"
 
-#: templates/setup_wizard.html:139
+#: templates/setup_wizard.html:140
 msgid "Zinc 900, minimaliste"
 msgstr "Zinc 900, minimalist"
 
-#: templates/setup_wizard.html:140
+#: templates/setup_wizard.html:141
 msgid "Noir"
 msgstr "Noir"
 
-#: templates/setup_wizard.html:140
+#: templates/setup_wizard.html:141
 msgid "Monochrome, contraste max"
 msgstr "Monochrome, max contrast"
 
-#: templates/setup_wizard.html:143
+#: templates/setup_wizard.html:144
+msgid "Legacy ✨"
+msgstr ""
+
+#: templates/setup_wizard.html:144
+msgid ""
+"Thème cosmique d’origine — particules en constellation, fireworks au "
+"résultat, code Konami…"
+msgstr ""
+
+#: templates/setup_wizard.html:147
 msgid "Couleur principale"
 msgstr "Primary color"
 
-#: templates/setup_wizard.html:143
+#: templates/setup_wizard.html:147
 msgid "Boutons, focus, accents de marque"
 msgstr "Buttons, focus, brand accents"
 
-#: templates/setup_wizard.html:144
-msgid "Fond de page"
-msgstr "Page background"
-
-#: templates/setup_wizard.html:144
-msgid "Arrière-plan global de la page"
-msgstr "Global background of the page"
-
-#: templates/setup_wizard.html:145
-msgid "Cards & panneaux"
-msgstr "Cards & panels"
-
-#: templates/setup_wizard.html:145
-msgid "Cards, filter bar, header, footer, score panel"
-msgstr "Cards, filter bar, header, footer, score panel"
-
-#: templates/setup_wizard.html:146
-msgid "Éléments élevés"
-msgstr "Elevated elements"
-
-#: templates/setup_wizard.html:146
-msgid "Hero, previews, panneaux mis en avant"
-msgstr "Hero, previews, featured panels"
-
-#: templates/setup_wizard.html:147
-msgid "Texte principal"
-msgstr "Main text"
-
-#: templates/setup_wizard.html:147
-msgid "Texte courant"
-msgstr "Body text"
-
 #: templates/setup_wizard.html:148
-msgid "Texte secondaire"
+#, fuzzy
+msgid "Couleur secondaire"
 msgstr "Secondary text"
 
 #: templates/setup_wizard.html:148
-msgid "Labels, descriptions"
-msgstr "Labels, descriptions"
+msgid "Accent secondaire — extrémité du bandeau cards, états de succès"
+msgstr ""
 
 #: templates/setup_wizard.html:149
+msgid "Fond de page"
+msgstr "Page background"
+
+#: templates/setup_wizard.html:149
+msgid "Arrière-plan global de la page"
+msgstr "Global background of the page"
+
+#: templates/setup_wizard.html:150
+#, fuzzy
+msgid "Texte par défaut"
+msgstr "Default"
+
+#: templates/setup_wizard.html:150
+msgid "Texte du body — sert aussi de fallback pour les composants ci-dessous"
+msgstr ""
+
+#: templates/setup_wizard.html:151
+msgid "Texte secondaire"
+msgstr "Secondary text"
+
+#: templates/setup_wizard.html:151
+msgid "Descriptions, paragraphes secondaires"
+msgstr ""
+
+#: templates/setup_wizard.html:152
+msgid "Texte atténué"
+msgstr ""
+
+#: templates/setup_wizard.html:152
+msgid "Metadata (durées), eyebrows (\"DIFFICULTÉ\", \"THÈMES\")"
+msgstr ""
+
+#: templates/setup_wizard.html:153
+msgid "Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:153
+msgid "Filter bar, inputs, panneau scores, tableau employés"
+msgstr ""
+
+#: templates/setup_wizard.html:154
+msgid "Éléments élevés"
+msgstr "Elevated elements"
+
+#: templates/setup_wizard.html:154
+msgid "Hero, previews, panneaux mis en avant"
+msgstr "Hero, previews, featured panels"
+
+#: templates/setup_wizard.html:155
+msgid "Surfaces atténuées"
+msgstr ""
+
+#: templates/setup_wizard.html:155
+msgid "Pills de tags dans les cards, badges discrets"
+msgstr ""
+
+#: templates/setup_wizard.html:156
+#, fuzzy
+msgid "Fond des cards"
+msgstr "Page background"
+
+#: templates/setup_wizard.html:156
+msgid ""
+"Cards de modes, cards de datasets, panneaux de jeu — laisse vide pour "
+"suivre Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:157
+msgid "Texte des cards"
+msgstr ""
+
+#: templates/setup_wizard.html:157
+msgid "Texte à l’intérieur des cards — laisse vide pour suivre Texte par défaut"
+msgstr ""
+
+#: templates/setup_wizard.html:158
+#, fuzzy
+msgid "Fond du header"
+msgstr "Page background"
+
+#: templates/setup_wizard.html:158
+msgid "Bandeau du haut — laisse vide pour suivre Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:159
+msgid "Texte du header"
+msgstr ""
+
+#: templates/setup_wizard.html:159
+msgid "Texte + liens du bandeau — laisse vide pour suivre Texte par défaut"
+msgstr ""
+
+#: templates/setup_wizard.html:160
+msgid "Fond du footer"
+msgstr ""
+
+#: templates/setup_wizard.html:160
+msgid "Bandeau du bas — laisse vide pour suivre Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:161
+msgid "Texte du footer"
+msgstr ""
+
+#: templates/setup_wizard.html:161
+msgid "Texte + liens du footer — laisse vide pour suivre Texte atténué"
+msgstr ""
+
+#: templates/setup_wizard.html:162
 msgid "Bordures"
 msgstr "Borders"
 
-#: templates/setup_wizard.html:149
+#: templates/setup_wizard.html:162
 msgid "Séparateurs, contours de cards"
 msgstr "Separators, card outlines"
 
-#: templates/setup_wizard.html:153
+#: templates/setup_wizard.html:166
 msgid "Palette de départ"
 msgstr "Starting palette"
 
-#: templates/setup_wizard.html:155
+#: templates/setup_wizard.html:168
 msgid "Clair"
 msgstr "Light"
 
-#: templates/setup_wizard.html:156
+#: templates/setup_wizard.html:169
 msgid "Palettes claires"
 msgstr "Light palettes"
 
-#: templates/setup_wizard.html:177
+#: templates/setup_wizard.html:190
 msgid "Palettes sombres"
 msgstr "Dark palettes"
 
-#: templates/setup_wizard.html:198
+#: templates/setup_wizard.html:210
+#, fuzzy
+msgid "Spécial"
+msgstr "Sepia"
+
+#: templates/setup_wizard.html:211
+#, fuzzy
+msgid "Palettes spéciales"
+msgstr "Light palettes"
+
+#: templates/setup_wizard.html:232 templates/setup_wizard.html:244
+msgid "Fond animé"
+msgstr ""
+
+#: templates/setup_wizard.html:233
+msgid ""
+"Choisissez l’effet de fond animé. « Auto » suit la palette : feu "
+"d’artifice pour Legacy, NASA ailleurs. Les cinq premiers proviennent "
+"directement de la librairie particles.js de Vincent Garreau."
+msgstr ""
+
+#: templates/setup_wizard.html:235 templates/setup_wizard.html:262
+msgid "Auto"
+msgstr ""
+
+#: templates/setup_wizard.html:235
+msgid "Suit la palette (recommandé)"
+msgstr ""
+
+#: templates/setup_wizard.html:236 templates/setup_wizard.html:263
+msgid "Aucun"
+msgstr ""
+
+#: templates/setup_wizard.html:236
+msgid "Aucune animation — page totalement statique"
+msgstr ""
+
+#: templates/setup_wizard.html:237
+msgid "NASA"
+msgstr ""
+
+#: templates/setup_wizard.html:237
+msgid "Petits points blancs scintillants, sans liaisons"
+msgstr ""
+
+#: templates/setup_wizard.html:238
+msgid "Particules"
+msgstr ""
+
+#: templates/setup_wizard.html:238
+msgid "Cercles bleus + lignes de connexion"
+msgstr ""
+
+#: templates/setup_wizard.html:239
+msgid "Neige"
+msgstr ""
+
+#: templates/setup_wizard.html:239
+msgid "Flocons qui tombent doucement"
+msgstr ""
+
+#: templates/setup_wizard.html:240
+msgid "Bulles"
+msgstr ""
+
+#: templates/setup_wizard.html:240
+msgid "Grandes bulles qui montent"
+msgstr ""
+
+#: templates/setup_wizard.html:241
+#, fuzzy
+msgid "Étoiles"
+msgstr "All"
+
+#: templates/setup_wizard.html:241
+msgid "Étoiles dérivantes"
+msgstr ""
+
+#: templates/setup_wizard.html:242
+msgid "Feu d’artifice"
+msgstr ""
+
+#: templates/setup_wizard.html:242
+msgid "Bursts colorés en boucle (custom)"
+msgstr ""
+
+#: templates/setup_wizard.html:259 templates/setup_wizard.html:266
+#, fuzzy
+msgid "Effet sur les cards"
+msgstr "Body text on a card."
+
+#: templates/setup_wizard.html:260
+msgid ""
+"Reflet doré qui balaie les cards au survol — le même effet que la palette"
+" Legacy, désormais sélectionnable indépendamment de la palette."
+msgstr ""
+
+#: templates/setup_wizard.html:262
+msgid "Suit la palette (Legacy → reflet doré, sinon aucun)"
+msgstr ""
+
+#: templates/setup_wizard.html:263
+msgid "Pas d’effet sur les cards"
+msgstr ""
+
+#: templates/setup_wizard.html:264
+msgid "Reflet doré"
+msgstr ""
+
+#: templates/setup_wizard.html:264
+msgid "Bandeau doré qui traverse la carte au survol"
+msgstr ""
+
+#: templates/setup_wizard.html:281
 msgid "Personnaliser chaque couleur"
 msgstr "Customize each color"
 
-#: templates/setup_wizard.html:199
+#: templates/setup_wizard.html:282
 msgid ""
-"Chaque couleur hérite de la palette. Modifiez-en une pour créer un override "
-"personnel. Bouton Reset pour revenir à la valeur du preset."
+"Chaque couleur hérite de la palette. Modifiez-en une pour créer un "
+"override personnel. Bouton Reset pour revenir à la valeur du preset."
 msgstr ""
 "Each color inherits from the palette. Change one to create a personal "
 "override. Use Reset to go back to the preset value."
 
-#: templates/setup_wizard.html:216 templates/setup_wizard.html:571
+#: templates/setup_wizard.html:299 templates/setup_wizard.html:714
 msgid "Hérité du preset"
 msgstr "Inherited from preset"
 
-#: templates/setup_wizard.html:217
+#: templates/setup_wizard.html:300
 msgid "Code hexadécimal"
 msgstr "Hex code"
 
-#: templates/setup_wizard.html:231 templates/setup_wizard.html:234
+#: templates/setup_wizard.html:314 templates/setup_wizard.html:317
 msgid "Aperçu"
 msgstr "Preview"
 
-#: templates/setup_wizard.html:236
+#: templates/setup_wizard.html:319
 msgid "Bouton principal"
 msgstr "Primary button"
 
-#: templates/setup_wizard.html:239
+#: templates/setup_wizard.html:322
 msgid "Disponible"
 msgstr "Available"
 
-#: templates/setup_wizard.html:240
+#: templates/setup_wizard.html:323
 msgid "Texte courant sur une card."
 msgstr "Body text on a card."
 
-#: templates/setup_wizard.html:248 templates/setup_wizard.html:296
-#: templates/setup_wizard.html:325 templates/setup_wizard.html:354
+#: templates/setup_wizard.html:334
+#, fuzzy
+msgid "Presets sauvegardés"
+msgstr "Summary and save"
+
+#: templates/setup_wizard.html:335
+msgid ""
+"Sauvegarde la config (palette + overrides + fond animé) actuelle sous un "
+"nom, pour pouvoir basculer dessus en un clic plus tard."
+msgstr ""
+
+#: templates/setup_wizard.html:350
+msgid "Appliquer"
+msgstr ""
+
+#: templates/setup_wizard.html:358 templates/setup_wizard.html:1337
+#, fuzzy
+msgid "Aucun preset sauvegardé pour ce dataset."
+msgstr "Add a first employee for this dataset."
+
+#: templates/setup_wizard.html:363
+msgid "Nom du preset (ex. Sombre)"
+msgstr ""
+
+#: templates/setup_wizard.html:365
+msgid "Sauvegarder le thème actuel"
+msgstr ""
+
+#: templates/setup_wizard.html:373 templates/setup_wizard.html:421
+#: templates/setup_wizard.html:446 templates/setup_wizard.html:475
 msgid "Précédent"
 msgstr "Previous"
 
-#: templates/setup_wizard.html:258
+#: templates/setup_wizard.html:383
 msgid "Données employés"
 msgstr "Employee data"
 
-#: templates/setup_wizard.html:263
+#: templates/setup_wizard.html:388
 msgid ""
 "Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le "
 "remplacer."
 msgstr "You can keep the current CSV or upload a new one to replace it."
 
-#: templates/setup_wizard.html:270
+#: templates/setup_wizard.html:395
 msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
 msgstr "Drag your CSV file here or click to browse"
 
-#: templates/setup_wizard.html:271
+#: templates/setup_wizard.html:396
 msgid "Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc."
 msgstr "Format: CSV with columns for last name, first name, photo, team, etc."
 
-#: templates/setup_wizard.html:277
+#: templates/setup_wizard.html:402
 msgid "Aperçu des données"
 msgstr "Data preview"
 
-#: templates/setup_wizard.html:283
+#: templates/setup_wizard.html:408
 msgid ""
 "Uploadez un fichier CSV ci-dessus pour configurer la correspondance des "
 "colonnes."
 msgstr "Upload a CSV file above to configure column mapping."
 
-#: templates/setup_wizard.html:287
+#: templates/setup_wizard.html:412
 msgid "Correspondance des colonnes"
 msgstr "Column mapping"
 
-#: templates/setup_wizard.html:289
+#: templates/setup_wizard.html:414
 msgid "Associez chaque champ du jeu à une colonne de votre CSV."
 msgstr "Map each game field to a column in your CSV."
 
-#: templates/setup_wizard.html:311
+#: templates/setup_wizard.html:434
 msgid ""
-"Les photos seront uploadées après la création du dataset, depuis la page de "
-"modification."
-msgstr "Photos will be uploaded after the dataset is created, from the edit page."
+"Glissez votre ZIP de photos dès maintenant — elles seront déplacées dans "
+"le dataset à l’étape 5 (Sauvegarder)."
+msgstr ""
 
-#: templates/setup_wizard.html:317
+#: templates/setup_wizard.html:439
 msgid "Glissez un fichier ZIP contenant les photos ici"
 msgstr "Drag a ZIP file containing the photos here"
 
-#: templates/setup_wizard.html:318
+#: templates/setup_wizard.html:440
 msgid "Formats acceptes: JPG, PNG, GIF, WebP"
 msgstr "Accepted formats: JPG, PNG, GIF, WebP"
 
-#: templates/setup_wizard.html:335
+#: templates/setup_wizard.html:456
 msgid "Résumé et sauvegarde"
 msgstr "Summary and save"
 
-#: templates/setup_wizard.html:348
+#: templates/setup_wizard.html:469
 msgid "Mapping colonnes"
 msgstr "Column mapping"
 
-#: templates/setup_wizard.html:358
+#: templates/setup_wizard.html:479
 #, fuzzy
 msgid "Enregistrer les modifications"
 msgstr "Check matches"
 
-#: templates/setup_wizard.html:358
+#: templates/setup_wizard.html:479
 #, fuzzy
 msgid "Créer le dataset"
 msgstr "Switch dataset"
 
-#: templates/setup_wizard.html:438
+#: templates/setup_wizard.html:560
 msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
 msgstr "Invalid identifier (lowercase/digits/_-, max 32)."
 
-#: templates/setup_wizard.html:443
+#: templates/setup_wizard.html:565
 msgid "Un dataset avec cet identifiant existe déjà."
 msgstr "A dataset with this identifier already exists."
 
-#: templates/setup_wizard.html:452
+#: templates/setup_wizard.html:574
 msgid "Le nom de l'entreprise est requis"
 msgstr "Company name is required"
 
-#: templates/setup_wizard.html:570
+#: templates/setup_wizard.html:713
 msgid "Override"
 msgstr "Override"
 
-#: templates/setup_wizard.html:670
+#: templates/setup_wizard.html:857
 msgid "Contraste faible"
 msgstr "Low contrast"
 
-#: templates/setup_wizard.html:671
+#: templates/setup_wizard.html:858
 msgid "Ajustez les couleurs pour améliorer la lisibilité."
 msgstr "Adjust the colors to improve readability."
 
-#: templates/setup_wizard.html:675
+#: templates/setup_wizard.html:862
 msgid "Contraste moyen"
 msgstr "Moderate contrast"
 
-#: templates/setup_wizard.html:676
+#: templates/setup_wizard.html:863
 msgid "WCAG AA recommande 4.5:1 minimum pour le texte courant."
 msgstr "WCAG AA recommends a 4.5:1 minimum for body text."
 
-#: templates/setup_wizard.html:680
+#: templates/setup_wizard.html:867
 msgid "Contraste conforme WCAG AA"
 msgstr "WCAG AA contrast"
 
-#: templates/setup_wizard.html:760 templates/setup_wizard.html:944
+#: templates/setup_wizard.html:947 templates/setup_wizard.html:1137
 msgid "Erreur lors de l'envoi"
 msgstr "Error during upload"
 
-#: templates/setup_wizard.html:764
+#: templates/setup_wizard.html:951
 msgid "CSV chargé avec succès"
 msgstr "CSV loaded successfully"
 
-#: templates/setup_wizard.html:764
+#: templates/setup_wizard.html:951
 msgid "colonnes détectées"
 msgstr "columns detected"
 
-#: templates/setup_wizard.html:844
+#: templates/setup_wizard.html:1031
 msgid "requis"
 msgstr "required"
 
-#: templates/setup_wizard.html:844
+#: templates/setup_wizard.html:1031
 msgid "optionnel"
 msgstr "optional"
 
-#: templates/setup_wizard.html:854
+#: templates/setup_wizard.html:1041
 msgid "Non utilisé"
 msgstr "Unused"
 
-#: templates/setup_wizard.html:879
+#: templates/setup_wizard.html:1066
 msgid "Détection automatique"
 msgstr "Auto-detected"
 
-#: templates/setup_wizard.html:948
+#: templates/setup_wizard.html:1141
 msgid "photos extraites avec succès"
 msgstr "photos extracted successfully"
 
-#: templates/setup_wizard.html:967
+#: templates/setup_wizard.html:1160
 msgid "couleur(s) personnalisée(s)"
 msgstr "custom color(s)"
 
-#: templates/setup_wizard.html:968
+#: templates/setup_wizard.html:1161
 msgid "Aucune — toutes héritées du preset"
 msgstr "None — all inherited from the preset"
 
-#: templates/setup_wizard.html:970
+#: templates/setup_wizard.html:1163
 msgid "Identifiant"
 msgstr "Identifier"
 
-#: templates/setup_wizard.html:972
+#: templates/setup_wizard.html:1165
 msgid "Logo"
 msgstr "Logo"
 
-#: templates/setup_wizard.html:975
+#: templates/setup_wizard.html:1168
 msgid "Palette"
 msgstr "Palette"
 
-#: templates/setup_wizard.html:976
+#: templates/setup_wizard.html:1169
 msgid "Overrides"
 msgstr "Overrides"
 
-#: templates/setup_wizard.html:977
+#: templates/setup_wizard.html:1170
 msgid "Masquer modes indisponibles"
 msgstr "Hide unavailable modes"
 
-#: templates/setup_wizard.html:977
+#: templates/setup_wizard.html:1170
 msgid "Oui"
 msgstr "Yes"
 
-#: templates/setup_wizard.html:977
+#: templates/setup_wizard.html:1170
 msgid "Non"
 msgstr "No"
 
-#: templates/setup_wizard.html:981
+#: templates/setup_wizard.html:1174
 msgid "Fichier CSV"
 msgstr "CSV file"
 
-#: templates/setup_wizard.html:982
+#: templates/setup_wizard.html:1175
 msgid "Colonnes"
 msgstr "Columns"
 
-#: templates/setup_wizard.html:1045
+#: templates/setup_wizard.html:1256
 msgid "Dataset créé"
 msgstr "Dataset created"
+
+#: templates/setup_wizard.html:1265
+#, fuzzy
+msgid "autres"
+msgstr "All"
+
+#: templates/setup_wizard.html:1268
+msgid "Photos référencées absentes du dossier"
+msgstr ""
+
+#: templates/setup_wizard.html:1307
+msgid "Preset « "
+msgstr ""
+
+#: templates/setup_wizard.html:1307
+msgid " » appliqué"
+msgstr ""
+
+#: templates/setup_wizard.html:1318
+#, fuzzy
+msgid "Supprimer le preset « "
+msgstr "Switch dataset"
+
+#: templates/setup_wizard.html:1318
+msgid " » ?"
+msgstr ""
+
+#: templates/setup_wizard.html:1340
+#, fuzzy
+msgid "Preset supprimé"
+msgstr "Deleted"
+
+#: templates/setup_wizard.html:1355
+msgid "Donne un nom au preset avant de sauvegarder"
+msgstr ""
+
+#: templates/setup_wizard.html:1397
+#, fuzzy
+msgid "Preset sauvegardé"
+msgstr "Summary and save"
 
 #: templates/silhouette.html:3
 msgid "Mode Silhouette"
 msgstr "Silhouette Mode"
 
-#: templates/silhouette.html:67
+#: templates/silhouette.html:73
 msgid "Mode Silhouette - Identifiez la personne"
 msgstr "Silhouette Mode - Identify the person"
 
@@ -2075,11 +2386,11 @@ msgstr "Speed Mode - Quickly identify the person"
 msgid "Mode Équipe"
 msgstr "Team Mode"
 
-#: templates/team.html:90
+#: templates/team.html:97
 msgid "Mode Équipe - Identifiez les membres"
 msgstr "Team Mode - Identify the members"
 
-#: templates/team.html:129
+#: templates/team.html:136
 msgid "Valider l'équipe"
 msgstr "Validate team"
 
@@ -2091,7 +2402,7 @@ msgstr "Team Mode - Guess the employee's team"
 msgid "À quelle équipe appartient cette personne ?"
 msgstr "Which team does this person belong to?"
 
-#: templates/timed.html:32
+#: templates/timed.html:54
 msgid "Mode Chronométré - Identifiez le maximum de personnes en 2 minutes"
 msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 
@@ -2126,9 +2437,9 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "Contact email"
 
 #~ msgid ""
-#~ "Les photos peuvent aussi être placées "
-#~ "manuellement dans le répertoire d'images "
-#~ "configuré."
+#~ "Les photos peuvent aussi être placées"
+#~ " manuellement dans le répertoire d'images"
+#~ " configuré."
 #~ msgstr "Photos can also be placed manually in the configured images directory."
 
 #~ msgid "Sauvegarder la configuration"
@@ -2147,99 +2458,101 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "Card Game Mode: Challenge the AI in a strategic card duel"
 
 #~ msgid ""
-#~ "Decouvrez l'histoire et l'equipe derriere Le"
-#~ " Jeu Des Images, un jeu interactif "
-#~ "pour identifier les membres de l'equipe "
-#~ "%(company_name)s."
+#~ "Decouvrez l'histoire et l'equipe derriere "
+#~ "Le Jeu Des Images, un jeu "
+#~ "interactif pour identifier les membres "
+#~ "de l'equipe %(company_name)s."
 #~ msgstr ""
-#~ "Discover the story and team behind The"
-#~ " Image Game, an interactive game to "
-#~ "identify %(company_name)s team members."
+#~ "Discover the story and team behind "
+#~ "The Image Game, an interactive game "
+#~ "to identify %(company_name)s team members."
 
 #~ msgid "Decouvrez l'histoire et l'equipe derriere Le Jeu Des Images"
 #~ msgstr "Discover the story and team behind The Image Game"
 
 #~ msgid ""
 #~ "Le Jeu Des Images est ne d'une "
-#~ "volonte de creer un outil ludique et"
-#~ " interactif pour aider les nouveaux "
-#~ "collaborateurs a se familiariser avec les"
-#~ " membres de l'equipe %(company_name)s."
+#~ "volonte de creer un outil ludique "
+#~ "et interactif pour aider les nouveaux"
+#~ " collaborateurs a se familiariser avec "
+#~ "les membres de l'equipe %(company_name)s."
 #~ msgstr ""
 #~ "The Image Game was born from a "
-#~ "desire to create a fun and interactive"
-#~ " tool to help new employees get to"
-#~ " know the %(company_name)s team members."
+#~ "desire to create a fun and "
+#~ "interactive tool to help new employees"
+#~ " get to know the %(company_name)s "
+#~ "team members."
 
 #~ msgid ""
-#~ "Ce projet a ete developpe avec passion"
-#~ " pour favoriser l'integration et renforcer "
-#~ "la cohesion d'equipe au sein de notre"
-#~ " entreprise."
+#~ "Ce projet a ete developpe avec "
+#~ "passion pour favoriser l'integration et "
+#~ "renforcer la cohesion d'equipe au sein"
+#~ " de notre entreprise."
 #~ msgstr ""
-#~ "This project was developed with passion "
-#~ "to foster onboarding and strengthen team "
-#~ "cohesion within our company."
+#~ "This project was developed with passion"
+#~ " to foster onboarding and strengthen "
+#~ "team cohesion within our company."
 
 #~ msgid ""
 #~ "Notre mission est de faciliter "
-#~ "l'apprentissage des visages et des noms "
-#~ "de vos collegues de maniere amusante "
-#~ "et engageante."
+#~ "l'apprentissage des visages et des noms"
+#~ " de vos collegues de maniere amusante"
+#~ " et engageante."
 #~ msgstr ""
-#~ "Our mission is to make learning your"
-#~ " colleagues' faces and names fun and "
-#~ "engaging."
+#~ "Our mission is to make learning "
+#~ "your colleagues' faces and names fun "
+#~ "and engaging."
 
 #~ msgid ""
-#~ "Grace a differents modes de jeu, vous"
-#~ " pouvez tester et ameliorer votre "
-#~ "connaissance de l'equipe tout en vous "
-#~ "amusant."
+#~ "Grace a differents modes de jeu, "
+#~ "vous pouvez tester et ameliorer votre"
+#~ " connaissance de l'equipe tout en "
+#~ "vous amusant."
 #~ msgstr ""
-#~ "Through different game modes, you can "
-#~ "test and improve your knowledge of the"
-#~ " team while having fun."
+#~ "Through different game modes, you can"
+#~ " test and improve your knowledge of"
+#~ " the team while having fun."
 
 #~ msgid ""
-#~ "Le Jeu Des Images a ete concu et"
-#~ " developpe par une equipe passionnee de"
-#~ " developpeurs et de designers de "
-#~ "%(company_name)s."
+#~ "Le Jeu Des Images a ete concu "
+#~ "et developpe par une equipe passionnee"
+#~ " de developpeurs et de designers de"
+#~ " %(company_name)s."
 #~ msgstr ""
 #~ "The Image Game was designed and "
 #~ "developed by a passionate team of "
-#~ "developers and designers from %(company_name)s."
+#~ "developers and designers from "
+#~ "%(company_name)s."
 
 #~ msgid ""
 #~ "Nous travaillons constamment a ameliorer "
-#~ "l'experience utilisateur et a ajouter de "
-#~ "nouveaux modes de jeu pour rendre "
-#~ "l'apprentissage encore plus amusant."
+#~ "l'experience utilisateur et a ajouter de"
+#~ " nouveaux modes de jeu pour rendre"
+#~ " l'apprentissage encore plus amusant."
 #~ msgstr ""
 #~ "We are constantly working to improve "
-#~ "the user experience and add new game"
-#~ " modes to make learning even more "
-#~ "fun."
+#~ "the user experience and add new "
+#~ "game modes to make learning even "
+#~ "more fun."
 
 #~ msgid ""
 #~ "Vous avez des suggestions ou des "
-#~ "commentaires pour ameliorer Le Jeu Des "
-#~ "Images ? N'hesitez pas a nous "
+#~ "commentaires pour ameliorer Le Jeu Des"
+#~ " Images ? N'hesitez pas a nous "
 #~ "contacter !"
 #~ msgstr ""
-#~ "Have suggestions or feedback to improve "
-#~ "The Image Game? Feel free to reach "
-#~ "out!"
+#~ "Have suggestions or feedback to improve"
+#~ " The Image Game? Feel free to "
+#~ "reach out!"
 
 #~ msgid ""
-#~ "Envoyez-nous un email a %(email_link)s "
-#~ "ou parlez-en directement a un membre"
-#~ " de l'equipe de developpement."
+#~ "Envoyez-nous un email a %(email_link)s"
+#~ " ou parlez-en directement a un "
+#~ "membre de l'equipe de developpement."
 #~ msgstr ""
-#~ "Send us an email at %(email_link)s or"
-#~ " speak directly with a member of "
-#~ "the development team."
+#~ "Send us an email at %(email_link)s "
+#~ "or speak directly with a member of"
+#~ " the development team."
 
 #~ msgid "Retour a l'accueil"
 #~ msgstr "Back to home"
@@ -2258,20 +2571,21 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 
 #~ msgid ""
 #~ "Le Jeu Des Images - Un jeu "
-#~ "interactif pour identifier les membres de"
-#~ " l'equipe %(company_name)s."
+#~ "interactif pour identifier les membres "
+#~ "de l'equipe %(company_name)s."
 #~ msgstr ""
-#~ "The Image Game - An interactive game"
-#~ " to identify %(company_name)s team members."
+#~ "The Image Game - An interactive "
+#~ "game to identify %(company_name)s team "
+#~ "members."
 
 #~ msgid ""
-#~ "Apprenez a jouer au Jeu Des Images "
-#~ "et decouvrez les regles des differents "
-#~ "modes de jeu pour identifier les "
-#~ "membres de l'equipe %(company_name)s."
+#~ "Apprenez a jouer au Jeu Des Images"
+#~ " et decouvrez les regles des "
+#~ "differents modes de jeu pour identifier"
+#~ " les membres de l'equipe %(company_name)s."
 #~ msgstr ""
-#~ "Learn how to play The Image Game "
-#~ "and discover the rules of the "
+#~ "Learn how to play The Image Game"
+#~ " and discover the rules of the "
 #~ "different game modes to identify "
 #~ "%(company_name)s team members."
 
@@ -2279,48 +2593,50 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "Discover the rules and tips to master all game modes"
 
 #~ msgid ""
-#~ "Le Jeu Des Images est concu pour "
-#~ "vous aider a memoriser les visages et"
-#~ " les noms de vos collegues de "
-#~ "maniere ludique et interactive."
+#~ "Le Jeu Des Images est concu pour"
+#~ " vous aider a memoriser les visages"
+#~ " et les noms de vos collegues "
+#~ "de maniere ludique et interactive."
 #~ msgstr ""
-#~ "The Image Game is designed to help "
-#~ "you memorize your colleagues' faces and "
-#~ "names in a fun and interactive way."
+#~ "The Image Game is designed to help"
+#~ " you memorize your colleagues' faces "
+#~ "and names in a fun and interactive"
+#~ " way."
 
 #~ msgid ""
-#~ "Chaque mode de jeu propose un defi "
-#~ "different, mais l'objectif reste le meme "
-#~ ": associer correctement les visages aux "
-#~ "noms, equipes et postes."
+#~ "Chaque mode de jeu propose un defi"
+#~ " different, mais l'objectif reste le "
+#~ "meme : associer correctement les visages"
+#~ " aux noms, equipes et postes."
 #~ msgstr ""
 #~ "Each game mode offers a different "
 #~ "challenge, but the goal remains the "
-#~ "same: correctly match faces with names, "
-#~ "teams and positions."
+#~ "same: correctly match faces with names,"
+#~ " teams and positions."
 
 #~ msgid ""
-#~ "Dans ce mode, vous voyez la photo "
-#~ "d'un collaborateur et devez identifier son"
-#~ " entreprise, son equipe, son nom et "
-#~ "son poste. Vous gagnez des points pour"
-#~ " chaque bonne reponse."
+#~ "Dans ce mode, vous voyez la photo"
+#~ " d'un collaborateur et devez identifier "
+#~ "son entreprise, son equipe, son nom "
+#~ "et son poste. Vous gagnez des "
+#~ "points pour chaque bonne reponse."
 #~ msgstr ""
-#~ "In this mode, you see a colleague's"
-#~ " photo and must identify their company,"
-#~ " team, name and position. You earn "
-#~ "points for each correct answer."
+#~ "In this mode, you see a "
+#~ "colleague's photo and must identify "
+#~ "their company, team, name and position."
+#~ " You earn points for each correct "
+#~ "answer."
 
 #~ msgid ""
-#~ "A l'inverse du mode normal, vous voyez"
-#~ " un nom et devez identifier la "
-#~ "personne parmi plusieurs photos. Ce mode "
-#~ "teste votre memoire visuelle."
+#~ "A l'inverse du mode normal, vous "
+#~ "voyez un nom et devez identifier "
+#~ "la personne parmi plusieurs photos. Ce"
+#~ " mode teste votre memoire visuelle."
 #~ msgstr ""
-#~ "Unlike normal mode, you see a name "
-#~ "and must identify the person among "
-#~ "several photos. This mode tests your "
-#~ "visual memory."
+#~ "Unlike normal mode, you see a name"
+#~ " and must identify the person among"
+#~ " several photos. This mode tests your"
+#~ " visual memory."
 
 #~ msgid "Mode Chronometre"
 #~ msgstr "Timed Mode"
@@ -2329,20 +2645,23 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "Experimental game modes"
 
 #~ msgid ""
-#~ "Decouvrez nos modes de jeu experimentaux "
-#~ "pour des defis encore plus varies :"
+#~ "Decouvrez nos modes de jeu experimentaux"
+#~ " pour des defis encore plus varies"
+#~ " :"
 #~ msgstr "Discover our experimental game modes for even more varied challenges:"
 
 #~ msgid ""
-#~ "Utilisez le mode pixelation pour tester "
-#~ "votre capacite a reconnaitre rapidement vos"
-#~ " collegues."
+#~ "Utilisez le mode pixelation pour tester"
+#~ " votre capacite a reconnaitre rapidement"
+#~ " vos collegues."
 #~ msgstr ""
 #~ "Use pixelation mode to test your "
 #~ "ability to quickly recognize your "
 #~ "colleagues."
 
-#~ msgid "Jouez regulierement pour ameliorer votre memoire des visages et des noms."
+#~ msgid ""
+#~ "Jouez regulierement pour ameliorer votre "
+#~ "memoire des visages et des noms."
 #~ msgstr "Play regularly to improve your memory of faces and names."
 
 #~ msgid ""
@@ -2388,13 +2707,13 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "Discover the best scores and see how you rank"
 
 #~ msgid ""
-#~ "Voici les meilleurs scores enregistres pour"
-#~ " chaque mode de jeu. Pouvez-vous "
-#~ "battre ces records ?"
+#~ "Voici les meilleurs scores enregistres "
+#~ "pour chaque mode de jeu. Pouvez-"
+#~ "vous battre ces records ?"
 #~ msgstr ""
-#~ "Here are the best scores recorded for"
-#~ " each game mode. Can you beat these"
-#~ " records?"
+#~ "Here are the best scores recorded "
+#~ "for each game mode. Can you beat"
+#~ " these records?"
 
 #~ msgid "Aucun score enregistre"
 #~ msgstr "No scores recorded"
@@ -2409,14 +2728,14 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "The Image Game - About"
 
 #~ msgid ""
-#~ "Découvrez l'histoire et l'equipe derriere Le"
-#~ " Jeu Des Images, un jeu interactif "
-#~ "pour identifier les membres de l'équipe "
-#~ "%(company_name)s."
+#~ "Découvrez l'histoire et l'equipe derriere "
+#~ "Le Jeu Des Images, un jeu "
+#~ "interactif pour identifier les membres "
+#~ "de l'équipe %(company_name)s."
 #~ msgstr ""
-#~ "Discover the story and team behind The"
-#~ " Image Game, an interactive game to "
-#~ "identify %(company_name)s team members."
+#~ "Discover the story and team behind "
+#~ "The Image Game, an interactive game "
+#~ "to identify %(company_name)s team members."
 
 #~ msgid "A propos"
 #~ msgstr "About"
@@ -2428,12 +2747,12 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "The development team"
 
 #~ msgid ""
-#~ "Envoyez-nous un email a %(email_link)s "
-#~ "ou parlez-en directement à un membre"
-#~ " de l'équipe de développement."
+#~ "Envoyez-nous un email a %(email_link)s"
+#~ " ou parlez-en directement à un "
+#~ "membre de l'équipe de développement."
 #~ msgstr ""
-#~ "Send us an email at %(email_link)s or"
-#~ " talk to a member of the "
+#~ "Send us an email at %(email_link)s "
+#~ "or talk to a member of the "
 #~ "development team directly."
 
 #~ msgid "Découvrez les règles et astuces pour maitriser tous les modes de jeu"
@@ -2479,25 +2798,26 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 #~ msgstr "ARR"
 
 #~ msgid ""
-#~ "Mode ARR : Arcade Retro Racing - "
-#~ "Évitez les obstacles et atteignez la "
-#~ "ligne d'arrivée !"
+#~ "Mode ARR : Arcade Retro Racing -"
+#~ " Évitez les obstacles et atteignez la"
+#~ " ligne d'arrivée !"
 #~ msgstr ""
-#~ "ARR Mode: Arcade Retro Racing - Dodge"
-#~ " the obstacles and reach the finish "
-#~ "line!"
+#~ "ARR Mode: Arcade Retro Racing - "
+#~ "Dodge the obstacles and reach the "
+#~ "finish line!"
 
 #~ msgid "Special"
 #~ msgstr "Special"
 
 #~ msgid ""
-#~ "Félicitations ! Vous avez atteint l'objectif"
-#~ " de +15% d'ARR ! Les employés "
-#~ "recevront leur prime de participation."
+#~ "Félicitations ! Vous avez atteint "
+#~ "l'objectif de +15% d'ARR ! Les "
+#~ "employés recevront leur prime de "
+#~ "participation."
 #~ msgstr ""
-#~ "Congratulations! You reached the +15% d'ARR"
-#~ " target! Employees will receive their "
-#~ "profit-sharing bonus."
+#~ "Congratulations! You reached the +15% "
+#~ "d'ARR target! Employees will receive "
+#~ "their profit-sharing bonus."
 
 #~ msgid "ARR Initial"
 #~ msgstr "Initial ARR"
@@ -2510,12 +2830,13 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 
 #~ msgid ""
 #~ "Malheureusement, vous n'avez pas atteint "
-#~ "l'objectif de +15% d'ARR. Les employés "
-#~ "ne recevront pas de prime cette année."
+#~ "l'objectif de +15% d'ARR. Les employés"
+#~ " ne recevront pas de prime cette "
+#~ "année."
 #~ msgstr ""
 #~ "Unfortunately, you did not reach the "
-#~ "+15% d'ARR target. Employees will not "
-#~ "receive a bonus this year."
+#~ "+15% d'ARR target. Employees will not"
+#~ " receive a bonus this year."
 
 #~ msgid "Actions prises"
 #~ msgstr "Actions taken"
@@ -2597,4 +2918,46 @@ msgstr "Timed Mode - Identify as many people as possible in 2 minutes"
 
 #~ msgid "Accent utilisé sur les boutons et éléments de marque. Format #RRGGBB."
 #~ msgstr "Accent used on buttons and brand elements. Format #RRGGBB."
+
+#~ msgid "Bonnes réponses pour l'entreprise"
+#~ msgstr "Correct answers for company"
+
+#~ msgid "Bonnes réponses pour l'équipe"
+#~ msgstr "Correct answers for team"
+
+#~ msgid "Bonnes réponses pour le nom"
+#~ msgstr "Correct answers for name"
+
+#~ msgid "Bonnes réponses pour le poste"
+#~ msgstr "Correct answers for position"
+
+#~ msgid "Qui qui c'est le monsieur / la madame ?"
+#~ msgstr "Who is this person?"
+
+#~ msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
+#~ msgstr "Who is the person in the photo?"
+
+#~ msgid "Cards & panneaux"
+#~ msgstr "Cards & panels"
+
+#~ msgid "Cards, filter bar, header, footer, score panel"
+#~ msgstr "Cards, filter bar, header, footer, score panel"
+
+#~ msgid "Texte principal"
+#~ msgstr "Main text"
+
+#~ msgid "Texte courant"
+#~ msgstr "Body text"
+
+#~ msgid "Labels, descriptions"
+#~ msgstr "Labels, descriptions"
+
+#~ msgid ""
+#~ "Les photos seront uploadées après la "
+#~ "création du dataset, depuis la page "
+#~ "de modification."
+#~ msgstr ""
+#~ "Photos will be uploaded after the "
+#~ "dataset is created, from the edit "
+#~ "page."
 

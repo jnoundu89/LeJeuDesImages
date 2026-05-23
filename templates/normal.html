@@ -1,6 +1,6 @@
 {% extends 'base_game.html' %}
 
-{% block title %}{{ _("Qui qui c'est le monsieur / la madame ?") }}{% endblock %}
+{% block title %}{{ _("Qui est-ce ?") }}{% endblock %}
 
 {% block mode_styles %}
         /* Normal mode tweaks on top of gameplay.css. */
@@ -21,7 +21,7 @@
         }
 {% endblock %}
 
-{% block game_title %}{{ _("Qui qui c'est le monsieur / la madame sur la photo ?") }}{% endblock %}
+{% block game_title %}{{ _("Sauriez-vous identifier la personne sur la photo ?") }}{% endblock %}
 
 {% block game_content %}
             <img src="{{ image_url }}" alt="Photo d'employé" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >

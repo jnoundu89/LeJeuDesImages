@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-04-24 17:11+0200\n"
+"POT-Creation-Date: 2026-05-23 14:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -49,26 +49,26 @@ msgstr ""
 msgid "Mode exemple : identifiez uniquement le nom de la personne sur l'image"
 msgstr ""
 
-#: models/game_mode.py:274
+#: models/game_mode.py:286
 msgid "Normal"
 msgstr ""
 
-#: models/game_mode.py:278
+#: models/game_mode.py:290
 msgid ""
 "Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur "
 "l'image"
 msgstr ""
 
-#: models/game_mode.py:353
+#: models/game_mode.py:365
 msgid "Inverse"
 msgstr ""
 
-#: models/game_mode.py:357
+#: models/game_mode.py:369
 msgid "Identifiez la personne correspondant au nom affiché"
 msgstr ""
 
-#: models/manager_mode.py:26 templates/_mode_preview.html:46
-#: templates/employee_edit.html:176 templates/setup_wizard.html:400
+#: models/manager_mode.py:26 templates/employee_edit.html:140
+#: templates/setup_wizard.html:522
 msgid "Manager"
 msgstr ""
 
@@ -184,11 +184,11 @@ msgstr ""
 msgid "Mode équipe : devinez à quelle équipe appartient chaque employé"
 msgstr ""
 
-#: models/team_mode.py:29 templates/_mode_preview.html:45
-#: templates/emoji_challenge.html:81 templates/employee_edit.html:135
-#: templates/employees_list.html:132 templates/missing_person.html:62
-#: templates/result.html:141 templates/setup_wizard.html:391
-#: templates/team.html:93
+#: models/team_mode.py:29 templates/_mode_preview.html:55
+#: templates/base_game.html:47 templates/emoji_challenge.html:80
+#: templates/employee_edit.html:99 templates/employees_list.html:133
+#: templates/missing_person.html:62 templates/result.html:248
+#: templates/setup_wizard.html:513 templates/team.html:100
 msgid "Équipe"
 msgstr ""
 
@@ -204,109 +204,114 @@ msgstr ""
 msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
 msgstr ""
 
-#: routes/admin_routes.py:144 routes/admin_routes.py:150
+#: routes/admin_routes.py:184 routes/admin_routes.py:190
 msgid "Unauthorized"
 msgstr ""
 
-#: routes/admin_routes.py:174
+#: routes/admin_routes.py:214
 msgid "Mot de passe incorrect."
 msgstr ""
 
-#: routes/admin_routes.py:321 routes/admin_routes.py:524
-#: routes/admin_routes.py:829 routes/admin_routes.py:994
+#: routes/admin_routes.py:386 routes/admin_routes.py:698
+#: routes/admin_routes.py:1040 routes/admin_routes.py:1212
 msgid "No file provided"
 msgstr ""
 
-#: routes/admin_routes.py:325 routes/admin_routes.py:528
-#: routes/admin_routes.py:833 routes/admin_routes.py:998
+#: routes/admin_routes.py:390 routes/admin_routes.py:701
+#: routes/admin_routes.py:1044 routes/admin_routes.py:1216
 msgid "No file selected"
 msgstr ""
 
-#: routes/admin_routes.py:329
+#: routes/admin_routes.py:394
 msgid "File must be a CSV"
 msgstr ""
 
-#: routes/admin_routes.py:340
+#: routes/admin_routes.py:405
 msgid "Invalid CSV file"
 msgstr ""
 
-#: routes/admin_routes.py:358
+#: routes/admin_routes.py:423
 msgid "No data provided"
 msgstr ""
 
-#: routes/admin_routes.py:363
+#: routes/admin_routes.py:428
 msgid ""
 "Dataset id must be lowercase alphanumeric (underscores and dashes "
 "allowed, max 32 chars)."
 msgstr ""
 
-#: routes/admin_routes.py:368 routes/admin_routes.py:839
+#: routes/admin_routes.py:433 routes/admin_routes.py:1050
 msgid "A dataset with this id already exists."
 msgstr ""
 
-#: routes/admin_routes.py:387 routes/admin_routes.py:587
+#: routes/admin_routes.py:452 routes/admin_routes.py:768
 msgid "Uploaded CSV was not found. Re-upload and retry."
 msgstr ""
 
-#: routes/admin_routes.py:392
+#: routes/admin_routes.py:457
 msgid "A CSV file is required to create a dataset."
 msgstr ""
 
-#: routes/admin_routes.py:491 routes/admin_routes.py:521
-#: routes/admin_routes.py:578 routes/admin_routes.py:698
-#: routes/admin_routes.py:724 routes/admin_routes.py:754
-#: routes/admin_routes.py:784 routes/admin_routes.py:937
-#: routes/admin_routes.py:986
+#: routes/admin_routes.py:600 routes/admin_routes.py:634
+#: routes/admin_routes.py:668 routes/admin_routes.py:727
+#: routes/admin_routes.py:759 routes/admin_routes.py:909
+#: routes/admin_routes.py:935 routes/admin_routes.py:965
+#: routes/admin_routes.py:995 routes/admin_routes.py:1155
+#: routes/admin_routes.py:1204
 msgid "Dataset not found"
 msgstr ""
 
-#: routes/admin_routes.py:532
+#: routes/admin_routes.py:604 routes/admin_routes.py:638
+msgid "Preset not found"
+msgstr ""
+
+#: routes/admin_routes.py:704
 msgid "File must be a ZIP archive"
 msgstr ""
 
-#: routes/admin_routes.py:559 routes/admin_routes.py:900
+#: routes/admin_routes.py:712 routes/admin_routes.py:1118
 msgid "Invalid ZIP file"
 msgstr ""
 
-#: routes/admin_routes.py:583
+#: routes/admin_routes.py:764
 msgid "csv_filename is required"
 msgstr ""
 
-#: routes/admin_routes.py:705 routes/admin_routes.py:731
+#: routes/admin_routes.py:916 routes/admin_routes.py:942
 #, python-format
 msgid "Missing required fields: %(fields)s"
 msgstr ""
 
-#: routes/admin_routes.py:736 routes/admin_routes.py:759
-#: routes/admin_routes.py:991
+#: routes/admin_routes.py:947 routes/admin_routes.py:970
+#: routes/admin_routes.py:1209
 msgid "Employee not found"
 msgstr ""
 
-#: routes/admin_routes.py:837
+#: routes/admin_routes.py:1048
 msgid "Invalid dataset id"
 msgstr ""
 
-#: routes/admin_routes.py:850
+#: routes/admin_routes.py:1061
 msgid "Archive must contain manifest.json and team.csv"
 msgstr ""
 
-#: routes/admin_routes.py:857
+#: routes/admin_routes.py:1068
 msgid "Target dataset dir already exists"
 msgstr ""
 
-#: routes/admin_routes.py:902
+#: routes/admin_routes.py:1120
 msgid "Invalid archive"
 msgstr ""
 
-#: routes/admin_routes.py:1002
+#: routes/admin_routes.py:1220
 msgid "Unsupported image format"
 msgstr ""
 
-#: routes/admin_routes.py:1007
+#: routes/admin_routes.py:1225
 msgid "Invalid or oversize image (max 8 MiB)"
 msgstr ""
 
-#: routes/admin_routes.py:1021
+#: routes/admin_routes.py:1239
 msgid "Invalid path"
 msgstr ""
 
@@ -318,8 +323,8 @@ msgstr ""
 msgid "Culture"
 msgstr ""
 
-#: routes/game_routes.py:24 templates/employee_edit.html:113
-#: templates/employees_list.html:130 templates/setup_wizard.html:390
+#: routes/game_routes.py:24 templates/employee_edit.html:77
+#: templates/employees_list.html:131 templates/setup_wizard.html:512
 msgid "Photo"
 msgstr ""
 
@@ -343,10 +348,17 @@ msgstr ""
 msgid "Expérimental"
 msgstr ""
 
-#: templates/_mode_preview.html:47 templates/emoji_challenge.html:85
-#: templates/employee_edit.html:139 templates/employees_list.html:133
-#: templates/result.html:149 templates/setup_wizard.html:392
+#: templates/_mode_preview.html:54 templates/base_game.html:65
+#: templates/emoji_challenge.html:84 templates/employee_edit.html:103
+#: templates/employees_list.html:134 templates/result.html:256
+#: templates/setup_wizard.html:514
 msgid "Poste"
+msgstr ""
+
+#: templates/_mode_preview.html:56 templates/base_game.html:38
+#: templates/emoji_challenge.html:76 templates/result.html:244
+#: templates/setup_wizard.html:459
+msgid "Entreprise"
 msgstr ""
 
 #: templates/_switchers.html:8
@@ -372,7 +384,7 @@ msgid ""
 "interactif pour identifier les membres de l'équipe %(company_name)s."
 msgstr ""
 
-#: templates/about.html:9 templates/base_page.html:61
+#: templates/about.html:9 templates/base_page.html:68
 msgid "À propos"
 msgstr ""
 
@@ -468,88 +480,89 @@ msgstr ""
 msgid "Meilleur score"
 msgstr ""
 
-#: templates/age.html:41 templates/base_game.html:60 templates/manager.html:72
+#: templates/age.html:41 templates/manager.html:72
 #: templates/missing_person.html:79 templates/normal.html:32
-#: templates/progressive_hint.html:115 templates/reverse.html:33
+#: templates/progressive_hint.html:122 templates/reverse.html:33
 #: templates/seniority.html:41 templates/speed.html:53
 #: templates/team_guess.html:54
 msgid "Score actuel"
 msgstr ""
 
-#: templates/base.html:17 templates/employee_edit.html:4
+#: templates/base.html:19 templates/employee_edit.html:4
 #: templates/employees_list.html:3 templates/setup_list.html:3
 #: templates/setup_login.html:3 templates/setup_wizard.html:4
 msgid "Le Jeu Des Images"
 msgstr ""
 
-#: templates/base_game.html:15
+#: templates/base_game.html:19
 msgid "Recommencer"
 msgstr ""
 
-#: templates/base_game.html:25
+#: templates/base_game.html:29
 msgid "Masquer les statistiques"
 msgstr ""
 
-#: templates/base_game.html:25
+#: templates/base_game.html:29
 msgid "Afficher les statistiques"
 msgstr ""
 
-#: templates/base_game.html:27
+#: templates/base_game.html:31
 msgid "Statistiques de jeu"
 msgstr ""
 
-#: templates/base_game.html:28
-msgid "Bonnes réponses pour l'entreprise"
+#: templates/base_game.html:56 templates/employee_edit.html:95
+#: templates/employees_list.html:132 templates/result.html:252
+#: templates/setup_wizard.html:511 templates/setup_wizard.html:1164
+msgid "Nom"
 msgstr ""
 
-#: templates/base_game.html:29
-msgid "Bonnes réponses pour l'équipe"
-msgstr ""
-
-#: templates/base_game.html:30
-msgid "Bonnes réponses pour le nom"
-msgstr ""
-
-#: templates/base_game.html:31
-msgid "Bonnes réponses pour le poste"
-msgstr ""
-
-#: templates/base_game.html:45 templates/timed.html:39 templates/timed.html:76
+#: templates/base_game.html:83 templates/timed.html:61 templates/timed.html:98
 msgid "Temps restant"
 msgstr ""
 
-#: templates/base_game.html:58 templates/base_page.html:31
-#: templates/scores.html:9
-msgid "Scores"
+#: templates/base_game.html:95
+msgid "Leaderboard"
 msgstr ""
 
-#: templates/base_game.html:71
+#: templates/base_game.html:102
+msgid "Score Actuel"
+msgstr ""
+
+#: templates/base_game.html:111
+msgid "Meilleur Score"
+msgstr ""
+
+#: templates/base_game.html:125
 msgid "Personne suivante"
 msgstr ""
 
-#: templates/base_page.html:11
+#: templates/base_page.html:17
 msgid "Aller au contenu"
 msgstr ""
 
-#: templates/base_page.html:30
+#: templates/base_page.html:37
 msgid "Modes de jeu"
 msgstr ""
 
-#: templates/base_page.html:32 templates/base_page.html:62
+#: templates/base_page.html:38 templates/scores.html:9
+msgid "Scores"
+msgstr ""
+
+#: templates/base_page.html:39 templates/base_page.html:69
 #: templates/how_to_play.html:9
 msgid "Comment jouer"
 msgstr ""
 
-#: templates/base_page.html:59
+#: templates/base_page.html:66
 #, python-format
 msgid "Le Jeu Des Images · identifiez les membres de l'équipe %(company_name)s"
 msgstr ""
 
-#: templates/base_page.html:63
+#: templates/base_page.html:70
 msgid "Contact"
 msgstr ""
 
-#: templates/base_page.html:64
+#: templates/base_page.html:71
 msgid "Admin"
 msgstr ""
 
@@ -557,15 +570,15 @@ msgstr ""
 msgid "Mode Indices"
 msgstr ""
 
-#: templates/clue.html:57
+#: templates/clue.html:67
 msgid "Mode Indices - Devinez avec le minimum d'indices"
 msgstr ""
 
-#: templates/clue.html:66
+#: templates/clue.html:76
 msgid "Révéler un indice"
 msgstr ""
 
-#: templates/clue.html:67 templates/clue.html:109
+#: templates/clue.html:77 templates/clue.html:119
 msgid "Points possibles"
 msgstr ""
 
@@ -573,198 +586,198 @@ msgstr ""
 msgid "Mode Défi Emoji"
 msgstr ""
 
-#: templates/emoji_challenge.html:72
+#: templates/emoji_challenge.html:71
 msgid "Mode Défi Emoji - Qui suis-je?"
 msgstr ""
 
-#: templates/emoji_challenge.html:77 templates/result.html:137
-#: templates/setup_wizard.html:338
-msgid "Entreprise"
-msgstr ""
-
-#: templates/emoji_challenge.html:97 templates/silhouette.html:78
+#: templates/emoji_challenge.html:96 templates/silhouette.html:84
 msgid "Révéler la photo"
 msgstr ""
 
-#: templates/employee_edit.html:4 templates/employee_edit.html:95
-#: templates/employees_list.html:153 templates/setup_list.html:64
+#: templates/employee_edit.html:4 templates/employee_edit.html:59
+#: templates/employees_list.html:160 templates/setup_list.html:65
 msgid "Modifier"
 msgstr ""
 
-#: templates/employee_edit.html:4 templates/employee_edit.html:97
+#: templates/employee_edit.html:4 templates/employee_edit.html:61
 msgid "Nouvel employé"
 msgstr ""
 
-#: templates/employee_edit.html:89
+#: templates/employee_edit.html:53
 msgid "Retour aux employés"
 msgstr ""
 
-#: templates/employee_edit.html:100
+#: templates/employee_edit.html:64
 msgid "Dataset"
 msgstr ""
 
-#: templates/employee_edit.html:114
+#: templates/employee_edit.html:78
 msgid "Fichier actuel"
 msgstr ""
 
-#: templates/employee_edit.html:117
+#: templates/employee_edit.html:81
 msgid "Remplacer la photo"
 msgstr ""
 
-#: templates/employee_edit.html:124
+#: templates/employee_edit.html:88
 msgid "Informations principales"
 msgstr ""
 
-#: templates/employee_edit.html:127 templates/setup_wizard.html:388
+#: templates/employee_edit.html:91 templates/setup_wizard.html:510
 msgid "Prénom"
 msgstr ""
 
-#: templates/employee_edit.html:131 templates/employees_list.html:131
-#: templates/result.html:145 templates/setup_wizard.html:389
-#: templates/setup_wizard.html:971
-msgid "Nom"
-msgstr ""
-
-#: templates/employee_edit.html:143 templates/setup_wizard.html:393
+#: templates/employee_edit.html:107 templates/setup_wizard.html:515
 msgid "Société"
 msgstr ""
 
-#: templates/employee_edit.html:147 templates/setup_wizard.html:394
+#: templates/employee_edit.html:111 templates/setup_wizard.html:516
 msgid "Sexe"
 msgstr ""
 
-#: templates/employee_edit.html:149
+#: templates/employee_edit.html:113
 msgid "Sélectionner"
 msgstr ""
 
-#: templates/employee_edit.html:156
+#: templates/employee_edit.html:120
 msgid "Fichier photo"
 msgstr ""
 
-#: templates/employee_edit.html:158
+#: templates/employee_edit.html:122
 msgid ""
 "Nom du fichier dans le répertoire photos (photo à uploader depuis la page"
 " Modifier après création)."
 msgstr ""
 
-#: templates/employee_edit.html:165
+#: templates/employee_edit.html:129
 msgid "Informations optionnelles"
 msgstr ""
 
-#: templates/employee_edit.html:168 templates/setup_wizard.html:398
+#: templates/employee_edit.html:132 templates/setup_wizard.html:520
 msgid "Date de naissance"
 msgstr ""
 
-#: templates/employee_edit.html:172 templates/setup_wizard.html:399
+#: templates/employee_edit.html:136 templates/setup_wizard.html:521
 msgid "Date d'embauche"
 msgstr ""
 
-#: templates/employee_edit.html:183 templates/employees_list.html:181
-#: templates/mode_selection.html:195 templates/setup_list.html:97
+#: templates/employee_edit.html:147 templates/employees_list.html:188
+#: templates/mode_selection.html:195 templates/setup_list.html:98
 msgid "Annuler"
 msgstr ""
 
-#: templates/employee_edit.html:187
+#: templates/employee_edit.html:151
 msgid "Enregistrer"
 msgstr ""
 
-#: templates/employee_edit.html:187
+#: templates/employee_edit.html:151
 msgid "Créer"
 msgstr ""
 
-#: templates/employee_edit.html:236 templates/setup_wizard.html:1042
+#: templates/employee_edit.html:201 templates/setup_wizard.html:1253
 msgid "Erreur lors de la sauvegarde"
 msgstr ""
 
-#: templates/employee_edit.html:240 templates/setup_wizard.html:1045
+#: templates/employee_edit.html:205 templates/setup_wizard.html:1256
 msgid "Modifications enregistrées"
 msgstr ""
 
-#: templates/employee_edit.html:240
+#: templates/employee_edit.html:205
 msgid "Employé créé"
 msgstr ""
 
-#: templates/employee_edit.html:246 templates/employee_edit.html:295
-#: templates/employees_list.html:248 templates/setup_list.html:145
-#: templates/setup_list.html:186 templates/setup_list.html:221
-#: templates/setup_list.html:223 templates/setup_wizard.html:773
-#: templates/setup_wizard.html:952 templates/setup_wizard.html:1050
+#: templates/employee_edit.html:211 templates/employee_edit.html:264
+#: templates/employees_list.html:256 templates/setup_list.html:147
+#: templates/setup_list.html:188 templates/setup_list.html:223
+#: templates/setup_list.html:225 templates/setup_wizard.html:960
+#: templates/setup_wizard.html:1145 templates/setup_wizard.html:1276
+#: templates/setup_wizard.html:1314 templates/setup_wizard.html:1402
 msgid "Erreur réseau"
 msgstr ""
 
-#: templates/employee_edit.html:262
+#: templates/employee_edit.html:227
 msgid "Envoi..."
 msgstr ""
 
-#: templates/employee_edit.html:272 templates/setup_list.html:199
+#: templates/employee_edit.html:237 templates/setup_list.html:201
+#: templates/setup_wizard.html:1303 templates/setup_wizard.html:1327
+#: templates/setup_wizard.html:1394
 msgid "Erreur"
 msgstr ""
 
-#: templates/employee_edit.html:276
+#: templates/employee_edit.html:241
 msgid "Photo mise à jour"
 msgstr ""
 
-#: templates/employees_list.html:3 templates/setup_list.html:61
+#: templates/employees_list.html:3 templates/setup_list.html:62
 msgid "Employés"
 msgstr ""
 
-#: templates/employees_list.html:110
+#: templates/employees_list.html:111
 msgid "Retour à la liste des datasets"
 msgstr ""
 
-#: templates/employees_list.html:113
+#: templates/employees_list.html:114
 msgid "Employés de"
 msgstr ""
 
-#: templates/employees_list.html:114 templates/setup_list.html:51
+#: templates/employees_list.html:115 templates/setup_list.html:52
 msgid "employés"
 msgstr ""
 
-#: templates/employees_list.html:119
+#: templates/employees_list.html:120
 msgid "Rechercher un employé..."
 msgstr ""
 
-#: templates/employees_list.html:119
+#: templates/employees_list.html:120
 msgid "Rechercher un employé"
 msgstr ""
 
-#: templates/employees_list.html:122 templates/employees_list.html:171
+#: templates/employees_list.html:123 templates/employees_list.html:178
 msgid "Ajouter un employé"
 msgstr ""
 
-#: templates/employees_list.html:134
+#: templates/employees_list.html:135
 msgid "Actions"
 msgstr ""
 
-#: templates/employees_list.html:164
+#: templates/employees_list.html:146
+msgid "Photo référencée mais introuvable"
+msgstr ""
+
+#: templates/employees_list.html:147
+msgid "Photo manquante"
+msgstr ""
+
+#: templates/employees_list.html:171
 msgid "Aucun employé ne correspond à votre recherche."
 msgstr ""
 
-#: templates/employees_list.html:168
+#: templates/employees_list.html:175
 msgid "Aucun employé"
 msgstr ""
 
-#: templates/employees_list.html:169
+#: templates/employees_list.html:176
 msgid "Ajoutez un premier employé pour ce dataset."
 msgstr ""
 
-#: templates/employees_list.html:178
+#: templates/employees_list.html:185
 msgid "Supprimer l'employé ?"
 msgstr ""
 
-#: templates/employees_list.html:179
+#: templates/employees_list.html:186
 msgid "L'employé"
 msgstr ""
 
-#: templates/employees_list.html:179
+#: templates/employees_list.html:186
 msgid "sera définitivement retiré du CSV. Cette action est irréversible."
 msgstr ""
 
-#: templates/employees_list.html:183 templates/setup_list.html:73
+#: templates/employees_list.html:190 templates/setup_list.html:74
 msgid "Supprimer"
 msgstr ""
 
-#: templates/employees_list.html:241 templates/setup_list.html:138
+#: templates/employees_list.html:249 templates/setup_list.html:140
 msgid "Erreur lors de la suppression"
 msgstr ""
 
@@ -929,19 +942,19 @@ msgstr ""
 msgid "Qui est le manager de cette personne ?"
 msgstr ""
 
-#: templates/memory.html:63
+#: templates/memory.html:77
 msgid "Mode Mémoire - Associez les photos avec les noms"
 msgstr ""
 
-#: templates/memory.html:68
+#: templates/memory.html:82
 msgid "Paires trouvées"
 msgstr ""
 
-#: templates/memory.html:69
+#: templates/memory.html:83
 msgid "Essais"
 msgstr ""
 
-#: templates/memory.html:73
+#: templates/memory.html:87
 msgid "Félicitations! Vous avez trouvé toutes les paires!"
 msgstr ""
 
@@ -949,19 +962,19 @@ msgstr ""
 msgid "Mode Miroir"
 msgstr ""
 
-#: templates/mirror.html:61
+#: templates/mirror.html:70
 msgid "Mode Miroir - Identifiez la personne"
 msgstr ""
 
-#: templates/mirror.html:71
+#: templates/mirror.html:80
 msgid "Retourner l'image"
 msgstr ""
 
-#: templates/mirror.html:94
+#: templates/mirror.html:103
 msgid "Voir en miroir"
 msgstr ""
 
-#: templates/mirror.html:97
+#: templates/mirror.html:106
 msgid "Voir normal"
 msgstr ""
 
@@ -969,7 +982,7 @@ msgstr ""
 msgid "Mode Personne Manquante"
 msgstr ""
 
-#: templates/missing_person.html:80 templates/progressive_hint.html:116
+#: templates/missing_person.html:80 templates/progressive_hint.html:123
 #: templates/quiz.html:36 templates/speed.html:54 templates/team_guess.html:55
 msgid "Question"
 msgstr ""
@@ -1040,7 +1053,7 @@ msgstr ""
 msgid "modes disponibles"
 msgstr ""
 
-#: templates/mode_selection.html:96 templates/setup_wizard.html:221
+#: templates/mode_selection.html:96 templates/setup_wizard.html:304
 msgid "Réinitialiser"
 msgstr ""
 
@@ -1073,7 +1086,7 @@ msgstr ""
 msgid "Mode indisponible"
 msgstr ""
 
-#: templates/mode_selection.html:175 templates/setup_wizard.html:365
+#: templates/mode_selection.html:175 templates/setup_wizard.html:486
 msgid "Fermer"
 msgstr ""
 
@@ -1097,11 +1110,11 @@ msgid ""
 msgstr ""
 
 #: templates/normal.html:3
-msgid "Qui qui c'est le monsieur / la madame ?"
+msgid "Qui est-ce ?"
 msgstr ""
 
 #: templates/normal.html:24
-msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
+msgid "Sauriez-vous identifier la personne sur la photo ?"
 msgstr ""
 
 #: templates/normal.html:54
@@ -1124,71 +1137,71 @@ msgstr ""
 msgid "Mode Pixelisation"
 msgstr ""
 
-#: templates/pixelation.html:28
+#: templates/pixelation.html:31
 msgid "Mode Pixelisation - Identifiez la personne"
 msgstr ""
 
-#: templates/position_match.html:5 templates/position_match.html:104
+#: templates/position_match.html:5 templates/position_match.html:112
 msgid "Mode Association de Postes"
 msgstr ""
 
-#: templates/position_match.html:114
+#: templates/position_match.html:122
 msgid "Manche"
 msgstr ""
 
-#: templates/position_match.html:132
+#: templates/position_match.html:140
 msgid "Associez chaque employé avec son poste correct"
 msgstr ""
 
-#: templates/position_match.html:141
+#: templates/position_match.html:149
 msgid "Sélectionnez un poste"
 msgstr ""
 
-#: templates/position_match.html:152
+#: templates/position_match.html:160
 msgid "Vérifier les associations"
 msgstr ""
 
-#: templates/position_match.html:158
+#: templates/position_match.html:166
 msgid "Résultats"
 msgstr ""
 
-#: templates/position_match.html:159
+#: templates/position_match.html:167
 msgid "Vous avez correctement associé"
 msgstr ""
 
-#: templates/position_match.html:159
+#: templates/position_match.html:167
 msgid "employés avec leurs postes."
 msgstr ""
 
-#: templates/position_match.html:160
+#: templates/position_match.html:168
 msgid "Score"
 msgstr ""
 
-#: templates/position_match.html:160 templates/progressive_hint.html:105
+#: templates/position_match.html:168 templates/progressive_hint.html:112
 msgid "points"
 msgstr ""
 
-#: templates/position_match.html:161
+#: templates/position_match.html:169
 msgid "Continuer"
 msgstr ""
 
-#: templates/progressive_hint.html:5 templates/progressive_hint.html:91
+#: templates/progressive_hint.html:5 templates/progressive_hint.html:98
 msgid "Mode Indices Progressifs"
 msgstr ""
 
-#: templates/progressive_hint.html:103 templates/silhouette.html:75
+#: templates/progressive_hint.html:110 templates/silhouette.html:81
 msgid "Indice"
 msgstr ""
 
-#: templates/progressive_hint.html:105
+#: templates/progressive_hint.html:112
 msgid "Valeur"
 msgstr ""
 
-#: templates/progressive_hint.html:109
+#: templates/progressive_hint.html:116
 msgid "Indice suivant"
 msgstr ""
 
-#: templates/progressive_hint.html:130
+#: templates/progressive_hint.html:137
 msgid "Qui est cette personne ?"
 msgstr ""
 
@@ -1200,38 +1213,38 @@ msgstr ""
 msgid "Mode Quiz - Testez vos connaissances"
 msgstr ""
 
-#: templates/result.html:3 templates/result.html:125
+#: templates/result.html:3 templates/result.html:230
 msgid "Résultat final"
 msgstr ""
 
-#: templates/result.html:111
+#: templates/result.html:216
 #, python-format
 msgid "Tu es imbattable concernant tes collègues de %(company)s — score parfait !"
 msgstr ""
 
-#: templates/result.html:114
+#: templates/result.html:219
 msgid "Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde."
 msgstr ""
 
-#: templates/result.html:117
+#: templates/result.html:222
 msgid "Bravo pour ton effort ! Continue à apprendre à connaître tes collègues."
 msgstr ""
 
-#: templates/result.html:120
+#: templates/result.html:225
 msgid ""
 "Il te reste beaucoup à apprendre sur tes collègues. C'est l'occasion de "
 "faire de nouvelles rencontres !"
 msgstr ""
 
-#: templates/result.html:126
+#: templates/result.html:231
 msgid "Score final"
 msgstr ""
 
-#: templates/result.html:157
+#: templates/result.html:264
 msgid "Rejouer"
 msgstr ""
 
-#: templates/result.html:161
+#: templates/result.html:268
 msgid "Autre mode"
 msgstr ""
 
@@ -1299,11 +1312,11 @@ msgstr ""
 msgid "Mode Visage Mélangé"
 msgstr ""
 
-#: templates/scrambled_face.html:53
+#: templates/scrambled_face.html:63
 msgid "Mode Visage Mélangé - Identifiez la personne"
 msgstr ""
 
-#: templates/scrambled_face.html:73
+#: templates/scrambled_face.html:83
 msgid "Révéler le visage original"
 msgstr ""
 
@@ -1319,103 +1332,103 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: templates/setup_list.html:13
+#: templates/setup_list.html:14
 msgid "Retour au jeu"
 msgstr ""
 
-#: templates/setup_list.html:17
+#: templates/setup_list.html:18
 msgid "Gestion des datasets"
 msgstr ""
 
-#: templates/setup_list.html:18
+#: templates/setup_list.html:19
 msgid "Ajoutez, modifiez ou supprimez les datasets disponibles dans le jeu."
 msgstr ""
 
-#: templates/setup_list.html:24
+#: templates/setup_list.html:25
 msgid "Aucun dataset configuré"
 msgstr ""
 
-#: templates/setup_list.html:25
+#: templates/setup_list.html:26
 msgid "Commencez par ajouter un dataset pour démarrer le jeu."
 msgstr ""
 
-#: templates/setup_list.html:27
+#: templates/setup_list.html:28
 msgid "Créer le premier dataset"
 msgstr ""
 
-#: templates/setup_list.html:42
+#: templates/setup_list.html:43
 msgid "Par défaut"
 msgstr ""
 
-#: templates/setup_list.html:67
+#: templates/setup_list.html:68
 msgid "Exporter"
 msgstr ""
 
-#: templates/setup_list.html:70
+#: templates/setup_list.html:71
 msgid "Nettoyer photos"
 msgstr ""
 
-#: templates/setup_list.html:82
+#: templates/setup_list.html:83
 msgid "Ajouter un dataset"
 msgstr ""
 
-#: templates/setup_list.html:85
+#: templates/setup_list.html:86
 msgid "Importer un dataset"
 msgstr ""
 
-#: templates/setup_list.html:94
+#: templates/setup_list.html:95
 msgid "Supprimer le dataset ?"
 msgstr ""
 
-#: templates/setup_list.html:95
+#: templates/setup_list.html:96
 msgid "Cette action est irréversible. Le dataset"
 msgstr ""
 
-#: templates/setup_list.html:95
+#: templates/setup_list.html:96
 msgid "et toutes ses données (CSV, photos, scores) seront supprimés."
 msgstr ""
 
-#: templates/setup_list.html:99
+#: templates/setup_list.html:100
 msgid "Supprimer définitivement"
 msgstr ""
 
-#: templates/setup_list.html:171
+#: templates/setup_list.html:173
 msgid "Identifiant du nouveau dataset"
 msgstr ""
 
-#: templates/setup_list.html:180
+#: templates/setup_list.html:182
 msgid "Erreur lors de l import"
 msgstr ""
 
-#: templates/setup_list.html:183
+#: templates/setup_list.html:185
 msgid "Dataset importé"
 msgstr ""
 
-#: templates/setup_list.html:183
+#: templates/setup_list.html:185
 msgid "photos"
 msgstr ""
 
-#: templates/setup_list.html:204
+#: templates/setup_list.html:206
 msgid "Aucune photo orpheline — le dossier est propre."
 msgstr ""
 
-#: templates/setup_list.html:207
+#: templates/setup_list.html:209
 msgid "Trouvé"
 msgstr ""
 
-#: templates/setup_list.html:207
+#: templates/setup_list.html:209
 msgid "photo(s) orpheline(s) dans"
 msgstr ""
 
-#: templates/setup_list.html:207
+#: templates/setup_list.html:209
 msgid "Supprimer ?"
 msgstr ""
 
-#: templates/setup_list.html:217
+#: templates/setup_list.html:219
 msgid "Supprimé"
 msgstr ""
 
-#: templates/setup_list.html:217
+#: templates/setup_list.html:219
 msgid "photo(s)"
 msgstr ""
 
@@ -1423,557 +1436,812 @@ msgstr ""
 msgid "Connexion administrateur"
 msgstr ""
 
-#: templates/setup_login.html:71
+#: templates/setup_login.html:72
 msgid "Accès administrateur"
 msgstr ""
 
-#: templates/setup_login.html:72
+#: templates/setup_login.html:73
 msgid ""
 "Entrez le mot de passe défini dans la variable ADMIN_PASSWORD pour "
 "accéder à la configuration."
 msgstr ""
 
-#: templates/setup_login.html:78
+#: templates/setup_login.html:79
 msgid "Mot de passe"
 msgstr ""
 
-#: templates/setup_login.html:80
+#: templates/setup_login.html:81
 msgid "Se connecter"
 msgstr ""
 
-#: templates/setup_wizard.html:4 templates/setup_wizard.html:19
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:20
 msgid "Modifier le dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:4 templates/setup_wizard.html:21
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:22
 msgid "Nouveau dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:14
+#: templates/setup_wizard.html:15
 msgid "Retour à la liste"
 msgstr ""
 
-#: templates/setup_wizard.html:24
+#: templates/setup_wizard.html:25
 msgid "Configurez le dataset en quelques étapes."
 msgstr ""
 
-#: templates/setup_wizard.html:27
+#: templates/setup_wizard.html:28
 msgid "Étapes de configuration"
 msgstr ""
 
-#: templates/setup_wizard.html:30
+#: templates/setup_wizard.html:31
 msgid "Branding"
 msgstr ""
 
-#: templates/setup_wizard.html:34
+#: templates/setup_wizard.html:35
 msgid "Thème"
 msgstr ""
 
-#: templates/setup_wizard.html:38 templates/setup_wizard.html:343
+#: templates/setup_wizard.html:39 templates/setup_wizard.html:464
 msgid "Données"
 msgstr ""
 
-#: templates/setup_wizard.html:42 templates/setup_wizard.html:306
+#: templates/setup_wizard.html:43 templates/setup_wizard.html:431
 msgid "Photos"
 msgstr ""
 
-#: templates/setup_wizard.html:46
+#: templates/setup_wizard.html:47
 msgid "Résumé"
 msgstr ""
 
-#: templates/setup_wizard.html:52
+#: templates/setup_wizard.html:53
 msgid "Identité du dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:55
+#: templates/setup_wizard.html:56
 msgid "Identifiant technique"
 msgstr ""
 
-#: templates/setup_wizard.html:62
+#: templates/setup_wizard.html:63
 msgid ""
 "Minuscules, chiffres, tirets et underscores. Sert de clé interne (non "
 "modifiable après création)."
 msgstr ""
 
-#: templates/setup_wizard.html:67
+#: templates/setup_wizard.html:68
 msgid "Nom de l'entreprise"
 msgstr ""
 
-#: templates/setup_wizard.html:70
+#: templates/setup_wizard.html:71
 msgid "Ex: Mon Entreprise"
 msgstr ""
 
-#: templates/setup_wizard.html:76
+#: templates/setup_wizard.html:77
 msgid "URL du logo"
 msgstr ""
 
-#: templates/setup_wizard.html:83 templates/setup_wizard.html:973
+#: templates/setup_wizard.html:84 templates/setup_wizard.html:1166
 msgid "Tagline (français)"
 msgstr ""
 
-#: templates/setup_wizard.html:86
+#: templates/setup_wizard.html:87
 msgid "Ex: Testez votre connaissance de vos collègues !"
 msgstr ""
 
-#: templates/setup_wizard.html:90 templates/setup_wizard.html:974
+#: templates/setup_wizard.html:91 templates/setup_wizard.html:1167
 msgid "Tagline (English)"
 msgstr ""
 
-#: templates/setup_wizard.html:93
+#: templates/setup_wizard.html:94
 msgid "E.g.: Test your knowledge of your colleagues!"
 msgstr ""
 
-#: templates/setup_wizard.html:100
+#: templates/setup_wizard.html:101
 msgid "Masquer les modes indisponibles pour ce dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:102
+#: templates/setup_wizard.html:103
 msgid ""
 "Décoché : les modes non jouables restent visibles mais grisés. Coché : "
 "ils sont totalement masqués de la grille."
 msgstr ""
 
-#: templates/setup_wizard.html:108 templates/setup_wizard.html:251
-#: templates/setup_wizard.html:299 templates/setup_wizard.html:328
+#: templates/setup_wizard.html:109 templates/setup_wizard.html:376
+#: templates/setup_wizard.html:424 templates/setup_wizard.html:449
 msgid "Suivant"
 msgstr ""
 
-#: templates/setup_wizard.html:119
+#: templates/setup_wizard.html:120
 msgid "Thème visuel"
 msgstr ""
 
-#: templates/setup_wizard.html:120
+#: templates/setup_wizard.html:121
 msgid ""
 "Choisissez une palette comme point de départ, puis ajustez "
 "individuellement les couleurs qui ne vous conviennent pas."
 msgstr ""
 
-#: templates/setup_wizard.html:123
+#: templates/setup_wizard.html:124
 msgid "Corporate"
 msgstr ""
 
-#: templates/setup_wizard.html:123
+#: templates/setup_wizard.html:124
 msgid "Neutre Zinc, professionnel"
 msgstr ""
 
-#: templates/setup_wizard.html:124
+#: templates/setup_wizard.html:125
 msgid "Ardoise"
 msgstr ""
 
-#: templates/setup_wizard.html:124
+#: templates/setup_wizard.html:125
 msgid "Bleu-gris froid, businessy"
 msgstr ""
 
-#: templates/setup_wizard.html:125
+#: templates/setup_wizard.html:126
 msgid "Nordique"
 msgstr ""
 
-#: templates/setup_wizard.html:125
+#: templates/setup_wizard.html:126
 msgid "Pâle et froid, scandinave"
 msgstr ""
 
-#: templates/setup_wizard.html:126
+#: templates/setup_wizard.html:127
 msgid "Chaleureux"
 msgstr ""
 
-#: templates/setup_wizard.html:126
+#: templates/setup_wizard.html:127
 msgid "Ivoire crème, éditorial"
 msgstr ""
 
-#: templates/setup_wizard.html:127
+#: templates/setup_wizard.html:128
 msgid "Sépia"
 msgstr ""
 
-#: templates/setup_wizard.html:127
+#: templates/setup_wizard.html:128
 msgid "Ambre vintage, parchemin"
 msgstr ""
 
-#: templates/setup_wizard.html:128
+#: templates/setup_wizard.html:129
 msgid "Sable"
 msgstr ""
 
-#: templates/setup_wizard.html:128
+#: templates/setup_wizard.html:129
 msgid "Beige désertique, doux"
 msgstr ""
 
-#: templates/setup_wizard.html:129
+#: templates/setup_wizard.html:130
 msgid "Pastel"
 msgstr ""
 
-#: templates/setup_wizard.html:129
+#: templates/setup_wizard.html:130
 msgid "Lavande douce, onboarding"
 msgstr ""
 
-#: templates/setup_wizard.html:130
+#: templates/setup_wizard.html:131
 msgid "Rose"
 msgstr ""
 
-#: templates/setup_wizard.html:130
+#: templates/setup_wizard.html:131
 msgid "Rose poudré, tendre"
 msgstr ""
 
-#: templates/setup_wizard.html:131
+#: templates/setup_wizard.html:132
 msgid "Menthe"
 msgstr ""
 
-#: templates/setup_wizard.html:131
+#: templates/setup_wizard.html:132
 msgid "Vert frais, léger"
 msgstr ""
 
-#: templates/setup_wizard.html:134
+#: templates/setup_wizard.html:135
 msgid "Nuit"
 msgstr ""
 
-#: templates/setup_wizard.html:134
+#: templates/setup_wizard.html:135
 msgid "Bleu navy doux — sombre sans être noir"
 msgstr ""
 
-#: templates/setup_wizard.html:135
+#: templates/setup_wizard.html:136
 msgid "Charbon"
 msgstr ""
 
-#: templates/setup_wizard.html:135
+#: templates/setup_wizard.html:136
 msgid "Gris foncé chaud"
 msgstr ""
 
-#: templates/setup_wizard.html:136
+#: templates/setup_wizard.html:137
 msgid "Océan"
 msgstr ""
 
-#: templates/setup_wizard.html:136
+#: templates/setup_wizard.html:137
 msgid "Bleu profond teal"
 msgstr ""
 
-#: templates/setup_wizard.html:137
+#: templates/setup_wizard.html:138
 msgid "Forêt"
 msgstr ""
 
-#: templates/setup_wizard.html:137
+#: templates/setup_wizard.html:138
 msgid "Vert profond boisé"
 msgstr ""
 
-#: templates/setup_wizard.html:138
+#: templates/setup_wizard.html:139
 msgid "Prune"
 msgstr ""
 
-#: templates/setup_wizard.html:138
+#: templates/setup_wizard.html:139
 msgid "Violet foncé mure"
 msgstr ""
 
-#: templates/setup_wizard.html:139 templates/setup_wizard.html:176
+#: templates/setup_wizard.html:140 templates/setup_wizard.html:189
 msgid "Sombre"
 msgstr ""
 
-#: templates/setup_wizard.html:139
+#: templates/setup_wizard.html:140
 msgid "Zinc 900, minimaliste"
 msgstr ""
 
-#: templates/setup_wizard.html:140
+#: templates/setup_wizard.html:141
 msgid "Noir"
 msgstr ""
 
-#: templates/setup_wizard.html:140
+#: templates/setup_wizard.html:141
 msgid "Monochrome, contraste max"
 msgstr ""
 
-#: templates/setup_wizard.html:143
+#: templates/setup_wizard.html:144
+msgid "Legacy ✨"
+msgstr ""
+
+#: templates/setup_wizard.html:144
+msgid ""
+"Thème cosmique d’origine — particules en constellation, fireworks au "
+"résultat, code Konami…"
+msgstr ""
+
+#: templates/setup_wizard.html:147
 msgid "Couleur principale"
 msgstr ""
 
-#: templates/setup_wizard.html:143
+#: templates/setup_wizard.html:147
 msgid "Boutons, focus, accents de marque"
 msgstr ""
 
-#: templates/setup_wizard.html:144
+#: templates/setup_wizard.html:148
+msgid "Couleur secondaire"
+msgstr ""
+
+#: templates/setup_wizard.html:148
+msgid "Accent secondaire — extrémité du bandeau cards, états de succès"
+msgstr ""
+
+#: templates/setup_wizard.html:149
 msgid "Fond de page"
 msgstr ""
 
-#: templates/setup_wizard.html:144
+#: templates/setup_wizard.html:149
 msgid "Arrière-plan global de la page"
 msgstr ""
 
-#: templates/setup_wizard.html:145
-msgid "Cards & panneaux"
+#: templates/setup_wizard.html:150
+msgid "Texte par défaut"
 msgstr ""
 
-#: templates/setup_wizard.html:145
-msgid "Cards, filter bar, header, footer, score panel"
+#: templates/setup_wizard.html:150
+msgid "Texte du body — sert aussi de fallback pour les composants ci-dessous"
 msgstr ""
 
-#: templates/setup_wizard.html:146
-msgid "Éléments élevés"
-msgstr ""
-
-#: templates/setup_wizard.html:146
-msgid "Hero, previews, panneaux mis en avant"
-msgstr ""
-
-#: templates/setup_wizard.html:147
-msgid "Texte principal"
-msgstr ""
-
-#: templates/setup_wizard.html:147
-msgid "Texte courant"
-msgstr ""
-
-#: templates/setup_wizard.html:148
+#: templates/setup_wizard.html:151
 msgid "Texte secondaire"
 msgstr ""
 
-#: templates/setup_wizard.html:148
-msgid "Labels, descriptions"
+#: templates/setup_wizard.html:151
+msgid "Descriptions, paragraphes secondaires"
 msgstr ""
 
-#: templates/setup_wizard.html:149
-msgid "Bordures"
+#: templates/setup_wizard.html:152
+msgid "Texte atténué"
 msgstr ""
 
-#: templates/setup_wizard.html:149
-msgid "Séparateurs, contours de cards"
+#: templates/setup_wizard.html:152
+msgid "Metadata (durées), eyebrows (\"DIFFICULTÉ\", \"THÈMES\")"
 msgstr ""
 
 #: templates/setup_wizard.html:153
-msgid "Palette de départ"
+msgid "Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:153
+msgid "Filter bar, inputs, panneau scores, tableau employés"
+msgstr ""
+
+#: templates/setup_wizard.html:154
+msgid "Éléments élevés"
+msgstr ""
+
+#: templates/setup_wizard.html:154
+msgid "Hero, previews, panneaux mis en avant"
 msgstr ""
 
 #: templates/setup_wizard.html:155
-msgid "Clair"
+msgid "Surfaces atténuées"
+msgstr ""
+
+#: templates/setup_wizard.html:155
+msgid "Pills de tags dans les cards, badges discrets"
 msgstr ""
 
 #: templates/setup_wizard.html:156
+msgid "Fond des cards"
+msgstr ""
+
+#: templates/setup_wizard.html:156
+msgid ""
+"Cards de modes, cards de datasets, panneaux de jeu — laisse vide pour "
+"suivre Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:157
+msgid "Texte des cards"
+msgstr ""
+
+#: templates/setup_wizard.html:157
+msgid "Texte à l’intérieur des cards — laisse vide pour suivre Texte par défaut"
+msgstr ""
+
+#: templates/setup_wizard.html:158
+msgid "Fond du header"
+msgstr ""
+
+#: templates/setup_wizard.html:158
+msgid "Bandeau du haut — laisse vide pour suivre Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:159
+msgid "Texte du header"
+msgstr ""
+
+#: templates/setup_wizard.html:159
+msgid "Texte + liens du bandeau — laisse vide pour suivre Texte par défaut"
+msgstr ""
+
+#: templates/setup_wizard.html:160
+msgid "Fond du footer"
+msgstr ""
+
+#: templates/setup_wizard.html:160
+msgid "Bandeau du bas — laisse vide pour suivre Surfaces génériques"
+msgstr ""
+
+#: templates/setup_wizard.html:161
+msgid "Texte du footer"
+msgstr ""
+
+#: templates/setup_wizard.html:161
+msgid "Texte + liens du footer — laisse vide pour suivre Texte atténué"
+msgstr ""
+
+#: templates/setup_wizard.html:162
+msgid "Bordures"
+msgstr ""
+
+#: templates/setup_wizard.html:162
+msgid "Séparateurs, contours de cards"
+msgstr ""
+
+#: templates/setup_wizard.html:166
+msgid "Palette de départ"
+msgstr ""
+
+#: templates/setup_wizard.html:168
+msgid "Clair"
+msgstr ""
+
+#: templates/setup_wizard.html:169
 msgid "Palettes claires"
 msgstr ""
 
-#: templates/setup_wizard.html:177
+#: templates/setup_wizard.html:190
 msgid "Palettes sombres"
 msgstr ""
 
-#: templates/setup_wizard.html:198
+#: templates/setup_wizard.html:210
+msgid "Spécial"
+msgstr ""
+
+#: templates/setup_wizard.html:211
+msgid "Palettes spéciales"
+msgstr ""
+
+#: templates/setup_wizard.html:232 templates/setup_wizard.html:244
+msgid "Fond animé"
+msgstr ""
+
+#: templates/setup_wizard.html:233
+msgid ""
+"Choisissez l’effet de fond animé. « Auto » suit la palette : feu "
+"d’artifice pour Legacy, NASA ailleurs. Les cinq premiers proviennent "
+"directement de la librairie particles.js de Vincent Garreau."
+msgstr ""
+
+#: templates/setup_wizard.html:235 templates/setup_wizard.html:262
+msgid "Auto"
+msgstr ""
+
+#: templates/setup_wizard.html:235
+msgid "Suit la palette (recommandé)"
+msgstr ""
+
+#: templates/setup_wizard.html:236 templates/setup_wizard.html:263
+msgid "Aucun"
+msgstr ""
+
+#: templates/setup_wizard.html:236
+msgid "Aucune animation — page totalement statique"
+msgstr ""
+
+#: templates/setup_wizard.html:237
+msgid "NASA"
+msgstr ""
+
+#: templates/setup_wizard.html:237
+msgid "Petits points blancs scintillants, sans liaisons"
+msgstr ""
+
+#: templates/setup_wizard.html:238
+msgid "Particules"
+msgstr ""
+
+#: templates/setup_wizard.html:238
+msgid "Cercles bleus + lignes de connexion"
+msgstr ""
+
+#: templates/setup_wizard.html:239
+msgid "Neige"
+msgstr ""
+
+#: templates/setup_wizard.html:239
+msgid "Flocons qui tombent doucement"
+msgstr ""
+
+#: templates/setup_wizard.html:240
+msgid "Bulles"
+msgstr ""
+
+#: templates/setup_wizard.html:240
+msgid "Grandes bulles qui montent"
+msgstr ""
+
+#: templates/setup_wizard.html:241
+msgid "Étoiles"
+msgstr ""
+
+#: templates/setup_wizard.html:241
+msgid "Étoiles dérivantes"
+msgstr ""
+
+#: templates/setup_wizard.html:242
+msgid "Feu d’artifice"
+msgstr ""
+
+#: templates/setup_wizard.html:242
+msgid "Bursts colorés en boucle (custom)"
+msgstr ""
+
+#: templates/setup_wizard.html:259 templates/setup_wizard.html:266
+msgid "Effet sur les cards"
+msgstr ""
+
+#: templates/setup_wizard.html:260
+msgid ""
+"Reflet doré qui balaie les cards au survol — le même effet que la palette"
+" Legacy, désormais sélectionnable indépendamment de la palette."
+msgstr ""
+
+#: templates/setup_wizard.html:262
+msgid "Suit la palette (Legacy → reflet doré, sinon aucun)"
+msgstr ""
+
+#: templates/setup_wizard.html:263
+msgid "Pas d’effet sur les cards"
+msgstr ""
+
+#: templates/setup_wizard.html:264
+msgid "Reflet doré"
+msgstr ""
+
+#: templates/setup_wizard.html:264
+msgid "Bandeau doré qui traverse la carte au survol"
+msgstr ""
+
+#: templates/setup_wizard.html:281
 msgid "Personnaliser chaque couleur"
 msgstr ""
 
-#: templates/setup_wizard.html:199
+#: templates/setup_wizard.html:282
 msgid ""
 "Chaque couleur hérite de la palette. Modifiez-en une pour créer un "
 "override personnel. Bouton Reset pour revenir à la valeur du preset."
 msgstr ""
 
-#: templates/setup_wizard.html:216 templates/setup_wizard.html:571
+#: templates/setup_wizard.html:299 templates/setup_wizard.html:714
 msgid "Hérité du preset"
 msgstr ""
 
-#: templates/setup_wizard.html:217
+#: templates/setup_wizard.html:300
 msgid "Code hexadécimal"
 msgstr ""
 
-#: templates/setup_wizard.html:231 templates/setup_wizard.html:234
+#: templates/setup_wizard.html:314 templates/setup_wizard.html:317
 msgid "Aperçu"
 msgstr ""
 
-#: templates/setup_wizard.html:236
+#: templates/setup_wizard.html:319
 msgid "Bouton principal"
 msgstr ""
 
-#: templates/setup_wizard.html:239
+#: templates/setup_wizard.html:322
 msgid "Disponible"
 msgstr ""
 
-#: templates/setup_wizard.html:240
+#: templates/setup_wizard.html:323
 msgid "Texte courant sur une card."
 msgstr ""
 
-#: templates/setup_wizard.html:248 templates/setup_wizard.html:296
-#: templates/setup_wizard.html:325 templates/setup_wizard.html:354
+#: templates/setup_wizard.html:334
+msgid "Presets sauvegardés"
+msgstr ""
+
+#: templates/setup_wizard.html:335
+msgid ""
+"Sauvegarde la config (palette + overrides + fond animé) actuelle sous un "
+"nom, pour pouvoir basculer dessus en un clic plus tard."
+msgstr ""
+
+#: templates/setup_wizard.html:350
+msgid "Appliquer"
+msgstr ""
+
+#: templates/setup_wizard.html:358 templates/setup_wizard.html:1337
+msgid "Aucun preset sauvegardé pour ce dataset."
+msgstr ""
+
+#: templates/setup_wizard.html:363
+msgid "Nom du preset (ex. Sombre)"
+msgstr ""
+
+#: templates/setup_wizard.html:365
+msgid "Sauvegarder le thème actuel"
+msgstr ""
+
+#: templates/setup_wizard.html:373 templates/setup_wizard.html:421
+#: templates/setup_wizard.html:446 templates/setup_wizard.html:475
 msgid "Précédent"
 msgstr ""
 
-#: templates/setup_wizard.html:258
+#: templates/setup_wizard.html:383
 msgid "Données employés"
 msgstr ""
 
-#: templates/setup_wizard.html:263
+#: templates/setup_wizard.html:388
 msgid ""
 "Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le "
 "remplacer."
 msgstr ""
 
-#: templates/setup_wizard.html:270
+#: templates/setup_wizard.html:395
 msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
 msgstr ""
 
-#: templates/setup_wizard.html:271
+#: templates/setup_wizard.html:396
 msgid "Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc."
 msgstr ""
 
-#: templates/setup_wizard.html:277
+#: templates/setup_wizard.html:402
 msgid "Aperçu des données"
 msgstr ""
 
-#: templates/setup_wizard.html:283
+#: templates/setup_wizard.html:408
 msgid ""
 "Uploadez un fichier CSV ci-dessus pour configurer la correspondance des "
 "colonnes."
 msgstr ""
 
-#: templates/setup_wizard.html:287
+#: templates/setup_wizard.html:412
 msgid "Correspondance des colonnes"
 msgstr ""
 
-#: templates/setup_wizard.html:289
+#: templates/setup_wizard.html:414
 msgid "Associez chaque champ du jeu à une colonne de votre CSV."
 msgstr ""
 
-#: templates/setup_wizard.html:311
+#: templates/setup_wizard.html:434
 msgid ""
-"Les photos seront uploadées après la création du dataset, depuis la page "
-"de modification."
+"Glissez votre ZIP de photos dès maintenant — elles seront déplacées dans "
+"le dataset à l’étape 5 (Sauvegarder)."
 msgstr ""
 
-#: templates/setup_wizard.html:317
+#: templates/setup_wizard.html:439
 msgid "Glissez un fichier ZIP contenant les photos ici"
 msgstr ""
 
-#: templates/setup_wizard.html:318
+#: templates/setup_wizard.html:440
 msgid "Formats acceptes: JPG, PNG, GIF, WebP"
 msgstr ""
 
-#: templates/setup_wizard.html:335
+#: templates/setup_wizard.html:456
 msgid "Résumé et sauvegarde"
 msgstr ""
 
-#: templates/setup_wizard.html:348
+#: templates/setup_wizard.html:469
 msgid "Mapping colonnes"
 msgstr ""
 
-#: templates/setup_wizard.html:358
+#: templates/setup_wizard.html:479
 msgid "Enregistrer les modifications"
 msgstr ""
 
-#: templates/setup_wizard.html:358
+#: templates/setup_wizard.html:479
 msgid "Créer le dataset"
 msgstr ""
 
-#: templates/setup_wizard.html:438
+#: templates/setup_wizard.html:560
 msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
 msgstr ""
 
-#: templates/setup_wizard.html:443
+#: templates/setup_wizard.html:565
 msgid "Un dataset avec cet identifiant existe déjà."
 msgstr ""
 
-#: templates/setup_wizard.html:452
+#: templates/setup_wizard.html:574
 msgid "Le nom de l'entreprise est requis"
 msgstr ""
 
-#: templates/setup_wizard.html:570
+#: templates/setup_wizard.html:713
 msgid "Override"
 msgstr ""
 
-#: templates/setup_wizard.html:670
+#: templates/setup_wizard.html:857
 msgid "Contraste faible"
 msgstr ""
 
-#: templates/setup_wizard.html:671
+#: templates/setup_wizard.html:858
 msgid "Ajustez les couleurs pour améliorer la lisibilité."
 msgstr ""
 
-#: templates/setup_wizard.html:675
+#: templates/setup_wizard.html:862
 msgid "Contraste moyen"
 msgstr ""
 
-#: templates/setup_wizard.html:676
+#: templates/setup_wizard.html:863
 msgid "WCAG AA recommande 4.5:1 minimum pour le texte courant."
 msgstr ""
 
-#: templates/setup_wizard.html:680
+#: templates/setup_wizard.html:867
 msgid "Contraste conforme WCAG AA"
 msgstr ""
 
-#: templates/setup_wizard.html:760 templates/setup_wizard.html:944
+#: templates/setup_wizard.html:947 templates/setup_wizard.html:1137
 msgid "Erreur lors de l'envoi"
 msgstr ""
 
-#: templates/setup_wizard.html:764
+#: templates/setup_wizard.html:951
 msgid "CSV chargé avec succès"
 msgstr ""
 
-#: templates/setup_wizard.html:764
+#: templates/setup_wizard.html:951
 msgid "colonnes détectées"
 msgstr ""
 
-#: templates/setup_wizard.html:844
+#: templates/setup_wizard.html:1031
 msgid "requis"
 msgstr ""
 
-#: templates/setup_wizard.html:844
+#: templates/setup_wizard.html:1031
 msgid "optionnel"
 msgstr ""
 
-#: templates/setup_wizard.html:854
+#: templates/setup_wizard.html:1041
 msgid "Non utilisé"
 msgstr ""
 
-#: templates/setup_wizard.html:879
+#: templates/setup_wizard.html:1066
 msgid "Détection automatique"
 msgstr ""
 
-#: templates/setup_wizard.html:948
+#: templates/setup_wizard.html:1141
 msgid "photos extraites avec succès"
 msgstr ""
 
-#: templates/setup_wizard.html:967
+#: templates/setup_wizard.html:1160
 msgid "couleur(s) personnalisée(s)"
 msgstr ""
 
-#: templates/setup_wizard.html:968
+#: templates/setup_wizard.html:1161
 msgid "Aucune — toutes héritées du preset"
 msgstr ""
 
-#: templates/setup_wizard.html:970
+#: templates/setup_wizard.html:1163
 msgid "Identifiant"
 msgstr ""
 
-#: templates/setup_wizard.html:972
+#: templates/setup_wizard.html:1165
 msgid "Logo"
 msgstr ""
 
-#: templates/setup_wizard.html:975
+#: templates/setup_wizard.html:1168
 msgid "Palette"
 msgstr ""
 
-#: templates/setup_wizard.html:976
+#: templates/setup_wizard.html:1169
 msgid "Overrides"
 msgstr ""
 
-#: templates/setup_wizard.html:977
+#: templates/setup_wizard.html:1170
 msgid "Masquer modes indisponibles"
 msgstr ""
 
-#: templates/setup_wizard.html:977
+#: templates/setup_wizard.html:1170
 msgid "Oui"
 msgstr ""
 
-#: templates/setup_wizard.html:977
+#: templates/setup_wizard.html:1170
 msgid "Non"
 msgstr ""
 
-#: templates/setup_wizard.html:981
+#: templates/setup_wizard.html:1174
 msgid "Fichier CSV"
 msgstr ""
 
-#: templates/setup_wizard.html:982
+#: templates/setup_wizard.html:1175
 msgid "Colonnes"
 msgstr ""
 
-#: templates/setup_wizard.html:1045
+#: templates/setup_wizard.html:1256
 msgid "Dataset créé"
+msgstr ""
+
+#: templates/setup_wizard.html:1265
+msgid "autres"
+msgstr ""
+
+#: templates/setup_wizard.html:1268
+msgid "Photos référencées absentes du dossier"
+msgstr ""
+
+#: templates/setup_wizard.html:1307
+msgid "Preset « "
+msgstr ""
+
+#: templates/setup_wizard.html:1307
+msgid " » appliqué"
+msgstr ""
+
+#: templates/setup_wizard.html:1318
+msgid "Supprimer le preset « "
+msgstr ""
+
+#: templates/setup_wizard.html:1318
+msgid " » ?"
+msgstr ""
+
+#: templates/setup_wizard.html:1340
+msgid "Preset supprimé"
+msgstr ""
+
+#: templates/setup_wizard.html:1355
+msgid "Donne un nom au preset avant de sauvegarder"
+msgstr ""
+
+#: templates/setup_wizard.html:1397
+msgid "Preset sauvegardé"
 msgstr ""
 
 #: templates/silhouette.html:3
 msgid "Mode Silhouette"
 msgstr ""
 
-#: templates/silhouette.html:67
+#: templates/silhouette.html:73
 msgid "Mode Silhouette - Identifiez la personne"
 msgstr ""
 
@@ -1989,11 +2257,11 @@ msgstr ""
 msgid "Mode Équipe"
 msgstr ""
 
-#: templates/team.html:90
+#: templates/team.html:97
 msgid "Mode Équipe - Identifiez les membres"
 msgstr ""
 
-#: templates/team.html:129
+#: templates/team.html:136
 msgid "Valider l'équipe"
 msgstr ""
 
@@ -2005,7 +2273,7 @@ msgstr ""
 msgid "À quelle équipe appartient cette personne ?"
 msgstr ""
 
-#: templates/timed.html:32
+#: templates/timed.html:54
 msgid "Mode Chronométré - Identifiez le maximum de personnes en 2 minutes"
 msgstr ""
 
