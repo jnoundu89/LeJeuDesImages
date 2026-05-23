@@ -1,20 +1,20 @@
-# Checklist : Refonte Visuelle & Polish UX
+# Checklist : Refonte Ergonomique & Clarification du Menu Principal
 
-Suivi de l'implémentation de la Proposition 3 (Axe UX & Interface).
+Suivi des tâches pour réorganiser les modes de jeu par catégories et intégrer les optimisations UX/UI.
 
-- `[x]` **Axe 1 : Design System & Tokens**
-  - `[x]` Ajouter des variables de lueur et de shimmer dans `design-tokens.css`
-  - `[x]` Optimiser les transitions par défaut
-- `[x]` **Axe 2 : Effet de Verre & Panneaux (Glassmorphism)**
-  - `[x]` Mettre à jour `gameplay.css` avec le backdrop-filter et les bordures semi-transparentes
-  - `[x]` Ajouter l'onde de choc (ripple wave) et la lueur succès/danger au feedback de réponses
-- `[x]` **Axe 3 : Survol Premium des Cartes**
-  - `[x]` Ajouter l'élévation et la lueur de couleur primaire au survol des cartes dans `mode-selection.css`
-- `[x]` **Axe 4 : Transitions Alpine.js & Chargement continu**
-  - `[x]` Intégrer les animations de transition `x-transition` dans `base_game.html`
-  - `[x]` Mettre en place l'effet "Card Slide" lors du changement de question
-- `[x]` **Axe 5 : Minuteur d'Urgence Pixel Art & Glitch**
-  - `[x]` Implémenter l'effet de secousse (shake/glitch) et le changement de police (VT323) sous les 15 secondes
-- `[x]` **Axe 6 : Vérification & Polish final**
-  - `[x]` Relancer la suite complète de tests locaux (`make test`)
-  - `[/]` Relancer les E2E tests Playwright (`make test-e2e`) en contournant l'auth d'administration
+- `[x]` **Étape 1 : Refonte Structurelle (Jinja & HTML)**
+  - `[x]` Intégrer la structure de la bannière vedette héroïque (`.featured-challenge-banner`) dans `templates/mode_selection.html`.
+  - `[x]` Ajouter la structure de la barre d'onglets de catégories (`.category-navigation-tabs`) avec icônes.
+  - `[x]` Ajouter l'interrupteur moderne style iOS pour basculer la visibilité des modes verrouillés.
+  - `[x]` Mettre à jour l'affichage de la difficulté par des pilules de couleur SaaS (`.badge-difficulty`) et des icônes d'horloge harmonisés.
+- `[x]` **Étape 2 : Polish Esthétique & Design System (CSS)**
+  - `[x]` Styliser le panneau vedette héroïque avec reflets en verre néon dans `static/mode-selection.css`.
+  - `[x]` Styliser les onglets de catégories avec transitions de soulignement dynamique au hover/actif.
+  - `[x]` Créer les classes et styles des badges de difficulté SaaS (facile, moyen, difficile) et durée.
+- `[x]` **Étape 3 : Logique de Filtrage Alpine.js**
+  - `[x]` Associer chaque mode de jeu de la base de données à l'une des 4 catégories dans la structure de filtrage Alpine.
+  - `[x]` Implémenter la réactivité des onglets avec `x-show` et `visibleCount` dans `modeSelection`.
+- `[x]` **Étape 4 : Validation & Rendu**
+  - `[x]` Valider avec la suite complète de tests unitaires (`make test`).
+  - `[x]` Valider avec la suite complète de tests Playwright E2E (`make test-e2e`).
+  - `[x]` Capturer les visuels de la nouvelle interface du menu de sélection des modes.

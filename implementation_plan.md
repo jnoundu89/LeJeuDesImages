@@ -1,78 +1,58 @@
-# Plan d'implémentation : Refonte Visuelle & Polish UX (Proposition 3)
+# Plan d'implémentation : Restructuration Ergonomique du Menu Principal (Modes de Jeu)
 
-Ce plan décrit les modifications à apporter au design du jeu pour offrir une esthétique moderne et interactive (effet de verre / glassmorphism, micro-animations Alpine.js, transitions fluides et ombres soignées).
+Ce document présente notre proposition de restructuration complète du menu de sélection des modes de jeu. L'objectif est d'éliminer la surcharge cognitive (cognitive overload) d'une grille plate uniforme en introduisant des catégories de jeux thématiques, une bannière héroïque mettant en valeur un défi vedette, des boutons filtres avancés (style iOS) et des indicateurs de difficulté et durée grandement clarifiés.
 
 ## User Review Required
 
-> [!NOTE]
-> Toutes les modifications esthétiques s'appuient sur les tokens existants du design system (`design-tokens.css`). Nous n'ajoutons pas de variables globales supplémentaires pour préserver la portabilité et le fonctionnement des 16 palettes du sélecteur de thème.
+> [!IMPORTANT]
+> - **Catégorisation des Modes** : Nous regroupons les modes de jeu en 4 grandes familles claires et engageantes pour guider immédiatement les joueurs selon leurs envies :
+>   1. 🌟 **Les Incontournables** : Modes classiques et équilibrés (Normal, Devinette, Quiz).
+>   2. 👁️ **Défis Visuels** : Modes mystérieux basés sur la reconnaissance visuelle (Pixelisation, Silhouette, Visage Scrambled, Memory).
+>   3. 💼 **RH & Carrière** : Modes axés sur la culture d'entreprise (Poste/Position Match, Seniority/Âge, Miroir, Indices).
+>   4. ⚡ **Contre-la-Montre** : Modes rapides et dynamiques (Timed, Speed, Émojis).
+> - **Défi Vedette du Jour (Featured Banner)** : Intégration d'un panneau héroïque interactif en haut du menu mettant en avant un mode de jeu phare avec son illustration 3D, pour donner envie de lancer une partie en un clic.
+> - **Filtrage Intelligent des Modes Verrouillés (QoL)** : Ajout d'un interrupteur (switch style iOS) permettant aux joueurs de masquer instantanément les modes verrouillés (ceux nécessitant des colonnes CSV absentes dans le dataset actuel).
+
+---
+
+## Open Questions
+
+> [!IMPORTANT]
+> 1. **Tri par défaut** : Préférez-vous que les modes soient présentés sous forme d'**onglets interactifs** (un seul groupe visible à la fois, ex: Incontournables, Visuels, RH, etc.) ou sous forme de **sections déroulantes** empilées verticalement pour pouvoir tout parcourir d'un coup d'œil ?
+> 2. **Mode Vedette** : Souhaitez-vous que le mode vedette affiché en haut soit statique (le "Mode Normal", parfait pour débuter) ou dynamique (sélectionné aléatoirement parmi les modes disponibles à chaque chargement) ?
+
+---
 
 ## Proposed Changes
 
-### [Axe 1 : Glassmorphism & Panneaux]
+### [Composant : Menu de Sélection des Modes]
 
-#### [MODIFY] [gameplay.css](file:///mnt/c/Users/yassi/PycharmProjects/PythonProject/LeJeuDesImages/static/gameplay.css)
-* Remplacer le fond uni des 3 panneaux de jeu principaux (`.stats`, `.right-content`, `.center-content`) par un effet de verre transparent moderne :
-  ```css
-  background: color-mix(in srgb, var(--card-bg, var(--surface)) 82%, transparent);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.08);
-  ```
-* Ajouter des transitions globales sur toutes les actions interactives (survol, focus, clic) pour un rendu extrêmement fluide.
+Nous allons réécrire l'agencement et l'ergonomie du menu de sélection des modes dans le template HTML et le fichier CSS associé :
 
----
-
-### [Axe 2 : Mode Selection & Hover Effects]
+#### [MODIFY] [mode_selection.html](file:///mnt/c/Users/yassi/PycharmProjects/PythonProject/LeJeuDesImages/templates/mode_selection.html)
+- **Bannière Héroïque Vedette (Featured)** : Insérer un conteneur `.featured-challenge-banner` contenant le mode vedette avec une description détaillée et un aperçu 3D grand format.
+- **Barre d'Onglets Thématiques (Category Tabs)** :
+  - Créer un panneau de navigation à onglets avec Alpine.js (`activeCategory`).
+  - Définir 4 onglets majeurs : `all` (Tous), `classics` (Incontournables), `visual` (Visuels), `career` (RH & Carrière), `speed` (Rapidité).
+- **Interrupteur Modernisé pour les Modes Disponibles** : Remplacer le filtre standard par un magnifique switch style iOS ou bouton toggle pour filtrer les modes jouables immédiatement.
+- **Badge de Difficulté Premium** : Remplacer les 3 points par des badges colorés SaaS (`.badge-difficulty-easy`, `.badge-difficulty-medium`, `.badge-difficulty-hard`) avec icônes de jauge distinctives.
 
 #### [MODIFY] [mode-selection.css](file:///mnt/c/Users/yassi/PycharmProjects/PythonProject/LeJeuDesImages/static/mode-selection.css)
-* Améliorer le survol des cartes de jeu (`.mode-card`) :
-  * Légère élévation en 3D (`transform: translateY(-4px) scale(1.025)`).
-  * Lueur diffuse de la couleur primaire de l'entreprise (`box-shadow: 0 12px 24px var(--primary-ring)`).
-  * Transition douce sur 0.3s avec une courbe de Bézier premium (`transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1)`).
+- **Featured Banner Styling** : Gradients de verre dépoli à fort contraste avec reflets néon, angles arrondis adoucis, et mise en valeur de la composition 3D interactive.
+- **Category Tabs Styles** : Liens d'onglets premium avec indicateurs de sélection soulignés de manière dynamique (`transform: scaleX()`), micro-animations de hover.
+- **Badges de Difficulté & Durée** : Pilules colorées très lisibles s'adaptant à la palette de couleurs du thème actif.
 
 ---
-
-### [Axe 3 : Alpine.js Transitions & Gameplay Animations]
-
-#### [MODIFY] [base_game.html](file:///mnt/c/Users/yassi/PycharmProjects/PythonProject/LeJeuDesImages/templates/base_game.html)
-* Ajouter des animations d'entrée Alpine.js (`x-transition`) sur les différents éléments dynamiques :
-  * Bannière de statistiques (`.stats-banner`) : transition fluide en fondu/hauteur au dépliage.
-  * Bouton "Personne suivante" (`#next`) : transition d'opacité et d'échelle (`scale`) lorsqu'il passe de l'état désactivé à activé.
-
-#### [MODIFY] [game-alpine.js](file:///mnt/c/Users/yassi/PycharmProjects/PythonProject/LeJeuDesImages/static/game-alpine.js)
-* Optimiser les contrôles d'état dans le store Alpine pour soutenir ces transitions sans à-coups visuels.
-
----
-
-### [Axe 4 : Polish des boutons et du minuteur]
-
-#### [MODIFY] [design-tokens.css](file:///mnt/c/Users/yassi/PycharmProjects/PythonProject/LeJeuDesImages/static/design-tokens.css)
-* Ajuster les styles de boutons génériques pour intégrer un effet de brillance ou de lueur diffuse au survol (boutons `.btn-primary` et choix de jeu).
-
----
-
-## Spécifications de Design Validées (Entretien /grill-me)
-
-Suite à notre entretien interactif, les choix esthétiques suivants ont été validés et intégrés aux objectifs d'implémentation :
-1. **Feedback de Réponse (Correcte/Incorrecte)** : Onde de choc lumineuse en CSS (ripple/glow pulse) autour du bouton cliqué + lueur diffuse de la couleur de statut (vert succès / rouge danger) sur tout le panneau de jeu central.
-2. **Effet d'Urgence du Minuteur** : Effet d'horloge numérique rétro en police pixel (VT323) qui s'illumine et tremble légèrement (glitch/shake effect) à chaque seconde qui s'écoule dès que le temps passe sous la barre critique des 15 secondes.
-3. **Transition entre les Questions** : Effet de flux continu de type "Card Slide" (la question en cours glisse doucement vers la gauche en s'estompant, et la nouvelle question glisse depuis la droite en fondu).
-4. **Survol des Boutons de Choix** : Effet de balayage brillant (shimmer reflection) au survol, accompagné d'un léger agrandissement (scale 1.03) et d'un liseré néon de la couleur primaire.
 
 ## Verification Plan
 
 ### Automated Tests
-- Relancer la suite complète de tests locaux pour s'assurer qu'aucune modification CSS ou HTML ne casse les sélecteurs requis par les tests E2E Playwright.
+- Lancer les tests unitaires et d'intégration E2E pour valider que la navigation et les sélecteurs de cartes de modes (`.mode-card`, `[data-mode]`) restent pleinement opérationnels :
   ```bash
   make test
+  make test-e2e
   ```
 
 ### Manual Verification
-- Démarrer l'application locale :
-  ```bash
-  make run
-  ```
-- Naviguer sur `http://localhost:5000` et tester la fluidité des animations de survol des cartes.
-- Lancer une partie en Mode Normal, observer l'effet de flou d'arrière-plan (glassmorphism) sur les colonnes gauche/droite et le comportement du bouton "Suivant" avec son animation Alpine.js.
+- Naviguer sur `http://localhost:5000/` pour parcourir la nouvelle interface.
+- Vérifier le fonctionnement dynamique des filtres de catégorie en un clic, le toggle des modes verrouillés, et l'ergonomie générale du menu.

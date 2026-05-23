@@ -32,6 +32,69 @@
 <div x-data="modeSelection({
         hideUnavailable: {{ 'true' if hide_unavailable_modes else 'false' }}
     })">
+
+    {% if featured_mode %}
+    <div class="featured-challenge-banner">
+        <div class="featured-content">
+            <span class="featured-badge">
+                <i class="fa-solid fa-fire-flame-curved" aria-hidden="true"></i>
+                {{ _('DÉFI DU JOUR') }}
+            </span>
+            <h2 class="featured-title">{{ featured_mode.display_name }}</h2>
+            <p class="featured-description">{{ featured_mode.description }}</p>
+            <div class="featured-meta">
+                <span class="featured-meta-item">
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    ~{{ (featured_mode.estimated_duration_sec / 60)|round(0, 'ceil')|int }} {{ _('min') }}
+                </span>
+                <span class="featured-meta-item">
+                    <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+                    <span class="featured-difficulty">
+                        {% if featured_mode.difficulty == 1 %}{{ _('Facile') }}
+                        {% elif featured_mode.difficulty == 2 %}{{ _('Moyen') }}
+                        {% else %}{{ _('Difficile') }}
+                        {% endif %}
+                    </span>
+                </span>
+            </div>
+            <a href="{{ url_for('game.start_mode', mode_name=featured_mode.name) }}" class="btn btn-primary btn-lg featured-cta-btn">
+                <i class="fa-solid fa-play" aria-hidden="true"></i>
+                {{ _('Lancer le défi') }}
+            </a>
+        </div>
+        <div class="featured-visual-deck">
+            {% with mode=featured_mode %}
+                {% include '_mode_preview.html' %}
+            {% endwith %}
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="category-tabs-wrapper">
+        <div class="category-tabs" role="tablist" aria-label="{{ _('Catégories de modes de jeu') }}">
+            <button type="button" class="category-tab" :class="{ 'is-active': activeCategory === 'all' }" @click="activeCategory = 'all'" role="tab" :aria-selected="activeCategory === 'all'">
+                <i class="fa-solid fa-border-all" aria-hidden="true"></i>
+                <span>{{ _('Tous les modes') }}</span>
+            </button>
+            <button type="button" class="category-tab" :class="{ 'is-active': activeCategory === 'classics' }" @click="activeCategory = 'classics'" role="tab" :aria-selected="activeCategory === 'classics'">
+                <i class="fa-solid fa-star" aria-hidden="true"></i>
+                <span>{{ _('Les Incontournables') }}</span>
+            </button>
+            <button type="button" class="category-tab" :class="{ 'is-active': activeCategory === 'visual' }" @click="activeCategory = 'visual'" role="tab" :aria-selected="activeCategory === 'visual'">
+                <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                <span>{{ _('Défis Visuels') }}</span>
+            </button>
+            <button type="button" class="category-tab" :class="{ 'is-active': activeCategory === 'career' }" @click="activeCategory = 'career'" role="tab" :aria-selected="activeCategory === 'career'">
+                <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+                <span>{{ _('RH & Carrière') }}</span>
+            </button>
+            <button type="button" class="category-tab" :class="{ 'is-active': activeCategory === 'speed' }" @click="activeCategory = 'speed'" role="tab" :aria-selected="activeCategory === 'speed'">
+                <i class="fa-solid fa-bolt" aria-hidden="true"></i>
+                <span>{{ _('Contre-la-Montre') }}</span>
+            </button>
+        </div>
+    </div>
+
     <div class="filter-bar" role="search" aria-label="{{ _('Filtrer les modes de jeu') }}">
         <label class="field">
             <i class="fa-solid fa-search" aria-hidden="true"></i>
@@ -63,22 +126,18 @@
                 </div>
             </div>
 
-            {% if all_tags %}
-            <div class="filter-group">
-                <span class="filter-group-label">{{ _('Thèmes') }}</span>
-                <div class="filter-group-chips">
-                    {% for tag in all_tags %}
-                    <button type="button"
-                            class="chip"
-                            :class="{ 'is-active': selectedTags.includes('{{ tag.key }}') }"
-                            @click="toggleTag('{{ tag.key }}')"
-                            :aria-pressed="selectedTags.includes('{{ tag.key }}') ? 'true' : 'false'">
-                        {{ tag.label }}
-                    </button>
-                    {% endfor %}
-                </div>
+            <div class="filter-group filter-group-toggle">
+                <span class="filter-group-label">{{ _('Masquer verrouillés') }}</span>
+                <button type="button"
+                        class="ios-switch"
+                        :class="{ 'is-active': hideUnavailable }"
+                        @click="hideUnavailable = !hideUnavailable; recomputeVisible()"
+                        role="switch"
+                        :aria-checked="hideUnavailable ? 'true' : 'false'"
+                        aria-label="{{ _('Masquer les modes verrouillés') }}">
+                    <span class="ios-switch-thumb"></span>
+                </button>
             </div>
-            {% endif %}
         </div>
     </div>
 
@@ -90,7 +149,7 @@
         </span>
         <button type="button"
                 class="btn btn-ghost btn-sm"
-                x-show="search !== '' || difficulty !== null || selectedTags.length > 0"
+                x-show="search !== '' || difficulty !== null || activeCategory !== 'all'"
                 @click="reset()">
             <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
             {{ _('Réinitialiser') }}
@@ -124,11 +183,22 @@
 
             <div class="mode-card-title">
                 <h2>{{ mode.display_name }}</h2>
-                <span class="mode-card-difficulty" aria-label="{{ _('Difficulté') }}: {{ mode.difficulty }}/3">
-                    {% for i in range(3) %}
-                        <span class="dot {% if i < mode.difficulty %}is-active{% endif %}"></span>
-                    {% endfor %}
-                </span>
+                {% if mode.difficulty == 1 %}
+                    <span class="badge-difficulty badge-difficulty-easy">
+                        <i class="fa-solid fa-gauge-simple-min" aria-hidden="true"></i>
+                        {{ _('Facile') }}
+                    </span>
+                {% elif mode.difficulty == 2 %}
+                    <span class="badge-difficulty badge-difficulty-medium">
+                        <i class="fa-solid fa-gauge" aria-hidden="true"></i>
+                        {{ _('Moyen') }}
+                    </span>
+                {% else %}
+                    <span class="badge-difficulty badge-difficulty-hard">
+                        <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
+                        {{ _('Difficile') }}
+                    </span>
+                {% endif %}
             </div>
 
             <p class="mode-card-description">{{ mode.description }}</p>
@@ -228,20 +298,53 @@ document.addEventListener('alpine:init', () => {
         modalMessage: '',
         modalMissingFields: [],
         currentDatasetId: window.CURRENT_DATASET_ID,
+        activeCategory: 'all',
+
+        categoryMapping: {
+            'normal': 'classics',
+            'team_guess': 'classics',
+            'quiz': 'classics',
+            'example': 'classics',
+            'pixelation': 'visual',
+            'silhouette': 'visual',
+            'scrambled_face': 'visual',
+            'memory': 'visual',
+            'mirror': 'visual',
+            'missing_person': 'visual',
+            'position_match': 'career',
+            'seniority': 'career',
+            'age': 'career',
+            'clue': 'career',
+            'progressive_hint': 'career',
+            'manager': 'career',
+            'timed': 'speed',
+            'speed': 'speed',
+            'emoji_challenge': 'speed',
+            'team': 'speed'
+        },
 
         init() {
             this.$nextTick(() => this.recomputeVisible());
             this.$watch('search', () => this.recomputeVisible());
             this.$watch('difficulty', () => this.recomputeVisible());
             this.$watch('selectedTags', () => this.recomputeVisible());
+            this.$watch('activeCategory', () => this.recomputeVisible());
         },
 
         matches(el) {
             const search = this.search.trim().toLowerCase();
             const difficulty = this.difficulty;
             const tags = this.selectedTags;
+            const category = this.activeCategory;
 
             if (this.hideUnavailable && el.classList.contains('is-unavailable')) return false;
+
+            // Filter by category tab
+            if (category !== 'all') {
+                const modeName = el.dataset.mode;
+                const mappedCat = this.categoryMapping[modeName] || 'classics';
+                if (mappedCat !== category) return false;
+            }
 
             if (search && !el.dataset.search.toLowerCase().includes(search)) return false;
             if (difficulty !== null && Number(el.dataset.difficulty) !== difficulty) return false;
@@ -269,6 +372,7 @@ document.addEventListener('alpine:init', () => {
             this.search = '';
             this.difficulty = null;
             this.selectedTags = [];
+            this.activeCategory = 'all';
         },
 
         showUnavailable(modeName) {

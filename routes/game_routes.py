@@ -86,10 +86,15 @@ def init_routes(registry: DatasetRegistry) -> Blueprint:
         tag_keys = sorted({tag for m in modes for tag in m['tags']})
         all_tags = [{'key': t, 'label': _tag_label(t)} for t in tag_keys]
 
+        # Select a random available mode to be the Featured Challenge of the day
+        available_modes = [m for m in modes if m['available']]
+        featured_mode = random.choice(available_modes) if available_modes else None
+
         return render_template(
             'mode_selection.html',
             modes=modes,
             all_tags=all_tags,
+            featured_mode=featured_mode,
             available_count=sum(1 for m in modes if m['available']),
             hide_unavailable_modes=ds.config.hide_unavailable_modes,
         )
