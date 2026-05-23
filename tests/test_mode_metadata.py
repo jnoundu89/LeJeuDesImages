@@ -9,7 +9,7 @@ from models.game_mode import GameMode
 
 KNOWN_PREVIEW_TYPES = {
     'static', 'pixelation', 'silhouette', 'scrambled', 'emoji',
-    'clue', 'memory', 'age', 'normal',
+    'clue', 'memory', 'age', 'normal', 'zoom',
 }
 
 

@@ -1,0 +1,144 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Zoom') }}{% endblock %}
+
+{% block mode_styles %}
+        .zoom-game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .zoom-image-wrapper {
+            width: 240px;
+            height: 240px;
+            margin: 0 auto var(--space-4);
+            border-radius: var(--radius-md);
+            border: 2px solid var(--border-strong);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            background: var(--surface-2);
+            position: relative;
+        }
+        .zoom-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform-origin: center center;
+            transition: transform 0.2s linear;
+        }
+        .zoom-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+        .score-info {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            margin-top: var(--space-2);
+        }
+{% endblock %}
+
+{% block game_title %}{{ _("Mode Zoom - Identifiez la personne au fur et à mesure que la photo dézoome") }}{% endblock %}
+
+{% block game_content %}
+        <div class="zoom-image-wrapper">
+            <img id="zoom-image" src="{{ image_url }}" alt="Photo d'employé" class="zoom-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'">
+        </div>
+        <div class="score-info" id="score-info">{{ _('Points possibles') }}: 3</div>
+{% endblock %}
+
+{% block base_timer %}
+        <!-- Override timer to start at 30 seconds -->
+        <div x-data="gameTimer(30)" data-label="{{ _('Temps restant') }}"
+             class="timer"
+             :class="{ warning: isWarning, danger: isDanger }"
+             x-text="display"
+             id="timer">
+        </div>
+{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="remaining_sec" id="remaining-sec" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="zoom-game-container" x-data="singleAnswer('{{ correct_name }}')">
+        <div class="zoom-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="zoom-choice-btn choice-btn"
+                    @click="check('{{ name }}', $el); onZoomAnswered()">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    let zoomAnswered = false;
+    let initialZoom = 8;
+    let finalZoom = 1;
+    let totalTime = 30;
+
+    // Called after Alpine singleAnswer.check() runs
+    function onZoomAnswered() {
+        zoomAnswered = true;
+        
+        // Stop timer
+        var timerEl = document.querySelector('[x-data^="gameTimer"]');
+        if (timerEl && timerEl._x_dataStack && timerEl._x_dataStack[0]) {
+            var timerData = timerEl._x_dataStack[0];
+            timerData.stop();
+            document.getElementById('remaining-sec').value = timerData.remaining;
+        }
+        
+        // Fully zoom out to scale(1) to reveal the answer clearly
+        document.getElementById('zoom-image').style.transform = 'scale(1)';
+    }
+
+    // Initialize and watch for timer countdown to update zoom level smoothly
+    document.addEventListener('DOMContentLoaded', function() {
+        const updateZoom = setInterval(function() {
+            if (zoomAnswered) {
+                clearInterval(updateZoom);
+                return;
+            }
+
+            var timerEl = document.querySelector('[x-data^="gameTimer"]');
+            if (!timerEl) return;
+            var timerData = timerEl._x_dataStack && timerEl._x_dataStack[0];
+            if (!timerData) return;
+
+            // If timer expired
+            if (timerData.expired) {
+                clearInterval(updateZoom);
+                zoomAnswered = true;
+                document.getElementById('remaining-sec').value = 0;
+                document.getElementById('zoom-image').style.transform = 'scale(1)';
+                return;
+            }
+
+            // Calculate progress and scale smoothly
+            let remaining = timerData.remaining;
+            let ratio = remaining / totalTime; // 1 at start down to 0 at end
+            let currentScale = finalZoom + (initialZoom - finalZoom) * ratio;
+            
+            document.getElementById('zoom-image').style.transform = 'scale(' + currentScale + ')';
+            
+            // Calculate dynamic possible points
+            let possiblePoints = 1;
+            if (remaining > 20) {
+                possiblePoints = 3;
+            } else if (remaining > 10) {
+                possiblePoints = 2;
+            }
+            document.getElementById('score-info').textContent = '{{ _("Points possibles") }}: ' + possiblePoints;
+        }, 100);
+    });
+{% endblock %}

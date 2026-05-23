@@ -62,6 +62,14 @@
             <div class="preview-memory-card preview-memory-card-2"></div>
         </div>
 
+    {% elif ptype == 'zoom' %}
+        <div class="preview-zoom-lens">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <div class="preview-zoom-avatar">
+            <i class="fa-solid fa-user"></i>
+        </div>
+
     {% else %}
         {# static fallback: centred neon icon with mesh overlay #}
         <div class="preview-mesh-grid"></div>
