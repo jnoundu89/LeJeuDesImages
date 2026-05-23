@@ -26,6 +26,7 @@
             object-fit: cover;
             transform-origin: center center;
             transition: transform 0.2s linear;
+            transform: scale(18); /* Prevent initial unzoomed flash */
         }
         .zoom-choices {
             display: grid;
@@ -45,9 +46,8 @@
 
 {% block game_content %}
         <div class="zoom-image-wrapper">
-            <img id="zoom-image" src="{{ image_url }}" alt="Photo d'employé" class="zoom-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'">
+            <img id="zoom-image" src="{{ image_url }}" alt="Photo d'employé" class="zoom-image" style="transform: scale(18);" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'">
         </div>
-        <div class="score-info" id="score-info">{{ _('Points possibles') }}: 3</div>
 {% endblock %}
 
 {% block base_timer %}
@@ -82,7 +82,7 @@
 
 {% block game_scripts %}
     let zoomAnswered = false;
-    let initialZoom = 8;
+    let initialZoom = 18;
     let finalZoom = 1;
     let totalTime = 30;
 
@@ -130,15 +130,6 @@
             let currentScale = finalZoom + (initialZoom - finalZoom) * ratio;
             
             document.getElementById('zoom-image').style.transform = 'scale(' + currentScale + ')';
-            
-            // Calculate dynamic possible points
-            let possiblePoints = 1;
-            if (remaining > 20) {
-                possiblePoints = 3;
-            } else if (remaining > 10) {
-                possiblePoints = 2;
-            }
-            document.getElementById('score-info').textContent = '{{ _("Points possibles") }}: ' + possiblePoints;
         }, 100);
     });
 {% endblock %}
