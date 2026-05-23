@@ -1,12 +1,34 @@
 # Le Jeu Des Images
 
-A company-agnostic team recognition game — identify your colleagues from photos across 21 game modes. Register **multiple datasets** (one per company) from the browser and switch between them at runtime; no YAML editing required.
+A company-agnostic team recognition game — identify your colleagues from photos across 22 game modes. Register **multiple datasets** (one per company) from the browser and switch between them at runtime; no YAML editing required.
 
 [![CI](https://github.com/jnoundu89/LeJeuDesImages/actions/workflows/ci.yml/badge.svg)](https://github.com/jnoundu89/LeJeuDesImages/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.10%2B-brightgreen)
 ![Flask](https://img.shields.io/badge/Flask-2.3%2B-orange)
 ![i18n](https://img.shields.io/badge/i18n-FR%20%7C%20EN-blue)
 ![Docker](https://img.shields.io/badge/Docker-ready-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+## Screenshots & Demo
+
+<table>
+  <tr>
+    <td><b>Gameplay Interface (Normal Mode)</b></td>
+    <td><b>Visual Customizations & Themes</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/normal-mode.png" alt="Normal Mode Gameplay" width="400"></td>
+    <td><img src="docs/images/palettes-16.png" alt="Themes Customization" width="400"></td>
+  </tr>
+  <tr>
+    <td><b>Special Game Skins & Particle Effects</b></td>
+    <td><b>Admin Setup Dashboard (Presets)</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/images/game-with-particles.png" alt="Particles Effect" width="400"></td>
+    <td><img src="docs/images/presets-list.png" alt="Presets Selection" width="400"></td>
+  </tr>
+</table>
 
 ## TL;DR
 
@@ -253,7 +275,7 @@ models/
   score.py                 # ScoreManager (per-dataset TinyDB)
   game.py                  # GameManager (core orchestration)
   game_mode.py             # GameMode ABC + helpers + Factory
-  *_mode.py                # 21 game modes (auto-discovered per dataset)
+  *_mode.py                # 22 game modes (auto-discovered per dataset)
 routes/
   game_routes.py           # Per-request dataset resolution
   admin_routes.py          # /setup datasets + employees CRUD (+ login form)
@@ -325,6 +347,8 @@ class MyMode(GameMode):
 ```
 
 Create `templates/my_mode.html` extending `base_game.html`. That's it — auto-discovery handles registration.
+
+We welcome community contributions! Feel free to create a Pull Request to add your own creative game modes or enhancements using our auto-discovery architecture. Check out [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Troubleshooting
 
