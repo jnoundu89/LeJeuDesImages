@@ -28,6 +28,7 @@
             transition: transform 0.2s linear, opacity 0.15s ease-in-out;
             transform: scale(18); /* Prevent initial unzoomed flash */
             opacity: 0; /* Hidden initially to avoid flash on question transition */
+            animation: none !important; /* Disable the global employee-photo-fade animation */
         }
         .zoom-choices {
             display: grid;
