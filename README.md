@@ -9,26 +9,6 @@ A company-agnostic team recognition game — identify your colleagues from photo
 ![Docker](https://img.shields.io/badge/Docker-ready-blue)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Screenshots & Demo
-
-<table>
-  <tr>
-    <td><b>Gameplay Interface (Normal Mode)</b></td>
-    <td><b>Visual Customizations & Themes</b></td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/normal-mode.png" alt="Normal Mode Gameplay" width="400"></td>
-    <td><img src="docs/images/palettes-16.png" alt="Themes Customization" width="400"></td>
-  </tr>
-  <tr>
-    <td><b>Special Game Skins & Particle Effects</b></td>
-    <td><b>Admin Setup Dashboard (Presets)</b></td>
-  </tr>
-  <tr>
-    <td><img src="docs/images/game-with-particles.png" alt="Particles Effect" width="400"></td>
-    <td><img src="docs/images/presets-list.png" alt="Presets Selection" width="400"></td>
-  </tr>
-</table>
 
 ## TL;DR
 
