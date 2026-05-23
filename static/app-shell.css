@@ -1,0 +1,331 @@
+/* Page shell: sticky header, footer, main content flow.
+ * Used by base_page.html (mode selection, scores, about, how-to-play).
+ */
+@layer components {
+    /* particles.js / fireworks-bg.js backdrop. The empty `<div>` is
+     * the container the vendored particles.js library writes its
+     * canvas into; for the fireworks effect we inject a canvas
+     * ourselves. Either way it stays pinned behind app content via
+     * z-index 0. The shell sits in its own stacking context
+     * (z-index: 1) so its descendants — including the sticky header
+     * at z-index: 50 — stay above. */
+    .particles-bg {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    /* particles.js writes a `<canvas class="particles-js-canvas-el">`.
+     * Make absolutely sure it tracks the container. */
+    .particles-bg > canvas {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .app-shell {
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Skip link: hidden off-screen until focused, then visible in the
+     * top-left so keyboard users can jump over the header nav. */
+    .skip-link {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: var(--space-2) var(--space-4);
+        background: var(--primary);
+        color: var(--primary-contrast);
+        font-weight: 600;
+        border-radius: 0 0 var(--radius) 0;
+        transform: translateY(-100%);
+        transition: transform var(--dur-fast) var(--ease);
+        z-index: 100;
+    }
+    .skip-link:focus {
+        transform: translateY(0);
+        color: var(--primary-contrast);
+    }
+
+    /* Header -------------------------------------------------------- */
+    /* `--header-bg` and `--header-text` are admin-overridable from the
+     * wizard. Default to surface/text so a dataset that doesn't touch
+     * them keeps the previous translucent-light look. When set to a
+     * dark color (e.g. Infolegale's navy `#041E42`), every descendant
+     * that previously relied on `--text` / `--text-soft` flips via
+     * the same custom-property indirection — no manual `dark` class. */
+    .app-header {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        background: color-mix(in srgb, var(--header-bg, var(--surface)) 92%, transparent);
+        backdrop-filter: saturate(180%) blur(12px);
+        -webkit-backdrop-filter: saturate(180%) blur(12px);
+        border-bottom: 1px solid color-mix(in srgb, var(--header-text, var(--text)) 18%, transparent);
+        color: var(--header-text, var(--text));
+    }
+    .app-header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        height: var(--header-height);
+    }
+    .app-brand {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        color: var(--header-text, var(--text));
+        font-weight: 650;
+        font-size: var(--text-base);
+        min-width: 0;
+    }
+    .app-brand:hover { color: var(--header-text, var(--text)); }
+    .app-brand-logo {
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+        border-radius: var(--radius-sm);
+        background: var(--surface-2);
+        flex: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes app-brand-float {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-3px); }
+        }
+        .app-brand-logo,
+        .app-brand-fallback {
+            animation: app-brand-float 4s ease-in-out infinite;
+        }
+    }
+    .app-brand-fallback {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-sm);
+        display: grid;
+        place-items: center;
+        background: var(--primary-subtle);
+        color: var(--primary);
+        font-weight: 700;
+        flex: none;
+    }
+    .app-brand-name {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.1;
+        min-width: 0;
+    }
+    .app-brand-name strong {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: var(--text-sm);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--header-text, var(--text));
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    /* Bracketed brand name "[ NAME ]" — purely cosmetic, mono font
+     * already gives the arcade vibe; the brackets seal it. */
+    .app-brand-name strong::before { content: "[ "; opacity: 0.45; }
+    .app-brand-name strong::after { content: " ]"; opacity: 0.45; }
+    .app-brand-name small {
+        font-weight: 450;
+        font-size: var(--text-xs);
+        /* Tagline reads at 65% opacity so it sits under the brand name
+         * on both light and dark headers without needing a separate
+         * `--header-text-muted` token. */
+        color: color-mix(in srgb, var(--header-text, var(--text-muted)) 65%, transparent);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .app-nav {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    .app-nav-link {
+        padding: var(--space-2) var(--space-3);
+        border-radius: 2px;
+        /* Inactive links sit at 80% header text — readable on both
+         * light and dark headers. Active state uses --primary. */
+        color: color-mix(in srgb, var(--header-text, var(--text-soft)) 80%, transparent);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: var(--text-xs);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        transition: color var(--dur-fast) var(--ease),
+                    background var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+    }
+    .app-nav-link:hover {
+        background: color-mix(in srgb, var(--header-text, var(--text)) 10%, transparent);
+        color: var(--header-text, var(--text));
+        box-shadow: var(--glow-sm);
+    }
+    .app-nav-link.is-active {
+        color: var(--primary);
+        background: color-mix(in srgb, var(--primary) 18%, transparent);
+        box-shadow: var(--glow-sm);
+    }
+
+    .app-header-actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+
+    /* Header switchers (dataset + language) */
+    .app-switchers {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+    .app-dataset-select {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: 0 var(--space-3);
+        height: 36px;
+        border-radius: var(--radius-pill);
+        border: 1px solid var(--border-strong);
+        background: var(--surface);
+        cursor: pointer;
+        position: relative;
+        max-width: 220px;
+    }
+    .app-dataset-select:hover { background: var(--surface-2); }
+    .app-dataset-select::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--primary);
+        flex: none;
+    }
+    .app-dataset-select select {
+        appearance: none;
+        background: transparent;
+        border: 0;
+        outline: none;
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text);
+        cursor: pointer;
+        padding-right: var(--space-4);
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .app-dataset-select::after {
+        content: "";
+        position: absolute;
+        right: var(--space-3);
+        top: 50%;
+        width: 6px;
+        height: 6px;
+        border-right: 2px solid var(--text-muted);
+        border-bottom: 2px solid var(--text-muted);
+        transform: translateY(-70%) rotate(45deg);
+        pointer-events: none;
+    }
+
+    .app-lang-switch {
+        display: inline-flex;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-pill);
+        background: var(--surface);
+        padding: 2px;
+        height: 36px;
+        align-items: center;
+    }
+    .app-lang-switch a {
+        padding: 0 var(--space-3);
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: var(--radius-pill);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--text-muted);
+        transition: background var(--dur-fast) var(--ease),
+                    color var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+    }
+    .app-lang-switch a.is-active { box-shadow: var(--glow-sm); }
+    .app-lang-switch a.is-active {
+        background: var(--primary);
+        color: var(--primary-contrast);
+    }
+    .app-lang-switch a:not(.is-active):hover {
+        background: var(--surface-2);
+        color: var(--text);
+    }
+
+    /* Main ---------------------------------------------------------- */
+    .app-main {
+        flex: 1 0 auto;
+        padding-block: var(--space-10) var(--space-16);
+    }
+
+    /* Footer -------------------------------------------------------- */
+    /* Same indirection pattern as the header — `--footer-bg` /
+     * `--footer-text` let an admin theme the footer independently
+     * (e.g. dark navy footer over a light body). Footer text uses
+     * --text-muted as fallback because footers are typically muted. */
+    .app-footer {
+        margin-top: auto;
+        border-top: 1px solid color-mix(in srgb, var(--footer-text, var(--border)) 20%, transparent);
+        padding-block: var(--space-6);
+        background: var(--footer-bg, var(--surface));
+        color: var(--footer-text, var(--text-muted));
+    }
+    .app-footer-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        letter-spacing: 0.04em;
+        color: inherit;  /* picks up `--footer-text` via the `.app-footer` rule above */
+    }
+    .app-footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-4);
+    }
+    .app-footer-links a {
+        /* Inactive footer link sits at 90% of the footer text colour
+         * so it reads as a link without needing a separate token. */
+        color: color-mix(in srgb, var(--footer-text, var(--text-soft)) 90%, transparent);
+        font-weight: 500;
+    }
+    .app-footer-links a:hover { color: var(--primary); }
+
+    /* Responsive ---------------------------------------------------- */
+    @media (max-width: 720px) {
+        .app-nav { display: none; }
+        .app-brand-name small { display: none; }
+        .app-dataset-select { max-width: 140px; }
+    }
+}

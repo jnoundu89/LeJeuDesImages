@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ static_v('gameplay.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="{{ static_v('game-alpine.js') }}" defer></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>{% block mode_styles %}{% endblock %}</style>
+{% endblock %}
+
+{% block body %}
+{% include '_particles_bg.html' %}
+<div class="top-container">
+    <button class="top-right btn" onclick="window.location.href='/restart'">
+        <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+        {{ _('Recommencer') }}
+    </button>
+    {% with disable_dataset_switcher=true %}
+        {% include '_switchers.html' %}
+    {% endwith %}
+</div>
+
+<div class="main-layout" x-data x-init="$store.game.init()">
+    <!-- Colonne gauche - Statistiques -->
+    <div class="stats" x-data="statsToggle">
+        <button class="toggle-stats-btn" @click="toggle" x-text="open ? '{{ _('Masquer les statistiques') }}' : '{{ _('Afficher les statistiques') }}'">{{ _('Afficher les statistiques') }}</button>
+        <div id="stats-banner" class="stats-banner" x-show="open" x-transition>
+            <h2>{{ _('Statistiques de jeu') }}</h2>
+            <p>{{ _("Bonnes réponses pour l'entreprise") }} : <span class="score">{{ stats.company }}</span></p>
+            <p>{{ _("Bonnes réponses pour l'équipe") }} : <span class="score">{{ stats.team }}</span></p>
+            <p>{{ _('Bonnes réponses pour le nom') }} : <span class="score">{{ stats.name }}</span></p>
+            <p>{{ _('Bonnes réponses pour le poste') }} : <span class="score">{{ stats.position }}</span></p>
+        </div>
+    </div>
+
+    <!-- Colonne centrale - Photo et titre -->
+    <div class="center-content">
+        <h1 class="title">{% block game_title %}{% endblock %}</h1>
+        {% block progress_bar %}
+        <div x-data="progressBar" class="progress-bar">
+            <div class="progress-bar-fill" :style="'width:' + percentage + '%'" x-text="text"></div>
+        </div>
+        {% endblock %}
+        {% block game_content %}{% endblock %}
+        {% block base_timer %}
+        <div x-data="gameTimer(60)" data-label="{{ _('Temps restant') }}"
+             class="timer"
+             :class="{ warning: isWarning, danger: isDanger }"
+             x-text="display"
+             id="timer">
+        </div>
+        {% endblock %}
+        {% block after_timer %}{% endblock %}
+    </div>
+
+    <!-- Colonne droite - Scores et timer -->
+    <div class="right-content">
+        <div class="stats score-section">
+            <h2>{{ _('Scores') }}</h2>
+            {% block score_display %}
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score" x-text="$store.game.score + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span></p>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+<form action="/check" method="post" {% block form_attrs %}{% endblock %} x-data>
+    <button type="submit" id="next"
+            :disabled="!$store.game.nextEnabled"
+            :class="{ 'disabled-btn': !$store.game.nextEnabled }"
+            class="disabled-btn">
+        {{ _('Personne suivante') }}
+    </button>
+    {% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="score_increment" id="score-increment" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    {% endblock %}
+
+    {% block game_choices %}{% endblock %}
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    {% block game_scripts %}{% endblock %}
+</script>
+{% include '_particles_scripts.html' %}
+{% endblock %}

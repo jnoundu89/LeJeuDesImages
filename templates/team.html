@@ -1,0 +1,196 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Équipe') }}{% endblock %}
+
+{% block mode_styles %}
+        .team-title {
+            font-size: var(--text-lg);
+            font-weight: 650;
+            color: var(--primary);
+            text-align: center;
+        }
+        .team-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .team-members {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin: var(--space-4) 0;
+        }
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+        }
+        .member-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .member-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-2);
+            width: 100%;
+        }
+        .member-choice-btn {
+            padding: var(--space-2) var(--space-3);
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius);
+            font: inherit;
+            font-size: var(--text-xs);
+            cursor: pointer;
+            transition: background var(--dur-fast) var(--ease);
+        }
+        .member-choice-btn:hover:not(:disabled):not(.correct):not(.incorrect) {
+            background: var(--primary-subtle);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .member-choice-btn.correct {
+            background: var(--success-subtle);
+            border-color: var(--success);
+            color: var(--success);
+        }
+        .member-choice-btn.incorrect {
+            background: var(--danger-subtle);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .member-choice-btn:disabled { cursor: not-allowed; }
+        .submit-team {
+            display: block;
+            margin: var(--space-6) auto 0;
+            padding: 0 var(--space-6);
+            height: 48px;
+            font: inherit;
+            font-weight: 600;
+            color: var(--primary-contrast);
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+        .submit-team:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Équipe - Identifiez les membres') }}{% endblock %}
+
+{% block game_content %}
+        <div class="team-title">{{ _('Équipe') }} : {{ team_name }}</div>
+{% endblock %}
+
+{% block form_attrs %}id="team-form"{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answers" id="correct-answers" value="0">
+    <input type="hidden" name="total_members" id="total-members" value="{{ members|length }}">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="team-container">
+        <div class="team-members">
+            {% for member in members %}
+            <div class="team-member" id="member-{{ loop.index }}">
+                <div class="member-image-container">
+                    <img src="{{ member.image_url }}" alt="Photo d'employé" class="member-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                </div>
+                <div class="member-choices">
+                    {% for choice in member.choices %}
+                    <button type="button" class="member-choice-btn"
+                            data-correct="{{ member.name }}"
+                            data-selected="{{ choice }}"
+                            onclick="selectName(this)">
+                        {{ choice }}
+                    </button>
+                    {% endfor %}
+                </div>
+                <input type="hidden" class="member-correct" value="0">
+            </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="submit-team" class="submit-team" disabled onclick="submitTeam()">
+            {{ _("Valider l'équipe") }}
+        </button>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    var selectedMembers = 0;
+    var correctAnswers = 0;
+
+    function getTotalMembers() {
+        return parseInt(document.getElementById('total-members').value);
+    }
+
+    function selectName(button) {
+        var correct = button.getAttribute('data-correct');
+        var selected = button.getAttribute('data-selected');
+        var memberDiv = button.closest('.team-member');
+        var buttons = memberDiv.querySelectorAll('.member-choice-btn');
+
+        buttons.forEach(function(btn) { btn.disabled = true; });
+
+        if (correct === selected) {
+            button.classList.add('correct');
+            memberDiv.querySelector('.member-correct').value = 1;
+            correctAnswers++;
+        } else {
+            button.classList.add('incorrect');
+            buttons.forEach(function(btn) {
+                if (btn.textContent.trim() === correct) btn.classList.add('correct');
+            });
+        }
+
+        selectedMembers++;
+
+        if (selectedMembers === getTotalMembers()) {
+            document.getElementById('submit-team').disabled = false;
+        }
+    }
+
+    function submitTeam() {
+        document.getElementById('correct-answers').value = correctAnswers;
+        document.getElementById('team-form').submit();
+    }
+
+    // Watch for timer expiry to show correct answers
+    document.addEventListener('DOMContentLoaded', function() {
+        var checkExpiry = setInterval(function() {
+            var timerEl = document.querySelector('[x-data^="gameTimer"]');
+            if (!timerEl) return;
+            var timerData = timerEl._x_dataStack && timerEl._x_dataStack[0];
+            if (!timerData) return;
+
+            if (timerData.expired) {
+                clearInterval(checkExpiry);
+                document.querySelectorAll('.team-member').forEach(function(memberDiv) {
+                    var buttons = memberDiv.querySelectorAll('.member-choice-btn');
+                    buttons.forEach(function(btn) {
+                        btn.disabled = true;
+                        if (btn.textContent.trim() === btn.getAttribute('data-correct')) {
+                            btn.classList.add('correct');
+                        }
+                    });
+                });
+                document.getElementById('submit-team').disabled = false;
+            }
+        }, 200);
+    });
+{% endblock %}

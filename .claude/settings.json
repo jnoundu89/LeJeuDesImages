@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make test)",
+      "Bash(make lint)",
+      "Bash(make format)",
+      "Bash(make babel-extract)",
+      "Bash(make babel-compile)",
+      "Bash(make babel-update)",
+      "Bash(make validate-data)",
+      "Bash(uv run *)",
+      "Bash(uv sync *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git ls-files *)",
+      "Bash(mkdir *)",
+      "mcp__playwright__*"
+    ],
+    "deny": [
+      "Bash(git reset --hard *)",
+      "Bash(git checkout -- *)",
+      "Bash(rm -rf *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit *)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --extra dev ruff check . && uv run --extra dev pytest tests/ -x -q -m 'not e2e'",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}

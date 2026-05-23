@@ -1,0 +1,128 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Défi Emoji') }}{% endblock %}
+
+{% block mode_styles %}
+        .emoji-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .employee-image-container {
+            max-width: 220px;
+            margin: 0 auto;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: none;
+        }
+        .employee-image { width: 100%; display: block; }
+        .emoji-clues-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: var(--space-3);
+            max-width: 540px;
+            margin: var(--space-3) auto;
+        }
+        .emoji-clue {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-3);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .emoji-clue-label {
+            font-size: var(--text-xs);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .emoji-clue-value {
+            font-size: 1.75rem;
+            line-height: 1;
+        }
+        .emoji-personality {
+            font-size: 1.5rem;
+            letter-spacing: 0.3rem;
+            margin: var(--space-3) 0;
+        }
+        .emoji-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+        .reveal-image-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius);
+            font: inherit;
+            font-size: var(--text-sm);
+            cursor: pointer;
+            color: var(--text-soft);
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Défi Emoji - Qui suis-je?') }}{% endblock %}
+
+{% block game_content %}
+        <div class="emoji-clues-container">
+            <div class="emoji-clue">
+                <span class="emoji-clue-label">{{ _('Entreprise') }}:</span>
+                <span class="emoji-clue-value">{{ emoji_clues.company }}</span>
+            </div>
+            <div class="emoji-clue">
+                <span class="emoji-clue-label">{{ _('Équipe') }}:</span>
+                <span class="emoji-clue-value">{{ emoji_clues.team }}</span>
+            </div>
+            <div class="emoji-clue">
+                <span class="emoji-clue-label">{{ _('Poste') }}:</span>
+                <span class="emoji-clue-value">{{ emoji_clues.position }}</span>
+            </div>
+            <div class="emoji-personality">
+                {{ emoji_clues.personality }}
+            </div>
+        </div>
+
+        <div class="employee-image-container" id="employee-image-container">
+            <img id="employee-image" src="{{ image_url }}" alt="Photo d'employé" class="employee-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+        </div>
+
+        <button id="reveal-image-btn" class="reveal-image-btn" onclick="revealImage()">{{ _('Révéler la photo') }}</button>
+{% endblock %}
+
+{% block game_choices %}
+    <div class="emoji-container" x-data="singleAnswer('{{ correct_name }}')">
+        <div class="emoji-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="emoji-choice-btn choice-btn"
+                    @click="check('{{ name }}', $el); revealImage()">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    // Function to reveal the employee image
+    function revealImage() {
+        document.getElementById('employee-image-container').style.display = 'block';
+        document.getElementById('reveal-image-btn').disabled = true;
+        document.getElementById('reveal-image-btn').style.opacity = '0.5';
+    }
+
+    // Watch for timer expiry to auto-reveal
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkExpiry = setInterval(function() {
+            if (Alpine.store('game').answersCount > 0) {
+                clearInterval(checkExpiry);
+                revealImage();
+            }
+        }, 200);
+    });
+{% endblock %}

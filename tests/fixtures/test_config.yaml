@@ -1,0 +1,25 @@
+app:
+  contact_email: "test@example.com"
+  default_dataset: "test"
+
+datasets:
+  test:
+    company:
+      name: "Test Corp"
+      logo_url: "https://example.com/logo.png"
+      tagline: "A test company tagline"
+    data:
+      csv_path: "tests/fixtures/test_team.csv"
+      images_dir: "static/images"
+      scores_db_path: "data/test/scores.json"
+      column_mapping:
+        first_name: "firstName"
+        last_name: "lastName"
+        photo: "image_path"
+        team: "department_name"
+        job_title: "jobTitle"
+        company: "legalEntity_name"
+        sex: "sex"
+        birth_date: "birthDate"
+        contract_start: "dtContractStart"
+        manager_name: "manager_name"

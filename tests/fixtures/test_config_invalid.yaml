@@ -1,0 +1,8 @@
+company:
+  name: "Broken Corp"
+
+data:
+  # csv_path is missing
+  column_mapping:
+    first_name: "firstName"
+    # missing last_name, photo, team, job_title, company, sex

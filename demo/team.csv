@@ -1,0 +1,11 @@
+first_name,last_name,photo,team,job_title,company,sex,birth_date,contract_start,manager_name
+Alice,Martin,/photos/alice_martin.png,Engineering,Software Developer,DemoTech,F,1990-03-15,2020-01-10,Pierre Dupont
+Bob,Bernard,/photos/bob_bernard.png,Engineering,Tech Lead,DemoTech,M,1985-07-22,2018-06-01,Pierre Dupont
+Claire,Dubois,/photos/claire_dubois.png,Marketing,Marketing Manager,DemoTech,F,1992-11-08,2021-03-15,Sophie Lambert
+David,Moreau,/photos/david_moreau.png,Sales,Sales Representative,DemoTech,M,1988-05-30,2019-09-01,Claire Dubois
+Emma,Petit,/photos/emma_petit.png,Engineering,Frontend Developer,DemoTech,F,1995-01-12,2022-02-01,Bob Bernard
+François,Robert,/photos/francois_robert.png,HR,HR Manager,DemoTech,M,1983-09-18,2017-04-20,Sophie Lambert
+Sophie,Lambert,/photos/sophie_lambert.png,Management,CEO,DemoTech,F,1980-12-05,2015-01-01,
+Hugo,Leroy,/photos/hugo_leroy.png,Sales,Account Manager,DemoTech,M,1991-06-25,2020-08-10,David Moreau
+Isabelle,Garcia,/photos/isabelle_garcia.png,Marketing,Content Creator,DemoTech,F,1993-04-17,2021-11-01,Claire Dubois
+Pierre,Dupont,/photos/pierre_dupont.png,Engineering,CTO,DemoTech,M,1982-08-03,2016-02-15,Sophie Lambert

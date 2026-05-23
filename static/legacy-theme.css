@@ -1,0 +1,160 @@
+/* legacy-theme.css — opt-in cosmic flourishes for the 'legacy' palette.
+ *
+ * Only loaded by base_page.html when `dataset_palette == 'legacy'`,
+ * so non-legacy users don't pay the bytes. All effects are layered
+ * ABOVE the standard mode-selection / app-shell rules so they win
+ * whenever they apply.
+ *
+ * The hardcoded gold + cyan accent colors are deliberate — they're
+ * what makes the legacy theme legacy. They don't conflict with the
+ * dataset's `--primary` (which still drives buttons / focus / chips);
+ * gold/cyan are reserved for the title glow and the underline sweep.
+ */
+@layer components {
+    :root[data-palette="legacy"] {
+        /* Two extra accent slots so the JS + CSS can pick them up
+         * without re-inventing the wheel. They reference well-known
+         * cosmic anchors from the pre-refactor theme. */
+        --legacy-gold: #FFD700;
+        --legacy-cyan: #45CAFF;
+        --legacy-pink: #FF45CA;
+    }
+
+    /* Cosmic title: applied to the big h1s on mode-selection (hero),
+     * result page, and any block_page_header h1. Gradient text +
+     * pulsing glow + animated underline expand. */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes legacy-title-glow {
+            0%, 100% {
+                text-shadow:
+                    0 0 10px color-mix(in srgb, var(--legacy-gold) 50%, transparent),
+                    0 0 20px color-mix(in srgb, var(--legacy-cyan) 40%, transparent);
+            }
+            50% {
+                text-shadow:
+                    0 0 16px color-mix(in srgb, var(--legacy-gold) 75%, transparent),
+                    0 0 32px color-mix(in srgb, var(--legacy-cyan) 60%, transparent);
+            }
+        }
+        @keyframes legacy-underline-expand {
+            from { transform: translateX(-50%) scaleX(0); opacity: 0; }
+            to   { transform: translateX(-50%) scaleX(1); opacity: 1; }
+        }
+    }
+
+    :root[data-palette="legacy"] .mode-hero h1,
+    :root[data-palette="legacy"] .result-title,
+    :root[data-palette="legacy"] .app-main > .container > .stack > h1 {
+        background: linear-gradient(135deg, var(--legacy-gold), var(--legacy-cyan));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        position: relative;
+        padding-bottom: 0.6rem;
+        letter-spacing: 0.5px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        :root[data-palette="legacy"] .mode-hero h1,
+        :root[data-palette="legacy"] .result-title,
+        :root[data-palette="legacy"] .app-main > .container > .stack > h1 {
+            animation: legacy-title-glow 3s ease-in-out infinite;
+        }
+        :root[data-palette="legacy"] .mode-hero h1::after,
+        :root[data-palette="legacy"] .result-title::after,
+        :root[data-palette="legacy"] .app-main > .container > .stack > h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 120px;
+            height: 3px;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                var(--legacy-gold),
+                var(--legacy-cyan),
+                var(--legacy-gold),
+                transparent);
+            border-radius: 3px;
+            transform: translateX(-50%) scaleX(0);
+            transform-origin: center;
+            animation: legacy-underline-expand 1.5s ease-out 0.3s forwards;
+        }
+        /* Hero title is left-aligned, not centered — the underline
+         * needs a different anchor. */
+        :root[data-palette="legacy"] .mode-hero h1::after {
+            left: 0;
+            transform: translateX(0) scaleX(0);
+            transform-origin: left center;
+        }
+        :root[data-palette="legacy"] .mode-hero h1::after {
+            animation-name: legacy-hero-underline;
+        }
+        @keyframes legacy-hero-underline {
+            from { transform: translateX(0) scaleX(0); opacity: 0; }
+            to   { transform: translateX(0) scaleX(1); opacity: 1; }
+        }
+    }
+
+    /* Card shine moved to static/mode-selection.css so it's available
+     * to any dataset that picks `theme.card_effect = 'shine'`, not
+     * just legacy. Legacy palette still gets it automatically because
+     * DatasetTheme.card_effect defaults to 'shine' for that palette. */
+
+    /* Typing cursor on the brand tagline. Tiny "|" that blinks at
+     * the end of the tagline — no actual typing animation (the
+     * pre-refactor author disabled that because the dynamic width
+     * pushed the layout around). */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes legacy-cursor-blink {
+            0%, 50%   { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+    }
+    :root[data-palette="legacy"] .app-brand-name small::after {
+        content: "|";
+        margin-left: 2px;
+        color: var(--legacy-gold);
+        font-weight: 700;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        :root[data-palette="legacy"] .app-brand-name small::after {
+            animation: legacy-cursor-blink 1s step-end infinite;
+        }
+    }
+
+    /* Fireworks canvas — pinned exactly like .particles-bg so the
+     * legacy JS can swap them for one another without layout drift.
+     * particles.js detects the legacy palette and bails out so we
+     * don't double-paint. */
+    .legacy-fireworks-bg {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    /* Konami flash — golden sweep that fades out. Triggered by the
+     * legacy JS when the user enters the code. */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes legacy-konami-flash {
+            0%   { opacity: 0; }
+            20%  { opacity: 1; }
+            100% { opacity: 0; }
+        }
+    }
+    .legacy-konami-flash {
+        position: fixed;
+        inset: 0;
+        background: radial-gradient(
+            circle at center,
+            color-mix(in srgb, var(--legacy-gold, #FFD700) 35%, transparent),
+            transparent 70%);
+        pointer-events: none;
+        z-index: 90;
+        opacity: 0;
+        animation: legacy-konami-flash 0.6s ease-out forwards;
+    }
+}

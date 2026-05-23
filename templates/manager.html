@@ -1,0 +1,102 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Manager') }}{% endblock %}
+
+{% block mode_styles %}
+        .employee-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+        }
+        .employee-container .employee-image {
+            max-width: 180px;
+            border-radius: var(--radius-md);
+        }
+        .employee-info p {
+            margin: 0;
+            justify-content: center;
+        }
+        .employee-info p:first-child {
+            font-weight: 650;
+            color: var(--text);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-3);
+            max-width: 720px;
+            margin: var(--space-4) auto 0;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .image-container .choice-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3);
+            height: auto;
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 140px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            display: block;
+        }
+        .image-container p {
+            margin: 0;
+            font-size: var(--text-sm);
+            font-weight: 550;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Qui est le manager de cette personne ?') }}{% endblock %}
+
+{% block game_content %}
+            <!-- Employee information -->
+            <div class="employee-container">
+                <img class="employee-image" src="{{ employee.image_path }}" alt="{{ employee.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                <div class="employee-info">
+                    <p>{{ employee.name }}</p>
+                    <p>{{ employee.job_title }}</p>
+                    <p>{{ employee.team }}</p>
+                </div>
+            </div>
+{% endblock %}
+
+{% block score_display %}
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_value" value="{{ manager.id }}">
+    <input type="hidden" id="score-increment" name="score_increment" value="0">
+    <input type="hidden" id="correct-answer" name="correct_answer" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% endblock %}
+
+{% block game_choices %}
+        <div class="image-grid" id="image-choices" x-data="imageAnswer('{{ manager.id }}')">
+            {% for choice in choices %}
+            <div class="image-container">
+                <button type="button" class="choice-btn" @click="check('{{ choice.id }}', $el)">
+                    <img src="{{ choice.image_path }}" alt="{{ choice.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                    <p>{{ choice.name }}</p>
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+{% endblock %}
+
+{% block after_timer %}
+    <div id="fireworks-container" class="fireworks"></div>
+{% endblock %}
+
+{% block game_scripts %}
+{% endblock %}

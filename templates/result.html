@@ -1,0 +1,272 @@
+{% extends 'base_page.html' %}
+
+{% block title %}{{ _('Résultat final') }}{% endblock %}
+
+{% block page_css %}
+<style>
+    /* Arcade victory screen — hard 2px frame, segmented score, neon
+     * stars wrapping the final number. Scanline overlay echoes the
+     * CRT vibe established in the gameplay shell. */
+    .result-hero {
+        text-align: center;
+        padding: var(--space-10) var(--space-6);
+        background: linear-gradient(135deg,
+            color-mix(in srgb, var(--primary) 12%, var(--surface)),
+            var(--surface) 70%);
+        background-image:
+            linear-gradient(135deg,
+                color-mix(in srgb, var(--primary) 12%, var(--surface)),
+                var(--surface) 70%),
+            var(--scanlines);
+        background-blend-mode: normal, multiply;
+        border: 2px solid var(--primary);
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--glow);
+    }
+    .result-trophy {
+        font-size: 4rem;
+        margin-bottom: var(--space-3);
+        display: inline-block;
+        animation: trophyFloat 3s ease-in-out infinite;
+        filter: drop-shadow(0 0 12px color-mix(in srgb, var(--warning) 65%, transparent));
+    }
+    @keyframes trophyFloat {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    .result-title {
+        font-family: var(--font-display);
+        font-size: clamp(var(--text-3xl), 4vw, var(--text-4xl));
+        font-weight: 400;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-bottom: var(--space-2);
+        text-shadow: var(--glow-sm);
+    }
+    /* Big segmented final score with ★ wrap. Display font + glow
+     * makes it feel like a high-score readout. */
+    .result-score {
+        font-family: var(--font-display);
+        font-size: clamp(4rem, 9vw, 6.5rem);
+        font-weight: 400;
+        color: var(--primary);
+        letter-spacing: 0.04em;
+        line-height: 1;
+        margin-block: var(--space-4);
+        text-shadow: var(--glow);
+    }
+    .result-score::before,
+    .result-score::after {
+        color: var(--warning);
+        text-shadow: var(--glow-warning);
+        font-size: 0.55em;
+        vertical-align: 0.2em;
+        margin-inline: var(--space-3);
+    }
+    .result-score::before { content: "★"; }
+    .result-score::after { content: "★"; }
+    .result-score small {
+        color: var(--text-muted);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-size: 0.4em;
+        letter-spacing: 0.04em;
+        margin-left: var(--space-2);
+        text-shadow: none;
+    }
+    /* Segmented block-fill progress bar — same aesthetic as the
+     * in-game .progress-bar but on the result hero. */
+    .result-progress {
+        max-width: 420px;
+        margin: 0 auto;
+        height: 16px;
+        background: var(--surface-muted);
+        border: 2px solid var(--border-strong);
+        border-radius: 2px;
+        overflow: hidden;
+        padding: 2px;
+    }
+    .result-progress-fill {
+        height: 100%;
+        background: var(--primary);
+        background-image: repeating-linear-gradient(
+            90deg,
+            var(--primary) 0,
+            var(--primary) 6px,
+            color-mix(in srgb, var(--primary) 65%, transparent) 6px,
+            color-mix(in srgb, var(--primary) 65%, transparent) 8px
+        );
+        border-radius: 1px;
+        transition: width var(--dur-slow) var(--ease);
+        box-shadow: var(--glow-sm);
+    }
+    .result-message {
+        margin-top: var(--space-6);
+        max-width: 56ch;
+        margin-inline: auto;
+        color: var(--text-soft);
+        font-size: var(--text-lg);
+    }
+
+    .result-stats {
+        margin-top: var(--space-8);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: var(--space-3);
+    }
+    .result-stat-card {
+        background: var(--surface);
+        border: 2px solid var(--border-strong);
+        border-radius: 2px;
+        padding: var(--space-4);
+        text-align: left;
+        transition: border-color var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+    }
+    .result-stat-card:hover {
+        border-color: var(--primary);
+        box-shadow: var(--glow-sm);
+    }
+    .result-stat-label {
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: var(--space-1);
+    }
+    .result-stat-value {
+        font-family: var(--font-display);
+        font-size: var(--text-3xl);
+        font-weight: 400;
+        color: var(--text);
+        letter-spacing: 0.02em;
+    }
+
+    .result-actions {
+        margin-top: var(--space-8);
+        display: flex;
+        gap: var(--space-3);
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    /* Press-start arcade buttons on result page — overrides the base
+     * .btn styling so the victory screen ends in the same physical
+     * pressed-block feedback as the in-game submit button. */
+    .result-actions .btn {
+        font-family: var(--font-mono);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-radius: 2px;
+        border-width: 2px;
+        height: 52px;
+        padding-inline: var(--space-8);
+        transition: transform var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+    }
+    .result-actions .btn-primary {
+        box-shadow: 0 4px 0 0 var(--primary-pressed), var(--glow);
+    }
+    .result-actions .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 5px 0 0 var(--primary-pressed),
+                    0 0 24px color-mix(in srgb, var(--primary) 65%, transparent);
+    }
+    .result-actions .btn-primary:active {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 0 var(--primary-pressed), var(--glow-sm);
+    }
+    .result-actions .btn:not(.btn-primary) {
+        box-shadow: 0 4px 0 0 var(--border-strong);
+    }
+    .result-actions .btn:not(.btn-primary):hover {
+        transform: translateY(-1px);
+        border-color: var(--primary);
+        color: var(--primary);
+        box-shadow: 0 5px 0 0 var(--border-strong), var(--glow-sm);
+    }
+
+    /* Confetti canvas — fixed full-screen overlay during the celebration
+     * burst. `pointer-events: none` so it never traps clicks. The JS
+     * removes the element when all confetti pieces have faded. */
+    .result-confetti-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        pointer-events: none;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ static_v('result-effects.js') }}" defer></script>
+    {{ super() }}
+{% endblock %}
+
+{% block page_header %}{% endblock %}
+
+{% block content %}
+{% set ratio = (currentScore / maxScore) if maxScore and maxScore > 0 else 0 %}
+{% if currentScore == maxScore and maxScore > 0 %}
+    {% set trophy = '🏆' %}
+    {% set message = _('Tu es imbattable concernant tes collègues de %(company)s — score parfait !', company=company_name) %}
+{% elif ratio >= 0.75 %}
+    {% set trophy = '🥇' %}
+    {% set message = _('Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde.') %}
+{% elif ratio > 0.5 %}
+    {% set trophy = '🥈' %}
+    {% set message = _('Bravo pour ton effort ! Continue à apprendre à connaître tes collègues.') %}
+{% else %}
+    {% set trophy = '🥉' %}
+    {% set message = _("Il te reste beaucoup à apprendre sur tes collègues. C'est l'occasion de faire de nouvelles rencontres !") %}
+{% endif %}
+
+<div class="result-hero">
+    <div class="result-trophy" aria-hidden="true">{{ trophy }}</div>
+    <h1 class="result-title">{{ _('Résultat final') }}</h1>
+    <div class="result-score" aria-label="{{ _('Score final') }}"
+         data-result-score="{{ currentScore }}"
+         data-result-max="{{ maxScore }}">
+        <span data-result-score-value>{{ currentScore }}</span><small>/ {{ maxScore }}</small>
+    </div>
+    <div class="result-progress" role="progressbar"
+         aria-valuenow="{{ currentScore }}" aria-valuemin="0" aria-valuemax="{{ maxScore }}">
+        <div class="result-progress-fill" style="width: {{ (ratio * 100)|round(0) }}%;"></div>
+    </div>
+    <p class="result-message">{{ message }}</p>
+
+    <div class="result-stats">
+        <div class="result-stat-card">
+            <div class="result-stat-label">{{ _('Entreprise') }}</div>
+            <div class="result-stat-value">{{ stats.company }}</div>
+        </div>
+        <div class="result-stat-card">
+            <div class="result-stat-label">{{ _('Équipe') }}</div>
+            <div class="result-stat-value">{{ stats.team }}</div>
+        </div>
+        <div class="result-stat-card">
+            <div class="result-stat-label">{{ _('Nom') }}</div>
+            <div class="result-stat-value">{{ stats.name }}</div>
+        </div>
+        <div class="result-stat-card">
+            <div class="result-stat-label">{{ _('Poste') }}</div>
+            <div class="result-stat-value">{{ stats.position }}</div>
+        </div>
+    </div>
+
+    <div class="result-actions">
+        <a href="{{ url_for('game.restart') }}" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+            {{ _('Rejouer') }}
+        </a>
+        <a href="{{ url_for('game.index') }}" class="btn btn-lg">
+            <i class="fa-solid fa-th-large" aria-hidden="true"></i>
+            {{ _('Autre mode') }}
+        </a>
+    </div>
+</div>
+{% endblock %}

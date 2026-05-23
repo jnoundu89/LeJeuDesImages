@@ -1,0 +1,12 @@
+company:
+  name: "No CSV Corp"
+
+data:
+  column_mapping:
+    first_name: "firstName"
+    last_name: "lastName"
+    photo: "image_path"
+    team: "department_name"
+    job_title: "jobTitle"
+    company: "legalEntity_name"
+    sex: "sex"

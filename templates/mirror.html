@@ -1,0 +1,128 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Miroir') }}{% endblock %}
+
+{% block mode_styles %}
+        .mirror-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .mirror-image-container {
+            max-width: 220px;
+            margin: 0 auto;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .mirror-image {
+            width: 100%;
+            display: block;
+            transform: scaleX(-1);
+            transition: transform 500ms var(--ease);
+        }
+        .original-image { display: none; width: 100%; }
+        .flip-btn, .reveal-btn {
+            padding: var(--space-2) var(--space-4);
+            background: var(--surface);
+            border: 2px solid var(--border-strong);
+            border-radius: 2px;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin: var(--space-3) auto;
+            color: var(--text-soft);
+            transition: all var(--dur-fast) var(--ease);
+        }
+        .flip-btn:hover:not(:disabled), .reveal-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: var(--glow-sm);
+        }
+        .flip-btn:disabled, .reveal-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+        .fact-container {
+            margin: var(--space-3) auto;
+            padding: var(--space-3);
+            background: var(--surface-2);
+            border-left: 3px solid var(--primary);
+            border-radius: var(--radius);
+            max-width: 480px;
+            text-align: left;
+        }
+        .fact-text {
+            font-style: italic;
+            font-size: var(--text-sm);
+            color: var(--text-soft);
+            margin: 0;
+        }
+        .mirror-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Miroir - Identifiez la personne') }}{% endblock %}
+
+{% block game_content %}
+        <div class="mirror-image-container">
+            <img id="mirror-image" src="{{ image_url }}" alt="Image miroir d'employé" class="mirror-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+            <img id="original-image" src="{{ image_url }}" alt="Photo d'employé" class="original-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+        </div>
+        <div class="fact-container">
+            <div class="fact-text">{{ mirror_fact }}</div>
+        </div>
+        <button id="flip-btn" class="flip-btn" onclick="flipImage()">{{ _("Retourner l'image") }}</button>
+{% endblock %}
+
+{% block game_choices %}
+    <div class="mirror-container" x-data="singleAnswer('{{ correct_name }}')">
+        <div class="mirror-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="mirror-choice-btn choice-btn"
+                    @click="check('{{ name }}', $el); showOriginal()">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    // Flip image toggle
+    let isFlipped = true;
+
+    function flipImage() {
+        const mirrorImage = document.getElementById('mirror-image');
+        if (isFlipped) {
+            mirrorImage.style.transform = 'scaleX(1)';
+            document.getElementById('flip-btn').textContent = '{{ _("Voir en miroir") }}';
+        } else {
+            mirrorImage.style.transform = 'scaleX(-1)';
+            document.getElementById('flip-btn').textContent = '{{ _("Voir normal") }}';
+        }
+        isFlipped = !isFlipped;
+    }
+
+    // Function to show the original image
+    function showOriginal() {
+        document.getElementById('mirror-image').style.display = 'none';
+        document.getElementById('original-image').style.display = 'block';
+        document.getElementById('flip-btn').disabled = true;
+        document.getElementById('flip-btn').style.opacity = '0.5';
+    }
+
+    // Watch for timer expiry to auto-reveal
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkExpiry = setInterval(function() {
+            if (Alpine.store('game').answersCount > 0) {
+                clearInterval(checkExpiry);
+                showOriginal();
+            }
+        }, 200);
+    });
+{% endblock %}

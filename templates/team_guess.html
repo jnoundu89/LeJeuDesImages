@@ -1,0 +1,79 @@
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}{{ _('Mode Équipe') }}{% endblock %}
+
+{% block mode_styles %}
+        .team-guess-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .team-guess-image-container {
+            max-width: 220px;
+            margin: 0 auto;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .team-guess-image { width: 100%; display: block; }
+        .team-guess-info {
+            color: var(--text-soft);
+            font-size: var(--text-sm);
+            margin-top: var(--space-3);
+        }
+        .team-guess-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _("Mode Équipe - Devinez l'équipe de l'employé") }}{% endblock %}
+
+{% block progress_bar %}
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+{% endblock %}
+
+{% block game_content %}
+        <div class="team-guess-image-container">
+            <img id="team-guess-image" src="{{ image_url }}" alt="Photo d'employé" class="team-guess-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+        </div>
+        <div class="team-guess-info">
+            <h3>{{ name }}</h3>
+            <p>{{ position }}</p>
+        </div>
+{% endblock %}
+
+{% block score_display %}
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>{{ _('Question') }} : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="team-guess-container" x-data="singleAnswer('{{ correct_team }}')">
+        <h2>{{ _('À quelle équipe appartient cette personne ?') }}</h2>
+        <div class="team-guess-choices" id="team-choices">
+            {% for team in team_choices %}
+            <button type="button" class="team-guess-choice-btn choice-btn"
+                    @click="check('{{ team }}', $el)">{{ team }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+{% endblock %}

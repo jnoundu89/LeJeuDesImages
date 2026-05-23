@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Configuration') }} - {{ _('Le Jeu Des Images') }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{{ static_v('setup.css') }}">
+{% endblock %}
+
+{% block body %}
+{% include '_particles_bg.html' %}
+<div class="setup-container">
+    {% if datasets %}
+    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> {{ _('Retour au jeu') }}</a>
+    {% endif %}
+
+    <div class="setup-header">
+        <h1><i class="fas fa-database"></i> {{ _('Gestion des datasets') }}</h1>
+        <p>{{ _('Ajoutez, modifiez ou supprimez les datasets disponibles dans le jeu.') }}</p>
+    </div>
+
+    {% if not datasets %}
+    <div class="empty-state">
+        <i class="fas fa-folder-open empty-icon"></i>
+        <h2>{{ _('Aucun dataset configuré') }}</h2>
+        <p>{{ _('Commencez par ajouter un dataset pour démarrer le jeu.') }}</p>
+        <a href="{{ url_for('admin.setup_new') }}" class="btn btn-primary btn-large">
+            <i class="fas fa-plus"></i> {{ _('Créer le premier dataset') }}
+        </a>
+    </div>
+    {% else %}
+    <div class="dataset-list">
+        {% for ds in datasets %}
+        <div class="dataset-card" data-dataset-id="{{ ds.id }}">
+            <div class="dataset-card-header">
+                {% if ds.logo_url %}
+                <img src="{{ ds.logo_url }}" alt="{{ ds.name }}" class="dataset-logo" onerror="this.style.display='none'">
+                {% else %}
+                <div class="dataset-logo-placeholder"><i class="fas fa-building"></i></div>
+                {% endif %}
+                <div class="dataset-card-title">
+                    <h3>{{ ds.name }}
+                        {% if ds.id == default_dataset_id %}<span class="badge-default">{{ _('Par défaut') }}</span>{% endif %}
+                    </h3>
+                    <p class="dataset-id-label"><code>{{ ds.id }}</code></p>
+                </div>
+            </div>
+
+            <div class="dataset-card-stats">
+                <div class="stat-item">
+                    <i class="fas fa-users"></i>
+                    <span>{{ ds.employee_count }} {{ _('employés') }}</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-image"></i>
+                    <span class="truncate" title="{{ ds.images_dir }}">{{ ds.images_dir }}</span>
+                </div>
+            </div>
+
+            <div class="dataset-card-actions">
+                <a href="{{ url_for('admin.employees_list', dataset_id=ds.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-users"></i> {{ _('Employés') }}
+                </a>
+                <a href="{{ url_for('admin.setup_edit', dataset_id=ds.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-pen"></i> {{ _('Modifier') }}
+                </a>
+                <a href="{{ url_for('admin.export_dataset', dataset_id=ds.id) }}" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> {{ _('Exporter') }}
+                </a>
+                <button type="button" class="btn btn-secondary" onclick="cleanupPhotos('{{ ds.id }}', '{{ ds.name|e }}')">
+                    <i class="fas fa-broom"></i> {{ _('Nettoyer photos') }}
+                </button>
+                <button type="button" class="btn btn-danger" onclick="confirmDelete('{{ ds.id }}', '{{ ds.name|e }}')">
+                    <i class="fas fa-trash"></i> {{ _('Supprimer') }}
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="add-dataset-row">
+        <a href="{{ url_for('admin.setup_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> {{ _('Ajouter un dataset') }}
+        </a>
+        <button type="button" class="btn btn-secondary" onclick="document.getElementById('import-file').click()">
+            <i class="fas fa-upload"></i> {{ _('Importer un dataset') }}
+        </button>
+        <input type="file" id="import-file" accept=".zip" style="display:none" onchange="startImport(this)">
+    </div>
+    {% endif %}
+
+    <!-- Confirm delete modal -->
+    <div class="modal-overlay" id="delete-modal" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" style="display:none">
+        <div class="modal-content">
+            <h3 id="delete-modal-title"><i class="fas fa-exclamation-triangle"></i> {{ _('Supprimer le dataset ?') }}</h3>
+            <p>{{ _("Cette action est irréversible. Le dataset") }} <strong id="delete-modal-name"></strong> {{ _('et toutes ses données (CSV, photos, scores) seront supprimés.') }}</p>
+            <div class="btn-row">
+                <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">{{ _('Annuler') }}</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-btn">
+                    <i class="fas fa-trash"></i> {{ _('Supprimer définitivement') }}
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        <span id="toast-message"></span>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include '_particles_scripts.html' %}
+<script>
+(function () {
+    'use strict';
+
+    let pendingDeleteId = null;
+    const modal = document.getElementById('delete-modal');
+    const confirmBtn = document.getElementById('confirm-delete-btn');
+
+    window.confirmDelete = function (id, name) {
+        pendingDeleteId = id;
+        document.getElementById('delete-modal-name').textContent = name;
+        modal.style.display = 'flex';
+    };
+
+    window.closeDeleteModal = function () {
+        pendingDeleteId = null;
+        modal.style.display = 'none';
+    };
+
+    confirmBtn.addEventListener('click', () => {
+        if (!pendingDeleteId) return;
+        confirmBtn.disabled = true;
+        fetch(`/setup/${pendingDeleteId}/delete`, { method: 'POST' })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    showToast(data.error || "{{ _('Erreur lors de la suppression') }}", 'error');
+                    confirmBtn.disabled = false;
+                    return;
+                }
+                window.location.href = data.redirect || '/setup';
+            })
+            .catch(() => {
+                showToast("{{ _('Erreur réseau') }}", 'error');
+                confirmBtn.disabled = false;
+            });
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeDeleteModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.style.display !== 'none') closeDeleteModal();
+    });
+
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(() => { toast.classList.remove('show'); }, 5000);
+    }
+
+    // Import a dataset from an exported ZIP. Prompt for the new id.
+    window.startImport = function (input) {
+        const file = input.files && input.files[0];
+        input.value = '';  // allow re-selecting the same file
+        if (!file) return;
+        const defaultId = file.name.replace(/\.zip$/i, '').toLowerCase().replace(/[^a-z0-9_-]/g, '-').substring(0, 32);
+        const newId = window.prompt("{{ _('Identifiant du nouveau dataset') }}", defaultId);
+        if (!newId) return;
+        const fd = new FormData();
+        fd.append('file', file);
+        fd.append('dataset_id', newId);
+        fetch('/setup/import', { method: 'POST', body: fd })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    showToast(data.error || "{{ _('Erreur lors de l import') }}", 'error');
+                    return;
+                }
+                showToast("{{ _('Dataset importé') }}: " + (data.photos_extracted || 0) + " {{ _('photos') }}", 'success');
+                setTimeout(() => window.location.reload(), 800);
+            })
+            .catch(() => showToast("{{ _('Erreur réseau') }}", 'error'));
+    };
+
+    // Cleanup orphan photos: preview then confirm.
+    window.cleanupPhotos = function (id, name) {
+        fetch(`/setup/${id}/cleanup-photos`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({}),  // no confirm → preview
+        })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    showToast(data.error || "{{ _('Erreur') }}", 'error');
+                    return;
+                }
+                const orphans = data.orphans || [];
+                if (orphans.length === 0) {
+                    showToast("{{ _('Aucune photo orpheline — le dossier est propre.') }}", 'success');
+                    return;
+                }
+                const confirmMsg = "{{ _('Trouvé') }} " + orphans.length + " {{ _('photo(s) orpheline(s) dans') }} " + name + ". {{ _('Supprimer ?') }}";
+                if (!confirm(confirmMsg)) return;
+                fetch(`/setup/${id}/cleanup-photos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ confirm: true }),
+                })
+                    .then(r => r.json())
+                    .then(data2 => {
+                        showToast(
+                            "{{ _('Supprimé') }} " + (data2.removed || 0) + " {{ _('photo(s)') }}",
+                            'success'
+                        );
+                    })
+                    .catch(() => showToast("{{ _('Erreur réseau') }}", 'error'));
+            })
+            .catch(() => showToast("{{ _('Erreur réseau') }}", 'error'));
+    };
+})();
+</script>
+{% endblock %}

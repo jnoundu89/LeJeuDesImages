@@ -1,0 +1,89 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _("Qui qui c'est le monsieur / la madame ?") }}{% endblock %}
+
+{% block mode_styles %}
+        /* Normal mode tweaks on top of gameplay.css. */
+        .center-content img {
+            max-width: 240px;
+            max-height: 240px;
+            object-fit: contain;
+        }
+        .normal-choices {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .normal-choice-btn {
+            min-width: 140px;
+            flex: 0 1 auto;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _("Qui qui c'est le monsieur / la madame sur la photo ?") }}{% endblock %}
+
+{% block game_content %}
+            <img src="{{ image_url }}" alt="Photo d'employé" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+{% endblock %}
+
+{% block score_display %}
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score" x-text="($store.game.score + {{ currentScore }}) + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span></p>
+{% endblock %}
+
+{% block form_fields %}
+        <input type="hidden" name="correct_company" value="{{ correct_values.company }}">
+        <input type="hidden" name="correct_team" value="{{ correct_values.team }}">
+        <input type="hidden" name="correct_name" value="{{ correct_values.name }}">
+        <input type="hidden" name="correct_position" value="{{ correct_values.position }}">
+        <input type="hidden" id="score-increment" name="score_increment" value="0">
+        <input type="hidden" id="company-correct" name="company_correct" value="0">
+        <input type="hidden" id="team-correct" name="team_correct" value="0">
+        <input type="hidden" id="name-correct" name="name_correct" value="0">
+        <input type="hidden" id="position-correct" name="position_correct" value="0">
+        <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="current-question" value="{{ current_question }}">
+        <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% endblock %}
+
+{% block game_choices %}
+        <div class="game-section" style="margin-top: 20px;"
+             x-data="normalMode({company: '{{ correct_values.company }}', team: '{{ correct_values.team }}', name: '{{ correct_values.name }}', position: '{{ correct_values.position }}'})">
+            <div x-show="step === 0" x-transition>
+                <p id="company-title" class="text-align-center"><strong>{{ _('ENTREPRISE') }} :</strong> <span class="score" id="company-score">0/1</span></p>
+                <div class="normal-choices" id="company-choices">
+                    {% for comp in choices.companies %}
+                    <button type="button" class="normal-choice-btn" @click="checkStep('company', '{{ comp }}', $el)">{{ comp }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div x-show="step === 1" x-transition>
+                <p id="team-title" class="text-align-center"><strong>{{ _('ÉQUIPE') }} :</strong> <span class="score" id="team-score">0/1</span></p>
+                <div class="normal-choices" id="team-choices">
+                    {% for tm in choices.teams %}
+                    <button type="button" class="normal-choice-btn" @click="checkStep('team', '{{ tm }}', $el)">{{ tm }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div x-show="step === 2" x-transition>
+                <p id="name-title" class="text-align-center"><strong>{{ _('NOM') }} :</strong> <span class="score" id="name-score">0/1</span></p>
+                <div class="normal-choices" id="name-choices">
+                    {% for nm in choices.names %}
+                    <button type="button" class="normal-choice-btn" @click="checkStep('name', '{{ nm }}', $el)">{{ nm }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            <div x-show="step === 3" x-transition>
+                <p id="position-title" class="text-align-center"><strong>{{ _('POSTE') }} :</strong> <span class="score" id="position-score">0/1</span></p>
+                <div class="normal-choices" id="position-choices">
+                    {% for pos in choices.positions %}
+                    <button type="button" class="normal-choice-btn" @click="checkStep('position', '{{ pos }}', $el)">{{ pos }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block game_scripts %}
+{% endblock %}

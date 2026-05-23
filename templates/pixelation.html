@@ -1,0 +1,79 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Pixelisation') }}{% endblock %}
+
+{% block mode_styles %}
+        .pixelation-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .pixelation-image-container {
+            position: relative;
+            max-width: 320px;
+            margin: 0 auto;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+        .pixelation-image {
+            width: 100%;
+            display: block;
+            image-rendering: pixelated;
+            transition: filter 500ms ease;
+        }
+        .pixelation-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Pixelisation - Identifiez la personne') }}{% endblock %}
+
+{% block game_content %}
+        <div class="pixelation-image-container">
+            <img id="pixelated-image" src="{{ image_url }}" alt="Photo d'employé" class="pixelation-image"
+                 style="filter: blur(10px);" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+        </div>
+{% endblock %}
+
+{% block game_choices %}
+    <div class="pixelation-container" x-data="singleAnswer('{{ correct_name }}')">
+        <div class="pixelation-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="pixelation-choice-btn choice-btn"
+                    @click="check('{{ name }}', $el); document.getElementById('pixelated-image').style.filter = 'blur(0)'">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    // Pixelation blur effect driven by Alpine timer
+    (function() {
+        const totalTime = 60;
+        let pixelationInterval;
+
+        function updatePixelation() {
+            const timerText = document.getElementById('timer').textContent;
+            const match = timerText.match(/\d+/);
+            if (!match) return;
+            const timeRemaining = parseInt(match[0]);
+            const pixelationLevel = Math.max(1, Math.floor((timeRemaining / totalTime) * 20));
+            const blurAmount = pixelationLevel * 2.5;
+            document.getElementById('pixelated-image').style.filter = 'blur(' + blurAmount + 'px)';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePixelation();
+            pixelationInterval = setInterval(updatePixelation, 200);
+
+            // Watch for timer expiry via Alpine store
+            const checkExpiry = setInterval(function() {
+                if (Alpine.store('game').answersCount > 0) {
+                    clearInterval(pixelationInterval);
+                    clearInterval(checkExpiry);
+                    document.getElementById('pixelated-image').style.filter = 'blur(0)';
+                }
+            }, 200);
+        });
+    })();
+{% endblock %}

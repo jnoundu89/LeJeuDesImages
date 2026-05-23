@@ -1,0 +1,83 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask
+instance/
+.webassets-cache
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Database
+*.db
+*.sqlite3
+scores_db.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment
+.env
+.coverage
+
+# Logs
+logs/
+*.log
+
+# Uploads (temp directory for admin setup) -- keep the dir, ignore its contents
+uploads/*
+!uploads/.gitkeep
+
+# Test artifacts (Playwright screenshots)
+tests/screenshots/
+.playwright-mcp/
+/*.png
+
+# Company-specific config (use config.example.yaml as template)
+config.yaml
+
+# Node (Playwright MCP)
+node_modules/
+package-lock.json
+
+# Company data (CSV + photos) -- do not commit
+data/*
+!data/.gitkeep
+static/images/
+
+# Ruflo MCP runtime state (memory store, swarm/hive-mind, claims)
+.claude-flow/
+.swarm/

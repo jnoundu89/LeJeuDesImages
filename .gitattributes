@@ -1,0 +1,28 @@
+# Normalize all text files to LF in the repo (auto-detect text vs binary).
+# Working tree keeps the platform-native EOL on checkout.
+* text=auto eol=lf
+
+# Source code: always LF, even on Windows
+*.py    text eol=lf
+*.js    text eol=lf
+*.html  text eol=lf
+*.css   text eol=lf
+*.json  text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+*.md    text eol=lf
+*.toml  text eol=lf
+*.cfg   text eol=lf
+*.po    text eol=lf
+*.pot   text eol=lf
+
+# Binary assets: never touch
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.mo    binary
+*.pdf   binary
+*.zip   binary

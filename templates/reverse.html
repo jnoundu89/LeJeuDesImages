@@ -1,0 +1,58 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Reverse') }}{% endblock %}
+
+{% block mode_styles %}
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--space-3);
+            max-width: 720px;
+            margin: var(--space-4) auto 0;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .image-container .choice-btn {
+            padding: var(--space-3);
+            height: auto;
+        }
+        .image-container img {
+            width: 100%;
+            max-width: 140px;
+            aspect-ratio: 1;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            display: block;
+            margin: 0 auto;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _("Cliquez sur l'image correspondant à") }} : {% endblock %}
+
+{% block score_display %}
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score" x-text="$store.game.score + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span></p>
+{% endblock %}
+
+{% block form_fields %}
+        <div class="center-content">
+            <h1 class="title">{{ correct_value }}</h1>
+        </div>
+        <input type="hidden" name="correct_value" value="{{ correct_value }}">
+        <input type="hidden" id="score-increment" name="score_increment" value="0">
+        <input type="hidden" id="correct-answer" name="correct_answer" value="0">
+        <input type="hidden" id="total-questions" value="{{ total_questions }}">
+        <input type="hidden" id="current-question" value="{{ current_question }}">
+        <input type="hidden" id="max-score" value="{{ maxScore }}">
+{% endblock %}
+
+{% block game_choices %}
+        <div class="image-grid" id="image-choices" x-data="imageAnswer('{{ correct_value }}')">
+            {% for choice in choices %}
+            <div class="image-container">
+                <button type="button" class="choice-btn" @click="check('{{ choice.name }}', $el)">
+                    <img src="{{ choice.image_url }}" alt="{{ choice.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                </button>
+            </div>
+            {% endfor %}
+        </div>
+{% endblock %}

@@ -1,0 +1,1426 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if mode == 'edit' %}{{ _('Modifier le dataset') }}{% else %}{{ _('Nouveau dataset') }}{% endif %} - {{ _('Le Jeu Des Images') }}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{{ static_v('setup.css') }}">
+{% endblock %}
+
+{% block body %}
+{% include '_particles_bg.html' %}
+<div class="setup-container">
+    <a href="{{ url_for('admin.setup') }}" class="back-link"><i class="fas fa-arrow-left"></i> {{ _('Retour à la liste') }}</a>
+
+    <div class="setup-header">
+        <h1>
+            {% if mode == 'edit' %}
+                <i class="fas fa-pen"></i> {{ _('Modifier le dataset') }} <code>{{ dataset_id }}</code>
+            {% else %}
+                <i class="fas fa-plus"></i> {{ _('Nouveau dataset') }}
+            {% endif %}
+        </h1>
+        <p>{{ _('Configurez le dataset en quelques étapes.') }}</p>
+    </div>
+
+    <div class="stepper" role="tablist" aria-label="{{ _('Étapes de configuration') }}">
+        <div class="step-indicator active" data-step="1" role="tab" tabindex="0" aria-selected="true">
+            <span class="step-number">1</span>
+            <span>{{ _('Branding') }}</span>
+        </div>
+        <div class="step-indicator" data-step="2" role="tab" tabindex="0" aria-selected="false">
+            <span class="step-number">2</span>
+            <span>{{ _('Thème') }}</span>
+        </div>
+        <div class="step-indicator" data-step="3" role="tab" tabindex="0" aria-selected="false">
+            <span class="step-number">3</span>
+            <span>{{ _('Données') }}</span>
+        </div>
+        <div class="step-indicator" data-step="4" role="tab" tabindex="0" aria-selected="false">
+            <span class="step-number">4</span>
+            <span>{{ _('Photos') }}</span>
+        </div>
+        <div class="step-indicator" data-step="5" role="tab" tabindex="0" aria-selected="false">
+            <span class="step-number">5</span>
+            <span>{{ _('Résumé') }}</span>
+        </div>
+    </div>
+
+    <!-- Step 1: Dataset id + Branding -->
+    <div class="step-panel active" id="step-1">
+        <h2><i class="fas fa-building"></i> {{ _('Identité du dataset') }}</h2>
+
+        <div class="form-group">
+            <label for="dataset-id">{{ _('Identifiant technique') }} <span class="required-mark" aria-hidden="true">*</span></label>
+            <input type="text" id="dataset-id" required
+                   value="{{ dataset_id }}"
+                   placeholder="ex: acme, client_x"
+                   pattern="[a-z0-9][a-z0-9_-]{0,31}"
+                   aria-required="true"
+                   {% if mode == 'edit' %}disabled readonly{% endif %}>
+            <span class="form-hint">{{ _('Minuscules, chiffres, tirets et underscores. Sert de clé interne (non modifiable après création).') }}</span>
+            <p class="field-error" id="dataset-id-error" role="alert"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="company-name">{{ _("Nom de l'entreprise") }} <span class="required-mark" aria-hidden="true">*</span></label>
+            <input type="text" id="company-name" required
+                   value="{{ current_config.get('company', {}).get('name', '') }}"
+                   placeholder="{{ _('Ex: Mon Entreprise') }}"
+                   aria-required="true">
+            <p class="field-error" id="company-name-error" role="alert"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="logo-url">{{ _('URL du logo') }}</label>
+            <input type="url" id="logo-url"
+                   value="{{ current_config.get('company', {}).get('logo_url', '') }}"
+                   placeholder="https://example.com/logo.png">
+        </div>
+
+        <div class="form-group">
+            <label for="tagline-fr">{{ _('Tagline (français)') }}</label>
+            <input type="text" id="tagline-fr"
+                   value="{{ current_config.get('company', {}).get('taglines', {}).get('fr', '') }}"
+                   placeholder="{{ _('Ex: Testez votre connaissance de vos collègues !') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="tagline-en">{{ _('Tagline (English)') }}</label>
+            <input type="text" id="tagline-en"
+                   value="{{ current_config.get('company', {}).get('taglines', {}).get('en', '') }}"
+                   placeholder="{{ _('E.g.: Test your knowledge of your colleagues!') }}">
+        </div>
+
+        <div class="form-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="hide-unavailable-modes"
+                       {% if current_config.get('settings', {}).get('hide_unavailable_modes') %}checked{% endif %}>
+                <span>{{ _('Masquer les modes indisponibles pour ce dataset') }}</span>
+            </label>
+            <span class="form-hint">{{ _('Décoché : les modes non jouables restent visibles mais grisés. Coché : ils sont totalement masqués de la grille.') }}</span>
+        </div>
+
+        <div class="btn-row">
+            <span></span>
+            <button class="btn btn-primary" id="step1-next">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    {#- `current_palette` + `current_overrides` are passed from
+        routes/admin_routes.py as first-class context vars so they're
+        reachable from both the {% block body %} and {% block scripts %}
+        below — Jinja2 block scopes don't share `{% set %}` values. -#}
+    <!-- Step 2: Theme (palette + per-token overrides + preview) -->
+    <div class="step-panel" id="step-2">
+        <h2><i class="fas fa-palette"></i> {{ _('Thème visuel') }}</h2>
+        <p class="form-hint">{{ _('Choisissez une palette comme point de départ, puis ajustez individuellement les couleurs qui ne vous conviennent pas.') }}</p>
+
+        {% set light_palettes = [
+            ('corporate', _('Corporate'), _('Neutre Zinc, professionnel')),
+            ('slate',     _('Ardoise'), _('Bleu-gris froid, businessy')),
+            ('nordic',    _('Nordique'), _('Pâle et froid, scandinave')),
+            ('warm',      _('Chaleureux'), _('Ivoire crème, éditorial')),
+            ('sepia',     _('Sépia'), _('Ambre vintage, parchemin')),
+            ('sand',      _('Sable'), _('Beige désertique, doux')),
+            ('pastel',    _('Pastel'), _('Lavande douce, onboarding')),
+            ('rose',      _('Rose'), _('Rose poudré, tendre')),
+            ('mint',      _('Menthe'), _('Vert frais, léger'))
+        ] %}
+        {% set dark_palettes = [
+            ('midnight',  _('Nuit'), _('Bleu navy doux — sombre sans être noir')),
+            ('charcoal',  _('Charbon'), _('Gris foncé chaud')),
+            ('ocean',     _('Océan'), _('Bleu profond teal')),
+            ('forest',    _('Forêt'), _('Vert profond boisé')),
+            ('plum',      _('Prune'), _('Violet foncé mure')),
+            ('dark',      _('Sombre'), _('Zinc 900, minimaliste')),
+            ('noir',      _('Noir'), _('Monochrome, contraste max'))
+        ] %}
+        {% set special_palettes = [
+            ('legacy',    _('Legacy ✨'), _('Thème cosmique d’origine — particules en constellation, fireworks au résultat, code Konami…'))
+        ] %}
+        {% set editable_tokens = [
+            ('primary',       _('Couleur principale'),    _('Boutons, focus, accents de marque')),
+            ('success',       _('Couleur secondaire'),    _('Accent secondaire — extrémité du bandeau cards, états de succès')),
+            ('bg',            _('Fond de page'),          _('Arrière-plan global de la page')),
+            ('text',          _('Texte par défaut'),      _('Texte du body — sert aussi de fallback pour les composants ci-dessous')),
+            ('text-soft',     _('Texte secondaire'),      _('Descriptions, paragraphes secondaires')),
+            ('text-muted',    _('Texte atténué'),         _('Metadata (durées), eyebrows ("DIFFICULTÉ", "THÈMES")')),
+            ('surface',       _('Surfaces génériques'),   _('Filter bar, inputs, panneau scores, tableau employés')),
+            ('surface-2',     _('Éléments élevés'),       _('Hero, previews, panneaux mis en avant')),
+            ('surface-muted', _('Surfaces atténuées'),    _('Pills de tags dans les cards, badges discrets')),
+            ('card-bg',       _('Fond des cards'),        _('Cards de modes, cards de datasets, panneaux de jeu — laisse vide pour suivre Surfaces génériques')),
+            ('card-text',     _('Texte des cards'),       _('Texte à l’intérieur des cards — laisse vide pour suivre Texte par défaut')),
+            ('header-bg',     _('Fond du header'),        _('Bandeau du haut — laisse vide pour suivre Surfaces génériques')),
+            ('header-text',   _('Texte du header'),       _('Texte + liens du bandeau — laisse vide pour suivre Texte par défaut')),
+            ('footer-bg',     _('Fond du footer'),        _('Bandeau du bas — laisse vide pour suivre Surfaces génériques')),
+            ('footer-text',   _('Texte du footer'),       _('Texte + liens du footer — laisse vide pour suivre Texte atténué')),
+            ('border',        _('Bordures'),              _('Séparateurs, contours de cards'))
+        ] %}
+
+        <div class="form-group">
+            <label>{{ _('Palette de départ') }}</label>
+            <div class="palette-group">
+                <span class="palette-group-title">{{ _('Clair') }}</span>
+                <div class="palette-picker" role="radiogroup" aria-label="{{ _('Palettes claires') }}">
+                    {% for key, label, description in light_palettes %}
+                    <label class="palette-option palette-{{ key }}">
+                        <input type="radio" name="palette" value="{{ key }}"
+                               {% if current_palette == key %}checked{% endif %}>
+                        <span class="palette-swatch">
+                            <span class="palette-swatch-bg"></span>
+                            <span class="palette-swatch-surface"></span>
+                            <span class="palette-swatch-text"></span>
+                        </span>
+                        <span class="palette-meta">
+                            <strong>{{ label }}</strong>
+                            <small>{{ description }}</small>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="palette-group">
+                <span class="palette-group-title">{{ _('Sombre') }}</span>
+                <div class="palette-picker" role="radiogroup" aria-label="{{ _('Palettes sombres') }}">
+                    {% for key, label, description in dark_palettes %}
+                    <label class="palette-option palette-{{ key }}">
+                        <input type="radio" name="palette" value="{{ key }}"
+                               {% if current_palette == key %}checked{% endif %}>
+                        <span class="palette-swatch">
+                            <span class="palette-swatch-bg"></span>
+                            <span class="palette-swatch-surface"></span>
+                            <span class="palette-swatch-text"></span>
+                        </span>
+                        <span class="palette-meta">
+                            <strong>{{ label }}</strong>
+                            <small>{{ description }}</small>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="palette-group">
+                <span class="palette-group-title">{{ _('Spécial') }}</span>
+                <div class="palette-picker" role="radiogroup" aria-label="{{ _('Palettes spéciales') }}">
+                    {% for key, label, description in special_palettes %}
+                    <label class="palette-option palette-{{ key }}">
+                        <input type="radio" name="palette" value="{{ key }}"
+                               {% if current_palette == key %}checked{% endif %}>
+                        <span class="palette-swatch">
+                            <span class="palette-swatch-bg"></span>
+                            <span class="palette-swatch-surface"></span>
+                            <span class="palette-swatch-text"></span>
+                        </span>
+                        <span class="palette-meta">
+                            <strong>{{ label }}</strong>
+                            <small>{{ description }}</small>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{ _('Fond animé') }}</label>
+            <p class="form-hint">{{ _('Choisissez l’effet de fond animé. « Auto » suit la palette : feu d’artifice pour Legacy, NASA ailleurs. Les cinq premiers proviennent directement de la librairie particles.js de Vincent Garreau.') }}</p>
+            {% set bg_effects = [
+                ('auto',      _('Auto'),           _('Suit la palette (recommandé)')),
+                ('none',      _('Aucun'),          _('Aucune animation — page totalement statique')),
+                ('nasa',      _('NASA'),           _('Petits points blancs scintillants, sans liaisons')),
+                ('default',   _('Particules'),     _('Cercles bleus + lignes de connexion')),
+                ('snow',      _('Neige'),          _('Flocons qui tombent doucement')),
+                ('bubble',    _('Bulles'),         _('Grandes bulles qui montent')),
+                ('star',      _('Étoiles'),        _('Étoiles dérivantes')),
+                ('fireworks', _('Feu d’artifice'), _('Bursts colorés en boucle (custom)'))
+            ] %}
+            <div class="bg-effect-picker" role="radiogroup" aria-label="{{ _('Fond animé') }}">
+                {% for value, label, description in bg_effects %}
+                <label class="bg-effect-option bg-effect-{{ value }}">
+                    <input type="radio" name="background_effect" value="{{ value }}"
+                           {% if (value == 'auto' and not current_background_effect) or current_background_effect == value %}checked{% endif %}>
+                    <span class="bg-effect-meta">
+                        <strong>{{ label }}</strong>
+                        <small>{{ description }}</small>
+                    </span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{ _('Effet sur les cards') }}</label>
+            <p class="form-hint">{{ _('Reflet doré qui balaie les cards au survol — le même effet que la palette Legacy, désormais sélectionnable indépendamment de la palette.') }}</p>
+            {% set card_effects = [
+                ('auto',  _('Auto'),  _('Suit la palette (Legacy → reflet doré, sinon aucun)')),
+                ('none',  _('Aucun'), _('Pas d’effet sur les cards')),
+                ('shine', _('Reflet doré'), _('Bandeau doré qui traverse la carte au survol'))
+            ] %}
+            <div class="bg-effect-picker" role="radiogroup" aria-label="{{ _('Effet sur les cards') }}">
+                {% for value, label, description in card_effects %}
+                <label class="bg-effect-option">
+                    <input type="radio" name="card_effect" value="{{ value }}"
+                           {% if (value == 'auto' and not current_card_effect) or current_card_effect == value %}checked{% endif %}>
+                    <span class="bg-effect-meta">
+                        <strong>{{ label }}</strong>
+                        <small>{{ description }}</small>
+                    </span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{ _('Personnaliser chaque couleur') }}</label>
+            <p class="form-hint">{{ _('Chaque couleur hérite de la palette. Modifiez-en une pour créer un override personnel. Bouton Reset pour revenir à la valeur du preset.') }}</p>
+            <div class="theme-overrides">
+                {% for token, label, description in editable_tokens %}
+                <div class="theme-override-row" data-token="{{ token }}"
+                     {% if token in current_overrides %}data-has-override="true"{% endif %}>
+                    <div class="theme-override-meta">
+                        <strong>{{ label }}</strong>
+                        <small>{{ description }}</small>
+                        <span class="theme-override-badge" aria-live="polite"></span>
+                    </div>
+                    <div class="theme-override-controls">
+                        <input type="color" data-picker="{{ token }}"
+                               value="{{ current_overrides.get(token, '#4F46E5') }}"
+                               aria-label="{{ label }}">
+                        <input type="text" data-hex="{{ token }}"
+                               value="{{ current_overrides.get(token, '') }}"
+                               pattern="#[0-9A-Fa-f]{6}" maxlength="7"
+                               placeholder="{{ _('Hérité du preset') }}"
+                               aria-label="{{ _('Code hexadécimal') }}">
+                        <button type="button" class="btn btn-ghost btn-sm theme-override-reset"
+                                data-reset="{{ token }}"
+                                {% if token not in current_overrides %}disabled{% endif %}
+                                aria-label="{{ _('Réinitialiser') }} {{ label }}">
+                            <i class="fas fa-rotate-left"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>{{ _('Aperçu') }}</label>
+            <div class="branding-preview" id="branding-preview" data-palette="{{ current_palette }}">
+                <div class="branding-preview-hero">
+                    <span class="branding-preview-eyebrow">{{ _('Aperçu') }}</span>
+                    <strong class="branding-preview-title" id="branding-preview-company">{{ current_config.get('company', {}).get('name', 'DemoCo') or 'DemoCo' }}</strong>
+                    <button type="button" class="branding-preview-cta">{{ _('Bouton principal') }}</button>
+                </div>
+                <div class="branding-preview-card">
+                    <span class="branding-preview-pill">{{ _('Disponible') }}</span>
+                    <p>{{ _('Texte courant sur une card.') }}</p>
+                </div>
+            </div>
+            <span class="form-hint" id="contrast-warning" role="status" aria-live="polite"></span>
+        </div>
+
+        {# Saved presets — only shown in EDIT mode (a brand-new dataset
+           has no presets yet, and pressing Apply on the wizard before
+           the dataset exists doesn't make sense). #}
+        {% if mode == 'edit' %}
+        <div class="form-group">
+            <label>{{ _('Presets sauvegardés') }}</label>
+            <p class="form-hint">{{ _('Sauvegarde la config (palette + overrides + fond animé) actuelle sous un nom, pour pouvoir basculer dessus en un clic plus tard.') }}</p>
+            <div id="theme-presets-list" class="theme-presets-list" data-dataset-id="{{ dataset_id }}">
+                {# Server-rendered list. JS only handles the apply/delete clicks. #}
+                {% for name, preset in current_presets.items() %}
+                <div class="theme-preset-row" data-name="{{ name }}">
+                    <div class="theme-preset-meta">
+                        <strong>{{ name }}</strong>
+                        <span class="theme-preset-swatches" aria-hidden="true">
+                            <span style="background: {{ preset.overrides.get('primary', '#4F46E5') }};"></span>
+                            <span style="background: {{ preset.overrides.get('bg', '#FAFAFA') }};"></span>
+                            <span style="background: {{ preset.overrides.get('surface', '#FFFFFF') }};"></span>
+                        </span>
+                    </div>
+                    <div class="theme-preset-actions">
+                        <button type="button" class="btn btn-secondary btn-sm" data-preset-apply="{{ name }}">
+                            <i class="fas fa-check"></i> {{ _('Appliquer') }}
+                        </button>
+                        <button type="button" class="btn btn-ghost btn-sm" data-preset-delete="{{ name }}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                {% else %}
+                <p class="form-hint" id="theme-presets-empty">{{ _('Aucun preset sauvegardé pour ce dataset.') }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="theme-preset-save">
+                <input type="text" id="theme-preset-name-input" placeholder="{{ _('Nom du preset (ex. Sombre)') }}" maxlength="32">
+                <button type="button" class="btn btn-secondary btn-sm" id="theme-preset-save-btn">
+                    <i class="fas fa-save"></i> {{ _('Sauvegarder le thème actuel') }}
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(1)">
+                <i class="fas fa-arrow-left"></i> {{ _('Précédent') }}
+            </button>
+            <button class="btn btn-primary" onclick="goToStep(3)">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 3: Employee Data -->
+    <div class="step-panel" id="step-3">
+        <h2><i class="fas fa-users"></i> {{ _('Données employés') }}</h2>
+
+        {% if mode == 'edit' %}
+        <div class="photos-note">
+            <i class="fas fa-info-circle"></i>
+            {{ _('Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le remplacer.') }}
+        </div>
+        {% endif %}
+
+        <div class="file-drop-zone" id="csv-drop-zone">
+            <input type="file" id="csv-file-input" accept=".csv" style="display:none">
+            <i class="fas fa-file-csv"></i>
+            <p>{{ _('Glissez votre fichier CSV ici ou cliquez pour parcourir') }}</p>
+            <p class="hint">{{ _('Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc.') }}</p>
+        </div>
+
+        <div class="upload-status" id="csv-upload-status"></div>
+
+        <div class="csv-preview" id="csv-preview" style="display:none">
+            <h3>{{ _('Aperçu des données') }}</h3>
+            <div id="csv-table-container"></div>
+        </div>
+
+        <div class="mapping-empty-hint" id="mapping-empty-hint">
+            <i class="fas fa-info-circle"></i>
+            {{ _('Uploadez un fichier CSV ci-dessus pour configurer la correspondance des colonnes.') }}
+        </div>
+
+        <div class="mapping-section" id="mapping-section" style="display:none">
+            <h3>{{ _('Correspondance des colonnes') }}</h3>
+            <p style="font-size:0.85rem;opacity:0.7;margin-bottom:1rem">
+                {{ _('Associez chaque champ du jeu à une colonne de votre CSV.') }}
+            </p>
+            <div class="mapping-grid" id="mapping-grid"></div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(2)">
+                <i class="fas fa-arrow-left"></i> {{ _('Précédent') }}
+            </button>
+            <button class="btn btn-primary" onclick="goToStep(4)">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 4: Photos -->
+    <div class="step-panel" id="step-4">
+        <h2><i class="fas fa-images"></i> {{ _('Photos') }}</h2>
+
+        {% if mode == 'new' %}
+        <p class="form-hint">{{ _('Glissez votre ZIP de photos dès maintenant — elles seront déplacées dans le dataset à l’étape 5 (Sauvegarder).') }}</p>
+        {% endif %}
+        <div class="file-drop-zone" id="photos-drop-zone">
+            <input type="file" id="photos-file-input" accept=".zip" style="display:none">
+            <i class="fas fa-file-archive"></i>
+            <p>{{ _('Glissez un fichier ZIP contenant les photos ici') }}</p>
+            <p class="hint">{{ _('Formats acceptes: JPG, PNG, GIF, WebP') }}</p>
+        </div>
+        <div class="upload-status" id="photos-upload-status"></div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(3)">
+                <i class="fas fa-arrow-left"></i> {{ _('Précédent') }}
+            </button>
+            <button class="btn btn-primary" onclick="buildSummary(); goToStep(5)">
+                {{ _('Suivant') }} <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 5: Summary & Save -->
+    <div class="step-panel" id="step-5">
+        <h2><i class="fas fa-check-circle"></i> {{ _('Résumé et sauvegarde') }}</h2>
+
+        <div class="summary-section">
+            <h3><i class="fas fa-building"></i> {{ _('Entreprise') }}</h3>
+            <table class="summary-table" id="summary-company"></table>
+        </div>
+
+        <div class="summary-section">
+            <h3><i class="fas fa-database"></i> {{ _('Données') }}</h3>
+            <table class="summary-table" id="summary-data"></table>
+        </div>
+
+        <div class="summary-section">
+            <h3><i class="fas fa-columns"></i> {{ _('Mapping colonnes') }}</h3>
+            <table class="summary-table" id="summary-mapping"></table>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goToStep(4)">
+                <i class="fas fa-arrow-left"></i> {{ _('Précédent') }}
+            </button>
+            <button class="btn btn-success" id="save-btn" onclick="saveDataset()">
+                <i class="fas fa-save"></i>
+                {% if mode == 'edit' %}{{ _('Enregistrer les modifications') }}{% else %}{{ _('Créer le dataset') }}{% endif %}
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite">
+        <span id="toast-message"></span>
+        <button type="button" class="toast-close" id="toast-close" aria-label="{{ _('Fermer') }}">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include '_particles_scripts.html' %}
+<script>
+(function () {
+    'use strict';
+
+    const MODE = {{ mode | tojson }};
+    const ORIGINAL_DATASET_ID = {{ dataset_id | tojson }};
+    const EXISTING_IDS = {{ existing_ids | tojson }};
+    const currentConfig = {{ current_config | tojson }};
+
+    let currentStep = 1;
+    let csvColumns = [];
+    let csvFilename = '';
+    let csvPreviewRows = [];
+
+    const REQUIRED_FIELDS = [
+        { key: 'first_name', label: "{{ _('Prénom') }}" },
+        { key: 'last_name', label: "{{ _('Nom') }}" },
+        { key: 'photo', label: "{{ _('Photo') }}" },
+        { key: 'team', label: "{{ _('Équipe') }}" },
+        { key: 'job_title', label: "{{ _('Poste') }}" },
+        { key: 'company', label: "{{ _('Société') }}" },
+        { key: 'sex', label: "{{ _('Sexe') }}" },
+    ];
+
+    const OPTIONAL_FIELDS = [
+        { key: 'birth_date', label: "{{ _('Date de naissance') }}" },
+        { key: 'contract_start', label: "{{ _("Date d'embauche") }}" },
+        { key: 'manager_name', label: "{{ _('Manager') }}" },
+    ];
+
+    // -- Step navigation --
+    window.goToStep = function (step) {
+        document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.step-indicator').forEach(s => {
+            s.classList.remove('active');
+            s.setAttribute('aria-selected', 'false');
+        });
+        document.getElementById('step-' + step).classList.add('active');
+        const activeIndicator = document.querySelector('.step-indicator[data-step="' + step + '"]');
+        activeIndicator.classList.add('active');
+        activeIndicator.setAttribute('aria-selected', 'true');
+        for (let i = 1; i < step; i++) {
+            document.querySelector('.step-indicator[data-step="' + i + '"]').classList.add('completed');
+        }
+        currentStep = step;
+    };
+
+    // -- Step 1 validation --
+    function validateStep1() {
+        const idInput = document.getElementById('dataset-id');
+        const idError = document.getElementById('dataset-id-error');
+        const nameInput = document.getElementById('company-name');
+        const nameError = document.getElementById('company-name-error');
+
+        const id = idInput.value.trim();
+        const name = nameInput.value.trim();
+        let ok = true;
+
+        idError.textContent = '';
+        idInput.removeAttribute('aria-invalid');
+        nameError.textContent = '';
+        nameInput.removeAttribute('aria-invalid');
+
+        if (MODE === 'new') {
+            if (!/^[a-z0-9][a-z0-9_-]{0,31}$/.test(id)) {
+                idError.textContent = "{{ _('Identifiant invalide (minuscules/chiffres/_-, 32 max).') }}";
+                idInput.setAttribute('aria-invalid', 'true');
+                idInput.focus();
+                ok = false;
+            } else if (EXISTING_IDS.includes(id)) {
+                idError.textContent = "{{ _('Un dataset avec cet identifiant existe déjà.') }}";
+                idInput.setAttribute('aria-invalid', 'true');
+                idInput.focus();
+                ok = false;
+            }
+        }
+
+        if (!name) {
+            if (ok) nameInput.focus();
+            nameError.textContent = "{{ _("Le nom de l'entreprise est requis") }}";
+            nameInput.setAttribute('aria-invalid', 'true');
+            ok = false;
+        }
+
+        return ok;
+    }
+
+    document.getElementById('step1-next').addEventListener('click', () => {
+        if (validateStep1()) goToStep(2);
+    });
+
+    // ============================================================
+    // Step 2 — Theme editor
+    // ============================================================
+    // State: the 7 editable tokens are either INHERITED from the
+    // current palette (italic, shown as placeholder) or OVERRIDDEN
+    // (set explicitly, displayed, with a reset button). We keep the
+    // source of truth in `themeOverrides` — a JS object that mirrors
+    // `DatasetTheme.overrides` server-side. Writing it back on save
+    // emits the { palette, overrides } payload the admin_routes
+    // expects.
+    //
+    // Rendering is a three-way update on any change:
+    //   1. Update the inline CSS custom property on <html> so the
+    //      preview card + the rest of the setup page show the effect
+    //   2. Recalculate the WCAG contrast ratio
+    //   3. Flip the « Override » badge + enable/disable Reset button
+    //
+    // PALETTE_DEFAULTS must mirror static/design-tokens.css exactly
+    // — whenever a palette's bg/surface/... hex changes there, this
+    // table needs to follow.
+
+    const DEFAULT_PRIMARY = '#4F46E5';
+    // Single fallback for `--success` across every palette — it's a
+    // semantic token, not palette-themed by design. Admins override
+    // it per-dataset when their brand has a green accent.
+    const DEFAULT_SUCCESS = '#16A34A';
+
+    const PALETTE_DEFAULTS = {
+        // ---------- Light ----------
+        corporate: { bg: '#FAFAFA', surface: '#FFFFFF', 'surface-2': '#F4F4F5', border: '#E4E4E7', text: '#18181B', 'text-soft': '#3F3F46' },
+        slate:     { bg: '#F1F5F9', surface: '#FFFFFF', 'surface-2': '#E2E8F0', border: '#CBD5E1', text: '#0F172A', 'text-soft': '#334155' },
+        nordic:    { bg: '#ECEFF4', surface: '#FFFFFF', 'surface-2': '#D8DEE9', border: '#C0C7D3', text: '#2E3440', 'text-soft': '#434C5E' },
+        warm:      { bg: '#FBF7F0', surface: '#FFFDF9', 'surface-2': '#F4EEE3', border: '#E3D9C4', text: '#2E2412', 'text-soft': '#5A4A2E' },
+        sepia:     { bg: '#F4E9D2', surface: '#FBF3E0', 'surface-2': '#E8D8B0', border: '#D2BD87', text: '#3E2D0F', 'text-soft': '#5E4618' },
+        sand:      { bg: '#F0E6D2', surface: '#F8EFDE', 'surface-2': '#E2D3B3', border: '#C9B584', text: '#3B2B18', 'text-soft': '#57412A' },
+        pastel:    { bg: '#F6F3FF', surface: '#FFFFFF', 'surface-2': '#EEE7FE', border: '#DED4F5', text: '#241B3D', 'text-soft': '#4C3F75' },
+        rose:      { bg: '#FDF2F8', surface: '#FFFFFF', 'surface-2': '#FCE7F3', border: '#F9A8D4', text: '#500724', 'text-soft': '#831843' },
+        mint:      { bg: '#EDFAF1', surface: '#FFFFFF', 'surface-2': '#D5EEDF', border: '#B0DCBE', text: '#0F3B23', 'text-soft': '#235C3F' },
+        // ---------- Dark ----------
+        dark:      { bg: '#0F0F12', surface: '#26262D', 'surface-2': '#32323B', border: '#3F3F48', text: '#F4F4F5', 'text-soft': '#D4D4D8' },
+        midnight:  { bg: '#151A2C', surface: '#2F3A5E', 'surface-2': '#3B4776', border: '#3D4872', text: '#EEF1F9', 'text-soft': '#C8CEE3' },
+        charcoal:  { bg: '#22232A', surface: '#3B3D48', 'surface-2': '#474954', border: '#53555F', text: '#F0F0F4', 'text-soft': '#C4C4CC' },
+        ocean:     { bg: '#0B2540', surface: '#1F548F', 'surface-2': '#2A68A9', border: '#3C7DB8', text: '#E6F1FC', 'text-soft': '#B3D4EE' },
+        forest:    { bg: '#0D2A20', surface: '#265A47', 'surface-2': '#326E57', border: '#428872', text: '#E1F1E7', 'text-soft': '#ADCCB8' },
+        plum:      { bg: '#221027', surface: '#4A2557', 'surface-2': '#5C2F6C', border: '#6E3A84', text: '#F8EDF7', 'text-soft': '#D8B5D3' },
+        noir:      { bg: '#000000', surface: '#1A1A1A', 'surface-2': '#262626', border: '#3F3F3F', text: '#FFFFFF', 'text-soft': '#D4D4D4' },
+        // ---------- Special ----------
+        legacy:    { bg: '#0A0E27', surface: '#1E2548', 'surface-2': '#2A3260', border: '#3D4488', text: '#F8F4FF', 'text-soft': '#C7C0E1' },
+    };
+    // Inject the shared success fallback into every palette so
+    // resolvedValue('success') always returns something printable.
+    Object.values(PALETTE_DEFAULTS).forEach(p => { p.success = DEFAULT_SUCCESS; });
+
+    const EDITABLE_TOKENS = [
+        'primary', 'success',
+        'bg', 'text', 'text-soft', 'text-muted',
+        'surface', 'surface-2', 'surface-muted',
+        'card-bg', 'card-text',
+        'header-bg', 'header-text',
+        'footer-bg', 'footer-text',
+        'border',
+    ];
+
+    // Overrides hydrated from server (edit mode) or empty (new mode).
+    let themeOverrides = {{ current_overrides | tojson }};
+    let currentPalette = {{ current_palette | tojson }};
+    // Raw saved presets, used by the « save current as preset » flow
+    // when re-emitting the full presets dict. Empty in NEW mode.
+    const currentPresetsRaw = {{ current_presets | default({}) | tojson }};
+
+    const brandingPreview = document.getElementById('branding-preview');
+    const contrastWarning = document.getElementById('contrast-warning');
+    const companyNameInput = document.getElementById('company-name');
+    const previewCompany = document.getElementById('branding-preview-company');
+
+    // Return the resolved hex for a token: override if set, else the
+    // palette default, else (for primary/success) the app-wide default.
+    function resolvedValue(token) {
+        if (token in themeOverrides) return themeOverrides[token];
+        const defaults = PALETTE_DEFAULTS[currentPalette] || PALETTE_DEFAULTS.corporate;
+        if (token in defaults) return defaults[token];
+        if (token === 'primary') return DEFAULT_PRIMARY;
+        if (token === 'success') return DEFAULT_SUCCESS;
+        return '';
+    }
+
+    // Push all overrides onto the live document so the preview + the
+    // setup page immediately reflect what the admin is seeing.
+    function applyOverridesToDocument() {
+        const root = document.documentElement;
+        // Clear any previous inline overrides before re-applying
+        EDITABLE_TOKENS.forEach(t => root.style.removeProperty('--' + t));
+        Object.entries(themeOverrides).forEach(([token, hex]) => {
+            root.style.setProperty('--' + token, hex);
+        });
+        root.setAttribute('data-palette', currentPalette);
+        if (brandingPreview) {
+            brandingPreview.setAttribute('data-palette', currentPalette);
+            EDITABLE_TOKENS.forEach(t => brandingPreview.style.removeProperty('--' + t));
+            Object.entries(themeOverrides).forEach(([token, hex]) => {
+                brandingPreview.style.setProperty('--' + token, hex);
+            });
+        }
+    }
+
+    // Sync the per-token row UI with the current state: picker value,
+    // hex input placeholder, override badge, reset button enablement.
+    function syncTokenRow(token) {
+        const row = document.querySelector('.theme-override-row[data-token="' + token + '"]');
+        if (!row) return;
+        const picker = row.querySelector('input[data-picker="' + token + '"]');
+        const hexIn = row.querySelector('input[data-hex="' + token + '"]');
+        const resetBtn = row.querySelector('button[data-reset="' + token + '"]');
+        const badge = row.querySelector('.theme-override-badge');
+
+        const hasOverride = token in themeOverrides;
+        const resolved = resolvedValue(token);
+
+        row.toggleAttribute('data-has-override', hasOverride);
+        if (picker) picker.value = resolved || DEFAULT_PRIMARY;
+        if (hexIn) {
+            hexIn.value = hasOverride ? resolved : '';
+            hexIn.placeholder = hasOverride ? '' : resolved;
+        }
+        if (resetBtn) resetBtn.disabled = !hasOverride;
+        if (badge) {
+            badge.textContent = hasOverride
+                ? "{{ _('Override') }}"
+                : "{{ _('Hérité du preset') }}";
+            badge.classList.toggle('is-override', hasOverride);
+        }
+    }
+
+    function syncAllRows() {
+        EDITABLE_TOKENS.forEach(syncTokenRow);
+    }
+
+    // Event: user changed a per-token color picker or hex input.
+    function onTokenValueInput(token, rawValue) {
+        const value = (rawValue || '').trim();
+        if (!/^#[0-9A-Fa-f]{6}$/.test(value)) return;
+        themeOverrides[token] = value.toUpperCase();
+        applyOverridesToDocument();
+        syncTokenRow(token);
+        refreshContrastWarning();
+    }
+
+    // Event: user clicked Reset on a token row.
+    function onTokenReset(token) {
+        delete themeOverrides[token];
+        applyOverridesToDocument();
+        syncTokenRow(token);
+        refreshContrastWarning();
+    }
+
+    // Event: user picked a different palette. Inherited tokens follow
+    // the new palette's defaults; existing overrides stay untouched.
+    function onPaletteChange(newPalette) {
+        currentPalette = newPalette;
+        document.documentElement.dataset.palette = newPalette;
+        applyOverridesToDocument();
+        syncAllRows();
+        refreshContrastWarning();
+        // If the user is on "Auto" for the bg effect, the resolved
+        // value depends on the palette — re-apply so the backdrop
+        // tracks the new palette default. Explicit choices stick.
+        const bgRadio = document.querySelector('input[name="background_effect"]:checked');
+        if (bgRadio && bgRadio.value === 'auto' && typeof window.applyBackgroundEffect === 'function') {
+            window.applyBackgroundEffect('auto');
+        }
+        // Same auto-tracking for the card effect.
+        const cardRadio = document.querySelector('input[name="card_effect"]:checked');
+        if (cardRadio && cardRadio.value === 'auto') {
+            onCardEffectChange('auto');
+        }
+    }
+
+    // Event: user picked a different bg effect — swap the live backdrop.
+    function onBackgroundEffectChange(newEffect) {
+        if (typeof window.applyBackgroundEffect === 'function') {
+            window.applyBackgroundEffect(newEffect);
+        }
+    }
+
+    // Wire up the row controls
+    EDITABLE_TOKENS.forEach(token => {
+        const row = document.querySelector('.theme-override-row[data-token="' + token + '"]');
+        if (!row) return;
+        const picker = row.querySelector('input[data-picker="' + token + '"]');
+        const hexIn = row.querySelector('input[data-hex="' + token + '"]');
+        const resetBtn = row.querySelector('button[data-reset="' + token + '"]');
+        if (picker) picker.addEventListener('input', () => onTokenValueInput(token, picker.value));
+        if (hexIn) hexIn.addEventListener('input', () => onTokenValueInput(token, hexIn.value));
+        if (resetBtn) resetBtn.addEventListener('click', () => onTokenReset(token));
+    });
+
+    // Palette radio changes
+    document.querySelectorAll('input[name="palette"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.checked) onPaletteChange(radio.value);
+        });
+    });
+
+    // Background-effect radio changes — swap the live backdrop.
+    document.querySelectorAll('input[name="background_effect"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.checked) onBackgroundEffectChange(radio.value);
+        });
+    });
+
+    // Card-effect radio changes — write the data-card-effect attribute
+    // on <html> so the existing CSS rule in mode-selection.css picks
+    // up the new value immediately. 'auto' resolves to 'shine' on
+    // legacy / 'none' otherwise, matching the model's default.
+    function onCardEffectChange(newEffect) {
+        let resolved = newEffect;
+        if (newEffect === 'auto') {
+            resolved = currentPalette === 'legacy' ? 'shine' : 'none';
+        }
+        document.documentElement.dataset.cardEffect = resolved;
+    }
+    document.querySelectorAll('input[name="card_effect"]').forEach(radio => {
+        radio.addEventListener('change', () => {
+            if (radio.checked) onCardEffectChange(radio.value);
+        });
+    });
+
+    // Keep the preview company name in sync with the branding input.
+    if (companyNameInput && previewCompany) {
+        companyNameInput.addEventListener('input', () => {
+            previewCompany.textContent = companyNameInput.value || 'DemoCo';
+        });
+    }
+
+    // -- Contrast checker (WCAG ratio) -----------------------------
+    function relativeLuminance(hex) {
+        const clean = hex.replace('#', '');
+        const [r, g, b] = [0, 2, 4].map(i =>
+            parseInt(clean.substring(i, i + 2), 16) / 255
+        );
+        const toLin = c => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
+        return 0.2126 * toLin(r) + 0.7152 * toLin(g) + 0.0722 * toLin(b);
+    }
+    function contrastRatio(a, b) {
+        const la = relativeLuminance(a);
+        const lb = relativeLuminance(b);
+        const [light, dark] = la > lb ? [la, lb] : [lb, la];
+        return (light + 0.05) / (dark + 0.05);
+    }
+
+    function refreshContrastWarning() {
+        if (!contrastWarning) return;
+        const primary = resolvedValue('primary');
+        const bg = resolvedValue('bg');
+        const text = resolvedValue('text');
+        if (![primary, bg, text].every(v => /^#[0-9A-Fa-f]{6}$/.test(v))) {
+            contrastWarning.textContent = '';
+            contrastWarning.className = 'form-hint';
+            return;
+        }
+
+        // Check the two ratios that matter the most: primary buttons
+        // against the page background, and body text against the
+        // background. The lesser of the two is what we surface.
+        const primaryOnBg = contrastRatio(primary, bg);
+        const textOnBg = contrastRatio(text, bg);
+        const weakest = Math.min(primaryOnBg, textOnBg);
+        const fmt = n => n.toFixed(1) + ':1';
+
+        if (weakest < 3) {
+            contrastWarning.textContent =
+                "{{ _('Contraste faible') }} (" + fmt(weakest) + "). " +
+                "{{ _('Ajustez les couleurs pour améliorer la lisibilité.') }}";
+            contrastWarning.className = 'form-hint contrast-warning-danger';
+        } else if (weakest < 4.5) {
+            contrastWarning.textContent =
+                "{{ _('Contraste moyen') }} (" + fmt(weakest) + "). " +
+                "{{ _('WCAG AA recommande 4.5:1 minimum pour le texte courant.') }}";
+            contrastWarning.className = 'form-hint contrast-warning-warn';
+        } else {
+            contrastWarning.textContent =
+                "{{ _('Contraste conforme WCAG AA') }} (" + fmt(weakest) + ").";
+            contrastWarning.className = 'form-hint contrast-warning-ok';
+        }
+    }
+
+    // Initial paint on page load
+    applyOverridesToDocument();
+    syncAllRows();
+    refreshContrastWarning();
+
+    ['dataset-id', 'company-name'].forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        if (!input) return;
+        input.addEventListener('input', () => {
+            const errorEl = document.getElementById(fieldId + '-error');
+            if (errorEl && errorEl.textContent) {
+                errorEl.textContent = '';
+                input.removeAttribute('aria-invalid');
+            }
+        });
+    });
+
+    // -- Stepper keyboard navigation --
+    document.querySelectorAll('.step-indicator').forEach(el => {
+        el.addEventListener('click', () => goToStep(parseInt(el.getAttribute('data-step'), 10)));
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                goToStep(parseInt(el.getAttribute('data-step'), 10));
+            } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                e.preventDefault();
+                const indicators = Array.from(document.querySelectorAll('.step-indicator'));
+                const idx = indicators.indexOf(el);
+                const next = e.key === 'ArrowRight' ? idx + 1 : idx - 1;
+                if (next >= 0 && next < indicators.length) indicators[next].focus();
+            }
+        });
+    });
+
+    // -- Toast --
+    let toastTimer = null;
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        const msgEl = document.getElementById('toast-message');
+        msgEl.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        if (toastTimer) clearTimeout(toastTimer);
+        const duration = (type === 'error' || type === 'warning') ? 8000 : 4000;
+        toastTimer = setTimeout(() => { toast.classList.remove('show'); }, duration);
+    }
+
+    document.getElementById('toast-close').addEventListener('click', () => {
+        document.getElementById('toast').classList.remove('show');
+        if (toastTimer) clearTimeout(toastTimer);
+    });
+
+    // -- CSV upload --
+    const csvDropZone = document.getElementById('csv-drop-zone');
+    const csvFileInput = document.getElementById('csv-file-input');
+    csvDropZone.addEventListener('click', () => csvFileInput.click());
+    csvDropZone.addEventListener('dragover', (e) => { e.preventDefault(); csvDropZone.classList.add('drag-over'); });
+    csvDropZone.addEventListener('dragleave', () => csvDropZone.classList.remove('drag-over'));
+    csvDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        csvDropZone.classList.remove('drag-over');
+        if (e.dataTransfer.files.length) uploadCSV(e.dataTransfer.files[0]);
+    });
+    csvFileInput.addEventListener('change', () => {
+        if (csvFileInput.files.length) uploadCSV(csvFileInput.files[0]);
+    });
+
+    function uploadCSV(file) {
+        const status = document.getElementById('csv-upload-status');
+        status.className = 'upload-status';
+        const formData = new FormData();
+        formData.append('file', file);
+        fetch('/setup/upload-csv', { method: 'POST', body: formData })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    status.textContent = data.error || "{{ _("Erreur lors de l'envoi") }}";
+                    status.className = 'upload-status error';
+                    return;
+                }
+                status.textContent = "{{ _('CSV chargé avec succès') }}: " + data.columns.length + " {{ _('colonnes détectées') }}";
+                status.className = 'upload-status success';
+                csvColumns = data.columns;
+                csvFilename = data.filename;
+                csvPreviewRows = data.preview || [];
+                renderPreview(data.columns, data.preview);
+                renderMappingSelects();
+            })
+            .catch(() => {
+                status.textContent = "{{ _('Erreur réseau') }}";
+                status.className = 'upload-status error';
+            });
+    }
+
+    function renderPreview(columns, rows) {
+        const container = document.getElementById('csv-table-container');
+        let html = '<table><thead><tr>';
+        columns.forEach(c => { html += '<th>' + escapeHtml(c) + '</th>'; });
+        html += '</tr></thead><tbody>';
+        rows.forEach(row => {
+            html += '<tr>';
+            columns.forEach(c => { html += '<td>' + escapeHtml(String(row[c] || '')) + '</td>'; });
+            html += '</tr>';
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        document.getElementById('csv-preview').style.display = 'block';
+    }
+
+    // Guess the CSV column that most likely matches a canonical field.
+    // Exact matches first, then loose aliases, then substring. Returns the
+    // matched column name or '' if nothing confident enough is found.
+    const FIELD_ALIASES = {
+        first_name: ['first_name', 'firstname', 'prenom', 'prénom', 'given_name', 'first'],
+        last_name: ['last_name', 'lastname', 'nom', 'surname', 'family_name', 'last'],
+        photo: ['photo', 'photo_path', 'image', 'image_path', 'picture', 'avatar', 'photo_url'],
+        team: ['team', 'equipe', 'équipe', 'department', 'department_name', 'dept', 'departement', 'departement_name'],
+        job_title: ['job_title', 'jobtitle', 'poste', 'role', 'title', 'position'],
+        company: ['company', 'entreprise', 'societe', 'société', 'legalentity_name', 'legal_entity', 'organization'],
+        sex: ['sex', 'sexe', 'gender', 'genre'],
+        birth_date: ['birth_date', 'birthdate', 'date_de_naissance', 'dob', 'naissance', 'birthday'],
+        contract_start: ['contract_start', 'dtcontractstart', 'date_embauche', "date_d'embauche", 'hire_date', 'start_date', 'embauche'],
+        manager_name: ['manager_name', 'managername', 'manager', 'responsable', 'supervisor'],
+    };
+
+    function guessColumn(fieldKey, columns) {
+        const aliases = (FIELD_ALIASES[fieldKey] || []).map(a => a.toLowerCase());
+        const lowered = columns.map(c => [c, c.toLowerCase()]);
+
+        // Pass 1: exact alias match
+        for (const alias of aliases) {
+            for (const [orig, low] of lowered) {
+                if (low === alias) return orig;
+            }
+        }
+        // Pass 2: alias appears as full word or substring (>= 3 chars to avoid
+        // noise like 'e' matching everything)
+        for (const alias of aliases) {
+            if (alias.length < 3) continue;
+            for (const [orig, low] of lowered) {
+                if (low.includes(alias) || alias.includes(low)) return orig;
+            }
+        }
+        return '';
+    }
+
+    function renderMappingSelects() {
+        const grid = document.getElementById('mapping-grid');
+        grid.innerHTML = '';
+        const existingMapping = currentConfig?.data?.column_mapping || {};
+        const isEditing = Object.keys(existingMapping).length > 0;
+
+        function makeSelect(field, required) {
+            const div = document.createElement('div');
+            div.className = 'mapping-item';
+
+            const label = document.createElement('label');
+            label.textContent = field.label;
+            const tag = document.createElement('span');
+            tag.className = 'field-tag' + (required ? '' : ' optional');
+            tag.textContent = required ? "{{ _('requis') }}" : "{{ _('optionnel') }}";
+            label.appendChild(tag);
+            div.appendChild(label);
+
+            const select = document.createElement('select');
+            select.id = 'map-' + field.key;
+
+            if (!required) {
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = "-- {{ _('Non utilisé') }} --";
+                select.appendChild(opt);
+            }
+
+            // Auto-detect: if we're creating a new dataset, try to pre-select
+            // the column that matches this canonical field. Editing preserves
+            // whatever the existing config already has.
+            const autoGuess = isEditing ? '' : guessColumn(field.key, csvColumns);
+
+            csvColumns.forEach(col => {
+                const opt = document.createElement('option');
+                opt.value = col;
+                opt.textContent = col;
+                if (existingMapping[field.key] === col) {
+                    opt.selected = true;
+                } else if (!isEditing && col === autoGuess) {
+                    opt.selected = true;
+                }
+                select.appendChild(opt);
+            });
+
+            // Tag the auto-guessed ones so the UI can show a subtle hint.
+            if (!isEditing && autoGuess) {
+                const hint = document.createElement('span');
+                hint.className = 'form-hint';
+                hint.textContent = "{{ _('Détection automatique') }}: " + autoGuess;
+                hint.style.color = 'var(--success)';
+                div.appendChild(hint);
+            }
+
+            // Live preview: when the user changes the column, show the first
+            // three values from the CSV preview to confirm the mapping.
+            const preview = document.createElement('span');
+            preview.className = 'form-hint mapping-live-preview';
+            preview.id = 'preview-' + field.key;
+            div.appendChild(preview);
+
+            function refreshPreview() {
+                if (!select.value || !csvPreviewRows.length) {
+                    preview.textContent = '';
+                    return;
+                }
+                const samples = csvPreviewRows
+                    .slice(0, 3)
+                    .map(row => row[select.value])
+                    .filter(v => v !== undefined && v !== null && v !== '');
+                preview.textContent = samples.length
+                    ? ('→ ' + samples.join(', '))
+                    : '';
+            }
+            select.addEventListener('change', refreshPreview);
+            refreshPreview();
+
+            div.appendChild(select);
+            grid.appendChild(div);
+        }
+
+        REQUIRED_FIELDS.forEach(f => makeSelect(f, true));
+        OPTIONAL_FIELDS.forEach(f => makeSelect(f, false));
+        document.getElementById('mapping-section').style.display = 'block';
+        document.getElementById('mapping-empty-hint').style.display = 'none';
+    }
+
+    // -- Photos upload (both modes — buffered server-side in NEW) --
+    const photosDropZone = document.getElementById('photos-drop-zone');
+    if (photosDropZone) {
+        const photosFileInput = document.getElementById('photos-file-input');
+        photosDropZone.addEventListener('click', () => photosFileInput.click());
+        photosDropZone.addEventListener('dragover', (e) => { e.preventDefault(); photosDropZone.classList.add('drag-over'); });
+        photosDropZone.addEventListener('dragleave', () => photosDropZone.classList.remove('drag-over'));
+        photosDropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            photosDropZone.classList.remove('drag-over');
+            if (e.dataTransfer.files.length) uploadPhotos(e.dataTransfer.files[0]);
+        });
+        photosFileInput.addEventListener('change', () => {
+            if (photosFileInput.files.length) uploadPhotos(photosFileInput.files[0]);
+        });
+    }
+
+    function uploadPhotos(file) {
+        const status = document.getElementById('photos-upload-status');
+        status.className = 'upload-status';
+        const formData = new FormData();
+        formData.append('file', file);
+        // In NEW mode the dataset doesn't exist yet — buffer the ZIP
+        // server-side under uploads/pending_photos and let the save
+        // handler move it to data/<id>/photos at finalisation. EDIT
+        // mode targets the existing dataset directly.
+        const url = (MODE === 'edit')
+            ? '/setup/' + encodeURIComponent(ORIGINAL_DATASET_ID) + '/upload-photos'
+            : '/setup/upload-photos-pending';
+        fetch(url, { method: 'POST', body: formData })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    status.textContent = data.error || "{{ _("Erreur lors de l'envoi") }}";
+                    status.className = 'upload-status error';
+                    return;
+                }
+                status.textContent = data.extracted + " {{ _('photos extraites avec succès') }}";
+                status.className = 'upload-status success';
+            })
+            .catch(() => {
+                status.textContent = "{{ _('Erreur réseau') }}";
+                status.className = 'upload-status error';
+            });
+    }
+
+    // -- Summary --
+    window.buildSummary = function () {
+        const companyTable = document.getElementById('summary-company');
+        const hideUnavailable = document.getElementById('hide-unavailable-modes').checked;
+        const paletteRadio = document.querySelector('input[name="palette"]:checked');
+        const paletteLabel = paletteRadio
+            ? paletteRadio.parentElement.querySelector('.palette-meta strong').textContent
+            : 'Corporate';
+        const overrideCount = Object.keys(themeOverrides).length;
+        const overridesSummary = overrideCount
+            ? overrideCount + ' ' + "{{ _('couleur(s) personnalisée(s)') }}: " + Object.keys(themeOverrides).join(', ')
+            : "{{ _('Aucune — toutes héritées du preset') }}";
+        companyTable.innerHTML =
+            summaryRow("{{ _('Identifiant') }}", document.getElementById('dataset-id').value)
+            + summaryRow("{{ _('Nom') }}", document.getElementById('company-name').value)
+            + summaryRow("{{ _('Logo') }}", document.getElementById('logo-url').value || '-')
+            + summaryRow("{{ _('Tagline (français)') }}", document.getElementById('tagline-fr').value || '-')
+            + summaryRow("{{ _('Tagline (English)') }}", document.getElementById('tagline-en').value || '-')
+            + summaryRow("{{ _('Palette') }}", paletteLabel)
+            + summaryRow("{{ _('Overrides') }}", overridesSummary)
+            + summaryRow("{{ _('Masquer modes indisponibles') }}", hideUnavailable ? "{{ _('Oui') }}" : "{{ _('Non') }}");
+
+        const dataTable = document.getElementById('summary-data');
+        dataTable.innerHTML =
+            summaryRow("{{ _('Fichier CSV') }}", csvFilename || currentConfig?.data?.csv_path || '-')
+            + summaryRow("{{ _('Colonnes') }}", csvColumns.length ? csvColumns.length : '-');
+
+        const mappingTable = document.getElementById('summary-mapping');
+        let mappingHtml = '';
+        REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).forEach(f => {
+            const sel = document.getElementById('map-' + f.key);
+            const val = sel ? sel.value : (currentConfig?.data?.column_mapping?.[f.key] || '-');
+            mappingHtml += summaryRow(f.label, val || '-');
+        });
+        mappingTable.innerHTML = mappingHtml;
+    };
+
+    function summaryRow(label, value) {
+        return '<tr><td>' + escapeHtml(label) + '</td><td>' + escapeHtml(value) + '</td></tr>';
+    }
+
+    // -- Save --
+    window.saveDataset = function () {
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true;
+
+        const mapping = {};
+        REQUIRED_FIELDS.concat(OPTIONAL_FIELDS).forEach(f => {
+            const sel = document.getElementById('map-' + f.key);
+            const val = sel ? sel.value : (currentConfig?.data?.column_mapping?.[f.key] || '');
+            if (val) mapping[f.key] = val;
+        });
+
+        const selectedPalette = document.querySelector('input[name="palette"]:checked');
+        const payload = {
+            mode: MODE,
+            id: MODE === 'edit' ? ORIGINAL_DATASET_ID : document.getElementById('dataset-id').value.trim(),
+            company: {
+                name: document.getElementById('company-name').value,
+                logo_url: document.getElementById('logo-url').value,
+                tagline: {
+                    fr: document.getElementById('tagline-fr').value,
+                    en: document.getElementById('tagline-en').value,
+                },
+            },
+            theme: (() => {
+                const themeBlock = {
+                    palette: selectedPalette ? selectedPalette.value : currentPalette,
+                    overrides: themeOverrides,
+                };
+                // background_effect is sent ONLY when the admin picked
+                // an explicit value. Sending the empty/auto choice
+                // would defeat the palette-derived default the model
+                // applies (legacy → fireworks, otherwise → particles).
+                const bgRadio = document.querySelector('input[name="background_effect"]:checked');
+                if (bgRadio && bgRadio.value && bgRadio.value !== 'auto') {
+                    themeBlock.background_effect = bgRadio.value;
+                }
+                // Same auto-default logic for card_effect: legacy palette
+                // gets the gold shine by default, anything else gets none.
+                // Only persist an explicit choice.
+                const cardRadio = document.querySelector('input[name="card_effect"]:checked');
+                if (cardRadio && cardRadio.value && cardRadio.value !== 'auto') {
+                    themeBlock.card_effect = cardRadio.value;
+                }
+                return themeBlock;
+            })(),
+            settings: {
+                hide_unavailable_modes: document.getElementById('hide-unavailable-modes').checked,
+            },
+            column_mapping: mapping,
+            csv_filename: csvFilename,
+        };
+
+        fetch('/setup/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    btn.disabled = false;
+                    showToast(data.error || "{{ _('Erreur lors de la sauvegarde') }}", 'error');
+                    return;
+                }
+                showToast(MODE === 'edit' ? "{{ _('Modifications enregistrées') }}" : "{{ _('Dataset créé') }}", 'success');
+
+                // Warning toast for any photos referenced by the CSV
+                // but missing on disk. Cap at 5 names + a "+N autres"
+                // tail so a giant dataset doesn't fill the screen.
+                const missing = data.warnings?.missing_photos || [];
+                if (missing.length) {
+                    const sample = missing.slice(0, 5);
+                    const tail = missing.length > 5
+                        ? ` (+${missing.length - 5} {{ _('autres') }})`
+                        : '';
+                    const list = sample.join(', ') + tail;
+                    const lead = "{{ _('Photos référencées absentes du dossier') }}";
+                    showToast(`${lead} (${missing.length}): ${list}`, 'warning');
+                }
+
+                setTimeout(() => { window.location.href = data.redirect || '/setup'; }, 1500);
+            })
+            .catch(() => {
+                btn.disabled = false;
+                showToast("{{ _('Erreur réseau') }}", 'error');
+            });
+    };
+
+    // ============================================================
+    // Theme presets — apply / delete / save (EDIT mode only)
+    // ============================================================
+    const presetsList = document.getElementById('theme-presets-list');
+    if (presetsList) {
+        const datasetId = presetsList.dataset.datasetId;
+
+        // Apply: replace active theme with the named preset, server-side.
+        // Reload so the page picks up the new tokens fully (including
+        // CSS that's recomputed on the server).
+        presetsList.addEventListener('click', (e) => {
+            const applyBtn = e.target.closest('[data-preset-apply]');
+            const deleteBtn = e.target.closest('[data-preset-delete]');
+            if (applyBtn) {
+                const name = applyBtn.dataset.presetApply;
+                applyBtn.disabled = true;
+                fetch(`/setup/${encodeURIComponent(datasetId)}/theme/preset/${encodeURIComponent(name)}/apply`, {
+                    method: 'POST',
+                })
+                    .then(r => r.json().then(data => ({ ok: r.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (!ok) {
+                            applyBtn.disabled = false;
+                            showToast(data.error || "{{ _('Erreur') }}", 'error');
+                            return;
+                        }
+                        showToast(
+                            "{{ _('Preset « ') }}" + name + "{{ _(' » appliqué') }}",
+                            'success'
+                        );
+                        setTimeout(() => window.location.reload(), 600);
+                    })
+                    .catch(() => {
+                        applyBtn.disabled = false;
+                        showToast("{{ _('Erreur réseau') }}", 'error');
+                    });
+            } else if (deleteBtn) {
+                const name = deleteBtn.dataset.presetDelete;
+                if (!confirm("{{ _('Supprimer le preset « ') }}" + name + "{{ _(' » ?') }}")) return;
+                deleteBtn.disabled = true;
+                fetch(`/setup/${encodeURIComponent(datasetId)}/theme/preset/${encodeURIComponent(name)}/delete`, {
+                    method: 'POST',
+                })
+                    .then(r => r.json().then(data => ({ ok: r.ok, data })))
+                    .then(({ ok, data }) => {
+                        if (!ok) {
+                            deleteBtn.disabled = false;
+                            showToast(data.error || "{{ _('Erreur') }}", 'error');
+                            return;
+                        }
+                        // Pop the row out of the DOM without reloading.
+                        const row = deleteBtn.closest('.theme-preset-row');
+                        row.remove();
+                        if (!presetsList.querySelector('.theme-preset-row')) {
+                            const empty = document.createElement('p');
+                            empty.id = 'theme-presets-empty';
+                            empty.className = 'form-hint';
+                            empty.textContent = "{{ _('Aucun preset sauvegardé pour ce dataset.') }}";
+                            presetsList.appendChild(empty);
+                        }
+                        showToast("{{ _('Preset supprimé') }}", 'success');
+                    });
+            }
+        });
+
+        // Save current theme as a new preset. We just re-use the main
+        // /setup/save flow with the current overrides + a new entry in
+        // theme.presets — that way the validation + persistence is
+        // shared with every other theme update path.
+        const saveBtn = document.getElementById('theme-preset-save-btn');
+        const nameInput = document.getElementById('theme-preset-name-input');
+        if (saveBtn && nameInput) {
+            saveBtn.addEventListener('click', () => {
+                const name = nameInput.value.trim();
+                if (!name) {
+                    showToast("{{ _('Donne un nom au preset avant de sauvegarder') }}", 'error');
+                    nameInput.focus();
+                    return;
+                }
+                const palette = (document.querySelector('input[name="palette"]:checked') || {}).value || currentPalette;
+                const bgRadio = document.querySelector('input[name="background_effect"]:checked');
+                const newPreset = { palette, overrides: { ...themeOverrides } };
+                if (bgRadio && bgRadio.value && bgRadio.value !== 'auto') {
+                    newPreset.background_effect = bgRadio.value;
+                }
+                const existingPresets = {};
+                presetsList.querySelectorAll('.theme-preset-row').forEach(row => {
+                    existingPresets[row.dataset.name] = currentPresetsRaw[row.dataset.name];
+                });
+                existingPresets[name] = newPreset;
+
+                saveBtn.disabled = true;
+                fetch('/setup/save', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        mode: 'edit',
+                        id: ORIGINAL_DATASET_ID,
+                        company: currentConfig.company || {},
+                        theme: {
+                            palette,
+                            overrides: themeOverrides,
+                            presets: existingPresets,
+                            ...(bgRadio && bgRadio.value && bgRadio.value !== 'auto'
+                                ? { background_effect: bgRadio.value }
+                                : {}),
+                        },
+                        column_mapping: currentConfig.data?.column_mapping || {},
+                    }),
+                })
+                    .then(r => r.json().then(data => ({ ok: r.ok, data })))
+                    .then(({ ok, data }) => {
+                        saveBtn.disabled = false;
+                        if (!ok) {
+                            showToast(data.error || "{{ _('Erreur') }}", 'error');
+                            return;
+                        }
+                        showToast("{{ _('Preset sauvegardé') }}", 'success');
+                        setTimeout(() => window.location.reload(), 600);
+                    })
+                    .catch(() => {
+                        saveBtn.disabled = false;
+                        showToast("{{ _('Erreur réseau') }}", 'error');
+                    });
+            });
+        }
+    }
+
+    // -- Util --
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    // Pre-populate mapping in edit mode (existing mapping reveals the already-known columns)
+    if (currentConfig?.data?.column_mapping && Object.keys(currentConfig.data.column_mapping).length) {
+        const existingCols = Object.values(currentConfig.data.column_mapping);
+        if (existingCols.length && !csvColumns.length) {
+            csvColumns = [...new Set(existingCols)];
+            csvFilename = '';
+            renderMappingSelects();
+        }
+    }
+})();
+</script>
+{% endblock %}

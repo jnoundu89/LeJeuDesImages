@@ -1,0 +1,525 @@
+/* Gameplay shell.
+ *
+ * Replaces the legacy styles.css dark theme for in-game pages
+ * (base_game.html and the 20 mode templates). Uses design-tokens.css
+ * variables so the per-dataset `--primary` lights up the buttons,
+ * timer, and score accents exactly like on the mode-selection page.
+ *
+ * Class names are kept identical to the old stylesheet so mode
+ * templates keep working: `.top-container`, `.main-layout`,
+ * `.center-content`, `.stats`, `.progress-bar`, `.timer`, `.title`,
+ * `.choice-btn`, `.score`, etc. Per-mode inline `{% block mode_styles %}`
+ * rules cascade on top as before.
+ */
+@layer gameplay {
+    body {
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100dvh;
+        padding: 0;
+        margin: 0;
+        font-family: var(--font-sans);
+    }
+
+    /* Mirror of app-shell.css's `.particles-bg` rule — game pages
+     * don't import app-shell.css so we need it here too. The
+     * particles.js canvas + the fireworks canvas both end up
+     * inside this container; either way it stays pinned behind
+     * everything via z-index 0. */
+    .particles-bg {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+    }
+    .particles-bg > canvas {
+        position: absolute;
+        inset: 0;
+        width: 100% !important;
+        height: 100% !important;
+    }
+    /* The game shell sits above the backdrop. .top-container is
+     * already sticky at z-index 50 so it's fine; .main-layout
+     * gets a stacking context via z-index 1. */
+    .main-layout {
+        position: relative;
+        z-index: 1;
+    }
+    /* The next button + form sit at the body level after the layout.
+     * Bump them above the canvas too. */
+    body > form {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Top bar: restart + switchers ---------------------------------- */
+    /* Mirrors `.app-header` so the game pages match whatever the
+     * dataset's header style is (typically navy on Infolegale,
+     * surface-tinted everywhere else). Same `--header-bg` /
+     * `--header-text` indirection. */
+    .top-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-3);
+        padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-8));
+        background: color-mix(in srgb, var(--header-bg, var(--surface)) 92%, transparent);
+        border-bottom: 1px solid color-mix(in srgb, var(--header-text, var(--text)) 18%, transparent);
+        color: var(--header-text, var(--text));
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(10px);
+    }
+    .top-container .top-right {
+        height: 40px;
+        padding: 0 var(--space-4);
+    }
+    .top-container .header-switchers {
+        position: static;
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+    }
+
+    /* Main 3-column game layout ------------------------------------- */
+    .main-layout {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) minmax(0, 2fr) minmax(220px, 1fr);
+        gap: var(--space-4);
+        padding: var(--space-6) clamp(var(--space-4), 4vw, var(--space-8));
+        max-width: 1400px;
+        margin-inline: auto;
+        align-items: start;
+    }
+    /* The 3-column game layout panels are styled like cards — they
+     * pick up the same `--card-bg` / `--card-text` overrides as
+     * `.mode-card`, falling back to `--surface` / `--text` when
+     * the admin hasn't set them explicitly. */
+    .stats,
+    .right-content,
+    .center-content {
+        background: var(--card-bg, var(--surface));
+        color: var(--card-text, var(--text));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: var(--space-5);
+        box-shadow: var(--shadow-xs);
+    }
+    .center-content {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-4);
+        align-items: center;
+    }
+    .center-content img {
+        max-width: 320px;
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow);
+    }
+    /* Soft entrance for employee photos: opacity 0 → 1 over 0.45s.
+     * Pure CSS, no JS hooks needed — the animation runs whenever the
+     * <img> is inserted (i.e. every new question). Skipped under
+     * reduced-motion. */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes employee-photo-fade {
+            from { opacity: 0; transform: scale(0.985); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+        .center-content img,
+        .clue-image,
+        .employee-image,
+        .original-image,
+        .quiz-image,
+        .pixelation-image,
+        .scrambled-image,
+        .example-image {
+            animation: employee-photo-fade 0.45s var(--ease) backwards;
+        }
+    }
+    .right-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    /* Stats / Score panels ----------------------------------------- */
+    .stats h2,
+    .score-section h2,
+    .right-content h2 {
+        font-size: var(--text-base);
+        font-weight: 650;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 var(--space-3);
+        text-align: center;
+    }
+    .stats p,
+    .score-section p,
+    .right-content p {
+        margin: 0 0 var(--space-2);
+        color: var(--text-soft);
+        font-size: var(--text-sm);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: var(--space-2);
+    }
+    /* Score readouts get a star prefix — pixel-game leaderboard vibe.
+     * Mono font for tabular alignment, glow accent on the star. */
+    .score,
+    .score-section .score {
+        color: var(--primary);
+        font-family: var(--font-mono);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.04em;
+    }
+    .score::before {
+        content: "★ ";
+        color: var(--warning);
+        text-shadow: var(--glow-warning);
+        margin-right: 2px;
+    }
+    .score-section {
+        border: 1px solid var(--primary);
+        background: var(--primary-subtle);
+        padding: var(--space-4);
+        border-radius: var(--radius);
+    }
+    .score-section .score {
+        color: var(--primary);
+    }
+    .stats-banner {
+        background: var(--surface-2);
+        color: var(--text-soft);
+        padding: var(--space-3);
+        border-radius: var(--radius);
+        margin-top: var(--space-3);
+    }
+    .stats-banner h2 {
+        color: var(--text);
+        text-align: center;
+        margin-bottom: var(--space-3);
+    }
+    .stats-banner p { margin: var(--space-1) 0; }
+
+    .toggle-stats-btn {
+        width: 100%;
+        padding: var(--space-2) var(--space-3);
+        font: inherit;
+        font-size: var(--text-sm);
+        font-weight: 550;
+        color: var(--text-soft);
+        background: var(--surface-2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        transition: background var(--dur-fast) var(--ease);
+    }
+    .toggle-stats-btn:hover {
+        background: var(--surface-muted);
+        color: var(--text);
+    }
+
+    /* Title + progress + timer ------------------------------------- */
+    .title {
+        font-family: var(--font-display);
+        font-size: clamp(var(--text-2xl), 3.4vw, var(--text-4xl));
+        font-weight: 400;
+        color: var(--text);
+        margin: 0 0 var(--space-2);
+        text-align: center;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        text-shadow: var(--glow-sm);
+        line-height: 1.1;
+    }
+    /* Sub-headline label that wraps the title with arcade brackets,
+     * e.g. "[ MODE PIXELATION ]". Pure CSS, no template touch. */
+    .title::before { content: "[ "; opacity: 0.45; }
+    .title::after { content: " ]"; opacity: 0.45; }
+
+    /* Progress bar — arcade segmented look. The filled portion uses
+     * a repeating gradient so it reads as discrete blocks rather than
+     * a smooth gradient. The track keeps hard 2px borders for a
+     * console-screen feel; a faint inner glow tracks the primary. */
+    .progress-bar {
+        width: 100%;
+        height: 16px;
+        background: var(--surface-muted);
+        border: 2px solid var(--border-strong);
+        border-radius: 2px;
+        overflow: hidden;
+        margin-bottom: var(--space-2);
+        padding: 2px;
+        box-shadow: inset 0 1px 0 color-mix(in srgb, var(--text) 8%, transparent);
+    }
+    .progress-bar-fill {
+        height: 100%;
+        background: var(--primary);
+        background-image: repeating-linear-gradient(
+            90deg,
+            var(--primary) 0,
+            var(--primary) 6px,
+            color-mix(in srgb, var(--primary) 65%, transparent) 6px,
+            color-mix(in srgb, var(--primary) 65%, transparent) 8px
+        );
+        border-radius: 1px;
+        transition: width var(--dur-slow) var(--ease);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-contrast);
+        font-family: var(--font-mono);
+        font-size: var(--text-xs);
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        box-shadow: var(--glow-sm);
+    }
+
+    /* Timer — arcade LCD vibe. Mono font, hard 2px border, no pill.
+     * Warning + danger states inherit their bg/colour tokens AND now
+     * radiate a colored glow so the time-pressure cue is felt
+     * peripherally even when the player's eye is on the photo. */
+    .timer {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 140px;
+        padding: var(--space-2) var(--space-4);
+        font-family: var(--font-mono);
+        font-size: var(--text-base);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.06em;
+        color: var(--text);
+        background: var(--surface-2);
+        border: 2px solid var(--border-strong);
+        border-radius: 2px;
+        text-transform: uppercase;
+        transition: background var(--dur-fast) var(--ease),
+                    color var(--dur-fast) var(--ease),
+                    border-color var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+    }
+    .timer.warning {
+        background: var(--warning-subtle);
+        color: var(--warning);
+        border-color: var(--warning);
+        box-shadow: var(--glow-warning);
+    }
+    .timer.danger {
+        background: var(--danger-subtle);
+        color: var(--danger);
+        border-color: var(--danger);
+        box-shadow: var(--glow-danger);
+        animation: timerPulse 600ms ease-in-out infinite alternate;
+    }
+    @keyframes timerPulse {
+        from { transform: scale(1); }
+        to { transform: scale(1.03); }
+    }
+
+    /* Choice buttons — arcade cabinet feel: mono UPPER labels, hard
+     * 2px border, no rounded pill. Hover lifts and glows; the bottom
+     * "shadow" is a hard pressed-block effect rather than a soft
+     * elevation, so click feels physical. .correct / .incorrect
+     * states keep their existing token-driven colors but inherit the
+     * new shape. */
+    .choice-btn,
+    .normal-choice-btn,
+    .clue-choice-btn,
+    .pixelation-choice-btn,
+    .emoji-choice-btn,
+    .quiz-choice-btn,
+    .team-choice-btn,
+    .memory-choice-btn,
+    .silhouette-choice-btn,
+    .scrambled-choice-btn,
+    .missing-choice-btn,
+    .progressive-choice-btn,
+    .team-guess-choice-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: var(--space-3) var(--space-4);
+        font-family: var(--font-mono);
+        font-size: var(--text-sm);
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text);
+        background: var(--surface);
+        border: 2px solid var(--border-strong);
+        border-radius: 2px;
+        cursor: pointer;
+        transition: background var(--dur-fast) var(--ease),
+                    border-color var(--dur-fast) var(--ease),
+                    color var(--dur-fast) var(--ease),
+                    transform var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+        text-align: center;
+        box-shadow: 0 3px 0 0 var(--border-strong);
+    }
+    .choice-btn:hover:not(.correct):not(.incorrect):not(:disabled),
+    .normal-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled),
+    .clue-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled),
+    .pixelation-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled),
+    .emoji-choice-btn:hover:not(.correct):not(.incorrect):not(:disabled) {
+        background: var(--primary-subtle);
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 0 0 var(--primary), var(--glow-sm);
+    }
+    .choice-btn:active:not(.correct):not(.incorrect):not(:disabled),
+    .normal-choice-btn:active:not(.correct):not(.incorrect):not(:disabled),
+    .clue-choice-btn:active:not(.correct):not(.incorrect):not(:disabled),
+    .pixelation-choice-btn:active:not(.correct):not(.incorrect):not(:disabled),
+    .emoji-choice-btn:active:not(.correct):not(.incorrect):not(:disabled) {
+        transform: translateY(2px);
+        box-shadow: 0 1px 0 0 var(--primary);
+    }
+    .choice-btn.correct,
+    .normal-choice-btn.correct,
+    .clue-choice-btn.correct,
+    .pixelation-choice-btn.correct,
+    .emoji-choice-btn.correct {
+        background: var(--success-subtle);
+        border-color: var(--success);
+        color: var(--success);
+        animation: choicePulse 800ms ease-in-out;
+    }
+    .choice-btn.incorrect,
+    .normal-choice-btn.incorrect,
+    .clue-choice-btn.incorrect,
+    .pixelation-choice-btn.incorrect,
+    .emoji-choice-btn.incorrect {
+        background: var(--danger-subtle);
+        border-color: var(--danger);
+        color: var(--danger);
+        animation: choiceShake 420ms ease;
+    }
+    @keyframes choicePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+    }
+    @keyframes choiceShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-4px); }
+        75% { transform: translateX(4px); }
+    }
+
+    /* "Next" submit button ---------------------------------------- */
+    form[action="/check"] {
+        max-width: 1400px;
+        margin: var(--space-4) auto;
+        padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        text-align: center;
+    }
+    /* Submit button — the "press start" of the round. Hard 4px
+     * pressed-block shadow that compresses on click. Glow on hover. */
+    form[action="/check"] button[type="submit"],
+    #next {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-2);
+        height: 52px;
+        padding: 0 var(--space-8);
+        font-family: var(--font-mono);
+        font-size: var(--text-base);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--primary-contrast);
+        background: var(--primary);
+        border: 2px solid var(--primary);
+        border-radius: 2px;
+        cursor: pointer;
+        transition: background var(--dur-fast) var(--ease),
+                    transform var(--dur-fast) var(--ease),
+                    box-shadow var(--dur-fast) var(--ease);
+        box-shadow: 0 4px 0 0 var(--primary-pressed), var(--glow);
+    }
+    form[action="/check"] button[type="submit"]:hover:not(:disabled),
+    #next:hover:not(:disabled) {
+        background: var(--primary-hover);
+        border-color: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 5px 0 0 var(--primary-pressed),
+                    0 0 24px color-mix(in srgb, var(--primary) 65%, transparent);
+    }
+    form[action="/check"] button[type="submit"]:active:not(:disabled),
+    #next:active:not(:disabled) {
+        transform: translateY(3px);
+        box-shadow: 0 1px 0 0 var(--primary-pressed), var(--glow-sm);
+    }
+    #next.disabled-btn,
+    form[action="/check"] button[type="submit"]:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        box-shadow: 0 2px 0 0 var(--border-strong);
+    }
+
+    /* Sections used by various modes ------------------------------- */
+    .game-section {
+        width: 100%;
+        max-width: 800px;
+        margin: var(--space-3) auto;
+        padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+    }
+    .normal-choices,
+    .clue-choices,
+    .pixelation-choices,
+    .emoji-choices,
+    .quiz-choices,
+    .team-choices,
+    .silhouette-choices,
+    .scrambled-choices {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: var(--space-3);
+        margin-top: var(--space-3);
+    }
+
+    .text-align-center { text-align: center; }
+
+    /* Responsive ---------------------------------------------------- */
+    @media (max-width: 900px) {
+        .main-layout {
+            grid-template-columns: 1fr;
+        }
+        .stats,
+        .right-content {
+            order: 2;
+        }
+        .center-content {
+            order: 1;
+        }
+        .top-container {
+            padding: var(--space-3);
+        }
+    }
+
+    /* Utility animations kept from legacy stylesheet --------------- */
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.025); }
+    }
+    @keyframes shake {
+        0%, 100% { transform: translate(0, 0); }
+        25% { transform: translate(-4px, 0); }
+        75% { transform: translate(4px, 0); }
+    }
+    .shake { animation: shake 420ms ease; }
+}

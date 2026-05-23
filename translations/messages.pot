@@ -1,0 +1,2011 @@
+# Translations template for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-04-24 17:11+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: models/age_mode.py:27
+msgid "Âge"
+msgstr ""
+
+#: models/age_mode.py:31
+msgid "Quel âge a la personne ? Devinez l'âge de la personne affichée"
+msgstr ""
+
+#: models/clue_mode.py:31
+msgid "Indices"
+msgstr ""
+
+#: models/clue_mode.py:35
+msgid "Mode indices : devinez qui est la personne avec le minimum d'indices"
+msgstr ""
+
+#: models/emoji_challenge_mode.py:30
+msgid "Défi Emoji"
+msgstr ""
+
+#: models/emoji_challenge_mode.py:34
+msgid "Mode Défi Emoji : devinez qui est la personne représentée par ces emojis"
+msgstr ""
+
+#: models/example_mode.py:29
+msgid "Exemple"
+msgstr ""
+
+#: models/example_mode.py:33
+msgid "Mode exemple : identifiez uniquement le nom de la personne sur l'image"
+msgstr ""
+
+#: models/game_mode.py:274
+msgid "Normal"
+msgstr ""
+
+#: models/game_mode.py:278
+msgid ""
+"Identifiez l'entreprise, l'équipe, le nom et le poste de la personne sur "
+"l'image"
+msgstr ""
+
+#: models/game_mode.py:353
+msgid "Inverse"
+msgstr ""
+
+#: models/game_mode.py:357
+msgid "Identifiez la personne correspondant au nom affiché"
+msgstr ""
+
+#: models/manager_mode.py:26 templates/_mode_preview.html:46
+#: templates/employee_edit.html:176 templates/setup_wizard.html:400
+msgid "Manager"
+msgstr ""
+
+#: models/manager_mode.py:30
+msgid "Qui est le manager de qui ? Identifiez le manager de la personne affichée"
+msgstr ""
+
+#: models/memory_mode.py:31 routes/game_routes.py:26
+msgid "Mémoire"
+msgstr ""
+
+#: models/memory_mode.py:35
+msgid "Mode mémoire : associez les photos avec les noms en retournant des cartes"
+msgstr ""
+
+#: models/mirror_mode.py:38
+msgid "Miroir"
+msgstr ""
+
+#: models/mirror_mode.py:42
+msgid ""
+"Mode Miroir : identifiez la personne dont l'image est inversée "
+"horizontalement"
+msgstr ""
+
+#: models/missing_person_mode.py:30
+msgid "Personne manquante"
+msgstr ""
+
+#: models/missing_person_mode.py:34
+msgid "Mode personne manquante : identifiez qui manque dans l'équipe affichée"
+msgstr ""
+
+#: models/pixelation_mode.py:28
+msgid "Pixélisation"
+msgstr ""
+
+#: models/pixelation_mode.py:32
+msgid ""
+"Mode pixelisation : identifiez la personne sur l'image qui devient "
+"progressivement plus nette"
+msgstr ""
+
+#: models/position_match_mode.py:41
+msgid "Association de postes"
+msgstr ""
+
+#: models/position_match_mode.py:45
+msgid "Mode poste : associez chaque employé avec son poste correct"
+msgstr ""
+
+#: models/progressive_hint_mode.py:33
+msgid "Indices progressifs"
+msgstr ""
+
+#: models/progressive_hint_mode.py:37
+msgid ""
+"Mode indices progressifs : identifiez l'employé avec le moins d'indices "
+"possible pour gagner plus de points"
+msgstr ""
+
+#: models/quiz_mode.py:29
+msgid "Quiz"
+msgstr ""
+
+#: models/quiz_mode.py:33
+msgid "Mode quiz : répondez à des questions variées sur vos collègues"
+msgstr ""
+
+#: models/scrambled_face_mode.py:30
+msgid "Visage mélangé"
+msgstr ""
+
+#: models/scrambled_face_mode.py:34
+msgid ""
+"Mode Visage Mélangé : identifiez la personne dont le visage a été mélangé"
+" avec d'autres"
+msgstr ""
+
+#: models/seniority_mode.py:27
+msgid "Ancienneté"
+msgstr ""
+
+#: models/seniority_mode.py:31
+msgid ""
+"Combien d'années d'ancienneté ? Devinez depuis combien d'années la "
+"personne travaille dans l'entreprise"
+msgstr ""
+
+#: models/silhouette_mode.py:29
+msgid "Silhouette"
+msgstr ""
+
+#: models/silhouette_mode.py:33
+msgid "Mode Silhouette : identifiez la personne à partir de sa silhouette"
+msgstr ""
+
+#: models/speed_mode.py:30
+msgid "Vitesse"
+msgstr ""
+
+#: models/speed_mode.py:34
+msgid ""
+"Mode vitesse : identifiez un maximum d'employés en un temps limité, plus "
+"vous êtes rapide, plus vous gagnez de points"
+msgstr ""
+
+#: models/team_guess_mode.py:27
+msgid "Devine l'équipe"
+msgstr ""
+
+#: models/team_guess_mode.py:31
+msgid "Mode équipe : devinez à quelle équipe appartient chaque employé"
+msgstr ""
+
+#: models/team_mode.py:29 templates/_mode_preview.html:45
+#: templates/emoji_challenge.html:81 templates/employee_edit.html:135
+#: templates/employees_list.html:132 templates/missing_person.html:62
+#: templates/result.html:141 templates/setup_wizard.html:391
+#: templates/team.html:93
+msgid "Équipe"
+msgstr ""
+
+#: models/team_mode.py:33
+msgid "Mode équipe : identifiez tous les membres d'une équipe spécifique"
+msgstr ""
+
+#: models/timed_mode.py:28
+msgid "Chronométré"
+msgstr ""
+
+#: models/timed_mode.py:32
+msgid "Mode chronométré : identifiez le maximum de personnes en 2 minutes"
+msgstr ""
+
+#: routes/admin_routes.py:144 routes/admin_routes.py:150
+msgid "Unauthorized"
+msgstr ""
+
+#: routes/admin_routes.py:174
+msgid "Mot de passe incorrect."
+msgstr ""
+
+#: routes/admin_routes.py:321 routes/admin_routes.py:524
+#: routes/admin_routes.py:829 routes/admin_routes.py:994
+msgid "No file provided"
+msgstr ""
+
+#: routes/admin_routes.py:325 routes/admin_routes.py:528
+#: routes/admin_routes.py:833 routes/admin_routes.py:998
+msgid "No file selected"
+msgstr ""
+
+#: routes/admin_routes.py:329
+msgid "File must be a CSV"
+msgstr ""
+
+#: routes/admin_routes.py:340
+msgid "Invalid CSV file"
+msgstr ""
+
+#: routes/admin_routes.py:358
+msgid "No data provided"
+msgstr ""
+
+#: routes/admin_routes.py:363
+msgid ""
+"Dataset id must be lowercase alphanumeric (underscores and dashes "
+"allowed, max 32 chars)."
+msgstr ""
+
+#: routes/admin_routes.py:368 routes/admin_routes.py:839
+msgid "A dataset with this id already exists."
+msgstr ""
+
+#: routes/admin_routes.py:387 routes/admin_routes.py:587
+msgid "Uploaded CSV was not found. Re-upload and retry."
+msgstr ""
+
+#: routes/admin_routes.py:392
+msgid "A CSV file is required to create a dataset."
+msgstr ""
+
+#: routes/admin_routes.py:491 routes/admin_routes.py:521
+#: routes/admin_routes.py:578 routes/admin_routes.py:698
+#: routes/admin_routes.py:724 routes/admin_routes.py:754
+#: routes/admin_routes.py:784 routes/admin_routes.py:937
+#: routes/admin_routes.py:986
+msgid "Dataset not found"
+msgstr ""
+
+#: routes/admin_routes.py:532
+msgid "File must be a ZIP archive"
+msgstr ""
+
+#: routes/admin_routes.py:559 routes/admin_routes.py:900
+msgid "Invalid ZIP file"
+msgstr ""
+
+#: routes/admin_routes.py:583
+msgid "csv_filename is required"
+msgstr ""
+
+#: routes/admin_routes.py:705 routes/admin_routes.py:731
+#, python-format
+msgid "Missing required fields: %(fields)s"
+msgstr ""
+
+#: routes/admin_routes.py:736 routes/admin_routes.py:759
+#: routes/admin_routes.py:991
+msgid "Employee not found"
+msgstr ""
+
+#: routes/admin_routes.py:837
+msgid "Invalid dataset id"
+msgstr ""
+
+#: routes/admin_routes.py:850
+msgid "Archive must contain manifest.json and team.csv"
+msgstr ""
+
+#: routes/admin_routes.py:857
+msgid "Target dataset dir already exists"
+msgstr ""
+
+#: routes/admin_routes.py:902
+msgid "Invalid archive"
+msgstr ""
+
+#: routes/admin_routes.py:1002
+msgid "Unsupported image format"
+msgstr ""
+
+#: routes/admin_routes.py:1007
+msgid "Invalid or oversize image (max 8 MiB)"
+msgstr ""
+
+#: routes/admin_routes.py:1021
+msgid "Invalid path"
+msgstr ""
+
+#: routes/game_routes.py:22
+msgid "Rapide"
+msgstr ""
+
+#: routes/game_routes.py:23
+msgid "Culture"
+msgstr ""
+
+#: routes/game_routes.py:24 templates/employee_edit.html:113
+#: templates/employees_list.html:130 templates/setup_wizard.html:390
+msgid "Photo"
+msgstr ""
+
+#: routes/game_routes.py:25
+msgid "Devinette"
+msgstr ""
+
+#: routes/game_routes.py:27
+msgid "Nouveau"
+msgstr ""
+
+#: routes/game_routes.py:28
+msgid "Populaire"
+msgstr ""
+
+#: routes/game_routes.py:29
+msgid "Temps"
+msgstr ""
+
+#: routes/game_routes.py:30 templates/mode_selection.html:119
+msgid "Expérimental"
+msgstr ""
+
+#: templates/_mode_preview.html:47 templates/emoji_challenge.html:85
+#: templates/employee_edit.html:139 templates/employees_list.html:133
+#: templates/result.html:149 templates/setup_wizard.html:392
+msgid "Poste"
+msgstr ""
+
+#: templates/_switchers.html:8
+msgid "Termine ou recommence la partie pour changer de dataset."
+msgstr ""
+
+#: templates/_switchers.html:8 templates/_switchers.html:9
+msgid "Changer de dataset"
+msgstr ""
+
+#: templates/_switchers.html:20
+msgid "Langue"
+msgstr ""
+
+#: templates/about.html:3
+msgid "Le Jeu Des Images - À propos"
+msgstr ""
+
+#: templates/about.html:6
+#, python-format
+msgid ""
+"Découvrez l'histoire et l'équipe derrière Le Jeu Des Images, un jeu "
+"interactif pour identifier les membres de l'équipe %(company_name)s."
+msgstr ""
+
+#: templates/about.html:9 templates/base_page.html:61
+msgid "À propos"
+msgstr ""
+
+#: templates/about.html:10
+msgid "Découvrez l'histoire et l'équipe derrière Le Jeu Des Images"
+msgstr ""
+
+#: templates/about.html:14
+msgid "Notre histoire"
+msgstr ""
+
+#: templates/about.html:16
+#, python-format
+msgid ""
+"Le Jeu Des Images est né d'une volonté de créer un outil ludique et "
+"interactif pour aider les nouveaux collaborateurs à se familiariser avec "
+"les membres de l'équipe %(company_name)s."
+msgstr ""
+
+#: templates/about.html:17
+msgid ""
+"Ce projet a été développé avec passion pour favoriser l'intégration et "
+"renforcer la cohésion d'équipe au sein de notre entreprise."
+msgstr ""
+
+#: templates/about.html:22
+msgid "Notre mission"
+msgstr ""
+
+#: templates/about.html:24
+msgid ""
+"Notre mission est de faciliter l'apprentissage des visages et des noms de"
+" vos collègues de manière amusante et engageante."
+msgstr ""
+
+#: templates/about.html:25
+msgid ""
+"Grâce à différents modes de jeu, vous pouvez tester et améliorer votre "
+"connaissance de l'équipe tout en vous amusant."
+msgstr ""
+
+#: templates/about.html:30
+msgid "L'équipe de développement"
+msgstr ""
+
+#: templates/about.html:32
+#, python-format
+msgid ""
+"Le Jeu Des Images a été conçu et développé par une équipe passionnée de "
+"développeurs et de designers de %(company_name)s."
+msgstr ""
+
+#: templates/about.html:33
+msgid ""
+"Nous travaillons constamment à améliorer l'expérience utilisateur et à "
+"ajouter de nouveaux modes de jeu pour rendre l'apprentissage encore plus "
+"amusant."
+msgstr ""
+
+#: templates/about.html:38
+msgid "Contactez-nous"
+msgstr ""
+
+#: templates/about.html:40
+msgid ""
+"Vous avez des suggestions ou des commentaires pour améliorer Le Jeu Des "
+"Images ? N'hésitez pas à nous contacter !"
+msgstr ""
+
+#: templates/about.html:41
+msgid "Envoyez-nous un email à"
+msgstr ""
+
+#: templates/about.html:41
+msgid "ou parlez-en directement à un membre de l'équipe de développement."
+msgstr ""
+
+#: templates/about.html:46 templates/how_to_play.html:64
+#: templates/scores.html:83
+msgid "Retour à l'accueil"
+msgstr ""
+
+#: templates/age.html:3
+msgid "Mode Âge"
+msgstr ""
+
+#: templates/age.html:25
+msgid "Quel âge a cette personne ?"
+msgstr ""
+
+#: templates/age.html:40 templates/manager.html:71 templates/normal.html:31
+#: templates/reverse.html:32 templates/seniority.html:40
+msgid "Meilleur score"
+msgstr ""
+
+#: templates/age.html:41 templates/base_game.html:60 templates/manager.html:72
+#: templates/missing_person.html:79 templates/normal.html:32
+#: templates/progressive_hint.html:115 templates/reverse.html:33
+#: templates/seniority.html:41 templates/speed.html:53
+#: templates/team_guess.html:54
+msgid "Score actuel"
+msgstr ""
+
+#: templates/base.html:17 templates/employee_edit.html:4
+#: templates/employees_list.html:3 templates/setup_list.html:3
+#: templates/setup_login.html:3 templates/setup_wizard.html:4
+msgid "Le Jeu Des Images"
+msgstr ""
+
+#: templates/base_game.html:15
+msgid "Recommencer"
+msgstr ""
+
+#: templates/base_game.html:25
+msgid "Masquer les statistiques"
+msgstr ""
+
+#: templates/base_game.html:25
+msgid "Afficher les statistiques"
+msgstr ""
+
+#: templates/base_game.html:27
+msgid "Statistiques de jeu"
+msgstr ""
+
+#: templates/base_game.html:28
+msgid "Bonnes réponses pour l'entreprise"
+msgstr ""
+
+#: templates/base_game.html:29
+msgid "Bonnes réponses pour l'équipe"
+msgstr ""
+
+#: templates/base_game.html:30
+msgid "Bonnes réponses pour le nom"
+msgstr ""
+
+#: templates/base_game.html:31
+msgid "Bonnes réponses pour le poste"
+msgstr ""
+
+#: templates/base_game.html:45 templates/timed.html:39 templates/timed.html:76
+msgid "Temps restant"
+msgstr ""
+
+#: templates/base_game.html:58 templates/base_page.html:31
+#: templates/scores.html:9
+msgid "Scores"
+msgstr ""
+
+#: templates/base_game.html:71
+msgid "Personne suivante"
+msgstr ""
+
+#: templates/base_page.html:11
+msgid "Aller au contenu"
+msgstr ""
+
+#: templates/base_page.html:30
+msgid "Modes de jeu"
+msgstr ""
+
+#: templates/base_page.html:32 templates/base_page.html:62
+#: templates/how_to_play.html:9
+msgid "Comment jouer"
+msgstr ""
+
+#: templates/base_page.html:59
+#, python-format
+msgid "Le Jeu Des Images · identifiez les membres de l'équipe %(company_name)s"
+msgstr ""
+
+#: templates/base_page.html:63
+msgid "Contact"
+msgstr ""
+
+#: templates/base_page.html:64
+msgid "Admin"
+msgstr ""
+
+#: templates/clue.html:3
+msgid "Mode Indices"
+msgstr ""
+
+#: templates/clue.html:57
+msgid "Mode Indices - Devinez avec le minimum d'indices"
+msgstr ""
+
+#: templates/clue.html:66
+msgid "Révéler un indice"
+msgstr ""
+
+#: templates/clue.html:67 templates/clue.html:109
+msgid "Points possibles"
+msgstr ""
+
+#: templates/emoji_challenge.html:3
+msgid "Mode Défi Emoji"
+msgstr ""
+
+#: templates/emoji_challenge.html:72
+msgid "Mode Défi Emoji - Qui suis-je?"
+msgstr ""
+
+#: templates/emoji_challenge.html:77 templates/result.html:137
+#: templates/setup_wizard.html:338
+msgid "Entreprise"
+msgstr ""
+
+#: templates/emoji_challenge.html:97 templates/silhouette.html:78
+msgid "Révéler la photo"
+msgstr ""
+
+#: templates/employee_edit.html:4 templates/employee_edit.html:95
+#: templates/employees_list.html:153 templates/setup_list.html:64
+msgid "Modifier"
+msgstr ""
+
+#: templates/employee_edit.html:4 templates/employee_edit.html:97
+msgid "Nouvel employé"
+msgstr ""
+
+#: templates/employee_edit.html:89
+msgid "Retour aux employés"
+msgstr ""
+
+#: templates/employee_edit.html:100
+msgid "Dataset"
+msgstr ""
+
+#: templates/employee_edit.html:114
+msgid "Fichier actuel"
+msgstr ""
+
+#: templates/employee_edit.html:117
+msgid "Remplacer la photo"
+msgstr ""
+
+#: templates/employee_edit.html:124
+msgid "Informations principales"
+msgstr ""
+
+#: templates/employee_edit.html:127 templates/setup_wizard.html:388
+msgid "Prénom"
+msgstr ""
+
+#: templates/employee_edit.html:131 templates/employees_list.html:131
+#: templates/result.html:145 templates/setup_wizard.html:389
+#: templates/setup_wizard.html:971
+msgid "Nom"
+msgstr ""
+
+#: templates/employee_edit.html:143 templates/setup_wizard.html:393
+msgid "Société"
+msgstr ""
+
+#: templates/employee_edit.html:147 templates/setup_wizard.html:394
+msgid "Sexe"
+msgstr ""
+
+#: templates/employee_edit.html:149
+msgid "Sélectionner"
+msgstr ""
+
+#: templates/employee_edit.html:156
+msgid "Fichier photo"
+msgstr ""
+
+#: templates/employee_edit.html:158
+msgid ""
+"Nom du fichier dans le répertoire photos (photo à uploader depuis la page"
+" Modifier après création)."
+msgstr ""
+
+#: templates/employee_edit.html:165
+msgid "Informations optionnelles"
+msgstr ""
+
+#: templates/employee_edit.html:168 templates/setup_wizard.html:398
+msgid "Date de naissance"
+msgstr ""
+
+#: templates/employee_edit.html:172 templates/setup_wizard.html:399
+msgid "Date d'embauche"
+msgstr ""
+
+#: templates/employee_edit.html:183 templates/employees_list.html:181
+#: templates/mode_selection.html:195 templates/setup_list.html:97
+msgid "Annuler"
+msgstr ""
+
+#: templates/employee_edit.html:187
+msgid "Enregistrer"
+msgstr ""
+
+#: templates/employee_edit.html:187
+msgid "Créer"
+msgstr ""
+
+#: templates/employee_edit.html:236 templates/setup_wizard.html:1042
+msgid "Erreur lors de la sauvegarde"
+msgstr ""
+
+#: templates/employee_edit.html:240 templates/setup_wizard.html:1045
+msgid "Modifications enregistrées"
+msgstr ""
+
+#: templates/employee_edit.html:240
+msgid "Employé créé"
+msgstr ""
+
+#: templates/employee_edit.html:246 templates/employee_edit.html:295
+#: templates/employees_list.html:248 templates/setup_list.html:145
+#: templates/setup_list.html:186 templates/setup_list.html:221
+#: templates/setup_list.html:223 templates/setup_wizard.html:773
+#: templates/setup_wizard.html:952 templates/setup_wizard.html:1050
+msgid "Erreur réseau"
+msgstr ""
+
+#: templates/employee_edit.html:262
+msgid "Envoi..."
+msgstr ""
+
+#: templates/employee_edit.html:272 templates/setup_list.html:199
+msgid "Erreur"
+msgstr ""
+
+#: templates/employee_edit.html:276
+msgid "Photo mise à jour"
+msgstr ""
+
+#: templates/employees_list.html:3 templates/setup_list.html:61
+msgid "Employés"
+msgstr ""
+
+#: templates/employees_list.html:110
+msgid "Retour à la liste des datasets"
+msgstr ""
+
+#: templates/employees_list.html:113
+msgid "Employés de"
+msgstr ""
+
+#: templates/employees_list.html:114 templates/setup_list.html:51
+msgid "employés"
+msgstr ""
+
+#: templates/employees_list.html:119
+msgid "Rechercher un employé..."
+msgstr ""
+
+#: templates/employees_list.html:119
+msgid "Rechercher un employé"
+msgstr ""
+
+#: templates/employees_list.html:122 templates/employees_list.html:171
+msgid "Ajouter un employé"
+msgstr ""
+
+#: templates/employees_list.html:134
+msgid "Actions"
+msgstr ""
+
+#: templates/employees_list.html:164
+msgid "Aucun employé ne correspond à votre recherche."
+msgstr ""
+
+#: templates/employees_list.html:168
+msgid "Aucun employé"
+msgstr ""
+
+#: templates/employees_list.html:169
+msgid "Ajoutez un premier employé pour ce dataset."
+msgstr ""
+
+#: templates/employees_list.html:178
+msgid "Supprimer l'employé ?"
+msgstr ""
+
+#: templates/employees_list.html:179
+msgid "L'employé"
+msgstr ""
+
+#: templates/employees_list.html:179
+msgid "sera définitivement retiré du CSV. Cette action est irréversible."
+msgstr ""
+
+#: templates/employees_list.html:183 templates/setup_list.html:73
+msgid "Supprimer"
+msgstr ""
+
+#: templates/employees_list.html:241 templates/setup_list.html:138
+msgid "Erreur lors de la suppression"
+msgstr ""
+
+#: templates/example.html:3
+msgid "Mode Exemple"
+msgstr ""
+
+#: templates/example.html:22
+msgid "Mode Exemple - Identifiez le nom"
+msgstr ""
+
+#: templates/how_to_play.html:3
+msgid "Le Jeu Des Images - Comment jouer"
+msgstr ""
+
+#: templates/how_to_play.html:6
+#, python-format
+msgid ""
+"Apprenez a jouer au Jeu Des Images et decouvrez les regles des differents"
+" modes de jeu pour identifier les membres de l'équipe %(company_name)s."
+msgstr ""
+
+#: templates/how_to_play.html:10
+msgid "Découvrez les règles et astuces pour maîtriser tous les modes de jeu"
+msgstr ""
+
+#: templates/how_to_play.html:14
+msgid "Principes de base"
+msgstr ""
+
+#: templates/how_to_play.html:16
+msgid ""
+"Le Jeu Des Images est conçu pour vous aider à mémoriser les visages et "
+"les noms de vos collègues de manière ludique et interactive."
+msgstr ""
+
+#: templates/how_to_play.html:17
+msgid ""
+"Chaque mode de jeu propose un défi différent, mais l'objectif reste le "
+"même : associer correctement les visages aux noms, équipes et postes."
+msgstr ""
+
+#: templates/how_to_play.html:22
+msgid "Modes de jeu classiques"
+msgstr ""
+
+#: templates/how_to_play.html:24
+msgid "Mode Normal"
+msgstr ""
+
+#: templates/how_to_play.html:25
+msgid ""
+"Dans ce mode, vous voyez la photo d'un collaborateur et devez identifier "
+"son entreprise, son équipe, son nom et son poste. Vous gagnez des points "
+"pour chaque bonne réponse."
+msgstr ""
+
+#: templates/how_to_play.html:27
+msgid "Mode Inverse"
+msgstr ""
+
+#: templates/how_to_play.html:28
+msgid ""
+"À l'inverse du mode normal, vous voyez un nom et devez identifier la "
+"personne parmi plusieurs photos. Ce mode teste votre mémoire visuelle."
+msgstr ""
+
+#: templates/how_to_play.html:30
+msgid "Mode Pixelation"
+msgstr ""
+
+#: templates/how_to_play.html:31
+msgid ""
+"L'image d'un collaborateur apparait progressivement, devenant de plus en "
+"plus nette. Plus vite vous identifiez la personne, plus vous gagnez de "
+"points."
+msgstr ""
+
+#: templates/how_to_play.html:33 templates/timed.html:3
+msgid "Mode Chronométré"
+msgstr ""
+
+#: templates/how_to_play.html:34
+msgid ""
+"Similaire au mode normal, mais avec une limite de temps pour repondre. La"
+" pression est a son comble !"
+msgstr ""
+
+#: templates/how_to_play.html:39
+msgid "Modes de jeu expérimentaux"
+msgstr ""
+
+#: templates/how_to_play.html:41
+msgid ""
+"Découvrez nos modes de jeu expérimentaux pour des défis encore plus "
+"variés :"
+msgstr ""
+
+#: templates/how_to_play.html:43
+msgid "Mode Memoire"
+msgstr ""
+
+#: templates/how_to_play.html:43
+msgid "Retrouvez les paires correspondantes, comme dans un jeu de memory."
+msgstr ""
+
+#: templates/how_to_play.html:44
+msgid "Mode Equipe"
+msgstr ""
+
+#: templates/how_to_play.html:44
+msgid "Identifiez les membres d'une equipe specifique."
+msgstr ""
+
+#: templates/how_to_play.html:45
+msgid "Mode Indice"
+msgstr ""
+
+#: templates/how_to_play.html:45
+msgid "Utilisez des indices pour identifier la personne."
+msgstr ""
+
+#: templates/how_to_play.html:46
+msgid "Et bien d'autres"
+msgstr ""
+
+#: templates/how_to_play.html:46
+msgid "a decouvrir par vous-meme !"
+msgstr ""
+
+#: templates/how_to_play.html:52
+msgid "Astuces pour progresser"
+msgstr ""
+
+#: templates/how_to_play.html:55
+msgid ""
+"Commencez par le mode normal pour vous familiariser avec les visages et "
+"les noms."
+msgstr ""
+
+#: templates/how_to_play.html:56
+msgid ""
+"Utilisez le mode pixélisation pour tester votre capacité à reconnaître "
+"rapidement vos collègues."
+msgstr ""
+
+#: templates/how_to_play.html:57
+msgid "Jouez régulièrement pour améliorer votre mémoire des visages et des noms."
+msgstr ""
+
+#: templates/how_to_play.html:58
+msgid ""
+"N'hésitez pas a explorer tous les modes de jeu pour une experience "
+"complete."
+msgstr ""
+
+#: templates/manager.html:3
+msgid "Mode Manager"
+msgstr ""
+
+#: templates/manager.html:56
+msgid "Qui est le manager de cette personne ?"
+msgstr ""
+
+#: templates/memory.html:63
+msgid "Mode Mémoire - Associez les photos avec les noms"
+msgstr ""
+
+#: templates/memory.html:68
+msgid "Paires trouvées"
+msgstr ""
+
+#: templates/memory.html:69
+msgid "Essais"
+msgstr ""
+
+#: templates/memory.html:73
+msgid "Félicitations! Vous avez trouvé toutes les paires!"
+msgstr ""
+
+#: templates/mirror.html:3
+msgid "Mode Miroir"
+msgstr ""
+
+#: templates/mirror.html:61
+msgid "Mode Miroir - Identifiez la personne"
+msgstr ""
+
+#: templates/mirror.html:71
+msgid "Retourner l'image"
+msgstr ""
+
+#: templates/mirror.html:94
+msgid "Voir en miroir"
+msgstr ""
+
+#: templates/mirror.html:97
+msgid "Voir normal"
+msgstr ""
+
+#: templates/missing_person.html:5 templates/missing_person.html:52
+msgid "Mode Personne Manquante"
+msgstr ""
+
+#: templates/missing_person.html:80 templates/progressive_hint.html:116
+#: templates/quiz.html:36 templates/speed.html:54 templates/team_guess.html:55
+msgid "Question"
+msgstr ""
+
+#: templates/missing_person.html:92
+msgid "Qui manque dans cette équipe ?"
+msgstr ""
+
+#: templates/mode_selection.html:3
+msgid "Le Jeu Des Images — Modes de jeu"
+msgstr ""
+
+#: templates/mode_selection.html:21
+msgid "Choisissez votre mode de jeu"
+msgstr ""
+
+#: templates/mode_selection.html:22
+msgid ""
+"Testez votre connaissance des membres de l'équipe à travers différents "
+"défis."
+msgstr ""
+
+#: templates/mode_selection.html:27
+msgid "Mode aléatoire"
+msgstr ""
+
+#: templates/mode_selection.html:35
+msgid "Filtrer les modes de jeu"
+msgstr ""
+
+#: templates/mode_selection.html:40
+msgid "Rechercher un mode…"
+msgstr ""
+
+#: templates/mode_selection.html:41
+msgid "Rechercher un mode"
+msgstr ""
+
+#: templates/mode_selection.html:46 templates/mode_selection.html:127
+msgid "Difficulté"
+msgstr ""
+
+#: templates/mode_selection.html:52
+msgid "Toutes"
+msgstr ""
+
+#: templates/mode_selection.html:60
+msgid "Facile"
+msgstr ""
+
+#: templates/mode_selection.html:60
+msgid "Moyen"
+msgstr ""
+
+#: templates/mode_selection.html:60
+msgid "Difficile"
+msgstr ""
+
+#: templates/mode_selection.html:68
+msgid "Thèmes"
+msgstr ""
+
+#: templates/mode_selection.html:88
+msgid "mode disponible"
+msgstr ""
+
+#: templates/mode_selection.html:89
+msgid "modes disponibles"
+msgstr ""
+
+#: templates/mode_selection.html:96 templates/setup_wizard.html:221
+msgid "Réinitialiser"
+msgstr ""
+
+#: templates/mode_selection.html:114
+msgid "Indisponible"
+msgstr ""
+
+#: templates/mode_selection.html:139
+msgid "min"
+msgstr ""
+
+#: templates/mode_selection.html:151
+msgid "Colonnes manquantes"
+msgstr ""
+
+#: templates/mode_selection.html:153
+#, python-format
+msgid "%(count)s employés éligibles (minimum %(min)s)"
+msgstr ""
+
+#: templates/mode_selection.html:163
+msgid "Aucun mode ne correspond à vos filtres."
+msgstr ""
+
+#: templates/mode_selection.html:167
+msgid "Réinitialiser les filtres"
+msgstr ""
+
+#: templates/mode_selection.html:174
+msgid "Mode indisponible"
+msgstr ""
+
+#: templates/mode_selection.html:175 templates/setup_wizard.html:365
+msgid "Fermer"
+msgstr ""
+
+#: templates/mode_selection.html:184
+msgid "Colonnes requises non renseignées"
+msgstr ""
+
+#: templates/mode_selection.html:198
+msgid "Compléter les données"
+msgstr ""
+
+#: templates/mode_selection.html:217
+msgid "Ce mode nécessite des données non renseignées dans ce dataset."
+msgstr ""
+
+#: templates/mode_selection.html:218
+#, python-brace-format
+msgid ""
+"Ce mode nécessite au moins {min} employés éligibles (actuellement "
+"{count})."
+msgstr ""
+
+#: templates/normal.html:3
+msgid "Qui qui c'est le monsieur / la madame ?"
+msgstr ""
+
+#: templates/normal.html:24
+msgid "Qui qui c'est le monsieur / la madame sur la photo ?"
+msgstr ""
+
+#: templates/normal.html:54
+msgid "ENTREPRISE"
+msgstr ""
+
+#: templates/normal.html:62
+msgid "ÉQUIPE"
+msgstr ""
+
+#: templates/normal.html:70
+msgid "NOM"
+msgstr ""
+
+#: templates/normal.html:78
+msgid "POSTE"
+msgstr ""
+
+#: templates/pixelation.html:3
+msgid "Mode Pixelisation"
+msgstr ""
+
+#: templates/pixelation.html:28
+msgid "Mode Pixelisation - Identifiez la personne"
+msgstr ""
+
+#: templates/position_match.html:5 templates/position_match.html:104
+msgid "Mode Association de Postes"
+msgstr ""
+
+#: templates/position_match.html:114
+msgid "Manche"
+msgstr ""
+
+#: templates/position_match.html:132
+msgid "Associez chaque employé avec son poste correct"
+msgstr ""
+
+#: templates/position_match.html:141
+msgid "Sélectionnez un poste"
+msgstr ""
+
+#: templates/position_match.html:152
+msgid "Vérifier les associations"
+msgstr ""
+
+#: templates/position_match.html:158
+msgid "Résultats"
+msgstr ""
+
+#: templates/position_match.html:159
+msgid "Vous avez correctement associé"
+msgstr ""
+
+#: templates/position_match.html:159
+msgid "employés avec leurs postes."
+msgstr ""
+
+#: templates/position_match.html:160
+msgid "Score"
+msgstr ""
+
+#: templates/position_match.html:160 templates/progressive_hint.html:105
+msgid "points"
+msgstr ""
+
+#: templates/position_match.html:161
+msgid "Continuer"
+msgstr ""
+
+#: templates/progressive_hint.html:5 templates/progressive_hint.html:91
+msgid "Mode Indices Progressifs"
+msgstr ""
+
+#: templates/progressive_hint.html:103 templates/silhouette.html:75
+msgid "Indice"
+msgstr ""
+
+#: templates/progressive_hint.html:105
+msgid "Valeur"
+msgstr ""
+
+#: templates/progressive_hint.html:109
+msgid "Indice suivant"
+msgstr ""
+
+#: templates/progressive_hint.html:130
+msgid "Qui est cette personne ?"
+msgstr ""
+
+#: templates/quiz.html:3
+msgid "Mode Quiz"
+msgstr ""
+
+#: templates/quiz.html:33
+msgid "Mode Quiz - Testez vos connaissances"
+msgstr ""
+
+#: templates/result.html:3 templates/result.html:125
+msgid "Résultat final"
+msgstr ""
+
+#: templates/result.html:111
+#, python-format
+msgid "Tu es imbattable concernant tes collègues de %(company)s — score parfait !"
+msgstr ""
+
+#: templates/result.html:114
+msgid "Bravo, tu es un vrai crack ! Tu connais quasiment tout le monde."
+msgstr ""
+
+#: templates/result.html:117
+msgid "Bravo pour ton effort ! Continue à apprendre à connaître tes collègues."
+msgstr ""
+
+#: templates/result.html:120
+msgid ""
+"Il te reste beaucoup à apprendre sur tes collègues. C'est l'occasion de "
+"faire de nouvelles rencontres !"
+msgstr ""
+
+#: templates/result.html:126
+msgid "Score final"
+msgstr ""
+
+#: templates/result.html:157
+msgid "Rejouer"
+msgstr ""
+
+#: templates/result.html:161
+msgid "Autre mode"
+msgstr ""
+
+#: templates/reverse.html:3
+msgid "Mode Reverse"
+msgstr ""
+
+#: templates/reverse.html:29
+msgid "Cliquez sur l'image correspondant à"
+msgstr ""
+
+#: templates/scores.html:3
+msgid "Le Jeu Des Images - Scores"
+msgstr ""
+
+#: templates/scores.html:6
+msgid ""
+"Consultez les meilleurs scores du Jeu Des Images et voyez comment vous "
+"vous classez parmi les autres joueurs."
+msgstr ""
+
+#: templates/scores.html:10
+msgid "Découvrez les meilleurs scores et voyez comment vous vous classez"
+msgstr ""
+
+#: templates/scores.html:14
+msgid "Meilleurs scores par mode de jeu"
+msgstr ""
+
+#: templates/scores.html:16
+msgid ""
+"Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-"
+"vous battre ces records ?"
+msgstr ""
+
+#: templates/scores.html:21
+msgid "Mode"
+msgstr ""
+
+#: templates/scores.html:33
+msgid "Aucun score enregistré"
+msgstr ""
+
+#: templates/scores.html:44
+msgid "Statistiques globales"
+msgstr ""
+
+#: templates/scores.html:50
+msgid "Nombre de joueurs"
+msgstr ""
+
+#: templates/scores.html:58
+msgid "Parties jouées"
+msgstr ""
+
+#: templates/scores.html:66
+msgid "Score moyen"
+msgstr ""
+
+#: templates/scores.html:74
+msgid "Score maximum"
+msgstr ""
+
+#: templates/scrambled_face.html:3
+msgid "Mode Visage Mélangé"
+msgstr ""
+
+#: templates/scrambled_face.html:53
+msgid "Mode Visage Mélangé - Identifiez la personne"
+msgstr ""
+
+#: templates/scrambled_face.html:73
+msgid "Révéler le visage original"
+msgstr ""
+
+#: templates/seniority.html:3
+msgid "Mode Ancienneté"
+msgstr ""
+
+#: templates/seniority.html:25
+msgid "Combien d'années d'ancienneté ?"
+msgstr ""
+
+#: templates/setup_list.html:3
+msgid "Configuration"
+msgstr ""
+
+#: templates/setup_list.html:13
+msgid "Retour au jeu"
+msgstr ""
+
+#: templates/setup_list.html:17
+msgid "Gestion des datasets"
+msgstr ""
+
+#: templates/setup_list.html:18
+msgid "Ajoutez, modifiez ou supprimez les datasets disponibles dans le jeu."
+msgstr ""
+
+#: templates/setup_list.html:24
+msgid "Aucun dataset configuré"
+msgstr ""
+
+#: templates/setup_list.html:25
+msgid "Commencez par ajouter un dataset pour démarrer le jeu."
+msgstr ""
+
+#: templates/setup_list.html:27
+msgid "Créer le premier dataset"
+msgstr ""
+
+#: templates/setup_list.html:42
+msgid "Par défaut"
+msgstr ""
+
+#: templates/setup_list.html:67
+msgid "Exporter"
+msgstr ""
+
+#: templates/setup_list.html:70
+msgid "Nettoyer photos"
+msgstr ""
+
+#: templates/setup_list.html:82
+msgid "Ajouter un dataset"
+msgstr ""
+
+#: templates/setup_list.html:85
+msgid "Importer un dataset"
+msgstr ""
+
+#: templates/setup_list.html:94
+msgid "Supprimer le dataset ?"
+msgstr ""
+
+#: templates/setup_list.html:95
+msgid "Cette action est irréversible. Le dataset"
+msgstr ""
+
+#: templates/setup_list.html:95
+msgid "et toutes ses données (CSV, photos, scores) seront supprimés."
+msgstr ""
+
+#: templates/setup_list.html:99
+msgid "Supprimer définitivement"
+msgstr ""
+
+#: templates/setup_list.html:171
+msgid "Identifiant du nouveau dataset"
+msgstr ""
+
+#: templates/setup_list.html:180
+msgid "Erreur lors de l import"
+msgstr ""
+
+#: templates/setup_list.html:183
+msgid "Dataset importé"
+msgstr ""
+
+#: templates/setup_list.html:183
+msgid "photos"
+msgstr ""
+
+#: templates/setup_list.html:204
+msgid "Aucune photo orpheline — le dossier est propre."
+msgstr ""
+
+#: templates/setup_list.html:207
+msgid "Trouvé"
+msgstr ""
+
+#: templates/setup_list.html:207
+msgid "photo(s) orpheline(s) dans"
+msgstr ""
+
+#: templates/setup_list.html:207
+msgid "Supprimer ?"
+msgstr ""
+
+#: templates/setup_list.html:217
+msgid "Supprimé"
+msgstr ""
+
+#: templates/setup_list.html:217
+msgid "photo(s)"
+msgstr ""
+
+#: templates/setup_login.html:3
+msgid "Connexion administrateur"
+msgstr ""
+
+#: templates/setup_login.html:71
+msgid "Accès administrateur"
+msgstr ""
+
+#: templates/setup_login.html:72
+msgid ""
+"Entrez le mot de passe défini dans la variable ADMIN_PASSWORD pour "
+"accéder à la configuration."
+msgstr ""
+
+#: templates/setup_login.html:78
+msgid "Mot de passe"
+msgstr ""
+
+#: templates/setup_login.html:80
+msgid "Se connecter"
+msgstr ""
+
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:19
+msgid "Modifier le dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:4 templates/setup_wizard.html:21
+msgid "Nouveau dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:14
+msgid "Retour à la liste"
+msgstr ""
+
+#: templates/setup_wizard.html:24
+msgid "Configurez le dataset en quelques étapes."
+msgstr ""
+
+#: templates/setup_wizard.html:27
+msgid "Étapes de configuration"
+msgstr ""
+
+#: templates/setup_wizard.html:30
+msgid "Branding"
+msgstr ""
+
+#: templates/setup_wizard.html:34
+msgid "Thème"
+msgstr ""
+
+#: templates/setup_wizard.html:38 templates/setup_wizard.html:343
+msgid "Données"
+msgstr ""
+
+#: templates/setup_wizard.html:42 templates/setup_wizard.html:306
+msgid "Photos"
+msgstr ""
+
+#: templates/setup_wizard.html:46
+msgid "Résumé"
+msgstr ""
+
+#: templates/setup_wizard.html:52
+msgid "Identité du dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:55
+msgid "Identifiant technique"
+msgstr ""
+
+#: templates/setup_wizard.html:62
+msgid ""
+"Minuscules, chiffres, tirets et underscores. Sert de clé interne (non "
+"modifiable après création)."
+msgstr ""
+
+#: templates/setup_wizard.html:67
+msgid "Nom de l'entreprise"
+msgstr ""
+
+#: templates/setup_wizard.html:70
+msgid "Ex: Mon Entreprise"
+msgstr ""
+
+#: templates/setup_wizard.html:76
+msgid "URL du logo"
+msgstr ""
+
+#: templates/setup_wizard.html:83 templates/setup_wizard.html:973
+msgid "Tagline (français)"
+msgstr ""
+
+#: templates/setup_wizard.html:86
+msgid "Ex: Testez votre connaissance de vos collègues !"
+msgstr ""
+
+#: templates/setup_wizard.html:90 templates/setup_wizard.html:974
+msgid "Tagline (English)"
+msgstr ""
+
+#: templates/setup_wizard.html:93
+msgid "E.g.: Test your knowledge of your colleagues!"
+msgstr ""
+
+#: templates/setup_wizard.html:100
+msgid "Masquer les modes indisponibles pour ce dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:102
+msgid ""
+"Décoché : les modes non jouables restent visibles mais grisés. Coché : "
+"ils sont totalement masqués de la grille."
+msgstr ""
+
+#: templates/setup_wizard.html:108 templates/setup_wizard.html:251
+#: templates/setup_wizard.html:299 templates/setup_wizard.html:328
+msgid "Suivant"
+msgstr ""
+
+#: templates/setup_wizard.html:119
+msgid "Thème visuel"
+msgstr ""
+
+#: templates/setup_wizard.html:120
+msgid ""
+"Choisissez une palette comme point de départ, puis ajustez "
+"individuellement les couleurs qui ne vous conviennent pas."
+msgstr ""
+
+#: templates/setup_wizard.html:123
+msgid "Corporate"
+msgstr ""
+
+#: templates/setup_wizard.html:123
+msgid "Neutre Zinc, professionnel"
+msgstr ""
+
+#: templates/setup_wizard.html:124
+msgid "Ardoise"
+msgstr ""
+
+#: templates/setup_wizard.html:124
+msgid "Bleu-gris froid, businessy"
+msgstr ""
+
+#: templates/setup_wizard.html:125
+msgid "Nordique"
+msgstr ""
+
+#: templates/setup_wizard.html:125
+msgid "Pâle et froid, scandinave"
+msgstr ""
+
+#: templates/setup_wizard.html:126
+msgid "Chaleureux"
+msgstr ""
+
+#: templates/setup_wizard.html:126
+msgid "Ivoire crème, éditorial"
+msgstr ""
+
+#: templates/setup_wizard.html:127
+msgid "Sépia"
+msgstr ""
+
+#: templates/setup_wizard.html:127
+msgid "Ambre vintage, parchemin"
+msgstr ""
+
+#: templates/setup_wizard.html:128
+msgid "Sable"
+msgstr ""
+
+#: templates/setup_wizard.html:128
+msgid "Beige désertique, doux"
+msgstr ""
+
+#: templates/setup_wizard.html:129
+msgid "Pastel"
+msgstr ""
+
+#: templates/setup_wizard.html:129
+msgid "Lavande douce, onboarding"
+msgstr ""
+
+#: templates/setup_wizard.html:130
+msgid "Rose"
+msgstr ""
+
+#: templates/setup_wizard.html:130
+msgid "Rose poudré, tendre"
+msgstr ""
+
+#: templates/setup_wizard.html:131
+msgid "Menthe"
+msgstr ""
+
+#: templates/setup_wizard.html:131
+msgid "Vert frais, léger"
+msgstr ""
+
+#: templates/setup_wizard.html:134
+msgid "Nuit"
+msgstr ""
+
+#: templates/setup_wizard.html:134
+msgid "Bleu navy doux — sombre sans être noir"
+msgstr ""
+
+#: templates/setup_wizard.html:135
+msgid "Charbon"
+msgstr ""
+
+#: templates/setup_wizard.html:135
+msgid "Gris foncé chaud"
+msgstr ""
+
+#: templates/setup_wizard.html:136
+msgid "Océan"
+msgstr ""
+
+#: templates/setup_wizard.html:136
+msgid "Bleu profond teal"
+msgstr ""
+
+#: templates/setup_wizard.html:137
+msgid "Forêt"
+msgstr ""
+
+#: templates/setup_wizard.html:137
+msgid "Vert profond boisé"
+msgstr ""
+
+#: templates/setup_wizard.html:138
+msgid "Prune"
+msgstr ""
+
+#: templates/setup_wizard.html:138
+msgid "Violet foncé mure"
+msgstr ""
+
+#: templates/setup_wizard.html:139 templates/setup_wizard.html:176
+msgid "Sombre"
+msgstr ""
+
+#: templates/setup_wizard.html:139
+msgid "Zinc 900, minimaliste"
+msgstr ""
+
+#: templates/setup_wizard.html:140
+msgid "Noir"
+msgstr ""
+
+#: templates/setup_wizard.html:140
+msgid "Monochrome, contraste max"
+msgstr ""
+
+#: templates/setup_wizard.html:143
+msgid "Couleur principale"
+msgstr ""
+
+#: templates/setup_wizard.html:143
+msgid "Boutons, focus, accents de marque"
+msgstr ""
+
+#: templates/setup_wizard.html:144
+msgid "Fond de page"
+msgstr ""
+
+#: templates/setup_wizard.html:144
+msgid "Arrière-plan global de la page"
+msgstr ""
+
+#: templates/setup_wizard.html:145
+msgid "Cards & panneaux"
+msgstr ""
+
+#: templates/setup_wizard.html:145
+msgid "Cards, filter bar, header, footer, score panel"
+msgstr ""
+
+#: templates/setup_wizard.html:146
+msgid "Éléments élevés"
+msgstr ""
+
+#: templates/setup_wizard.html:146
+msgid "Hero, previews, panneaux mis en avant"
+msgstr ""
+
+#: templates/setup_wizard.html:147
+msgid "Texte principal"
+msgstr ""
+
+#: templates/setup_wizard.html:147
+msgid "Texte courant"
+msgstr ""
+
+#: templates/setup_wizard.html:148
+msgid "Texte secondaire"
+msgstr ""
+
+#: templates/setup_wizard.html:148
+msgid "Labels, descriptions"
+msgstr ""
+
+#: templates/setup_wizard.html:149
+msgid "Bordures"
+msgstr ""
+
+#: templates/setup_wizard.html:149
+msgid "Séparateurs, contours de cards"
+msgstr ""
+
+#: templates/setup_wizard.html:153
+msgid "Palette de départ"
+msgstr ""
+
+#: templates/setup_wizard.html:155
+msgid "Clair"
+msgstr ""
+
+#: templates/setup_wizard.html:156
+msgid "Palettes claires"
+msgstr ""
+
+#: templates/setup_wizard.html:177
+msgid "Palettes sombres"
+msgstr ""
+
+#: templates/setup_wizard.html:198
+msgid "Personnaliser chaque couleur"
+msgstr ""
+
+#: templates/setup_wizard.html:199
+msgid ""
+"Chaque couleur hérite de la palette. Modifiez-en une pour créer un "
+"override personnel. Bouton Reset pour revenir à la valeur du preset."
+msgstr ""
+
+#: templates/setup_wizard.html:216 templates/setup_wizard.html:571
+msgid "Hérité du preset"
+msgstr ""
+
+#: templates/setup_wizard.html:217
+msgid "Code hexadécimal"
+msgstr ""
+
+#: templates/setup_wizard.html:231 templates/setup_wizard.html:234
+msgid "Aperçu"
+msgstr ""
+
+#: templates/setup_wizard.html:236
+msgid "Bouton principal"
+msgstr ""
+
+#: templates/setup_wizard.html:239
+msgid "Disponible"
+msgstr ""
+
+#: templates/setup_wizard.html:240
+msgid "Texte courant sur une card."
+msgstr ""
+
+#: templates/setup_wizard.html:248 templates/setup_wizard.html:296
+#: templates/setup_wizard.html:325 templates/setup_wizard.html:354
+msgid "Précédent"
+msgstr ""
+
+#: templates/setup_wizard.html:258
+msgid "Données employés"
+msgstr ""
+
+#: templates/setup_wizard.html:263
+msgid ""
+"Vous pouvez conserver le CSV actuel ou en uploader un nouveau pour le "
+"remplacer."
+msgstr ""
+
+#: templates/setup_wizard.html:270
+msgid "Glissez votre fichier CSV ici ou cliquez pour parcourir"
+msgstr ""
+
+#: templates/setup_wizard.html:271
+msgid "Format: CSV avec colonnes pour nom, prénom, photo, équipe, etc."
+msgstr ""
+
+#: templates/setup_wizard.html:277
+msgid "Aperçu des données"
+msgstr ""
+
+#: templates/setup_wizard.html:283
+msgid ""
+"Uploadez un fichier CSV ci-dessus pour configurer la correspondance des "
+"colonnes."
+msgstr ""
+
+#: templates/setup_wizard.html:287
+msgid "Correspondance des colonnes"
+msgstr ""
+
+#: templates/setup_wizard.html:289
+msgid "Associez chaque champ du jeu à une colonne de votre CSV."
+msgstr ""
+
+#: templates/setup_wizard.html:311
+msgid ""
+"Les photos seront uploadées après la création du dataset, depuis la page "
+"de modification."
+msgstr ""
+
+#: templates/setup_wizard.html:317
+msgid "Glissez un fichier ZIP contenant les photos ici"
+msgstr ""
+
+#: templates/setup_wizard.html:318
+msgid "Formats acceptes: JPG, PNG, GIF, WebP"
+msgstr ""
+
+#: templates/setup_wizard.html:335
+msgid "Résumé et sauvegarde"
+msgstr ""
+
+#: templates/setup_wizard.html:348
+msgid "Mapping colonnes"
+msgstr ""
+
+#: templates/setup_wizard.html:358
+msgid "Enregistrer les modifications"
+msgstr ""
+
+#: templates/setup_wizard.html:358
+msgid "Créer le dataset"
+msgstr ""
+
+#: templates/setup_wizard.html:438
+msgid "Identifiant invalide (minuscules/chiffres/_-, 32 max)."
+msgstr ""
+
+#: templates/setup_wizard.html:443
+msgid "Un dataset avec cet identifiant existe déjà."
+msgstr ""
+
+#: templates/setup_wizard.html:452
+msgid "Le nom de l'entreprise est requis"
+msgstr ""
+
+#: templates/setup_wizard.html:570
+msgid "Override"
+msgstr ""
+
+#: templates/setup_wizard.html:670
+msgid "Contraste faible"
+msgstr ""
+
+#: templates/setup_wizard.html:671
+msgid "Ajustez les couleurs pour améliorer la lisibilité."
+msgstr ""
+
+#: templates/setup_wizard.html:675
+msgid "Contraste moyen"
+msgstr ""
+
+#: templates/setup_wizard.html:676
+msgid "WCAG AA recommande 4.5:1 minimum pour le texte courant."
+msgstr ""
+
+#: templates/setup_wizard.html:680
+msgid "Contraste conforme WCAG AA"
+msgstr ""
+
+#: templates/setup_wizard.html:760 templates/setup_wizard.html:944
+msgid "Erreur lors de l'envoi"
+msgstr ""
+
+#: templates/setup_wizard.html:764
+msgid "CSV chargé avec succès"
+msgstr ""
+
+#: templates/setup_wizard.html:764
+msgid "colonnes détectées"
+msgstr ""
+
+#: templates/setup_wizard.html:844
+msgid "requis"
+msgstr ""
+
+#: templates/setup_wizard.html:844
+msgid "optionnel"
+msgstr ""
+
+#: templates/setup_wizard.html:854
+msgid "Non utilisé"
+msgstr ""
+
+#: templates/setup_wizard.html:879
+msgid "Détection automatique"
+msgstr ""
+
+#: templates/setup_wizard.html:948
+msgid "photos extraites avec succès"
+msgstr ""
+
+#: templates/setup_wizard.html:967
+msgid "couleur(s) personnalisée(s)"
+msgstr ""
+
+#: templates/setup_wizard.html:968
+msgid "Aucune — toutes héritées du preset"
+msgstr ""
+
+#: templates/setup_wizard.html:970
+msgid "Identifiant"
+msgstr ""
+
+#: templates/setup_wizard.html:972
+msgid "Logo"
+msgstr ""
+
+#: templates/setup_wizard.html:975
+msgid "Palette"
+msgstr ""
+
+#: templates/setup_wizard.html:976
+msgid "Overrides"
+msgstr ""
+
+#: templates/setup_wizard.html:977
+msgid "Masquer modes indisponibles"
+msgstr ""
+
+#: templates/setup_wizard.html:977
+msgid "Oui"
+msgstr ""
+
+#: templates/setup_wizard.html:977
+msgid "Non"
+msgstr ""
+
+#: templates/setup_wizard.html:981
+msgid "Fichier CSV"
+msgstr ""
+
+#: templates/setup_wizard.html:982
+msgid "Colonnes"
+msgstr ""
+
+#: templates/setup_wizard.html:1045
+msgid "Dataset créé"
+msgstr ""
+
+#: templates/silhouette.html:3
+msgid "Mode Silhouette"
+msgstr ""
+
+#: templates/silhouette.html:67
+msgid "Mode Silhouette - Identifiez la personne"
+msgstr ""
+
+#: templates/speed.html:5
+msgid "Mode Vitesse"
+msgstr ""
+
+#: templates/speed.html:34
+msgid "Mode Vitesse - Identifiez rapidement la personne"
+msgstr ""
+
+#: templates/team.html:3 templates/team_guess.html:5
+msgid "Mode Équipe"
+msgstr ""
+
+#: templates/team.html:90
+msgid "Mode Équipe - Identifiez les membres"
+msgstr ""
+
+#: templates/team.html:129
+msgid "Valider l'équipe"
+msgstr ""
+
+#: templates/team_guess.html:35
+msgid "Mode Équipe - Devinez l'équipe de l'employé"
+msgstr ""
+
+#: templates/team_guess.html:67
+msgid "À quelle équipe appartient cette personne ?"
+msgstr ""
+
+#: templates/timed.html:32
+msgid "Mode Chronométré - Identifiez le maximum de personnes en 2 minutes"
+msgstr ""
+

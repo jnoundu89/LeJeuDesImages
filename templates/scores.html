@@ -1,0 +1,85 @@
+{% extends 'base_page.html' %}
+
+{% block title %}{{ _('Le Jeu Des Images - Scores') }}{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="{{ _('Consultez les meilleurs scores du Jeu Des Images et voyez comment vous vous classez parmi les autres joueurs.') }}">
+{% endblock %}
+
+{% block page_title %}{{ _('Scores') }}{% endblock %}
+{% block page_tagline %}{{ _('Découvrez les meilleurs scores et voyez comment vous vous classez') }}{% endblock %}
+
+{% block content %}
+        <div class="about-section">
+            <h2 class="section-title">{{ _('Meilleurs scores par mode de jeu') }}</h2>
+            <div class="about-content">
+                <p>{{ _('Voici les meilleurs scores enregistrés pour chaque mode de jeu. Pouvez-vous battre ces records ?') }}</p>
+
+                <div class="scores-container">
+                    {% for mode in modes %}
+                    <div class="score-card">
+                        <h3 class="subsection-title"><i class="fas fa-gamepad"></i> {{ _('Mode') }} {{ mode.display_name }}</h3>
+                        <div class="score-list">
+                            {% if top_scores and top_scores[mode.name] %}
+                                {% for score in top_scores[mode.name] %}
+                                <div class="score-item">
+                                    <span class="score-rank">{{ loop.index }}</span>
+                                    <span class="score-user">{{ score.user_id }}</span>
+                                    <span class="score-value">{{ score.score }} pts</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="score-item no-scores">
+                                    <span>{{ _('Aucun score enregistré') }}</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="about-section">
+            <h2 class="section-title">{{ _('Statistiques globales') }}</h2>
+            <div class="about-content">
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <i class="fas fa-users stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">{{ _('Nombre de joueurs') }}</h3>
+                            <p class="stat-value">{{ total_players if total_players else 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <i class="fas fa-gamepad stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">{{ _('Parties jouées') }}</h3>
+                            <p class="stat-value">{{ total_games if total_games else 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <i class="fas fa-trophy stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">{{ _('Score moyen') }}</h3>
+                            <p class="stat-value">{{ average_score if average_score else 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <i class="fas fa-star stat-icon"></i>
+                        <div class="stat-info">
+                            <h3 class="stat-title">{{ _('Score maximum') }}</h3>
+                            <p class="stat-value">{{ highest_score if highest_score else 'N/A' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-to-home">
+            <a href="{{ url_for('game.index') }}" class="mode-button btn-hover">{{ _("Retour à l'accueil") }}</a>
+        </div>
+{% endblock %}

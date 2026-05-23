@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{{ static_v('app-shell.css') }}">
+    <link rel="stylesheet" href="{{ static_v('page-content.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {# Legacy palette only: cosmic title glow, card shine, typing
+       cursor, fireworks bg styling, Konami flash. Conditionally
+       loaded so the 99% on a regular palette don't pay the bytes. #}
+    {% if dataset_palette == 'legacy' %}
+        <link rel="stylesheet" href="{{ static_v('legacy-theme.css') }}">
+    {% endif %}
+    {% block page_css %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+<a href="#main-content" class="skip-link">{{ _('Aller au contenu') }}</a>
+{% include '_particles_bg.html' %}
+<div class="app-shell">
+    <header class="app-header">
+        <div class="container app-header-inner">
+            <a href="{{ url_for('game.index') }}" class="app-brand">
+                {% if company_logo_url %}
+                    <img src="{{ company_logo_url }}" alt="" class="app-brand-logo">
+                {% else %}
+                    <span class="app-brand-fallback" aria-hidden="true">
+                        {{ (company_name or 'C')[:1]|upper }}
+                    </span>
+                {% endif %}
+                <span class="app-brand-name">
+                    <strong>{{ company_name }}</strong>
+                    {% if company_tagline %}<small>{{ company_tagline }}</small>{% endif %}
+                </span>
+            </a>
+
+            <nav class="app-nav">
+                <a href="{{ url_for('game.index') }}" class="app-nav-link {% if request.endpoint == 'game.index' %}is-active{% endif %}">{{ _('Modes de jeu') }}</a>
+                <a href="{{ url_for('game.scores_page') }}" class="app-nav-link {% if request.endpoint == 'game.scores_page' %}is-active{% endif %}">{{ _('Scores') }}</a>
+                <a href="{{ url_for('game.how_to_play') }}" class="app-nav-link {% if request.endpoint == 'game.how_to_play' %}is-active{% endif %}">{{ _('Comment jouer') }}</a>
+            </nav>
+
+            <div class="app-header-actions">
+                {% include '_switchers.html' %}
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main" id="main-content" tabindex="-1">
+        <div class="container">
+            {% block page_header %}
+                {% if self.page_title()|trim %}
+                    <div class="stack" style="--stack-gap: var(--space-2); margin-bottom: var(--space-6);">
+                        <h1>{% block page_title %}{% endblock %}</h1>
+                        {% if self.page_tagline()|trim %}
+                            <p style="color: var(--text-soft); font-size: var(--text-lg);">{% block page_tagline %}{% endblock %}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endblock %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="app-footer">
+        <div class="container app-footer-inner">
+            <span>{{ _("Le Jeu Des Images · identifiez les membres de l'équipe %(company_name)s", company_name=company_name) }}</span>
+            <div class="app-footer-links">
+                <a href="{{ url_for('game.about') }}">{{ _('À propos') }}</a>
+                <a href="{{ url_for('game.how_to_play') }}">{{ _('Comment jouer') }}</a>
+                {% if company_email %}<a href="mailto:{{ company_email }}">{{ _('Contact') }}</a>{% endif %}
+                <a href="/setup">{{ _('Admin') }}</a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+{% block page_extras %}{% endblock %}
+{% endblock %}
+
+{% block scripts %}
+    {% include '_particles_scripts.html' %}
+    {% if dataset_palette == 'legacy' %}
+        <script src="{{ static_v('legacy-theme.js') }}" defer></script>
+    {% endif %}
+    {{ super() }}
+{% endblock %}

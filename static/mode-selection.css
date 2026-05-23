@@ -1,0 +1,477 @@
+/* Mode selection page — hero, filter bar, grid, cards, modal.
+ * Depends on design-tokens.css + app-shell.css.
+ */
+@layer components {
+    /* Hero ---------------------------------------------------------- */
+    .mode-hero {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: var(--space-6);
+        align-items: center;
+        padding: var(--space-8);
+        margin-bottom: var(--space-8);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        /* Same idea as the card preview: anchor on --surface-2 so the
+         * hero stays visibly elevated above --bg on every palette,
+         * with a gentle primary tint blended in. */
+        background:
+            linear-gradient(135deg,
+                color-mix(in srgb, var(--primary) 10%, var(--surface-2)),
+                var(--surface-2) 60%);
+        position: relative;
+        overflow: hidden;
+    }
+    .mode-hero::after {
+        content: "";
+        position: absolute;
+        right: -40%;
+        bottom: -60%;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(
+            circle at center,
+            color-mix(in srgb, var(--primary) 12%, transparent),
+            transparent 70%);
+        pointer-events: none;
+    }
+    /* Slowly drift the hero's accent blob across a small ellipse so the
+     * background feels alive without being distracting. ~16s loop. The
+     * displacement is tiny (-3% to +3%) — perceptible only out of the
+     * corner of the eye. Skipped under reduced-motion. */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes mode-hero-drift {
+            0%   { transform: translate(0, 0); }
+            25%  { transform: translate(-3%, -2%); }
+            50%  { transform: translate(2%, -3%); }
+            75%  { transform: translate(3%, 2%); }
+            100% { transform: translate(0, 0); }
+        }
+        .mode-hero::after {
+            animation: mode-hero-drift 16s ease-in-out infinite;
+        }
+    }
+    .mode-hero-content {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        position: relative;
+        z-index: 1;
+    }
+    .mode-hero-eyebrow {
+        font-size: var(--text-xs);
+        font-weight: 650;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+    .mode-hero h1 {
+        font-size: clamp(var(--text-2xl), 3vw, var(--text-4xl));
+        max-width: 28ch;
+    }
+    .mode-hero p {
+        color: var(--text-soft);
+        font-size: var(--text-lg);
+        max-width: 56ch;
+    }
+    .mode-hero-cta {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Filter bar --------------------------------------------------- */
+    .filter-bar {
+        display: grid;
+        grid-template-columns: minmax(200px, 280px) 1fr;
+        gap: var(--space-4);
+        align-items: start;
+        padding: var(--space-4);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--surface);
+        margin-bottom: var(--space-6);
+        box-shadow: var(--shadow-xs);
+    }
+    .filter-bar-groups {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-4) var(--space-6);
+        align-items: center;
+    }
+    .filter-group {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex-wrap: wrap;
+    }
+    .filter-group-label {
+        font-size: var(--text-xs);
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        margin-right: var(--space-1);
+    }
+    .filter-group-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    @media (max-width: 720px) {
+        .filter-bar { grid-template-columns: 1fr; }
+    }
+
+    /* Result count + empty state ---------------------------------- */
+    .mode-grid-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: var(--space-2);
+        margin-bottom: var(--space-4);
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+    }
+    .mode-grid-empty {
+        padding: var(--space-12);
+        text-align: center;
+        border-radius: var(--radius-md);
+        border: 1px dashed var(--border-strong);
+        color: var(--text-muted);
+    }
+
+    /* Grid --------------------------------------------------------- */
+    .mode-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: var(--space-4);
+    }
+    @media (min-width: 1000px) {
+        .mode-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+    }
+
+    /* Stagger fade-in on initial load: each card slides up + fades in
+     * with a 50ms delay relative to the previous one. Only runs for
+     * users who haven't opted out of motion. After 12 cards we stop
+     * adding delays (cap visual wait at ~600ms). Uses fill-mode
+     * `backwards` so cards stay invisible during the delay window. */
+    @media (prefers-reduced-motion: no-preference) {
+        @keyframes mode-card-fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .mode-grid .mode-card {
+            animation: mode-card-fade-in 0.45s var(--ease) backwards;
+        }
+        .mode-grid .mode-card:nth-child(1)  { animation-delay: 0.05s; }
+        .mode-grid .mode-card:nth-child(2)  { animation-delay: 0.10s; }
+        .mode-grid .mode-card:nth-child(3)  { animation-delay: 0.15s; }
+        .mode-grid .mode-card:nth-child(4)  { animation-delay: 0.20s; }
+        .mode-grid .mode-card:nth-child(5)  { animation-delay: 0.25s; }
+        .mode-grid .mode-card:nth-child(6)  { animation-delay: 0.30s; }
+        .mode-grid .mode-card:nth-child(7)  { animation-delay: 0.35s; }
+        .mode-grid .mode-card:nth-child(8)  { animation-delay: 0.40s; }
+        .mode-grid .mode-card:nth-child(9)  { animation-delay: 0.45s; }
+        .mode-grid .mode-card:nth-child(10) { animation-delay: 0.50s; }
+        .mode-grid .mode-card:nth-child(11) { animation-delay: 0.55s; }
+        .mode-grid .mode-card:nth-child(n+12) { animation-delay: 0.60s; }
+    }
+
+    /* Card --------------------------------------------------------- */
+    .mode-card {
+        display: flex;
+        flex-direction: column;
+        gap: var(--space-3);
+        padding: var(--space-5);
+        /* `--card-bg` and `--card-text` let an admin override the
+         * cards' surface + text without touching every other panel
+         * that also uses `--surface`. Falls back to the existing
+         * tokens when the admin hasn't customised them. */
+        background: var(--card-bg, var(--surface));
+        color: var(--card-text, var(--text));
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-xs);
+        transition: transform var(--dur) var(--ease),
+                    box-shadow var(--dur) var(--ease),
+                    border-color var(--dur) var(--ease);
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+    }
+    /* Top accent bar: dual-color band built from the dataset's two
+     * brand tokens. `--primary` dominates 60-65% of the strip; the
+     * remaining 35-40% blends into `--success` so brands with a
+     * green secondary (Infolegale) get an actual bicolor strip
+     * instead of a primary→white wash. For brands without a distinct
+     * `--success` override the default green sits right next to the
+     * indigo default — still readable as a strip rather than a flat
+     * fill. Odd cards reverse the gradient direction so adjacent
+     * cards never produce identical edges. */
+    .mode-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(
+            90deg,
+            var(--primary) 0%,
+            var(--primary) 35%,
+            var(--success) 100%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+    .mode-card:nth-child(odd)::before {
+        background: linear-gradient(
+            90deg,
+            var(--success) 0%,
+            var(--primary) 65%,
+            var(--primary) 100%);
+    }
+    .mode-card:hover {
+        transform: translateY(-6px) scale(1.01);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+        color: inherit;
+    }
+    .mode-card:focus-visible {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: var(--shadow-ring);
+    }
+
+    /* Card shine effect — opt-in via `theme.card_effect = 'shine'`
+     * on any dataset (legacy palette gets it by default). A diagonal
+     * gold gradient sweeps across the card on hover, like a
+     * metallic surface catching the light. The .mode-card already
+     * sets `position: relative` + `overflow: hidden` so the
+     * positioned + translated overlay stays within the card bounds.
+     *
+     * Skipped under prefers-reduced-motion so the user-side a11y
+     * setting always wins. */
+    :root[data-card-effect="shine"] .mode-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -120%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            120deg,
+            transparent 30%,
+            color-mix(in srgb, #FFD700 35%, transparent) 50%,
+            transparent 70%);
+        transform: skewX(-20deg);
+        pointer-events: none;
+        z-index: 1;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        :root[data-card-effect="shine"] .mode-card::after {
+            transition: left 0.7s ease;
+        }
+        :root[data-card-effect="shine"] .mode-card:hover::after {
+            left: 120%;
+        }
+    }
+    /* Direct mode-card children sit above the shine overlay so their
+     * text is never partially washed out when the gradient passes. */
+    :root[data-card-effect="shine"] .mode-card > * {
+        position: relative;
+        z-index: 2;
+    }
+    /* Animated underline under the card title — collapsed by default,
+     * scales in on hover. Pure CSS, no JS. */
+    .mode-card-title h2 {
+        position: relative;
+        padding-bottom: 2px;
+    }
+    .mode-card-title h2::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--primary);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform var(--dur) var(--ease);
+    }
+    .mode-card:hover .mode-card-title h2::after {
+        transform: scaleX(1);
+    }
+
+    .mode-card-preview {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        border-radius: var(--radius);
+        overflow: hidden;
+        /* Use --surface-2 as the base (it's the "elevated" surface
+         * and is guaranteed *lighter than* --surface on dark palettes,
+         * *slightly darker than* --surface on light palettes) so the
+         * preview always visually sits ABOVE the card instead of
+         * merging into it — which is what you were seeing on
+         * `ocean`/`midnight`/etc. where `--primary-subtle` was itself
+         * darker than `--surface`. A small primary tint adds warmth
+         * without turning the panel into a red/blue puddle. */
+        background:
+            linear-gradient(135deg,
+                color-mix(in srgb, var(--primary) 14%, var(--surface-2)),
+                var(--surface-2));
+        display: grid;
+        place-items: center;
+    }
+    .mode-card-preview-icon {
+        font-size: 2.5rem;
+        color: var(--primary);
+        opacity: 0.8;
+        transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    }
+    .mode-card:hover .mode-card-preview-icon {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    .mode-card-badge {
+        position: absolute;
+        top: var(--space-2);
+        left: var(--space-2);
+        background: color-mix(in srgb, var(--surface) 85%, transparent);
+        backdrop-filter: blur(6px);
+        color: var(--primary);
+        padding: 2px var(--space-2);
+        border-radius: var(--radius-pill);
+        font-size: var(--text-xs);
+        font-weight: 650;
+        z-index: 2;
+    }
+
+    .mode-card-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+    }
+    .mode-card-title h2 {
+        font-size: var(--text-lg);
+        font-weight: 650;
+        margin: 0;
+    }
+    .mode-card-difficulty {
+        display: inline-flex;
+        gap: 2px;
+        align-items: center;
+    }
+    .mode-card-difficulty .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--border-strong);
+    }
+    .mode-card-difficulty .dot.is-active {
+        background: var(--primary);
+    }
+
+    .mode-card-description {
+        font-size: var(--text-sm);
+        color: var(--text-soft);
+        line-height: var(--leading-snug);
+        /* 2-line clamp for visual consistency */
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .mode-card-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+        margin-top: auto;
+    }
+    .mode-card-duration {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+    }
+    .mode-card-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-1);
+        justify-content: flex-end;
+    }
+    .mode-card-tag {
+        padding: 2px var(--space-2);
+        background: var(--surface-muted);
+        color: var(--text-soft);
+        border-radius: var(--radius-pill);
+        font-size: var(--text-xs);
+        font-weight: 550;
+    }
+
+    /* Unavailable state ------------------------------------------- */
+    .mode-card.is-unavailable {
+        opacity: 0.6;
+        filter: grayscale(0.4);
+        cursor: help;
+    }
+    .mode-card.is-unavailable:hover {
+        transform: none;
+        opacity: 0.75;
+        filter: grayscale(0.2);
+    }
+    .mode-card.is-unavailable .mode-card-preview {
+        background: var(--surface-muted);
+    }
+    .mode-card.is-unavailable .mode-card-preview-icon {
+        color: var(--text-muted);
+    }
+    .mode-card.is-unavailable .mode-card-badge {
+        color: var(--text-muted);
+        background: color-mix(in srgb, var(--surface) 85%, transparent);
+    }
+
+    /* Tooltip shown on hover for unavailable modes */
+    .mode-card-unavailable-hint {
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        padding: var(--space-2) var(--space-3);
+        background: var(--gray-900);
+        color: var(--text-inverse);
+        font-size: var(--text-xs);
+        font-weight: 500;
+        border-radius: var(--radius);
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--dur-fast) var(--ease);
+        z-index: 10;
+    }
+    .mode-card-unavailable-hint::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 4px solid transparent;
+        border-top-color: var(--gray-900);
+    }
+    .mode-card.is-unavailable:hover .mode-card-unavailable-hint {
+        opacity: 1;
+    }
+}

@@ -1,0 +1,8 @@
+{# All three scripts ship together so the wizard can swap effects
+   without lazy-loading anything mid-session. The vendor lib + our
+   fireworks loop both stay idle until particles-init.js calls them.
+   On non-wizard pages the cost is small — particles.min.js (~23KB
+   minified, gzipped to ~7KB on the wire) plus our two ~3KB scripts. #}
+<script src="{{ static_v('vendor/particles.min.js') }}" defer></script>
+<script src="{{ static_v('fireworks-bg.js') }}" defer></script>
+<script src="{{ static_v('particles-init.js') }}" defer></script>

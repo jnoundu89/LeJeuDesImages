@@ -1,0 +1,39 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Exemple') }}{% endblock %}
+
+{% block mode_styles %}
+        .example-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .example-image { max-width: 220px; border-radius: var(--radius-md); margin: 0 auto; }
+        .example-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Exemple - Identifiez le nom') }}{% endblock %}
+
+{% block game_content %}
+        <img src="{{ image_url }}" alt="Photo d'employé" class="example-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+{% endblock %}
+
+{% block game_choices %}
+        <div class="example-container" x-data="singleAnswer('{{ correct_name }}')">
+            <div class="example-choices" id="name-choices">
+                {% for name in name_choices %}
+                <button type="button" class="example-choice-btn choice-btn" @click="check('{{ name }}', $el)">{{ name }}</button>
+                {% endfor %}
+            </div>
+        </div>
+{% endblock %}
+
+{% block game_scripts %}
+{% endblock %}

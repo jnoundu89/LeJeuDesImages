@@ -1,0 +1,325 @@
+{% extends 'base_page.html' %}
+
+{% block title %}{{ _('Le Jeu Des Images — Modes de jeu') }}{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="{{ company_tagline }}">
+{% endblock %}
+
+{% block page_css %}
+    <link rel="stylesheet" href="{{ static_v('mode-selection.css') }}">
+    <link rel="stylesheet" href="{{ static_v('mode-previews.css') }}">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}
+
+{% block page_header %}{% endblock %}
+
+{% block content %}
+<section class="mode-hero" aria-labelledby="mode-hero-title">
+    <div class="mode-hero-content">
+        <span class="mode-hero-eyebrow">{{ company_name }}</span>
+        <h1 id="mode-hero-title">{{ _('Choisissez votre mode de jeu') }}</h1>
+        <p>{% if company_tagline %}{{ company_tagline }}{% else %}{{ _("Testez votre connaissance des membres de l'équipe à travers différents défis.") }}{% endif %}</p>
+    </div>
+    <div class="mode-hero-cta">
+        <a href="{{ url_for('game.random_mode') }}" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-shuffle" aria-hidden="true"></i>
+            {{ _('Mode aléatoire') }}
+        </a>
+    </div>
+</section>
+
+<div x-data="modeSelection({
+        hideUnavailable: {{ 'true' if hide_unavailable_modes else 'false' }}
+    })">
+    <div class="filter-bar" role="search" aria-label="{{ _('Filtrer les modes de jeu') }}">
+        <label class="field">
+            <i class="fa-solid fa-search" aria-hidden="true"></i>
+            <input type="search"
+                   x-model.debounce.200ms="search"
+                   placeholder="{{ _('Rechercher un mode…') }}"
+                   aria-label="{{ _('Rechercher un mode') }}">
+        </label>
+
+        <div class="filter-bar-groups">
+            <div class="filter-group">
+                <span class="filter-group-label">{{ _('Difficulté') }}</span>
+                <div class="filter-group-chips">
+                    <button type="button"
+                            class="chip"
+                            :class="{ 'is-active': difficulty === null }"
+                            @click="difficulty = null">
+                        {{ _('Toutes') }}
+                    </button>
+                    <template x-for="level in [1, 2, 3]" :key="level">
+                        <button type="button"
+                                class="chip"
+                                :class="{ 'is-active': difficulty === level }"
+                                @click="difficulty = (difficulty === level ? null : level)"
+                                :aria-pressed="difficulty === level ? 'true' : 'false'">
+                            <span x-text="['{{ _('Facile') }}', '{{ _('Moyen') }}', '{{ _('Difficile') }}'][level - 1]"></span>
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            {% if all_tags %}
+            <div class="filter-group">
+                <span class="filter-group-label">{{ _('Thèmes') }}</span>
+                <div class="filter-group-chips">
+                    {% for tag in all_tags %}
+                    <button type="button"
+                            class="chip"
+                            :class="{ 'is-active': selectedTags.includes('{{ tag.key }}') }"
+                            @click="toggleTag('{{ tag.key }}')"
+                            :aria-pressed="selectedTags.includes('{{ tag.key }}') ? 'true' : 'false'">
+                        {{ tag.label }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mode-grid-meta" role="status" aria-live="polite" aria-atomic="true">
+        <span>
+            <strong x-text="visibleCount"></strong> / {{ modes|length }}
+            <span x-show="visibleCount === 1">{{ _('mode disponible') }}</span>
+            <span x-show="visibleCount !== 1">{{ _('modes disponibles') }}</span>
+        </span>
+        <button type="button"
+                class="btn btn-ghost btn-sm"
+                x-show="search !== '' || difficulty !== null || selectedTags.length > 0"
+                @click="reset()">
+            <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+            {{ _('Réinitialiser') }}
+        </button>
+    </div>
+
+    <div class="mode-grid" x-ref="grid">
+        {% for mode in modes %}
+        <a {% if mode.available %}href="{{ url_for('game.start_mode', mode_name=mode.name) }}"{% else %}href="#" @click.prevent="showUnavailable('{{ mode.name }}')"{% endif %}
+           class="mode-card {% if not mode.available %}is-unavailable{% endif %}"
+           data-mode="{{ mode.name }}"
+           data-difficulty="{{ mode.difficulty }}"
+           data-tags="{{ mode.tags|join(',') }}"
+           data-search="{{ mode.display_name }} {{ mode.description }} {{ mode.tags|join(' ') }}"
+           x-show="matches($el)"
+           x-transition.opacity>
+            <div class="mode-card-preview">
+                {% if not mode.available %}
+                    <span class="mode-card-badge">
+                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        {{ _('Indisponible') }}
+                    </span>
+                {% elif mode.experimental %}
+                    <span class="mode-card-badge">
+                        <i class="fa-solid fa-flask" aria-hidden="true"></i>
+                        {{ _('Expérimental') }}
+                    </span>
+                {% endif %}
+                {% include '_mode_preview.html' %}
+            </div>
+
+            <div class="mode-card-title">
+                <h2>{{ mode.display_name }}</h2>
+                <span class="mode-card-difficulty" aria-label="{{ _('Difficulté') }}: {{ mode.difficulty }}/3">
+                    {% for i in range(3) %}
+                        <span class="dot {% if i < mode.difficulty %}is-active{% endif %}"></span>
+                    {% endfor %}
+                </span>
+            </div>
+
+            <p class="mode-card-description">{{ mode.description }}</p>
+
+            <div class="mode-card-meta">
+                <span class="mode-card-duration">
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    ~{{ (mode.estimated_duration_sec / 60)|round(0, 'ceil')|int }} {{ _('min') }}
+                </span>
+                <div class="mode-card-tags">
+                    {% for tag in mode.tag_objects[:2] %}
+                    <span class="mode-card-tag">{{ tag.label }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if not mode.available %}
+            <span class="mode-card-unavailable-hint">
+                {% if mode.missing_fields %}
+                    {{ _('Colonnes manquantes') }}: <code>{{ mode.missing_fields|join(', ') }}</code>
+                {% else %}
+                    {{ _("%(count)s employés éligibles (minimum %(min)s)", count=mode.eligible_count, min=mode.min_eligible) }}
+                {% endif %}
+            </span>
+            {% endif %}
+        </a>
+        {% endfor %}
+    </div>
+
+    <div class="mode-grid-empty" x-show="visibleCount === 0" x-cloak>
+        <p style="font-size: var(--text-base); font-weight: 500; color: var(--text);">
+            {{ _('Aucun mode ne correspond à vos filtres.') }}
+        </p>
+        <p style="margin-top: var(--space-2);">
+            <button type="button" class="btn btn-ghost btn-sm" @click="reset()">
+                {{ _('Réinitialiser les filtres') }}
+            </button>
+        </p>
+    </div>
+
+    <dialog class="modal" x-ref="unavailableModal" aria-labelledby="unavailable-modal-title">
+        <div class="modal-header">
+            <h3 id="unavailable-modal-title">{{ _('Mode indisponible') }}</h3>
+            <button type="button" class="btn btn-ghost btn-icon" @click="$refs.unavailableModal.close()" aria-label="{{ _('Fermer') }}">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p style="color: var(--text-soft);" x-text="modalMessage"></p>
+            <template x-if="modalMissingFields.length > 0">
+                <div class="stack" style="--stack-gap: var(--space-2);">
+                    <span style="font-size: var(--text-xs); font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em;">
+                        {{ _('Colonnes requises non renseignées') }}
+                    </span>
+                    <div class="cluster">
+                        <template x-for="field in modalMissingFields" :key="field">
+                            <code class="chip chip-subtle" x-text="field"></code>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-ghost" @click="$refs.unavailableModal.close()">{{ _('Annuler') }}</button>
+            <a :href="'/setup/' + currentDatasetId + '/employees'" class="btn btn-primary">
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+                {{ _('Compléter les données') }}
+            </a>
+        </div>
+    </dialog>
+</div>
+
+<script>
+window.MODES_DATA = {
+    {% for mode in modes %}
+    '{{ mode.name }}': {
+        display_name: {{ mode.display_name|tojson }},
+        missing_fields: {{ mode.missing_fields|tojson }},
+        eligible_count: {{ mode.eligible_count }},
+        min_eligible: {{ mode.min_eligible }},
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+};
+window.CURRENT_DATASET_ID = {{ (current_dataset_id or '')|tojson }};
+window.I18N_MODE_MESSAGES = {
+    missingColumns: {{ _("Ce mode nécessite des données non renseignées dans ce dataset.")|tojson }},
+    notEnough: {{ _("Ce mode nécessite au moins {min} employés éligibles (actuellement {count}).")|tojson }},
+};
+
+document.addEventListener('alpine:init', () => {
+    Alpine.data('modeSelection', ({ hideUnavailable = false } = {}) => ({
+        search: '',
+        difficulty: null,
+        selectedTags: [],
+        hideUnavailable: hideUnavailable,
+        visibleCount: 0,
+        modalMessage: '',
+        modalMissingFields: [],
+        currentDatasetId: window.CURRENT_DATASET_ID,
+
+        init() {
+            this.$nextTick(() => this.recomputeVisible());
+            this.$watch('search', () => this.recomputeVisible());
+            this.$watch('difficulty', () => this.recomputeVisible());
+            this.$watch('selectedTags', () => this.recomputeVisible());
+        },
+
+        matches(el) {
+            const search = this.search.trim().toLowerCase();
+            const difficulty = this.difficulty;
+            const tags = this.selectedTags;
+
+            if (this.hideUnavailable && el.classList.contains('is-unavailable')) return false;
+
+            if (search && !el.dataset.search.toLowerCase().includes(search)) return false;
+            if (difficulty !== null && Number(el.dataset.difficulty) !== difficulty) return false;
+            if (tags.length > 0) {
+                const cardTags = (el.dataset.tags || '').split(',').filter(Boolean);
+                if (!tags.every(t => cardTags.includes(t))) return false;
+            }
+            return true;
+        },
+
+        recomputeVisible() {
+            const cards = this.$refs.grid ? this.$refs.grid.querySelectorAll('.mode-card') : [];
+            let count = 0;
+            cards.forEach(el => { if (this.matches(el)) count += 1; });
+            this.visibleCount = count;
+        },
+
+        toggleTag(tag) {
+            const i = this.selectedTags.indexOf(tag);
+            if (i >= 0) this.selectedTags.splice(i, 1);
+            else this.selectedTags.push(tag);
+        },
+
+        reset() {
+            this.search = '';
+            this.difficulty = null;
+            this.selectedTags = [];
+        },
+
+        showUnavailable(modeName) {
+            const data = (window.MODES_DATA || {})[modeName];
+            if (!data) return;
+            this.modalMissingFields = data.missing_fields || [];
+            if (data.missing_fields && data.missing_fields.length) {
+                this.modalMessage = window.I18N_MODE_MESSAGES.missingColumns;
+            } else {
+                this.modalMessage = window.I18N_MODE_MESSAGES.notEnough
+                    .replace('{min}', data.min_eligible)
+                    .replace('{count}', data.eligible_count);
+            }
+            this.$refs.unavailableModal.showModal();
+        },
+    }));
+});
+
+// Arrow-key navigation across the mode grid: when a .mode-card has
+// focus, ← / → / ↑ / ↓ move focus to the visible card in that
+// direction. Wrapping is intentional: ArrowRight on the last card
+// jumps to the first one.
+document.addEventListener('keydown', (e) => {
+    if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+    const active = document.activeElement;
+    if (!active || !active.classList.contains('mode-card')) return;
+    e.preventDefault();
+
+    const grid = active.closest('.mode-grid');
+    if (!grid) return;
+    const visible = Array.from(grid.querySelectorAll('.mode-card'))
+        .filter(el => el.offsetParent !== null);
+    if (!visible.length) return;
+    const idx = visible.indexOf(active);
+    if (idx === -1) return;
+
+    // Compute columns based on horizontal layout of the visible cards.
+    const firstTop = visible[0].offsetTop;
+    let cols = 1;
+    for (const el of visible) {
+        if (el.offsetTop === firstTop) cols += 1;
+        else break;
+    }
+    cols = Math.max(1, cols - 1);
+
+    let nextIdx = idx;
+    if (e.key === 'ArrowRight') nextIdx = (idx + 1) % visible.length;
+    else if (e.key === 'ArrowLeft') nextIdx = (idx - 1 + visible.length) % visible.length;
+    else if (e.key === 'ArrowDown') nextIdx = Math.min(idx + cols, visible.length - 1);
+    else if (e.key === 'ArrowUp') nextIdx = Math.max(idx - cols, 0);
+    visible[nextIdx].focus();
+});
+</script>
+{% endblock %}

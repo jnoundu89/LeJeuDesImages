@@ -1,0 +1,68 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Ancienneté') }}{% endblock %}
+
+{% block mode_styles %}
+        .quiz-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .employee-container { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); }
+        .employee-image { width: 220px; max-width: 100%; border-radius: var(--radius-md); }
+        .employee-info { margin-top: var(--space-2); }
+        .employee-info p { justify-content: center; margin: 0; }
+        .quiz-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 400px;
+            margin: var(--space-4) auto;
+        }
+        .quiz-score {
+            margin-top: var(--space-4);
+            color: var(--text-soft);
+            font-size: var(--text-sm);
+        }
+{% endblock %}
+
+{% block game_title %}{{ _("Combien d'années d'ancienneté ?") }}{% endblock %}
+
+{% block game_content %}
+            <!-- Employee information -->
+            <div class="employee-container">
+                <img class="employee-image" src="{{ employee.photo }}" alt="{{ employee.first_name }} {{ employee.last_name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                <div class="employee-info">
+                    <p>{{ employee.first_name }} {{ employee.last_name }}</p>
+                    <p>{{ employee.job_title }}</p>
+                    <p>{{ employee.team }}</p>
+                </div>
+            </div>
+{% endblock %}
+
+{% block score_display %}
+            <p id="high-score">{{ _('Meilleur score') }} : <span class="score">{{ best_score }} / {{ maxScore }}</span></p>
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+{% endblock %}
+
+{% block form_attrs %}id="quiz-form"{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="correct-value" value="{{ seniority_years }}">
+{% endblock %}
+
+{% block game_choices %}
+        <div class="quiz-container" x-data="singleAnswer('{{ seniority_years }}')">
+            <div class="quiz-choices" id="quiz-choices">
+                {% for choice in choices %}
+                <button type="button" class="quiz-choice-btn choice-btn"
+                        @click="check('{{ choice }}', $el)">{{ choice }} an{% if choice != 1 %}s{% endif %}
+                </button>
+                {% endfor %}
+            </div>
+            <div class="quiz-score" id="quiz-score" style="display: none;"></div>
+        </div>
+{% endblock %}
+
+{% block game_scripts %}
+{% endblock %}

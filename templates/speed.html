@@ -1,0 +1,96 @@
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}{{ _('Mode Vitesse') }}{% endblock %}
+
+{% block mode_styles %}
+        .speed-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .speed-image-container { max-width: 220px; margin: 0 auto; }
+        .speed-image { width: 100%; border-radius: var(--radius-md); }
+        .speed-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+        .time-bonus {
+            display: inline-block;
+            padding: 2px var(--space-2);
+            background: var(--success-subtle);
+            color: var(--success);
+            border-radius: var(--radius-pill);
+            font-size: var(--text-xs);
+            font-weight: 650;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Vitesse - Identifiez rapidement la personne') }}{% endblock %}
+
+{% block progress_bar %}
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+{% endblock %}
+
+{% block game_content %}
+        <div class="speed-image-container">
+            <img id="speed-image" src="{{ image_url }}" alt="Photo d'employé" class="speed-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+        </div>
+{% endblock %}
+
+{% block after_timer %}
+        <div id="time-bonus" class="time-bonus" style="display: none;"></div>
+{% endblock %}
+
+{% block score_display %}
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>{{ _('Question') }} : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="response_time" id="response-time" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="speed-container" x-data="singleAnswer('{{ correct_name }}')">
+        <div class="speed-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="speed-choice-btn choice-btn"
+                    @click="check('{{ name }}', $el); recordResponseTime($el)">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    let startTime = new Date().getTime();
+
+    function recordResponseTime(el) {
+        var responseTime = new Date().getTime() - startTime;
+        document.getElementById('response-time').value = responseTime;
+
+        // Display time bonus for correct answers
+        if (document.getElementById('correct-answer').value === '1') {
+            var bonusPoints = 0;
+            if (responseTime < 1000) bonusPoints = 3;
+            else if (responseTime < 3000) bonusPoints = 2;
+            else bonusPoints = 1;
+
+            var timeBonus = document.getElementById('time-bonus');
+            timeBonus.textContent = '+' + bonusPoints + ' points!';
+            timeBonus.style.display = 'block';
+        }
+    }
+{% endblock %}

@@ -1,0 +1,11 @@
+firstName,lastName,image_path,department_name,jobTitle,legalEntity_name,sex,birthDate,dtContractStart,manager_name
+Alice,DUPONT,/static/images/1_Alice_DUPONT.jpg,Engineering,Software Engineer,TestCorp,woman,1990-03-15,2020-01-10,Bob MARTIN
+Bob,MARTIN,/static/images/2_Bob_MARTIN.jpg,Engineering,Tech Lead,TestCorp,man,1985-07-22,2018-06-01,Charlie DURAND
+Charlie,DURAND,/static/images/3_Charlie_DURAND.jpg,Marketing,Marketing Manager,TestCorp,man,1988-11-03,2019-03-15,
+Diana,LEROY,/static/images/4_Diana_LEROY.jpg,Marketing,Content Writer,TestCorp,woman,1992-05-28,2021-09-01,Charlie DURAND
+Eve,MOREAU,/static/images/5_Eve_MOREAU.jpg,Sales,Sales Rep,PartnerInc,woman,1995-01-12,2022-02-14,Frank PETIT
+Frank,PETIT,/static/images/6_Frank_PETIT.jpg,Sales,Sales Manager,PartnerInc,man,1983-09-30,2017-04-20,
+George,BLANC,/static/images/7_George_BLANC.jpg,Engineering,DevOps Engineer,TestCorp,man,1991-12-05,2020-07-01,Bob MARTIN
+Helene,ROUX,/static/images/8_Helene_ROUX.jpg,HR,HR Manager,TestCorp,woman,1987-06-18,2016-11-01,
+Ivan,GARCIA,/static/images/9_Ivan_GARCIA.jpg,Engineering,Data Scientist,PartnerInc,man,1993-04-10,2021-01-15,Frank PETIT
+Julie,THOMAS,/static/images/10_Julie_THOMAS.jpg,Sales,Account Executive,PartnerInc,woman,1994-08-25,2022-06-01,Frank PETIT

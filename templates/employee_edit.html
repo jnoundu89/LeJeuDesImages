@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{% if mode == 'edit' %}{{ _('Modifier') }} {{ employee.first_name }} {{ employee.last_name }}{% else %}{{ _('Nouvel employé') }}{% endif %} - {{ _('Le Jeu Des Images') }}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<link rel="stylesheet" href="{{ static_v('setup.css') }}">
+<style>
+    .employee-form {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        box-shadow: var(--shadow-lg);
+        color: var(--text);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+        .form-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Photo section + preview rules live in static/setup.css now —
+     * they're shared with the employees-list thumbnail styling. */
+
+    .btn-row {
+        margin-top: 2rem;
+    }
+
+    .section-divider {
+        margin: 2rem 0 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+{% include '_particles_bg.html' %}
+<div class="setup-container">
+    <a href="{{ url_for('admin.employees_list', dataset_id=dataset_id) }}" class="back-link">
+        <i class="fas fa-arrow-left"></i> {{ _('Retour aux employés') }}
+    </a>
+
+    <div class="setup-header">
+        <h1>
+            {% if mode == 'edit' %}
+                <i class="fas fa-pen"></i> {{ _('Modifier') }} {{ employee.first_name }} {{ employee.last_name }}
+            {% else %}
+                <i class="fas fa-user-plus"></i> {{ _('Nouvel employé') }}
+            {% endif %}
+        </h1>
+        <p>{{ _('Dataset') }} : <code>{{ dataset_name }}</code></p>
+    </div>
+
+    <form class="employee-form" id="employee-form" onsubmit="return false">
+        {% if mode == 'edit' %}
+        <div class="photo-section">
+            {% if employee.photo %}
+            <img src="{{ employee.photo }}" alt="" id="photo-preview" class="photo-preview"
+                 onerror="this.replaceWith(Object.assign(document.createElement('div'), {id: 'photo-preview', className: 'photo-preview placeholder', innerHTML: '<i class=\'fas fa-user\'></i>'}))">
+            {% else %}
+            <div id="photo-preview" class="photo-preview placeholder"><i class="fas fa-user"></i></div>
+            {% endif %}
+            <div class="photo-controls">
+                <h4>{{ _('Photo') }}</h4>
+                <p class="hint">{{ _('Fichier actuel') }}: <code>{{ employee.photo or '-' }}</code></p>
+                <input type="file" id="photo-input" accept=".jpg,.jpeg,.png,.gif,.webp,.bmp" style="display:none">
+                <button type="button" class="btn btn-secondary" onclick="document.getElementById('photo-input').click()">
+                    <i class="fas fa-upload"></i> {{ _('Remplacer la photo') }}
+                </button>
+                <span id="photo-status" style="margin-left:0.5rem;font-size:0.85rem"></span>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="section-divider">{{ _('Informations principales') }}</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="field-first_name">{{ _('Prénom') }} <span class="required-mark" aria-hidden="true">*</span></label>
+                <input type="text" id="field-first_name" name="first_name" required value="{{ employee.first_name }}">
+            </div>
+            <div class="form-group">
+                <label for="field-last_name">{{ _('Nom') }} <span class="required-mark" aria-hidden="true">*</span></label>
+                <input type="text" id="field-last_name" name="last_name" required value="{{ employee.last_name }}">
+            </div>
+            <div class="form-group">
+                <label for="field-team">{{ _('Équipe') }} <span class="required-mark" aria-hidden="true">*</span></label>
+                <input type="text" id="field-team" name="team" required value="{{ employee.team }}">
+            </div>
+            <div class="form-group">
+                <label for="field-job_title">{{ _('Poste') }} <span class="required-mark" aria-hidden="true">*</span></label>
+                <input type="text" id="field-job_title" name="job_title" required value="{{ employee.job_title }}">
+            </div>
+            <div class="form-group">
+                <label for="field-company">{{ _('Société') }} <span class="required-mark" aria-hidden="true">*</span></label>
+                <input type="text" id="field-company" name="company" required value="{{ employee.company }}">
+            </div>
+            <div class="form-group">
+                <label for="field-sex">{{ _('Sexe') }} <span class="required-mark" aria-hidden="true">*</span></label>
+                <select id="field-sex" name="sex" required>
+                    <option value="" {% if not employee.sex %}selected{% endif %}>-- {{ _('Sélectionner') }} --</option>
+                    <option value="F" {% if employee.sex == 'F' %}selected{% endif %}>F</option>
+                    <option value="M" {% if employee.sex == 'M' %}selected{% endif %}>M</option>
+                </select>
+            </div>
+            {% if mode == 'new' %}
+            <div class="form-group">
+                <label for="field-photo">{{ _('Fichier photo') }}</label>
+                <input type="text" id="field-photo" name="photo" value="{{ employee.photo }}" placeholder="prénom_nom.jpg">
+                <span class="form-hint">{{ _('Nom du fichier dans le répertoire photos (photo à uploader depuis la page Modifier après création).') }}</span>
+            </div>
+            {% else %}
+            <input type="hidden" id="field-photo" name="photo" value="{{ employee.photo }}">
+            {% endif %}
+        </div>
+
+        <div class="section-divider">{{ _('Informations optionnelles') }}</div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="field-birth_date">{{ _('Date de naissance') }}</label>
+                <input type="text" id="field-birth_date" name="birth_date" value="{{ employee.birth_date }}" placeholder="YYYY-MM-DD">
+            </div>
+            <div class="form-group">
+                <label for="field-contract_start">{{ _("Date d'embauche") }}</label>
+                <input type="text" id="field-contract_start" name="contract_start" value="{{ employee.contract_start }}" placeholder="YYYY-MM-DD">
+            </div>
+            <div class="form-group">
+                <label for="field-manager_name">{{ _('Manager') }}</label>
+                <input type="text" id="field-manager_name" name="manager_name" value="{{ employee.manager_name }}">
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <a href="{{ url_for('admin.employees_list', dataset_id=dataset_id) }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> {{ _('Annuler') }}
+            </a>
+            <button type="button" class="btn btn-success" id="save-btn" onclick="saveEmployee()">
+                <i class="fas fa-save"></i>
+                {% if mode == 'edit' %}{{ _('Enregistrer') }}{% else %}{{ _('Créer') }}{% endif %}
+            </button>
+        </div>
+    </form>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"><span id="toast-message"></span></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% include '_particles_scripts.html' %}
+<script>
+(function () {
+    'use strict';
+
+    const MODE = {{ mode | tojson }};
+    const DATASET_ID = {{ dataset_id | tojson }};
+    const IDX = {{ idx | tojson }};
+    const ALL_FIELDS = ['first_name', 'last_name', 'photo', 'team', 'job_title',
+                        'company', 'sex', 'birth_date', 'contract_start', 'manager_name'];
+
+    function showToast(message, type) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.className = 'toast ' + type + ' show';
+        setTimeout(() => { toast.classList.remove('show'); }, 5000);
+    }
+
+    window.saveEmployee = function () {
+        const btn = document.getElementById('save-btn');
+        btn.disabled = true;
+
+        const payload = {};
+        ALL_FIELDS.forEach(f => {
+            const el = document.getElementById('field-' + f);
+            if (el) payload[f] = el.value.trim();
+        });
+
+        const url = MODE === 'new'
+            ? `/setup/${encodeURIComponent(DATASET_ID)}/employees`
+            : `/setup/${encodeURIComponent(DATASET_ID)}/employees/${IDX}`;
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+        })
+            .then(r => r.json().then(data => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    showToast(data.error || "{{ _('Erreur lors de la sauvegarde') }}", 'error');
+                    btn.disabled = false;
+                    return;
+                }
+                showToast(MODE === 'edit' ? "{{ _('Modifications enregistrées') }}" : "{{ _('Employé créé') }}", 'success');
+                setTimeout(() => {
+                    window.location.href = `/setup/${encodeURIComponent(DATASET_ID)}/employees`;
+                }, 700);
+            })
+            .catch(() => {
+                showToast("{{ _('Erreur réseau') }}", 'error');
+                btn.disabled = false;
+            });
+    };
+
+    // Photo upload (edit mode only)
+    const photoInput = document.getElementById('photo-input');
+    if (photoInput) {
+        photoInput.addEventListener('change', () => {
+            if (!photoInput.files.length) return;
+            const file = photoInput.files[0];
+            const status = document.getElementById('photo-status');
+            const preview = document.getElementById('photo-preview');
+
+            const formData = new FormData();
+            formData.append('file', file);
+            status.textContent = "{{ _('Envoi...') }}";
+
+            fetch(`/setup/${encodeURIComponent(DATASET_ID)}/employees/${IDX}/photo`, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(r => r.json().then(data => ({ ok: r.ok, data })))
+                .then(({ ok, data }) => {
+                    if (!ok) {
+                        status.textContent = '';
+                        showToast(data.error || "{{ _('Erreur') }}", 'error');
+                        return;
+                    }
+                    status.textContent = '';
+                    showToast("{{ _('Photo mise à jour') }}", 'success');
+                    // Update the preview inline + the hidden photo field.
+                    // The route returns the canonical `/photos/<filename>`
+                    // URL — drop it straight into <img src> with a
+                    // cache-buster so the browser doesn't reuse the old
+                    // bytes after a same-name replacement.
+                    const newSrc = `${data.photo}?t=${Date.now()}`;
+                    if (preview) {
+                        if (preview.tagName === 'IMG') {
+                            preview.src = newSrc;
+                        } else {
+                            const img = document.createElement('img');
+                            img.id = 'photo-preview';
+                            img.className = 'photo-preview';
+                            img.src = newSrc;
+                            preview.replaceWith(img);
+                        }
+                    }
+                    const photoField = document.getElementById('field-photo');
+                    if (photoField) photoField.value = data.photo;
+                })
+                .catch(() => {
+                    status.textContent = '';
+                    showToast("{{ _('Erreur réseau') }}", 'error');
+                });
+        });
+    }
+})();
+</script>
+{% endblock %}

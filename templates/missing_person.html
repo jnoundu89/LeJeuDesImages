@@ -1,0 +1,106 @@
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}{{ _('Mode Personne Manquante') }}{% endblock %}
+
+{% block mode_styles %}
+        .missing-person-container {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .team-banner {
+            display: inline-block;
+            padding: var(--space-2) var(--space-4);
+            background: var(--primary-subtle);
+            color: var(--primary);
+            border-radius: var(--radius-pill);
+            font-weight: 650;
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-3);
+        }
+        .team-members-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: var(--space-3);
+            max-width: 640px;
+            margin: var(--space-3) auto;
+        }
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-2);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .team-member img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: var(--radius-sm); }
+        .team-member-info { font-size: var(--text-xs); color: var(--text-soft); margin: 0; }
+        .missing-person-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 640px;
+            margin: var(--space-4) auto;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Personne Manquante') }}{% endblock %}
+
+{% block progress_bar %}
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+{% endblock %}
+
+{% block game_content %}
+        <div class="team-banner">
+            {{ _('Équipe') }}: {{ team_name }}
+        </div>
+
+        <div class="team-members-container">
+            {% for member in displayed_members %}
+            <div class="team-member">
+                <img src="{{ member.image_url }}" alt="{{ member.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                <div class="team-member-info">
+                    <h4>{{ member.name }}</h4>
+                    <p>{{ member.position }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+{% endblock %}
+
+{% block score_display %}
+            <p id="current-score">{{ _('Score actuel') }} : <span class="score">{{ currentScore }} / {{ maxScore }}</span></p>
+            <p>{{ _('Question') }} : <span id="question-counter">{{ current_question }} / {{ total_questions }}</span></p>
+{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="missing-person-container" x-data="singleAnswer('{{ missing_person.name }}')">
+        <h2>{{ _('Qui manque dans cette équipe ?') }}</h2>
+        <div class="missing-person-choices" id="person-choices">
+            {% for person in choices %}
+            <button type="button" class="missing-person-choice-btn choice-btn"
+                    @click="check('{{ person.name }}', $el)">
+                <img src="{{ person.image_url }}" alt="{{ person.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                {{ person.name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+{% endblock %}

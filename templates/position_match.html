@@ -1,0 +1,230 @@
+{% extends 'base_game.html' %}
+
+{% block lang %}fr{% endblock %}
+
+{% block title %}{{ _('Mode Association de Postes') }}{% endblock %}
+
+{% block mode_styles %}
+        .position-match-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .round-banner {
+            display: inline-flex;
+            padding: var(--space-2) var(--space-4);
+            background: var(--primary-subtle);
+            color: var(--primary);
+            border-radius: var(--radius-pill);
+            font-weight: 650;
+            font-size: var(--text-sm);
+            margin-bottom: var(--space-4);
+        }
+        .employees-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: var(--space-3);
+            margin: var(--space-3) 0;
+        }
+        .employee-card {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+        .employee-card.correct-match {
+            border-color: var(--success);
+            background: var(--success-subtle);
+        }
+        .employee-card.incorrect-match {
+            border-color: var(--danger);
+            background: var(--danger-subtle);
+        }
+        .employee-card img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            flex: none;
+        }
+        .employee-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .employee-info .name {
+            font-weight: 600;
+            font-size: var(--text-sm);
+        }
+        .position-selector {
+            width: 100%;
+            margin-top: var(--space-1);
+            padding: var(--space-2);
+            background: var(--surface);
+            border: 1px solid var(--border-strong);
+            border-radius: var(--radius-sm);
+            font: inherit;
+            font-size: var(--text-xs);
+        }
+        .submit-matches-btn, .continue-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 var(--space-6);
+            height: 48px;
+            margin: var(--space-6) auto 0;
+            font: inherit;
+            font-weight: 600;
+            color: var(--primary-contrast);
+            background: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            cursor: pointer;
+        }
+        .submit-matches-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .result-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgb(15 23 42 / 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        .result-overlay.show { display: flex; }
+        .result-content {
+            background: var(--surface);
+            padding: var(--space-6);
+            border-radius: var(--radius-md);
+            max-width: 420px;
+            text-align: center;
+        }
+        .result-score {
+            font-size: var(--text-2xl);
+            font-weight: 700;
+            color: var(--primary);
+            margin: var(--space-3) 0;
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Association de Postes') }}{% endblock %}
+
+{% block progress_bar %}
+        <div class="progress-container">
+            <div id="progress-bar" class="progress-bar" style="width: 0%"></div>
+        </div>
+{% endblock %}
+
+{% block game_content %}
+        <div class="round-banner">
+            {{ _('Manche') }} {{ current_round }} / {{ total_rounds }}
+        </div>
+{% endblock %}
+
+{% block form_attrs %}id="position-match-form"{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_matches" id="correct-matches" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="current-round" value="{{ current_round }}">
+    <input type="hidden" id="total-rounds" value="{{ total_rounds }}">
+    <input type="hidden" id="total-employees" value="{{ employees|length }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="position-match-container">
+        <h2>{{ _('Associez chaque employé avec son poste correct') }}</h2>
+        <div class="employees-container">
+            {% for employee_data in employees %}
+            <div class="employee-card" id="employee-{{ loop.index }}">
+                <img src="{{ employee_data.employee.image_url }}" alt="{{ employee_data.employee.name }}" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+                <div class="employee-info">
+                    <h4>{{ employee_data.employee.name }}</h4>
+                    <div class="position-selector">
+                        <select name="position-{{ loop.index }}" id="position-{{ loop.index }}" data-correct="{{ employee_data.correct_position }}">
+                            <option value="">-- {{ _('Sélectionnez un poste') }} --</option>
+                            {% for position in employee_data.position_options %}
+                            <option value="{{ position }}">{{ position }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="button" id="submit-matches" class="submit-matches-btn" disabled>{{ _('Vérifier les associations') }}</button>
+    </div>
+
+    <!-- Result overlay -->
+    <div id="result-overlay" class="result-overlay">
+        <div class="result-content">
+            <h2>{{ _('Résultats') }}</h2>
+            <p>{{ _('Vous avez correctement associé') }} <span id="correct-count">0</span> {{ _('employés avec leurs postes.') }}</p>
+            <div class="result-score">{{ _('Score') }}: <span id="round-score">0</span> {{ _('points') }}</div>
+            <button id="continue-btn" class="continue-btn">{{ _('Continuer') }}</button>
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    var correctMatches = 0;
+    var totalEmployees = parseInt(document.getElementById('total-employees').value);
+
+    function checkAllSelected() {
+        var selects = document.querySelectorAll('.position-selector select');
+        var allSelected = true;
+        selects.forEach(function(select) {
+            if (select.value === '') allSelected = false;
+        });
+        document.getElementById('submit-matches').disabled = !allSelected;
+    }
+
+    document.querySelectorAll('.position-selector select').forEach(function(select) {
+        select.addEventListener('change', checkAllSelected);
+    });
+
+    document.getElementById('submit-matches').addEventListener('click', function() {
+        correctMatches = 0;
+        var selects = document.querySelectorAll('.position-selector select');
+
+        selects.forEach(function(select) {
+            var employeeCard = select.closest('.employee-card');
+            var correctPosition = select.getAttribute('data-correct');
+            var selectedPosition = select.value;
+
+            if (correctPosition === selectedPosition) {
+                employeeCard.classList.add('correct-match');
+                correctMatches++;
+            } else {
+                employeeCard.classList.add('incorrect-match');
+                select.innerHTML = '<option value="' + correctPosition + '" selected>' + correctPosition + ' (correct)</option>';
+            }
+            select.disabled = true;
+        });
+
+        document.getElementById('correct-matches').value = correctMatches;
+        document.getElementById('correct-count').textContent = correctMatches;
+        document.getElementById('round-score').textContent = correctMatches;
+        document.getElementById('result-overlay').classList.add('show');
+
+        Alpine.store('game').answersCount = 1;
+        this.disabled = true;
+    });
+
+    document.getElementById('continue-btn').addEventListener('click', function() {
+        document.getElementById('result-overlay').classList.remove('show');
+        document.getElementById('position-match-form').submit();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var currentRound = parseInt(document.getElementById('current-round').value);
+        var totalRounds = parseInt(document.getElementById('total-rounds').value);
+        var progressBar = document.getElementById('progress-bar');
+        progressBar.style.width = ((currentRound - 1) / totalRounds * 100) + '%';
+    });
+{% endblock %}

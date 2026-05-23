@@ -1,0 +1,107 @@
+# -- Application configuration --
+# Copy this file to config.yaml and edit it for your setup.
+# You can also generate / edit this file entirely through the /setup admin wizard.
+#
+# Quick start: run `make demo-dataset` to install the bundled demo dataset under
+# data/demo/, then uncomment the `demo:` block below to play immediately.
+
+app:
+  # Contact email shown in the app footer; belongs to the app owner, not any dataset.
+  contact_email: "contact@yourcompany.com"
+  # Id of the dataset loaded by default when a user first visits the app.
+  default_dataset: "acme"
+
+# Datasets are independent collections of employees (CSV + photos + branding).
+# Users can switch between them at runtime via the header dropdown.
+# The admin wizard (/setup) can add / edit / delete datasets without touching this file.
+datasets:
+
+  acme:
+    company:
+      name: "Acme Corp"
+      logo_url: "/static/images/acme_logo.png"
+      # `tagline` accepts either a plain string (legacy) or a {fr, en} mapping.
+      # The wizard always writes the dict form; users get the string matching
+      # their current language cookie, with graceful fallback.
+      tagline:
+        fr: "Testez votre connaissance de vos collègues Acme."
+        en: "Test your knowledge of your Acme colleagues."
+    # Visual theming. Optional — omit the whole block to stick with the default
+    # `corporate` palette. The wizard's Thème step writes this shape.
+    theme:
+      # One of the 16 built-in palettes (see models/config.py PALETTES):
+      # corporate, slate, nordic, warm, sepia, sand, pastel, rose, mint,
+      # midnight, charcoal, ocean, forest, plum, dark, noir.
+      palette: "corporate"
+      # Per-token overrides. Only these 7 tokens are editable; anything else is
+      # silently dropped. Each value must be `#RRGGBB`. Overrides win over the
+      # palette (injected as inline CSS custom properties on <html>).
+      overrides:
+        primary: "#4F46E5"
+        # bg: "#F4F6FB"
+        # surface: "#FFFFFF"
+        # surface-2: "#F1F4FA"
+        # text: "#0F172A"
+        # text-soft: "#475569"
+        # border: "#E2E8F0"
+    # Dataset-level behaviour toggles. All optional.
+    settings:
+      # Hide modes that can't run against this dataset (missing required
+      # columns / not enough eligible employees). Default: false (greyed out).
+      hide_unavailable_modes: false
+    data:
+      csv_path: "data/acme/team.csv"
+      images_dir: "data/acme/photos"
+      scores_db_path: "data/acme/scores.json"
+      # Maps your CSV column names to the canonical field names used by the game.
+      # Required: first_name, last_name, photo, team, job_title, company, sex
+      # Optional: birth_date, contract_start, manager_name
+      column_mapping:
+        first_name: "first_name"
+        last_name: "last_name"
+        photo: "photo_path"
+        team: "team"
+        job_title: "job_title"
+        company: "company"
+        sex: "sex"
+        birth_date: "birth_date"
+        contract_start: "contract_start"
+        manager_name: "manager_name"
+
+  # Bundled demo dataset (populate with `make demo-dataset` first).
+  # demo:
+  #   company:
+  #     name: "DemoTech"
+  #     logo_url: ""
+  #     tagline:
+  #       fr: "Testez votre connaissance de vos collègues avec des modes de jeu amusants et interactifs."
+  #       en: "Test your knowledge of your colleagues across fun and interactive game modes."
+  #   data:
+  #     csv_path: "data/demo/team.csv"
+  #     images_dir: "data/demo/photos"
+  #     scores_db_path: "data/demo/scores.json"
+  #     column_mapping:
+  #       first_name: "first_name"
+  #       last_name: "last_name"
+  #       photo: "photo"
+  #       team: "team"
+  #       job_title: "job_title"
+  #       company: "company"
+  #       sex: "sex"
+  #       birth_date: "birth_date"
+  #       contract_start: "contract_start"
+  #       manager_name: "manager_name"
+
+  # Add as many datasets as you want; the wizard will generate entries like this.
+  # client_x:
+  #   company:
+  #     name: "Client X"
+  #     logo_url: "/static/images/client_x_logo.png"
+  #     tagline: "Get to know the Client X team."
+  #   data:
+  #     csv_path: "data/client_x/team.csv"
+  #     images_dir: "data/client_x/photos"
+  #     scores_db_path: "data/client_x/scores.json"
+  #     column_mapping:
+  #       first_name: "firstName"
+  #       ...

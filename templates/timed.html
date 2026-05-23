@@ -1,0 +1,129 @@
+{% extends 'base_game.html' %}
+
+{% block title %}{{ _('Mode Chronométré') }}{% endblock %}
+
+{% block mode_styles %}
+        .timed-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 0 clamp(var(--space-4), 4vw, var(--space-8));
+        }
+        .timed-image-container { max-width: 220px; margin: 0 auto; }
+        .timed-image { width: 100%; border-radius: var(--radius-md); }
+        .timed-choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            max-width: 480px;
+            margin: var(--space-4) auto;
+        }
+        .global-timer {
+            display: inline-block;
+            padding: var(--space-2) var(--space-4);
+            background: var(--surface-2);
+            color: var(--text);
+            border: 2px solid var(--border-strong);
+            border-radius: 2px;
+            font-family: var(--font-mono);
+            font-size: var(--text-base);
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: var(--space-3);
+            transition: background 200ms var(--ease, ease),
+                        color 200ms var(--ease, ease),
+                        border-color 200ms var(--ease, ease),
+                        box-shadow 200ms var(--ease, ease);
+        }
+        .global-timer.warning {
+            background: var(--warning-subtle);
+            color: var(--warning);
+            border-color: var(--warning);
+            box-shadow: var(--glow-warning);
+        }
+        .global-timer.danger {
+            background: var(--danger-subtle, var(--warning-subtle));
+            color: var(--danger);
+            border-color: var(--danger);
+            box-shadow: var(--glow-danger);
+        }
+{% endblock %}
+
+{% block game_title %}{{ _('Mode Chronométré - Identifiez le maximum de personnes en 2 minutes') }}{% endblock %}
+
+{# Mode Chronométré has its own #global-timer driving the 120s countdown across
+   questions, so suppress the default 60s per-question timer from base_game.html. #}
+{% block base_timer %}{% endblock %}
+
+{% block game_content %}
+        <div id="global-timer" class="global-timer">{{ _('Temps restant') }}: 120s</div>
+        <div class="timed-image-container">
+            <img id="timed-image" src="{{ image_url }}" alt="Photo d'employé" class="timed-image" loading="lazy" onerror="this.onerror=null;this.src='/static/placeholder-avatar.svg'" >
+        </div>
+{% endblock %}
+
+{% block form_fields %}
+    <input type="hidden" name="correct_answer" id="correct-answer" value="0">
+    <input type="hidden" name="score_increment" id="score-increment" value="0">
+    <input type="hidden" id="total-questions" value="{{ total_questions }}">
+    <input type="hidden" id="current-question" value="{{ current_question }}">
+    <input type="hidden" id="max-score" value="{{ maxScore }}">
+    <input type="hidden" id="total-time" value="{{ total_time }}">
+{% endblock %}
+
+{% block game_choices %}
+    <div class="timed-container" x-data="singleAnswer('{{ correct_name }}')">
+        <div class="timed-choices" id="name-choices">
+            {% for name in name_choices %}
+            <button type="button" class="timed-choice-btn choice-btn"
+                    @click="check('{{ name }}', $el)">{{ name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block game_scripts %}
+    // Global timer (120s countdown across all questions)
+    let globalTimerValue = parseInt(document.getElementById('total-time').value);
+    let globalTimerInterval;
+    let gameEnded = false;
+
+    function updateGlobalTimer() {
+        if (gameEnded) return;
+        globalTimerValue--;
+        const el = document.getElementById('global-timer');
+        el.textContent = '{{ _("Temps restant") }}: ' + globalTimerValue + 's';
+
+        if (globalTimerValue <= 30) el.classList.add('warning');
+        if (globalTimerValue <= 10) {
+            el.classList.remove('warning');
+            el.classList.add('danger');
+        }
+        if (globalTimerValue <= 0) endGame();
+    }
+
+    function endGame() {
+        if (gameEnded) return;
+        gameEnded = true;
+        clearInterval(globalTimerInterval);
+
+        var buttons = document.querySelectorAll('#name-choices button');
+        buttons.forEach(function(btn) { btn.disabled = true; });
+
+        var correctName = '{{ correct_name }}';
+        buttons.forEach(function(btn) {
+            if (btn.textContent.trim() === correctName) btn.classList.add('correct');
+        });
+
+        Alpine.store('game').answersCount = 1;
+
+        setTimeout(function() { window.location.href = '/result'; }, 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        globalTimerInterval = setInterval(updateGlobalTimer, 1000);
+    });
+{% endblock %}
