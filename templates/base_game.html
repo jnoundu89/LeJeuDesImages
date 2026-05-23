@@ -24,15 +24,49 @@
 </div>
 
 <div class="main-layout" x-data x-init="$store.game.init()">
-    <!-- Colonne gauche - Statistiques -->
+    <!-- Colonne gauche - Tableau de Bord Statistiques -->
     <div class="stats" x-data="statsToggle">
         <button class="toggle-stats-btn" @click="toggle" x-text="open ? '{{ _('Masquer les statistiques') }}' : '{{ _('Afficher les statistiques') }}'">{{ _('Afficher les statistiques') }}</button>
         <div id="stats-banner" class="stats-banner" x-show="open" x-transition>
             <h2>{{ _('Statistiques de jeu') }}</h2>
-            <p>{{ _("Bonnes réponses pour l'entreprise") }} : <span class="score">{{ stats.company }}</span></p>
-            <p>{{ _("Bonnes réponses pour l'équipe") }} : <span class="score">{{ stats.team }}</span></p>
-            <p>{{ _('Bonnes réponses pour le nom') }} : <span class="score">{{ stats.name }}</span></p>
-            <p>{{ _('Bonnes réponses pour le poste') }} : <span class="score">{{ stats.position }}</span></p>
+            <div class="metrics-grid">
+                <div class="metric-card metric-card-company">
+                    <div class="metric-icon-slot">
+                        <i class="fa-solid fa-building" aria-hidden="true"></i>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">{{ _('Entreprise') }}</span>
+                        <span class="metric-score">{{ stats.company }}</span>
+                    </div>
+                </div>
+                <div class="metric-card metric-card-team">
+                    <div class="metric-icon-slot">
+                        <i class="fa-solid fa-users-gear" aria-hidden="true"></i>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">{{ _('Équipe') }}</span>
+                        <span class="metric-score">{{ stats.team }}</span>
+                    </div>
+                </div>
+                <div class="metric-card metric-card-name">
+                    <div class="metric-icon-slot">
+                        <i class="fa-solid fa-id-card" aria-hidden="true"></i>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">{{ _('Nom') }}</span>
+                        <span class="metric-score">{{ stats.name }}</span>
+                    </div>
+                </div>
+                <div class="metric-card metric-card-position">
+                    <div class="metric-icon-slot">
+                        <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+                    </div>
+                    <div class="metric-info">
+                        <span class="metric-label">{{ _('Poste') }}</span>
+                        <span class="metric-score">{{ stats.position }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -56,13 +90,28 @@
         {% block after_timer %}{% endblock %}
     </div>
 
-    <!-- Colonne droite - Scores et timer -->
+    <!-- Colonne droite - Tableau de Bord Scores -->
     <div class="right-content">
-        <div class="stats score-section">
-            <h2>{{ _('Scores') }}</h2>
-            {% block score_display %}
-            <p id="current-score">{{ _('Score actuel') }} : <span class="score" x-text="$store.game.score + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span></p>
-            {% endblock %}
+        <h2>{{ _('Leaderboard') }}</h2>
+        <div class="score-cards-grid">
+            <div class="score-card score-card-current">
+                <div class="score-icon-slot">
+                    <i class="fa-solid fa-star score-star-icon" aria-hidden="true"></i>
+                </div>
+                <div class="score-info">
+                    <span class="score-label">{{ _('Score Actuel') }}</span>
+                    <span class="score-value" x-text="$store.game.score + ' / ' + $store.game.maxScore">{{ currentScore }} / {{ maxScore }}</span>
+                </div>
+            </div>
+            <div class="score-card score-card-best">
+                <div class="score-icon-slot">
+                    <i class="fa-solid fa-trophy score-trophy-icon" aria-hidden="true"></i>
+                </div>
+                <div class="score-info">
+                    <span class="score-label">{{ _('Meilleur Score') }}</span>
+                    <span class="score-value">{{ best_score }}</span>
+                </div>
+            </div>
         </div>
     </div>
 </div>

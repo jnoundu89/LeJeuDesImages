@@ -1,12 +1,8 @@
-/* Animated mode previews.
+/* Premium Animated Mode Previews
  *
- * Each preview_type defines a mini-composition shown inside
- * .mode-card-preview. Animations are CSS-only (no canvas, no extra
- * dependency) and play on hover / focus so idle cards stay calm —
- * important with 20 cards on screen.
- *
- * `prefers-reduced-motion: reduce` pins the animation to its final
- * frame so the composition is still legible without motion.
+ * All previews utilize design token variables (--primary, --surface, --border)
+ * so they instantly adapt to the 16 available enterprise themes.
+ * High-performance 3D transforms, glassmorphic panels, and neon gradients.
  */
 @layer components {
     .mode-preview {
@@ -17,170 +13,310 @@
         pointer-events: none;
         overflow: hidden;
         isolation: isolate;
+        background: radial-gradient(circle at 50% 120%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 70%);
+        transition: background var(--dur-slow) var(--ease);
+    }
+    .mode-card:hover .mode-preview {
+        background: radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--primary) 22%, transparent), transparent 60%);
     }
 
-    /* Shared avatar — inline SVG silhouette scaled to the card. */
-    .preview-avatar {
-        width: 56%;
-        height: 76%;
-        color: var(--primary);
-        filter: drop-shadow(0 1px 1px rgb(15 23 42 / 0.08));
-        transition: color var(--dur) var(--ease),
-                    transform var(--dur) var(--ease),
-                    filter var(--dur) var(--ease);
-    }
-
-    /* --- Pixelation -------------------------------------------- */
-    .mode-preview-pixelation .preview-avatar {
-        filter: blur(10px) saturate(140%);
-        transition: filter 900ms var(--ease);
-    }
-    .mode-card:hover .mode-preview-pixelation .preview-avatar,
-    .mode-card:focus-visible .mode-preview-pixelation .preview-avatar {
-        filter: blur(0px) saturate(100%);
-    }
-    .mode-preview-pixelation::after {
-        content: "";
+    /* --- Normal Mode: Floating Glass Decks --------------------- */
+    .preview-normal-orb {
         position: absolute;
-        inset: 0;
-        background-image:
-            linear-gradient(to right,
-                color-mix(in srgb, var(--primary) 10%, transparent) 0 1px,
-                transparent 1px 100%);
-        background-size: 12px 12px;
-        opacity: 0;
-        transition: opacity var(--dur) var(--ease);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--primary-ring) 0%, transparent 70%);
+        filter: blur(10px);
+        opacity: 0.6;
+        transition: transform var(--dur-slow) var(--ease);
+    }
+    .mode-card:hover .preview-normal-orb {
+        transform: scale(1.3) translate(10px, -10px);
+    }
+    .preview-normal-cards {
+        position: relative;
+        width: 60%;
+        height: 60%;
+        transform: perspective(600px) rotateX(25deg) rotateY(-15deg);
+        transform-style: preserve-3d;
+        transition: transform var(--dur-slow) var(--ease);
+    }
+    .mode-card:hover .preview-normal-cards {
+        transform: perspective(600px) rotateX(20deg) rotateY(-10deg) translateZ(10px);
+    }
+    .preview-normal-card {
+        position: absolute;
+        padding: var(--space-2) var(--space-3);
+        background: color-mix(in srgb, var(--surface) 35%, transparent);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+        border-radius: var(--radius-md);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
         pointer-events: none;
     }
-    .mode-card:hover .mode-preview-pixelation::after {
-        opacity: 0.6;
+    .preview-normal-card-1 {
+        bottom: 10%;
+        left: 5%;
+        z-index: 2;
+        width: 100px;
+    }
+    .preview-normal-card-2 {
+        top: 15%;
+        right: 5%;
+        z-index: 1;
+        background: color-mix(in srgb, var(--primary) 8%, var(--surface-2));
+        border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+    .preview-normal-tag {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text);
+        white-space: nowrap;
+    }
+    .preview-normal-role {
+        font-size: 8px;
+        color: var(--text-soft);
+    }
+    .mode-card:hover .preview-normal-card-1 {
+        transform: translateZ(25px) translateY(-5px);
+        border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+    }
+    .mode-card:hover .preview-normal-card-2 {
+        transform: translateZ(10px) translate(-5px, 5px);
     }
 
-    /* --- Silhouette -------------------------------------------- */
-    .mode-preview-silhouette .preview-avatar {
-        color: var(--gray-900);
-        transition: color 500ms var(--ease);
+    /* --- Pixelation Mode: 3D Isometric Shifting Grid ------------ */
+    .preview-pixel-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3px;
+        width: 80px;
+        height: 80px;
+        transform: perspective(400px) rotateX(45deg) rotateZ(-45deg);
+        transform-style: preserve-3d;
+        transition: transform var(--dur-slow) var(--ease);
     }
-    .mode-card:hover .mode-preview-silhouette .preview-avatar,
-    .mode-card:focus-visible .mode-preview-silhouette .preview-avatar {
-        color: var(--primary);
+    .mode-card:hover .preview-pixel-grid {
+        transform: perspective(400px) rotateX(35deg) rotateZ(-30deg) scale(1.05);
     }
-    .mode-preview-silhouette::after {
-        content: "?";
+    .preview-pixel-block {
+        background: color-mix(in srgb, var(--primary) 15%, var(--surface-2));
+        border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+        border-radius: 2px;
+        transition: transform 600ms var(--ease), background 600ms var(--ease), border-color 600ms var(--ease);
+    }
+    .preview-pixel-block:nth-child(even) {
+        background: color-mix(in srgb, var(--primary) 5%, var(--surface-2));
+    }
+    .mode-card:hover .preview-pixel-block {
+        border-color: color-mix(in srgb, var(--primary) 50%, transparent);
+    }
+    .mode-card:hover .preview-pixel-block:nth-child(3n) { transform: translateZ(8px); background: var(--primary); }
+    .mode-card:hover .preview-pixel-block:nth-child(5n) { transform: translateZ(15px); background: color-mix(in srgb, var(--primary) 60%, var(--surface)); }
+    .mode-card:hover .preview-pixel-block:nth-child(7n) { transform: translateZ(-5px); }
+
+    /* --- Silhouette Mode: Solar Eclipse Neon Ring --------------- */
+    .preview-silhouette-eclipse {
         position: absolute;
-        top: var(--space-3);
-        right: var(--space-4);
-        font-size: 1.5rem;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: transparent;
+        box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 40%, transparent), 0 0 15px var(--primary-ring);
+        transition: transform var(--dur-slow) var(--ease), box-shadow var(--dur-slow) var(--ease);
+    }
+    .mode-card:hover .preview-silhouette-eclipse {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 2px var(--primary), 0 0 25px var(--primary-ring);
+    }
+    .preview-silhouette-inner {
+        position: absolute;
+        width: 66px;
+        height: 66px;
+        border-radius: 50%;
+        background: var(--surface-2);
+        box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+    .preview-silhouette-question {
+        position: absolute;
+        font-size: 2.2rem;
         font-weight: 800;
         color: var(--primary);
-        opacity: 0.3;
+        text-shadow: 0 0 8px var(--primary-ring);
+        opacity: 0.6;
+        transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
+    }
+    .mode-card:hover .preview-silhouette-question {
+        transform: scale(1.2) rotate(10deg);
+        opacity: 1;
     }
 
-    /* --- Scrambled face ---------------------------------------- */
-    .mode-preview-scrambled {
-        padding: 12%;
+    /* --- Age / Seniority Mode: Glowing Odometer Cylinder ------- */
+    .preview-age-cylinder {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        background: color-mix(in srgb, var(--surface) 40%, transparent);
+        border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+        border-radius: var(--radius-md);
+        backdrop-filter: blur(6px);
+        box-shadow: inset 0 1px 4px rgba(255, 255, 255, 0.05), var(--shadow-sm);
     }
+    .mode-card:hover .preview-age-cylinder {
+        border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+        box-shadow: 0 0 15px var(--primary-ring), inset 0 1px 4px rgba(255, 255, 255, 0.05);
+    }
+    .preview-age-ticker {
+        display: flex;
+        gap: 1px;
+        font-family: var(--font-mono);
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: var(--primary);
+        letter-spacing: -0.02em;
+        overflow: hidden;
+        height: var(--text-2xl);
+    }
+    .preview-age-digit {
+        display: inline-block;
+        animation: digitScroll 2000ms cubic-bezier(0.85, 0, 0.15, 1) infinite;
+        animation-play-state: paused;
+    }
+    .preview-age-digit:nth-child(2) { animation-delay: 150ms; }
+    .mode-card:hover .preview-age-digit {
+        animation-play-state: running;
+    }
+    .preview-age-unit {
+        font-size: 10px;
+        font-weight: 700;
+        color: var(--text-soft);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        background: color-mix(in srgb, var(--primary) 10%, var(--surface-2));
+        padding: 2px 6px;
+        border-radius: var(--radius-pill);
+    }
+    @keyframes digitScroll {
+        0%, 20% { transform: translateY(0); }
+        45%, 55% { transform: translateY(-24px); }
+        80%, 100% { transform: translateY(0); }
+    }
+
+    /* --- Scrambled Mode: Moving Mosaic Glass Tiles -------------- */
     .preview-scramble-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(3, 1fr);
-        gap: 3px;
-        width: 100%;
-        height: 100%;
+        gap: 4px;
+        width: 72px;
+        height: 72px;
     }
     .preview-scramble-tile {
-        background: linear-gradient(135deg,
-            color-mix(in srgb, var(--primary) 25%, var(--surface)),
-            color-mix(in srgb, var(--primary) 10%, var(--surface)));
-        border-radius: 3px;
-        transition: transform 450ms var(--ease);
+        background: linear-gradient(135deg, color-mix(in srgb, var(--primary) 20%, var(--surface-2)), var(--surface-2));
+        border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+        border-radius: 4px;
+        transition: transform 500ms var(--ease), background 500ms var(--ease), border-color 500ms var(--ease);
     }
-    .mode-card:hover .preview-scramble-tile:nth-child(1) { transform: translate(100%, 100%); }
-    .mode-card:hover .preview-scramble-tile:nth-child(3) { transform: translate(-100%, 100%); }
-    .mode-card:hover .preview-scramble-tile:nth-child(5) { transform: scale(0.6); }
-    .mode-card:hover .preview-scramble-tile:nth-child(7) { transform: translate(100%, -100%); }
-    .mode-card:hover .preview-scramble-tile:nth-child(9) { transform: translate(-100%, -100%); }
+    .mode-card:hover .preview-scramble-tile {
+        border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+    .mode-card:hover .preview-scramble-tile:nth-child(1) { transform: translate(12px, 12px) rotate(15deg); background: var(--primary-ring); }
+    .mode-card:hover .preview-scramble-tile:nth-child(3) { transform: translate(-12px, 12px) rotate(-10deg); }
+    .mode-card:hover .preview-scramble-tile:nth-child(5) { transform: scale(0.7) rotate(45deg); background: var(--primary); }
+    .mode-card:hover .preview-scramble-tile:nth-child(7) { transform: translate(12px, -12px) rotate(-15deg); }
+    .mode-card:hover .preview-scramble-tile:nth-child(9) { transform: translate(-12px, -12px) rotate(20deg); background: var(--primary-ring); }
 
-    /* --- Emoji challenge --------------------------------------- */
-    .mode-preview-emoji {
+    /* --- Emoji Mode: Translucent Spheres Bouncing --------------- */
+    .preview-emoji-wrapper {
+        display: flex;
         gap: var(--space-2);
-        grid-auto-flow: column;
-        font-size: 1.6rem;
     }
     .preview-emoji-cell {
-        width: 2.4rem;
-        height: 2.4rem;
+        width: 34px;
+        height: 34px;
         display: grid;
         place-items: center;
-        background: color-mix(in srgb, var(--primary) 12%, var(--surface));
-        border-radius: var(--radius);
-        animation: emojiPulse 1200ms var(--ease) infinite;
-        animation-play-state: paused;
-    }
-    .mode-card:hover .preview-emoji-cell,
-    .mode-card:focus-visible .preview-emoji-cell {
-        animation-play-state: running;
-    }
-    .preview-emoji-cell:nth-child(2) { animation-delay: 150ms; }
-    .preview-emoji-cell:nth-child(3) { animation-delay: 300ms; }
-    @keyframes emojiPulse {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-6px); }
-    }
-
-    /* --- Clue --------------------------------------------------- */
-    .mode-preview-clue {
-        padding: 14%;
-        justify-items: start;
-        align-content: center;
-        gap: var(--space-2);
-        grid-auto-rows: min-content;
-    }
-    .preview-clue-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: var(--space-2);
-        padding: 4px var(--space-3);
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-pill);
-        font-size: var(--text-xs);
-        font-weight: 550;
-        color: var(--text-soft);
-        box-shadow: var(--shadow-xs);
-        opacity: 0.55;
-        transform: translateX(-6px);
-        transition: opacity 350ms var(--ease), transform 350ms var(--ease);
-    }
-    .preview-clue-chip::before {
-        content: "";
-        width: 6px;
-        height: 6px;
+        font-size: 1.25rem;
+        background: color-mix(in srgb, var(--surface) 50%, transparent);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
         border-radius: 50%;
-        background: var(--primary);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        animation: emojiFloat 1200ms ease-in-out infinite alternate;
+        animation-play-state: paused;
+        transition: border-color var(--dur) var(--ease);
     }
-    .mode-card:hover .preview-clue-chip,
-    .mode-card:focus-visible .preview-clue-chip {
-        opacity: 1;
-        transform: translateX(0);
+    .mode-card:hover .preview-emoji-cell {
+        animation-play-state: running;
+        border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+        box-shadow: 0 4px 12px var(--primary-ring);
     }
-    .mode-card:hover .preview-clue-chip:nth-child(2) { transition-delay: 120ms; }
-    .mode-card:hover .preview-clue-chip:nth-child(3) { transition-delay: 240ms; }
+    .preview-emoji-cell:nth-child(2) { animation-delay: 200ms; }
+    .preview-emoji-cell:nth-child(3) { animation-delay: 400ms; }
+    @keyframes emojiFloat {
+        from { transform: translateY(5px); }
+        to { transform: translateY(-5px); }
+    }
 
-    /* --- Memory ------------------------------------------------- */
-    .mode-preview-memory {
-        padding: 12%;
-        gap: var(--space-2);
-        grid-auto-flow: column;
+    /* --- Clue Mode: Layered Folder Stack ------------------------ */
+    .preview-clue-stack {
+        position: relative;
+        width: 130px;
+        height: 70px;
+    }
+    .preview-clue-folder {
+        position: absolute;
+        left: 0;
+        right: 0;
+        padding: 4px var(--space-3);
+        background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid color-mix(in srgb, var(--border) 40%, transparent);
+        border-radius: var(--radius);
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--text-soft);
+        box-shadow: var(--shadow-sm);
+        transition: transform 400ms var(--ease), opacity 400ms var(--ease), border-color 400ms var(--ease);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .preview-clue-folder-1 { top: 0px; z-index: 3; }
+    .preview-clue-folder-2 { top: 14px; transform: scale(0.93) translateY(4px); opacity: 0.8; z-index: 2; }
+    .preview-clue-folder-3 { top: 28px; transform: scale(0.86) translateY(8px); opacity: 0.6; z-index: 1; }
+    
+    .mode-card:hover .preview-clue-folder {
+        border-color: color-mix(in srgb, var(--primary) 30%, transparent);
+    }
+    .mode-card:hover .preview-clue-folder-1 { transform: translateY(-6px) translateZ(10px); color: var(--text); }
+    .mode-card:hover .preview-clue-folder-2 { transform: scale(0.96) translateY(2px) translateZ(5px); opacity: 0.95; }
+    .mode-card:hover .preview-clue-folder-3 { transform: scale(0.92) translateY(10px); opacity: 0.85; }
+
+    /* --- Memory Mode: 3D Mirror Flipping Cards ----------------- */
+    .preview-memory-cards {
+        display: flex;
+        gap: var(--space-3);
+        perspective: 400px;
     }
     .preview-memory-card {
-        width: 3rem;
-        height: 3.8rem;
+        width: 32px;
+        height: 44px;
         border-radius: var(--radius);
         background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-        position: relative;
-        transition: transform 600ms var(--ease);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 800ms cubic-bezier(0.175, 0.885, 0.32, 1.15);
         transform-style: preserve-3d;
+        position: relative;
     }
     .preview-memory-card::after {
         content: "?";
@@ -188,110 +324,69 @@
         inset: 0;
         display: grid;
         place-items: center;
-        color: color-mix(in srgb, var(--primary-contrast) 80%, transparent);
-        font-size: 1.2rem;
+        font-family: var(--font-mono);
+        color: var(--primary-contrast);
         font-weight: 800;
+        font-size: 1.1rem;
     }
-    .mode-card:hover .preview-memory-card:first-child,
-    .mode-card:focus-visible .preview-memory-card:first-child {
+    .preview-memory-card-2 {
+        background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+        transition-delay: 150ms;
+    }
+    .mode-card:hover .preview-memory-card-1 {
         transform: rotateY(180deg);
-        background: var(--surface);
-        border: 2px solid var(--primary);
+        background: color-mix(in srgb, var(--primary) 12%, var(--surface-2));
+        border: 1px solid var(--primary);
     }
-    .mode-card:hover .preview-memory-card:first-child::after {
+    .mode-card:hover .preview-memory-card-1::after {
         content: "A";
         color: var(--primary);
+        transform: rotateY(180deg);
     }
-
-    /* --- Age ---------------------------------------------------- */
-    .mode-preview-age {
-        position: relative;
+    .mode-card:hover .preview-memory-card-2 {
+        transform: rotateY(180deg) translateY(-4px);
+        background: color-mix(in srgb, var(--primary) 12%, var(--surface-2));
+        border: 1px solid var(--primary);
+        box-shadow: 0 8px 16px var(--primary-ring);
     }
-    .mode-preview-age .preview-avatar {
-        height: 60%;
-        transform: translateY(-10%);
-    }
-    .preview-age-ticker {
-        position: absolute;
-        bottom: 12%;
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: 2px;
-        font-size: 1.6rem;
-        font-weight: 800;
+    .mode-card:hover .preview-memory-card-2::after {
+        content: "A";
         color: var(--primary);
-        font-feature-settings: "tnum";
-        letter-spacing: -0.02em;
-    }
-    .preview-age-digit {
-        display: inline-block;
-        min-width: 0.7em;
-        text-align: center;
-        animation: rollDigit 1500ms var(--ease) infinite;
-        animation-play-state: paused;
-    }
-    .preview-age-digit:nth-child(2) { animation-delay: 100ms; }
-    .mode-card:hover .preview-age-digit,
-    .mode-card:focus-visible .preview-age-digit {
-        animation-play-state: running;
-    }
-    @keyframes rollDigit {
-        0%, 20% { transform: translateY(0); }
-        50% { transform: translateY(-4px); }
-        80%, 100% { transform: translateY(0); }
+        transform: rotateY(180deg);
     }
 
-    /* --- Normal ------------------------------------------------- */
-    .mode-preview-normal {
-        position: relative;
-    }
-    .mode-preview-normal .preview-avatar {
-        width: 42%;
-        height: 60%;
-        transform: translateY(-8%);
-    }
-    .preview-normal-tag {
+    /* --- Static Fallback: Neon Outline Icon and Mesh Grid ------ */
+    .preview-mesh-grid {
         position: absolute;
-        padding: 2px var(--space-2);
-        background: var(--surface);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-pill);
-        font-size: var(--text-xs);
-        font-weight: 600;
-        color: var(--text-soft);
-        box-shadow: var(--shadow-xs);
-        opacity: 0.6;
-        transform: scale(0.9);
-        transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+        inset: 0;
+        background-image: radial-gradient(color-mix(in srgb, var(--border) 15%, transparent) 1.5px, transparent 1.5px);
+        background-size: 12px 12px;
+        opacity: 0.4;
+        transition: opacity var(--dur) var(--ease);
     }
-    .preview-normal-tag-1 { top: 14%; right: 14%; }
-    .preview-normal-tag-2 { bottom: 20%; left: 12%; }
-    .preview-normal-tag-3 { bottom: 8%; right: 18%; }
-    .mode-card:hover .preview-normal-tag,
-    .mode-card:focus-visible .preview-normal-tag {
+    .preview-static-glow {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--primary-ring) 0%, transparent 70%);
+        filter: blur(8px);
+        opacity: 0;
+        transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+    }
+    .mode-card-preview-icon {
+        font-size: 2.2rem;
+        color: var(--primary);
+        filter: drop-shadow(0 0 2px var(--primary-ring));
+        opacity: 0.8;
+        transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), filter var(--dur) var(--ease);
+    }
+    
+    .mode-card:hover .preview-mesh-grid { opacity: 0.7; }
+    .mode-card:hover .preview-static-glow { opacity: 0.8; transform: scale(1.2); }
+    .mode-card:hover .mode-card-preview-icon {
+        transform: scale(1.15) rotate(5deg);
         opacity: 1;
-        transform: scale(1);
-    }
-    .mode-card:hover .preview-normal-tag-2 { transition-delay: 100ms; }
-    .mode-card:hover .preview-normal-tag-3 { transition-delay: 200ms; }
-
-    /* --- Static fallback --------------------------------------- */
-    /* `.mode-preview-static` uses the default preview styles from
-     * mode-selection.css (icon centred on a subtle gradient).
-     * Nothing extra needed here. */
-
-    /* --- Reduced motion override ------------------------------- */
-    @media (prefers-reduced-motion: reduce) {
-        .mode-preview,
-        .mode-preview *,
-        .mode-preview *::before,
-        .mode-preview *::after {
-            animation: none !important;
-            transition: none !important;
-        }
-        .mode-preview-clue .preview-clue-chip { opacity: 1; transform: none; }
-        .mode-preview-pixelation .preview-avatar { filter: none; }
-        .mode-preview-silhouette .preview-avatar { color: var(--primary); }
+        filter: drop-shadow(0 0 8px var(--primary)) drop-shadow(0 0 15px var(--primary-ring));
     }
 }

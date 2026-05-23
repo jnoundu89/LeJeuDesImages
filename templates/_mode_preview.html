@@ -1,35 +1,41 @@
 {# Mode preview dispatch.
    Expects `mode` in context; picks the animation based on mode.preview_type.
-   Always renders an accessible fallback (hidden from screen readers via
-   aria-hidden) because the card title/description carry the semantics.
-
    preview_type values: static, pixelation, silhouette, scrambled, emoji,
                        clue, memory, age, normal
 #}
 {% set ptype = mode.preview_type or 'static' %}
 
-{% macro svg_avatar() -%}
-<svg class="preview-avatar" viewBox="0 0 24 28" xmlns="http://www.w3.org/2000/svg"
-     fill="currentColor" aria-hidden="true">
-    <circle cx="12" cy="8" r="5"/>
-    <path d="M2 26c0-5.5 4.5-10 10-10s10 4.5 10 10v2H2z"/>
-</svg>
-{%- endmacro %}
-
 <div class="mode-preview mode-preview-{{ ptype }}" aria-hidden="true">
-    {% if ptype in ['pixelation', 'silhouette', 'age', 'normal'] %}
-        {{ svg_avatar() }}
+    {% if ptype == 'normal' %}
+        <div class="preview-normal-orb"></div>
+        <div class="preview-normal-cards">
+            <div class="preview-normal-card preview-normal-card-1">
+                <span class="preview-normal-tag">Alice Martin</span>
+                <span class="preview-normal-role">Developer</span>
+            </div>
+            <div class="preview-normal-card preview-normal-card-2">
+                <span class="preview-normal-tag">R&D</span>
+            </div>
+        </div>
 
-        {% if ptype == 'age' %}
-        <span class="preview-age-ticker">
-            <span class="preview-age-digit">2</span>
-            <span class="preview-age-digit">7</span>
-        </span>
-        {% elif ptype == 'normal' %}
-        <span class="preview-normal-tag preview-normal-tag-1">Tech</span>
-        <span class="preview-normal-tag preview-normal-tag-2">Alice D.</span>
-        <span class="preview-normal-tag preview-normal-tag-3">Dev</span>
-        {% endif %}
+    {% elif ptype == 'pixelation' %}
+        <div class="preview-pixel-grid">
+            {% for _ in range(16) %}<div class="preview-pixel-block"></div>{% endfor %}
+        </div>
+
+    {% elif ptype == 'silhouette' %}
+        <div class="preview-silhouette-eclipse"></div>
+        <div class="preview-silhouette-inner"></div>
+        <span class="preview-silhouette-question">?</span>
+
+    {% elif ptype == 'age' %}
+        <div class="preview-age-cylinder">
+            <div class="preview-age-ticker">
+                <span class="preview-age-digit">2</span>
+                <span class="preview-age-digit">8</span>
+            </div>
+            <span class="preview-age-unit">ans</span>
+        </div>
 
     {% elif ptype == 'scrambled' %}
         <div class="preview-scramble-grid">
@@ -37,21 +43,29 @@
         </div>
 
     {% elif ptype == 'emoji' %}
-        <span class="preview-emoji-cell">💼</span>
-        <span class="preview-emoji-cell">👩‍💻</span>
-        <span class="preview-emoji-cell">🎯</span>
+        <div class="preview-emoji-wrapper">
+            <span class="preview-emoji-cell">💼</span>
+            <span class="preview-emoji-cell">👩‍💻</span>
+            <span class="preview-emoji-cell">🎯</span>
+        </div>
 
     {% elif ptype == 'clue' %}
-        <span class="preview-clue-chip">{{ _('Équipe') }}</span>
-        <span class="preview-clue-chip">{{ _('Manager') }}</span>
-        <span class="preview-clue-chip">{{ _('Poste') }}</span>
+        <div class="preview-clue-stack">
+            <div class="preview-clue-folder preview-clue-folder-1">🔍 {{ _('Poste') }}</div>
+            <div class="preview-clue-folder preview-clue-folder-2">👥 {{ _('Équipe') }}</div>
+            <div class="preview-clue-folder preview-clue-folder-3">🏢 {{ _('Entreprise') }}</div>
+        </div>
 
     {% elif ptype == 'memory' %}
-        <div class="preview-memory-card"></div>
-        <div class="preview-memory-card"></div>
+        <div class="preview-memory-cards">
+            <div class="preview-memory-card preview-memory-card-1"></div>
+            <div class="preview-memory-card preview-memory-card-2"></div>
+        </div>
 
     {% else %}
-        {# static fallback: centred icon, lives in mode-selection.css #}
+        {# static fallback: centred neon icon with mesh overlay #}
+        <div class="preview-mesh-grid"></div>
+        <div class="preview-static-glow"></div>
         <i class="fa-solid {{ mode.icon }} mode-card-preview-icon"></i>
     {% endif %}
 </div>
